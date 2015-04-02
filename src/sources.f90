@@ -178,9 +178,9 @@ implicit none
 integer, intent(in) :: i,j,k
 real, intent(out)   :: d
   
-d=  (primit(6,i,j,k)-primit(6,i-1,j,k))/dx  &
-  + (primit(7,i,j,k)-primit(7,i,j-1,k))/dy  &
-  + (primit(8,i,j,k)-primit(8,i,j,k-1))/dz
+d=  (primit(6,i+1,j,k)-primit(6,i-1,j,k))/(2.*dx)  &
+  + (primit(7,i,j+1,k)-primit(7,i,j-1,k))/(2.*dy)  &
+  + (primit(8,i,j,k+1)-primit(8,i,j,k-1))/(2.*dz)  
 
 end subroutine divergence_B
 
@@ -198,26 +198,26 @@ end subroutine divergence_B
 subroutine divbcorr_source(i,j,k,pp,s)
  
   implicit none
-  real, intent(in)  :: pp(neq)
+  integer, intent(in) :: i, j, k
+  real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
-  real              :: divB
-  integer :: i, j, k
-
+  real                :: divB
+  
   call divergence_B(i,j,k,divB)
 
   ! update source terms
     ! momenta
-    s(2)= s(2)-divB*pp(2) 
-    s(3)= s(3)-divB*pp(3) 
-    s(4)= s(4)-divB*pp(4) 
+    s(2)= s(2)-divB*pp(6) 
+    s(3)= s(3)-divB*pp(7) 
+    s(4)= s(4)-divB*pp(8) 
 
     ! energy
     s(5)= s(5)-divB*(pp(2)*pp(6)+pp(3)+pp(7)+pp(4)*pp(8))      
 
     ! Faraday law
-    s(6)=s(6)-divB*pp(6)
-    s(7)=s(7)-divB*pp(7)
-    s(8)=s(8)-divB*pp(8)
+    s(6)=s(6)-divB*pp(2)
+    s(7)=s(7)-divB*pp(3)
+    s(8)=s(8)-divB*pp(4)
 
 end subroutine divbcorr_source
 
