@@ -1,0 +1,84 @@
+\hypertarget{namespaceuser__mod}{}\section{user\+\_\+mod Module Reference}
+\label{namespaceuser__mod}\index{user\+\_\+mod@{user\+\_\+mod}}
+
+
+User imput module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespaceuser__mod_a302a8099e4696e80b634ec347d6a3bec}{}subroutine \hyperlink{namespaceuser__mod_a302a8099e4696e80b634ec347d6a3bec}{init\+\_\+user\+\_\+mod} ()\label{namespaceuser__mod_a302a8099e4696e80b634ec347d6a3bec}
+
+\begin{DoxyCompactList}\small\item\em Initializes variables in the module, as well as other modules loaded by user. ~\newline
+ It has to be present, even if empty. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244}{initial\+\_\+conditions} (u, time)
+\begin{DoxyCompactList}\small\item\em Here the domain is initialized at t=0. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceuser__mod_a6028f43a668931350eba8020d0466e4f}{impose\+\_\+user\+\_\+bc} (u, time)
+\begin{DoxyCompactList}\small\item\em User Defined Boundary conditions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This is an attempt to have all input neede from user in a single file This module should load additional modules (i.\+e. star, jet, sn), to impose initial and boundary conditions (such as sources) 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespaceuser__mod_a6028f43a668931350eba8020d0466e4f}{}\index{user\+\_\+mod@{user\+\_\+mod}!impose\+\_\+user\+\_\+bc@{impose\+\_\+user\+\_\+bc}}
+\index{impose\+\_\+user\+\_\+bc@{impose\+\_\+user\+\_\+bc}!user\+\_\+mod@{user\+\_\+mod}}
+\subsubsection[{impose\+\_\+user\+\_\+bc}]{\setlength{\rightskip}{0pt plus 5cm}subroutine user\+\_\+mod\+::impose\+\_\+user\+\_\+bc (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(out)}]{u, }
+\item[{real, intent(in)}]{time}
+\end{DoxyParamCaption}
+)}\label{namespaceuser__mod_a6028f43a668931350eba8020d0466e4f}
+
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} time \+: time in the simulation (code units) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 114 of file user\+\_\+mod.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244}{}\index{user\+\_\+mod@{user\+\_\+mod}!initial\+\_\+conditions@{initial\+\_\+conditions}}
+\index{initial\+\_\+conditions@{initial\+\_\+conditions}!user\+\_\+mod@{user\+\_\+mod}}
+\subsubsection[{initial\+\_\+conditions}]{\setlength{\rightskip}{0pt plus 5cm}subroutine user\+\_\+mod\+::initial\+\_\+conditions (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(out)}]{u, }
+\item[{real, intent(in)}]{time}
+\end{DoxyParamCaption}
+)}\label{namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244}
+
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} time \+: time in the simulation (code units) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 58 of file user\+\_\+mod.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_cgraph}
+\end{center}
+\end{figure}
+
+

@@ -1,0 +1,82 @@
+\hypertarget{namespacehll}{}\section{hll Module Reference}
+\label{namespacehll}\index{hll@{hll}}
+
+
+H\+L\+L approximate Riemann solver module.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacehll_aa67c7db7e17f7dedf7286320baeda1dd}{prim2fhll} (priml, primr, ff)
+\begin{DoxyCompactList}\small\item\em Solves the Riemann problem at the interface P\+L,P\+R using the H\+L\+L solver. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehll_a27386fb5bcf705be5e8c2650484966c6}{hllfluxes} (choice)
+\begin{DoxyCompactList}\small\item\em Calculates H\+L\+L fluxes from the primitive variables on all the domain. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The module contains the routines needed to Solve the Riemann problem in the entire domain and return the physical fluxes in x,y,z with the H\+L\+L solver 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacehll_a27386fb5bcf705be5e8c2650484966c6}{}\index{hll@{hll}!hllfluxes@{hllfluxes}}
+\index{hllfluxes@{hllfluxes}!hll@{hll}}
+\subsubsection[{hllfluxes}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hll\+::hllfluxes (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{choice}
+\end{DoxyParamCaption}
+)}\label{namespacehll_a27386fb5bcf705be5e8c2650484966c6}
+Calculates H\+L\+L fluxes from the primitive variables on all the domain 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} choice \+: 1, uses primit for the 1st half of timestep (first order) ~\newline
+ 2 uses primit for second order timestep \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 93 of file hll.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespacehll_aa67c7db7e17f7dedf7286320baeda1dd}{}\index{hll@{hll}!prim2fhll@{prim2fhll}}
+\index{prim2fhll@{prim2fhll}!hll@{hll}}
+\subsubsection[{prim2fhll}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hll\+::prim2fhll (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{priml, }
+\item[{real, dimension(neq), intent(in)}]{primr, }
+\item[{real, dimension(neq), intent(inout)}]{ff}
+\end{DoxyParamCaption}
+)}\label{namespacehll_aa67c7db7e17f7dedf7286320baeda1dd}
+Solves the Riemann problem at the interface betweem P\+L and P\+R using the H\+L\+L solver ~\newline
+ The fluxes are computed in the X direction, to obtain the y ans z directions a swap is performed 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} prim\+L \+: primitives at the Left state \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} prim\+R \+: primitives at the Right state \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} ff \+: fluxes at the interface ( $ F_{i+1/2} $) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 48 of file hll.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=290pt]{namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph}
+\end{center}
+\end{figure}
+
+

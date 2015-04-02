@@ -1,0 +1,80 @@
+\hypertarget{namespaceinit}{}\section{init Module Reference}
+\label{namespaceinit}\index{init@{init}}
+
+
+Guacho-\/3\+D initialization.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99}{initmain} (time, tprint, itprint)
+\begin{DoxyCompactList}\small\item\em Main initialization routine. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9}{initflow} (itprint)
+\begin{DoxyCompactList}\small\item\em Initializes the conserved variables, in the globals module. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This module contains the routines needed to initializa the code, it also initiaizes all the modules set by the user. 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9}{}\index{init@{init}!initflow@{initflow}}
+\index{initflow@{initflow}!init@{init}}
+\subsubsection[{initflow}]{\setlength{\rightskip}{0pt plus 5cm}subroutine init\+::initflow (
+\begin{DoxyParamCaption}
+\item[{integer, intent(inout)}]{itprint}
+\end{DoxyParamCaption}
+)}\label{namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9}
+Initializes the conserved variables, in the globals module 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}inout\mbox{]} itprint \+: number of current output \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 417 of file init.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99}{}\index{init@{init}!initmain@{initmain}}
+\index{initmain@{initmain}!init@{init}}
+\subsubsection[{initmain}]{\setlength{\rightskip}{0pt plus 5cm}subroutine init\+::initmain (
+\begin{DoxyParamCaption}
+\item[{real, intent(out)}]{time, }
+\item[{real, intent(out)}]{tprint, }
+\item[{integer, intent(out)}]{itprint}
+\end{DoxyParamCaption}
+)}\label{namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99}
+This subsroutine initializes all the variables in the globals module, M\+P\+I, cooling and \hyperlink{namespaceuser__mod}{user\+\_\+mod} routines; and outputs to screen the main parameters used in the run 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} time \+: time (code units) \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} tprint \+: time of next output \\
+\hline
+{\em integer} & \mbox{[}out\mbox{]} itprint \+: number of next output \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 42 of file init.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99_cgraph}
+\end{center}
+\end{figure}
+
+

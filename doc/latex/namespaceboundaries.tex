@@ -1,0 +1,82 @@
+\hypertarget{namespaceboundaries}{}\section{boundaries Module Reference}
+\label{namespaceboundaries}\index{boundaries@{boundaries}}
+
+
+Boundary conditions.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a}{boundaryi} (time, dt)
+\begin{DoxyCompactList}\small\item\em Boundary conditions for 1st order half timestep. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104}{boundaryii} (time, dt)
+\begin{DoxyCompactList}\small\item\em Boundary conditions for 2nd order half timestep. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Sets boundary conditions, the type of boundaries is set in the Makefile 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a}{}\index{boundaries@{boundaries}!boundaryi@{boundaryi}}
+\index{boundaryi@{boundaryi}!boundaries@{boundaries}}
+\subsubsection[{boundaryi}]{\setlength{\rightskip}{0pt plus 5cm}subroutine boundaries\+::boundaryi (
+\begin{DoxyParamCaption}
+\item[{real, intent(in), optional}]{time, }
+\item[{real, intent(in), optional}]{dt}
+\end{DoxyParamCaption}
+)}\label{namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a}
+Boundary conditions for 1st order half timestep ~\newline
+ The conditions only are imposed at the innermost ghost cell, on the u (unstepped) variables 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} optional, time \+: integration time \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} optional, dt \+: timestep \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 50 of file boundaries.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104}{}\index{boundaries@{boundaries}!boundaryii@{boundaryii}}
+\index{boundaryii@{boundaryii}!boundaries@{boundaries}}
+\subsubsection[{boundaryii}]{\setlength{\rightskip}{0pt plus 5cm}subroutine boundaries\+::boundaryii (
+\begin{DoxyParamCaption}
+\item[{real, intent(in), optional}]{time, }
+\item[{real, intent(in), optional}]{dt}
+\end{DoxyParamCaption}
+)}\label{namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104}
+Boundary conditions for 2nd order half timestep ~\newline
+ The conditions only are imposed in two ghost cells on the up (stepped) variables 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} optional, time \+: integration time \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} optional, dt \+: timestep \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 264 of file boundaries.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph}
+\end{center}
+\end{figure}
+
+

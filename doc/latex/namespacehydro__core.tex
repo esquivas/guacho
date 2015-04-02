@@ -1,0 +1,299 @@
+\hypertarget{namespacehydro__core}{}\section{hydro\+\_\+core Module Reference}
+\label{namespacehydro__core}\index{hydro\+\_\+core@{hydro\+\_\+core}}
+
+
+Basic hydro (and M\+H\+D) subroutines utilities.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacehydro__core_a360e3d64343b30d94d270cfebc5b4eb3}{u2prim} (uu, prim, T)
+\begin{DoxyCompactList}\small\item\em Computes the primitive variables and temperature from conserved variables on a single cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a991a14316cc93864150071b30fd9c772}{calcprim} (u, primit)
+\begin{DoxyCompactList}\small\item\em Updated the primitives, using the conserved variables in the entire domain. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a98cafc8f97d7a1b3f8050b8e442194c3}{prim2u} (prim, uu)
+\begin{DoxyCompactList}\small\item\em Computes the conserved conserved variables from the primitives in a single cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a725c2c598f080ea420f4043dbda3f996}{prim2f} (prim, ff)
+\begin{DoxyCompactList}\small\item\em Computes the Euler Fluxes in one cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a64856096f7a7b7f65be1154d31916c2d}{swapy} (var, neq)
+\begin{DoxyCompactList}\small\item\em Swaps the x and y components in a cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ae4216bc7908e7665f0565aa8c885c821}{swapz} (var, neq)
+\begin{DoxyCompactList}\small\item\em Swaps the x and z components in a cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a27cb7ddb40cc0226e0139bd9eba42dfa}{csound} (p, d, cs)
+\begin{DoxyCompactList}\small\item\em Computes the sound speed. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ab2655b81626d4d95cb003112248e928a}{cfast} (p, d, bx, by, bz, cfx, cfy, cfz)
+\begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speeds in the 3 coordinates. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_abd089f71325e32997703c1420db62aa8}{cfastx} (prim, cf\+X)
+\begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speed in the x direction. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}{get\+\_\+timestep} (dt)
+\begin{DoxyCompactList}\small\item\em Otains the timestep allowed by the C\+F\+L condition in the entire. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}{limiter} (P\+L\+L, P\+L, P\+R, P\+R\+R, neq)
+\begin{DoxyCompactList}\small\item\em Performs a linear reconstruction of the primitive variables. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This module contains subroutines and utilities that are the core of the hydro (and M\+H\+D) that are common to most implementations and will be used for the different specific solvers 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacehydro__core_a991a14316cc93864150071b30fd9c772}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!calcprim@{calcprim}}
+\index{calcprim@{calcprim}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{calcprim}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::calcprim (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(in)}]{u, }
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(out)}]{primit}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a991a14316cc93864150071b30fd9c772}
+Updated the primitives, using the conserved variables in the entire domain 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} prim(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: primitive variables \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 116 of file hydro\+\_\+core.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=328pt]{namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespacehydro__core_ab2655b81626d4d95cb003112248e928a}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!cfast@{cfast}}
+\index{cfast@{cfast}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{cfast}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::cfast (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{p, }
+\item[{real, intent(in)}]{d, }
+\item[{real, intent(in)}]{bx, }
+\item[{real, intent(in)}]{by, }
+\item[{real, intent(in)}]{bz, }
+\item[{real, intent(out)}]{cfx, }
+\item[{real, intent(out)}]{cfy, }
+\item[{real, intent(out)}]{cfz}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_ab2655b81626d4d95cb003112248e928a}
+Computes the fast magnetosonic speeds in the 3 coordinates 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} p \+: value of pressure \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} d \+: value of density \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} Bx \+: value of the x component of the magnetic field \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} By \+: value of the y component of the magnetic field \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} Bz \+: value of the z component of the magnetic field \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} csx \+: fast magnetisonic speed in x \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} csy \+: fast magnetisonic speed in y \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} csz \+: fast magnetisonic speed in z \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 325 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_abd089f71325e32997703c1420db62aa8}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!cfastx@{cfastx}}
+\index{cfastx@{cfastx}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{cfastx}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::cfastx (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{prim, }
+\item[{real, intent(out)}]{cf\+X}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_abd089f71325e32997703c1420db62aa8}
+Computes the fast magnetosonic speed in the x direction 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} prim(neq) \+: vector with the primitives in one cell \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 350 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a27cb7ddb40cc0226e0139bd9eba42dfa}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!csound@{csound}}
+\index{csound@{csound}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{csound}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::csound (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{p, }
+\item[{real, intent(in)}]{d, }
+\item[{real, intent(out)}]{cs}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a27cb7ddb40cc0226e0139bd9eba42dfa}
+Computes the sound speed 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} p \+: value of pressure \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} d \+: value of density \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} cs \+: sound speed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 299 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!get\+\_\+timestep@{get\+\_\+timestep}}
+\index{get\+\_\+timestep@{get\+\_\+timestep}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{get\+\_\+timestep}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::get\+\_\+timestep (
+\begin{DoxyParamCaption}
+\item[{real, intent(out)}]{dt}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}
+Otains the timestep allowed by the C\+F\+L condition in the entire domain using the global primitives 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} \+: $ \Delta t$ allowed by the C\+F\+L condition \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 373 of file hydro\+\_\+core.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!limiter@{limiter}}
+\index{limiter@{limiter}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{limiter}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::limiter (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{P\+L\+L, }
+\item[{real, dimension(neq), intent(inout)}]{P\+L, }
+\item[{real, dimension(neq), intent(inout)}]{P\+R, }
+\item[{real, dimension(neq), intent(in)}]{P\+R\+R, }
+\item[{integer, intent(in)}]{neq}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}
+returns a linear reconstruction of the variables at the interface beteen the primitives P\+L\+L, P\+L, P\+R, P\+R\+R ~\newline
+ The reconstruction is made with a slope limiter chosen at compilation time (i.\+e. set on the Makefile) 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} \+: primitives at the left of the left state \\
+\hline
+{\em real} & \mbox{[}inout\mbox{]} \+: primitives at the left state \\
+\hline
+{\em real} & \mbox{[}inout\mbox{]} \+: primitives at the right state \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} \+: primitives at the right of the right state \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} \+: number of equations \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 437 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a725c2c598f080ea420f4043dbda3f996}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!prim2f@{prim2f}}
+\index{prim2f@{prim2f}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{prim2f}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::prim2f (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{prim, }
+\item[{real, dimension(neq), intent(out)}]{ff}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a725c2c598f080ea420f4043dbda3f996}
+Computes the Euler Fluxes in one cell, using the primitices ~\newline
+ It returns the flux in the x direction (i.\+e. F), the y and z fluxes can be obtained swaping the respective entries (see swapy and swapz subroutines) 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} prim(neq) \+: primitives in one cell \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} ff(neq) \+: Euler Fluxes (x direction) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 196 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a98cafc8f97d7a1b3f8050b8e442194c3}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!prim2u@{prim2u}}
+\index{prim2u@{prim2u}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{prim2u}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::prim2u (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{prim, }
+\item[{real, dimension(neq), intent(out)}]{uu}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a98cafc8f97d7a1b3f8050b8e442194c3}
+Computes the conserved conserved variables from the primitives in a single cell 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} prim(neq) \+: primitives in one cell \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} uu(neq) \+: conserved varibles in one cell \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 155 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a64856096f7a7b7f65be1154d31916c2d}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!swapy@{swapy}}
+\index{swapy@{swapy}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{swapy}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::swapy (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(inout)}]{var, }
+\item[{integer, intent(in)}]{neq}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a64856096f7a7b7f65be1154d31916c2d}
+Swaps the x and y components in a cell. 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}inout\mbox{]} var(neq) \+: variable to be swapped \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} neq \+: number of equations in the code \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 247 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_ae4216bc7908e7665f0565aa8c885c821}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!swapz@{swapz}}
+\index{swapz@{swapz}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{swapz}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::swapz (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(inout)}]{var, }
+\item[{integer, intent(in)}]{neq}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_ae4216bc7908e7665f0565aa8c885c821}
+Swaps the x and z components in a cell. 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}inout\mbox{]} var(neq) \+: variable to be swapped \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} neq \+: number of equations in the code \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 273 of file hydro\+\_\+core.\+f90.
+
+\hypertarget{namespacehydro__core_a360e3d64343b30d94d270cfebc5b4eb3}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!u2prim@{u2prim}}
+\index{u2prim@{u2prim}!hydro\+\_\+core@{hydro\+\_\+core}}
+\subsubsection[{u2prim}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::u2prim (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq), intent(in)}]{uu, }
+\item[{real, dimension(neq), intent(out)}]{prim, }
+\item[{real, intent(out)}]{T}
+\end{DoxyParamCaption}
+)}\label{namespacehydro__core_a360e3d64343b30d94d270cfebc5b4eb3}
+Computes the primitive variables and temperature from conserved variables on a single cell 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} uu(neq) \+: conserved variables in one cell \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} prim(neq) \+: primitives in one cell \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} T \+: Temperature \mbox{[}K\mbox{]} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 44 of file hydro\+\_\+core.\+f90.
+

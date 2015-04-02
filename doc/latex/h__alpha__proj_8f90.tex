@@ -1,0 +1,70 @@
+\hypertarget{h__alpha__proj_8f90}{}\section{src/h\+\_\+alpha\+\_\+proj.f90 File Reference}
+\label{h__alpha__proj_8f90}\index{src/h\+\_\+alpha\+\_\+proj.\+f90@{src/h\+\_\+alpha\+\_\+proj.\+f90}}
+
+
+H alpha projection.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceh__alpha__utilities}{h\+\_\+alpha\+\_\+utilities}
+\begin{DoxyCompactList}\small\item\em H alpha projection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_a8bb4ef22ad133f8d3f75cf1a26e14035}{h\+\_\+alpha\+\_\+utilities\+::init\+\_\+ha} ()
+\begin{DoxyCompactList}\small\item\em Initializes data. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_a5549bf9fd812d02d9189d27f380c01c0}{h\+\_\+alpha\+\_\+utilities\+::read\+\_\+data} (u, itprint, filepath)
+\begin{DoxyCompactList}\small\item\em reads data from file \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_af48cd3c223c292170bc1f90da256f537}{h\+\_\+alpha\+\_\+utilities\+::getxyz} (i, j, k, x, y, z)
+\begin{DoxyCompactList}\small\item\em gets position of a cell \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_a65ad5d15c1265e31f4d191ebf771e669}{h\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+x} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the X axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_ab643f1bac838912c58b25923b5de40ca}{h\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+y} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Y axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_acaf25f2c0ad80c5d7e2f451f58522a49}{h\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+z} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Z axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a}{h\+\_\+alpha\+\_\+utilities\+::fill\+\_\+map} (nxmap, nymap, u, map, dx\+T, dy\+T, theta\+\_\+x, theta\+\_\+y, theta\+\_\+z)
+\begin{DoxyCompactList}\small\item\em Fill target map. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_aa2b2b3783ef4b30d178412ea44671047}{h\+\_\+alpha\+\_\+utilities\+::write\+\_\+ha} (fileout, nxmap, nymap, map)
+\begin{DoxyCompactList}\small\item\em Writes projection to file. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceh__alpha__utilities_a1cf6b2b4be1a68c792b3cb07b5629af6}{h\+\_\+alpha\+\_\+utilities\+::write\+\_\+rg} (fileout, nxmap, nymap, map)
+\begin{DoxyCompactList}\small\item\em Writes projection to file in rg format. \end{DoxyCompactList}\item 
+program \hyperlink{h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3}{h\+\_\+alpha\+\_\+proj}
+\begin{DoxyCompactList}\small\item\em Computes the H-\/alpha emission. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}
+
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3}{}\index{h\+\_\+alpha\+\_\+proj.\+f90@{h\+\_\+alpha\+\_\+proj.\+f90}!h\+\_\+alpha\+\_\+proj@{h\+\_\+alpha\+\_\+proj}}
+\index{h\+\_\+alpha\+\_\+proj@{h\+\_\+alpha\+\_\+proj}!h\+\_\+alpha\+\_\+proj.\+f90@{h\+\_\+alpha\+\_\+proj.\+f90}}
+\subsubsection[{h\+\_\+alpha\+\_\+proj}]{\setlength{\rightskip}{0pt plus 5cm}program h\+\_\+alpha\+\_\+proj (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3}
+Computes the H-\/alpha apbsorption ~\newline
+ It rotates the data along each of the coordinates axis by an amount $ \theta_x, \theta_y, \theta_z $, and projectcs the map along the the L\+O\+S, which is taken to be the Z axis 
+
+Definition at line 428 of file h\+\_\+alpha\+\_\+proj.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cgraph}
+\end{center}
+\end{figure}
+
+

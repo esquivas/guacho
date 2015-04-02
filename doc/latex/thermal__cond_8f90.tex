@@ -1,0 +1,62 @@
+\hypertarget{thermal__cond_8f90}{}\section{src/thermal\+\_\+cond.f90 File Reference}
+\label{thermal__cond_8f90}\index{src/thermal\+\_\+cond.\+f90@{src/thermal\+\_\+cond.\+f90}}
+
+
+Thermal conduction module.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacethermal__cond}{thermal\+\_\+cond}
+\begin{DoxyCompactList}\small\item\em Adds (isotropuic) thermal conducion. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacethermal__cond_ac611766519a4602033c83e3ed5ae3c00}{thermal\+\_\+cond\+::init\+\_\+thermal\+\_\+cond} ()
+\begin{DoxyCompactList}\small\item\em Intializes Temperature array. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f}{thermal\+\_\+cond\+::dt\+\_\+cond} (dt)
+\begin{DoxyCompactList}\small\item\em computes conduction timescale \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a5283f7a2b8b4a4226ce624fb49445f43}{thermal\+\_\+cond\+::progress} (j, tot)
+\begin{DoxyCompactList}\small\item\em Progress bar. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_ab3978fb62e485cf71d7c83e779e92615}{thermal\+\_\+cond\+::ksp} (T)
+\begin{DoxyCompactList}\small\item\em Spitzer conductivity. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc}{thermal\+\_\+cond\+::heatfluxes} ()
+\begin{DoxyCompactList}\small\item\em Returns Heat Fluxes. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a55e65df0c700580f8af0a090063d2e32}{thermal\+\_\+cond\+::thermal\+\_\+bounds} ()
+\begin{DoxyCompactList}\small\item\em Exchanges ghost cells for energy only. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_a535cc1746914d413d4978aeda7b8fc06}{thermal\+\_\+cond\+::superstep} (N, snu)
+\begin{DoxyCompactList}\small\item\em Length of superstep. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_a782aaba01217281f2aa57dcc955fd294}{thermal\+\_\+cond\+::substep} (j, N, nu)
+\begin{DoxyCompactList}\small\item\em Size of substep j. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701}{thermal\+\_\+cond\+::st\+\_\+steps} (fs, Ns, fstep)
+\begin{DoxyCompactList}\small\item\em Returns the number of Supersteps. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646}{thermal\+\_\+cond\+::thermal\+\_\+conduction} (dt)
+\begin{DoxyCompactList}\small\item\em Upper level wrapper for thermal conduction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}{}real, parameter \hyperlink{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}{thermal\+\_\+cond\+::ph} =0.\+4\label{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}
+
+\begin{DoxyCompactList}\small\item\em Parameter for the sturated regime in Mc\+Kee. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}{}real, parameter \hyperlink{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}{thermal\+\_\+cond\+::nu} =0.\+005\label{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}
+
+\begin{DoxyCompactList}\small\item\em Super-\/stepping damping factor. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}{}real, parameter \hyperlink{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}{thermal\+\_\+cond\+::snu} =sqrt(nu)\label{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}
+
+\begin{DoxyCompactList}\small\item\em Sqrt of damping factor. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a35e92d8dd3107b43d3326f014577fa9e}{}real, dimension(\+:,\+:,\+:), allocatable \hyperlink{namespacethermal__cond_a35e92d8dd3107b43d3326f014577fa9e}{thermal\+\_\+cond\+::temp}\label{namespacethermal__cond_a35e92d8dd3107b43d3326f014577fa9e}
+
+\begin{DoxyCompactList}\small\item\em Temperature array \mbox{[}K\mbox{]}. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a59c290133a4485e731bfc0185d006091}{}real \hyperlink{namespacethermal__cond_a59c290133a4485e731bfc0185d006091}{thermal\+\_\+cond\+::dtcond}\label{namespacethermal__cond_a59c290133a4485e731bfc0185d006091}
+
+\begin{DoxyCompactList}\small\item\em conduction timestep \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}

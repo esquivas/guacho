@@ -1,0 +1,6 @@
+<map id="thermal_cond::thermal_conduction" name="thermal_cond::thermal_conduction">
+<area shape="rect" id="node2" href="$namespacethermal__cond.html#a9e4afd71cbe737fe5189bc6ecbb3a61f" title="computes conduction timescale " alt="" coords="215,5,372,32"/>
+<area shape="rect" id="node4" href="$namespacethermal__cond.html#abc5c4fc622aea2f85fc5a0c2fee333bc" title="Returns Heat Fluxes. " alt="" coords="208,56,379,83"/>
+<area shape="rect" id="node5" href="$namespacethermal__cond.html#a55e65df0c700580f8af0a090063d2e32" title="Exchanges ghost cells for energy only. " alt="" coords="216,107,371,149"/>
+<area shape="rect" id="node3" href="$namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="427,31,557,57"/>
+</map>

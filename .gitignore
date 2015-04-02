@@ -1,0 +1,6 @@
+BIN
+*.mod
+*.o
+Guacho
+nfs*
+

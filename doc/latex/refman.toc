@@ -1,0 +1,235 @@
+\contentsline {chapter}{\numberline {1}G\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}U\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}A\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}C\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}H\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}O-\/3\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}D Documentation}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}release.\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}notes}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}requirements}{1}{section.1.3}
+\contentsline {chapter}{\numberline {2}Modules Index}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Modules List}{3}{section.2.1}
+\contentsline {chapter}{\numberline {3}File Index}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}File List}{5}{section.3.1}
+\contentsline {chapter}{\numberline {4}Module Documentation}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}boundaries Module Reference}{7}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Detailed Description}{7}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{7}{subsection.4.1.2}
+\contentsline {subsubsection}{\numberline {4.1.2.1}boundaryi}{7}{subsubsection.4.1.2.1}
+\contentsline {subsubsection}{\numberline {4.1.2.2}boundaryii}{8}{subsubsection.4.1.2.2}
+\contentsline {section}{\numberline {4.2}coldens\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}utilities Module Reference}{9}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Detailed Description}{9}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{9}{subsection.4.2.2}
+\contentsline {subsubsection}{\numberline {4.2.2.1}fill\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}map}{9}{subsubsection.4.2.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2.2}getxyz}{10}{subsubsection.4.2.2.2}
+\contentsline {subsubsection}{\numberline {4.2.2.3}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}coldens}{11}{subsubsection.4.2.2.3}
+\contentsline {subsubsection}{\numberline {4.2.2.4}read\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}data}{11}{subsubsection.4.2.2.4}
+\contentsline {subsubsection}{\numberline {4.2.2.5}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}x}{11}{subsubsection.4.2.2.5}
+\contentsline {subsubsection}{\numberline {4.2.2.6}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}y}{11}{subsubsection.4.2.2.6}
+\contentsline {subsubsection}{\numberline {4.2.2.7}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}z}{12}{subsubsection.4.2.2.7}
+\contentsline {subsubsection}{\numberline {4.2.2.8}write\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}map}{12}{subsubsection.4.2.2.8}
+\contentsline {section}{\numberline {4.3}constants Module Reference}{12}{section.4.3}
+\contentsline {section}{\numberline {4.4}cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}chi Module Reference}{13}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Detailed Description}{13}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{13}{subsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.2.1}coolchi}{13}{subsubsection.4.4.2.1}
+\contentsline {subsubsection}{\numberline {4.4.2.2}coolingchi}{14}{subsubsection.4.4.2.2}
+\contentsline {subsubsection}{\numberline {4.4.2.3}read\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}table}{14}{subsubsection.4.4.2.3}
+\contentsline {section}{\numberline {4.5}cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}dmc Module Reference}{14}{section.4.5}
+\contentsline {subsection}{\numberline {4.5.1}Detailed Description}{15}{subsection.4.5.1}
+\contentsline {subsection}{\numberline {4.5.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{15}{subsection.4.5.2}
+\contentsline {subsubsection}{\numberline {4.5.2.1}cooldmc}{15}{subsubsection.4.5.2.1}
+\contentsline {subsubsection}{\numberline {4.5.2.2}coolingdmc}{15}{subsubsection.4.5.2.2}
+\contentsline {subsubsection}{\numberline {4.5.2.3}read\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}table}{15}{subsubsection.4.5.2.3}
+\contentsline {section}{\numberline {4.6}cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}h Module Reference}{15}{section.4.6}
+\contentsline {subsection}{\numberline {4.6.1}Detailed Description}{16}{subsection.4.6.1}
+\contentsline {subsection}{\numberline {4.6.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{16}{subsection.4.6.2}
+\contentsline {subsubsection}{\numberline {4.6.2.1}aloss}{16}{subsubsection.4.6.2.1}
+\contentsline {subsubsection}{\numberline {4.6.2.2}alpha}{16}{subsubsection.4.6.2.2}
+\contentsline {subsubsection}{\numberline {4.6.2.3}alpha1}{17}{subsubsection.4.6.2.3}
+\contentsline {subsubsection}{\numberline {4.6.2.4}atomic}{17}{subsubsection.4.6.2.4}
+\contentsline {subsubsection}{\numberline {4.6.2.5}betah}{17}{subsubsection.4.6.2.5}
+\contentsline {subsubsection}{\numberline {4.6.2.6}colf}{18}{subsubsection.4.6.2.6}
+\contentsline {subsubsection}{\numberline {4.6.2.7}coolingh}{18}{subsubsection.4.6.2.7}
+\contentsline {section}{\numberline {4.7}difrad Module Reference}{18}{section.4.7}
+\contentsline {subsection}{\numberline {4.7.1}Detailed Description}{19}{subsection.4.7.1}
+\contentsline {subsection}{\numberline {4.7.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{19}{subsection.4.7.2}
+\contentsline {subsubsection}{\numberline {4.7.2.1}diffuse\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}rad}{19}{subsubsection.4.7.2.1}
+\contentsline {subsubsection}{\numberline {4.7.2.2}emdiff}{20}{subsubsection.4.7.2.2}
+\contentsline {subsubsection}{\numberline {4.7.2.3}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}rand}{20}{subsubsection.4.7.2.3}
+\contentsline {subsubsection}{\numberline {4.7.2.4}photons}{20}{subsubsection.4.7.2.4}
+\contentsline {subsubsection}{\numberline {4.7.2.5}progress}{21}{subsubsection.4.7.2.5}
+\contentsline {subsubsection}{\numberline {4.7.2.6}radbounds}{21}{subsubsection.4.7.2.6}
+\contentsline {subsubsection}{\numberline {4.7.2.7}random\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}versor}{21}{subsubsection.4.7.2.7}
+\contentsline {subsubsection}{\numberline {4.7.2.8}starsource}{21}{subsubsection.4.7.2.8}
+\contentsline {section}{\numberline {4.8}exoplanet Module Reference}{22}{section.4.8}
+\contentsline {subsection}{\numberline {4.8.1}Detailed Description}{23}{subsection.4.8.1}
+\contentsline {subsection}{\numberline {4.8.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{23}{subsection.4.8.2}
+\contentsline {subsubsection}{\numberline {4.8.2.1}impose\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}exo}{23}{subsubsection.4.8.2.1}
+\contentsline {subsubsection}{\numberline {4.8.2.2}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}exo}{23}{subsubsection.4.8.2.2}
+\contentsline {section}{\numberline {4.9}globals Module Reference}{23}{section.4.9}
+\contentsline {subsection}{\numberline {4.9.1}Detailed Description}{24}{subsection.4.9.1}
+\contentsline {section}{\numberline {4.10}h\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}utilities Module Reference}{24}{section.4.10}
+\contentsline {subsection}{\numberline {4.10.1}Detailed Description}{25}{subsection.4.10.1}
+\contentsline {subsection}{\numberline {4.10.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{25}{subsection.4.10.2}
+\contentsline {subsubsection}{\numberline {4.10.2.1}fill\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}map}{25}{subsubsection.4.10.2.1}
+\contentsline {subsubsection}{\numberline {4.10.2.2}getxyz}{26}{subsubsection.4.10.2.2}
+\contentsline {subsubsection}{\numberline {4.10.2.3}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}ha}{27}{subsubsection.4.10.2.3}
+\contentsline {subsubsection}{\numberline {4.10.2.4}read\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}data}{27}{subsubsection.4.10.2.4}
+\contentsline {subsubsection}{\numberline {4.10.2.5}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}x}{27}{subsubsection.4.10.2.5}
+\contentsline {subsubsection}{\numberline {4.10.2.6}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}y}{27}{subsubsection.4.10.2.6}
+\contentsline {subsubsection}{\numberline {4.10.2.7}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}z}{28}{subsubsection.4.10.2.7}
+\contentsline {subsubsection}{\numberline {4.10.2.8}write\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}ha}{28}{subsubsection.4.10.2.8}
+\contentsline {subsubsection}{\numberline {4.10.2.9}write\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}rg}{28}{subsubsection.4.10.2.9}
+\contentsline {section}{\numberline {4.11}hll Module Reference}{29}{section.4.11}
+\contentsline {subsection}{\numberline {4.11.1}Detailed Description}{29}{subsection.4.11.1}
+\contentsline {subsection}{\numberline {4.11.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{29}{subsection.4.11.2}
+\contentsline {subsubsection}{\numberline {4.11.2.1}hllfluxes}{29}{subsubsection.4.11.2.1}
+\contentsline {subsubsection}{\numberline {4.11.2.2}prim2fhll}{29}{subsubsection.4.11.2.2}
+\contentsline {section}{\numberline {4.12}hllc Module Reference}{30}{section.4.12}
+\contentsline {subsection}{\numberline {4.12.1}Detailed Description}{30}{subsection.4.12.1}
+\contentsline {subsection}{\numberline {4.12.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{30}{subsection.4.12.2}
+\contentsline {subsubsection}{\numberline {4.12.2.1}hllcfluxes}{30}{subsubsection.4.12.2.1}
+\contentsline {subsubsection}{\numberline {4.12.2.2}prim2fhllc}{31}{subsubsection.4.12.2.2}
+\contentsline {section}{\numberline {4.13}hlld Module Reference}{31}{section.4.13}
+\contentsline {subsection}{\numberline {4.13.1}Detailed Description}{32}{subsection.4.13.1}
+\contentsline {subsection}{\numberline {4.13.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{32}{subsection.4.13.2}
+\contentsline {subsubsection}{\numberline {4.13.2.1}hlldfluxes}{32}{subsubsection.4.13.2.1}
+\contentsline {subsubsection}{\numberline {4.13.2.2}prim2fhlld}{32}{subsubsection.4.13.2.2}
+\contentsline {section}{\numberline {4.14}hlle Module Reference}{33}{section.4.14}
+\contentsline {subsection}{\numberline {4.14.1}Detailed Description}{33}{subsection.4.14.1}
+\contentsline {subsection}{\numberline {4.14.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{33}{subsection.4.14.2}
+\contentsline {subsubsection}{\numberline {4.14.2.1}hllefluxes}{33}{subsubsection.4.14.2.1}
+\contentsline {subsubsection}{\numberline {4.14.2.2}prim2fhlle}{34}{subsubsection.4.14.2.2}
+\contentsline {section}{\numberline {4.15}hydro\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}core Module Reference}{34}{section.4.15}
+\contentsline {subsection}{\numberline {4.15.1}Detailed Description}{35}{subsection.4.15.1}
+\contentsline {subsection}{\numberline {4.15.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{35}{subsection.4.15.2}
+\contentsline {subsubsection}{\numberline {4.15.2.1}calcprim}{35}{subsubsection.4.15.2.1}
+\contentsline {subsubsection}{\numberline {4.15.2.2}cfast}{36}{subsubsection.4.15.2.2}
+\contentsline {subsubsection}{\numberline {4.15.2.3}cfastx}{36}{subsubsection.4.15.2.3}
+\contentsline {subsubsection}{\numberline {4.15.2.4}csound}{36}{subsubsection.4.15.2.4}
+\contentsline {subsubsection}{\numberline {4.15.2.5}get\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}timestep}{36}{subsubsection.4.15.2.5}
+\contentsline {subsubsection}{\numberline {4.15.2.6}limiter}{37}{subsubsection.4.15.2.6}
+\contentsline {subsubsection}{\numberline {4.15.2.7}prim2f}{37}{subsubsection.4.15.2.7}
+\contentsline {subsubsection}{\numberline {4.15.2.8}prim2u}{37}{subsubsection.4.15.2.8}
+\contentsline {subsubsection}{\numberline {4.15.2.9}swapy}{38}{subsubsection.4.15.2.9}
+\contentsline {subsubsection}{\numberline {4.15.2.10}swapz}{39}{subsubsection.4.15.2.10}
+\contentsline {subsubsection}{\numberline {4.15.2.11}u2prim}{39}{subsubsection.4.15.2.11}
+\contentsline {section}{\numberline {4.16}hydro\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}solver Module Reference}{39}{section.4.16}
+\contentsline {subsection}{\numberline {4.16.1}Detailed Description}{39}{subsection.4.16.1}
+\contentsline {subsection}{\numberline {4.16.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{39}{subsection.4.16.2}
+\contentsline {subsubsection}{\numberline {4.16.2.1}step}{39}{subsubsection.4.16.2.1}
+\contentsline {subsubsection}{\numberline {4.16.2.2}tstep}{41}{subsubsection.4.16.2.2}
+\contentsline {subsubsection}{\numberline {4.16.2.3}viscosity}{42}{subsubsection.4.16.2.3}
+\contentsline {section}{\numberline {4.17}init Module Reference}{42}{section.4.17}
+\contentsline {subsection}{\numberline {4.17.1}Detailed Description}{43}{subsection.4.17.1}
+\contentsline {subsection}{\numberline {4.17.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{43}{subsection.4.17.2}
+\contentsline {subsubsection}{\numberline {4.17.2.1}initflow}{43}{subsubsection.4.17.2.1}
+\contentsline {subsubsection}{\numberline {4.17.2.2}initmain}{43}{subsubsection.4.17.2.2}
+\contentsline {section}{\numberline {4.18}lyman\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}utilities Module Reference}{44}{section.4.18}
+\contentsline {subsection}{\numberline {4.18.1}Detailed Description}{44}{subsection.4.18.1}
+\contentsline {subsection}{\numberline {4.18.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{44}{subsection.4.18.2}
+\contentsline {subsubsection}{\numberline {4.18.2.1}fill\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}map}{44}{subsubsection.4.18.2.1}
+\contentsline {subsubsection}{\numberline {4.18.2.2}getxyz}{45}{subsubsection.4.18.2.2}
+\contentsline {subsubsection}{\numberline {4.18.2.3}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}la}{45}{subsubsection.4.18.2.3}
+\contentsline {subsubsection}{\numberline {4.18.2.4}phigauss}{46}{subsubsection.4.18.2.4}
+\contentsline {subsubsection}{\numberline {4.18.2.5}read\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}data}{46}{subsubsection.4.18.2.5}
+\contentsline {subsubsection}{\numberline {4.18.2.6}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}x}{46}{subsubsection.4.18.2.6}
+\contentsline {subsubsection}{\numberline {4.18.2.7}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}y}{46}{subsubsection.4.18.2.7}
+\contentsline {subsubsection}{\numberline {4.18.2.8}rotation\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}z}{46}{subsubsection.4.18.2.8}
+\contentsline {subsubsection}{\numberline {4.18.2.9}write\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}la}{47}{subsubsection.4.18.2.9}
+\contentsline {section}{\numberline {4.19}out\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}silo\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}module Module Reference}{47}{section.4.19}
+\contentsline {subsection}{\numberline {4.19.1}Detailed Description}{47}{subsection.4.19.1}
+\contentsline {subsection}{\numberline {4.19.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{47}{subsection.4.19.2}
+\contentsline {subsubsection}{\numberline {4.19.2.1}outputsilo}{47}{subsubsection.4.19.2.1}
+\contentsline {subsubsection}{\numberline {4.19.2.2}writeblocks}{48}{subsubsection.4.19.2.2}
+\contentsline {subsubsection}{\numberline {4.19.2.3}writemaster}{48}{subsubsection.4.19.2.3}
+\contentsline {section}{\numberline {4.20}output Module Reference}{48}{section.4.20}
+\contentsline {subsection}{\numberline {4.20.1}Detailed Description}{48}{subsection.4.20.1}
+\contentsline {subsection}{\numberline {4.20.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{49}{subsection.4.20.2}
+\contentsline {subsubsection}{\numberline {4.20.2.1}write\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}output}{49}{subsubsection.4.20.2.1}
+\contentsline {section}{\numberline {4.21}parameters Module Reference}{50}{section.4.21}
+\contentsline {subsection}{\numberline {4.21.1}Detailed Description}{52}{subsection.4.21.1}
+\contentsline {subsection}{\numberline {4.21.2}Variable Documentation}{52}{subsection.4.21.2}
+\contentsline {subsubsection}{\numberline {4.21.2.1}mpi\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}real\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}kind}{52}{subsubsection.4.21.2.1}
+\contentsline {section}{\numberline {4.22}sources Module Reference}{52}{section.4.22}
+\contentsline {subsection}{\numberline {4.22.1}Detailed Description}{52}{subsection.4.22.1}
+\contentsline {subsection}{\numberline {4.22.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{53}{subsection.4.22.2}
+\contentsline {subsubsection}{\numberline {4.22.2.1}divbcorr\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}source}{53}{subsubsection.4.22.2.1}
+\contentsline {subsubsection}{\numberline {4.22.2.2}divergence\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}b}{54}{subsubsection.4.22.2.2}
+\contentsline {subsubsection}{\numberline {4.22.2.3}getpos}{54}{subsubsection.4.22.2.3}
+\contentsline {subsubsection}{\numberline {4.22.2.4}grav\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}source}{54}{subsubsection.4.22.2.4}
+\contentsline {subsubsection}{\numberline {4.22.2.5}radpress\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}source}{55}{subsubsection.4.22.2.5}
+\contentsline {subsubsection}{\numberline {4.22.2.6}source}{55}{subsubsection.4.22.2.6}
+\contentsline {section}{\numberline {4.23}thermal\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}cond Module Reference}{56}{section.4.23}
+\contentsline {subsection}{\numberline {4.23.1}Detailed Description}{57}{subsection.4.23.1}
+\contentsline {subsection}{\numberline {4.23.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{57}{subsection.4.23.2}
+\contentsline {subsubsection}{\numberline {4.23.2.1}dt\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}cond}{57}{subsubsection.4.23.2.1}
+\contentsline {subsubsection}{\numberline {4.23.2.2}heatfluxes}{57}{subsubsection.4.23.2.2}
+\contentsline {subsubsection}{\numberline {4.23.2.3}init\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}thermal\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}cond}{58}{subsubsection.4.23.2.3}
+\contentsline {subsubsection}{\numberline {4.23.2.4}ksp}{58}{subsubsection.4.23.2.4}
+\contentsline {subsubsection}{\numberline {4.23.2.5}progress}{58}{subsubsection.4.23.2.5}
+\contentsline {subsubsection}{\numberline {4.23.2.6}st\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}steps}{58}{subsubsection.4.23.2.6}
+\contentsline {subsubsection}{\numberline {4.23.2.7}substep}{58}{subsubsection.4.23.2.7}
+\contentsline {subsubsection}{\numberline {4.23.2.8}superstep}{59}{subsubsection.4.23.2.8}
+\contentsline {subsubsection}{\numberline {4.23.2.9}thermal\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}bounds}{59}{subsubsection.4.23.2.9}
+\contentsline {subsubsection}{\numberline {4.23.2.10}thermal\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}conduction}{59}{subsubsection.4.23.2.10}
+\contentsline {section}{\numberline {4.24}user\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}mod Module Reference}{59}{section.4.24}
+\contentsline {subsection}{\numberline {4.24.1}Detailed Description}{60}{subsection.4.24.1}
+\contentsline {subsection}{\numberline {4.24.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{60}{subsection.4.24.2}
+\contentsline {subsubsection}{\numberline {4.24.2.1}impose\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}user\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}bc}{60}{subsubsection.4.24.2.1}
+\contentsline {subsubsection}{\numberline {4.24.2.2}initial\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}conditions}{60}{subsubsection.4.24.2.2}
+\contentsline {chapter}{\numberline {5}File Documentation}{61}{chapter.5}
+\contentsline {section}{\numberline {5.1}doc/mainpage.h File Reference}{61}{section.5.1}
+\contentsline {section}{\numberline {5.2}src/boundaries.f90 File Reference}{61}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Detailed Description}{61}{subsection.5.2.1}
+\contentsline {section}{\numberline {5.3}src/coldens.f90 File Reference}{61}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Detailed Description}{62}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{62}{subsection.5.3.2}
+\contentsline {subsubsection}{\numberline {5.3.2.1}coldens}{62}{subsubsection.5.3.2.1}
+\contentsline {section}{\numberline {5.4}src/constants.f90 File Reference}{63}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Detailed Description}{64}{subsection.5.4.1}
+\contentsline {section}{\numberline {5.5}src/cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}chi.f90 File Reference}{64}{section.5.5}
+\contentsline {subsection}{\numberline {5.5.1}Detailed Description}{65}{subsection.5.5.1}
+\contentsline {section}{\numberline {5.6}src/cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}dmc.f90 File Reference}{65}{section.5.6}
+\contentsline {subsection}{\numberline {5.6.1}Detailed Description}{65}{subsection.5.6.1}
+\contentsline {section}{\numberline {5.7}src/cooling\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}h.f90 File Reference}{65}{section.5.7}
+\contentsline {subsection}{\numberline {5.7.1}Detailed Description}{66}{subsection.5.7.1}
+\contentsline {section}{\numberline {5.8}src/difrad.f90 File Reference}{66}{section.5.8}
+\contentsline {subsection}{\numberline {5.8.1}Detailed Description}{67}{subsection.5.8.1}
+\contentsline {section}{\numberline {5.9}src/exoplanet.f90 File Reference}{67}{section.5.9}
+\contentsline {subsection}{\numberline {5.9.1}Detailed Description}{69}{subsection.5.9.1}
+\contentsline {section}{\numberline {5.10}src/globals.f90 File Reference}{69}{section.5.10}
+\contentsline {subsection}{\numberline {5.10.1}Detailed Description}{70}{subsection.5.10.1}
+\contentsline {section}{\numberline {5.11}src/h\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}proj.f90 File Reference}{70}{section.5.11}
+\contentsline {subsection}{\numberline {5.11.1}Detailed Description}{71}{subsection.5.11.1}
+\contentsline {subsection}{\numberline {5.11.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{71}{subsection.5.11.2}
+\contentsline {subsubsection}{\numberline {5.11.2.1}h\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}proj}{71}{subsubsection.5.11.2.1}
+\contentsline {section}{\numberline {5.12}src/hll.f90 File Reference}{71}{section.5.12}
+\contentsline {subsection}{\numberline {5.12.1}Detailed Description}{72}{subsection.5.12.1}
+\contentsline {section}{\numberline {5.13}src/hllc.f90 File Reference}{72}{section.5.13}
+\contentsline {subsection}{\numberline {5.13.1}Detailed Description}{72}{subsection.5.13.1}
+\contentsline {section}{\numberline {5.14}src/hlld.f90 File Reference}{72}{section.5.14}
+\contentsline {subsection}{\numberline {5.14.1}Detailed Description}{73}{subsection.5.14.1}
+\contentsline {section}{\numberline {5.15}src/hlle.f90 File Reference}{73}{section.5.15}
+\contentsline {subsection}{\numberline {5.15.1}Detailed Description}{73}{subsection.5.15.1}
+\contentsline {section}{\numberline {5.16}src/hydro\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}core.f90 File Reference}{73}{section.5.16}
+\contentsline {subsection}{\numberline {5.16.1}Detailed Description}{74}{subsection.5.16.1}
+\contentsline {section}{\numberline {5.17}src/hydro\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}solver.f90 File Reference}{74}{section.5.17}
+\contentsline {subsection}{\numberline {5.17.1}Detailed Description}{75}{subsection.5.17.1}
+\contentsline {section}{\numberline {5.18}src/init.f90 File Reference}{75}{section.5.18}
+\contentsline {subsection}{\numberline {5.18.1}Detailed Description}{75}{subsection.5.18.1}
+\contentsline {section}{\numberline {5.19}src/lyman\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}tau.f90 File Reference}{75}{section.5.19}
+\contentsline {subsection}{\numberline {5.19.1}Detailed Description}{76}{subsection.5.19.1}
+\contentsline {subsection}{\numberline {5.19.2}Function/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Subroutine Documentation}{77}{subsection.5.19.2}
+\contentsline {subsubsection}{\numberline {5.19.2.1}lyman\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}alpha\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}tau}{77}{subsubsection.5.19.2.1}
+\contentsline {section}{\numberline {5.20}src/main.f90 File Reference}{77}{section.5.20}
+\contentsline {subsection}{\numberline {5.20.1}Detailed Description}{78}{subsection.5.20.1}
+\contentsline {section}{\numberline {5.21}src/\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Out\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Silo\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}Module.f90 File Reference}{78}{section.5.21}
+\contentsline {subsection}{\numberline {5.21.1}Detailed Description}{78}{subsection.5.21.1}
+\contentsline {section}{\numberline {5.22}src/output.f90 File Reference}{78}{section.5.22}
+\contentsline {subsection}{\numberline {5.22.1}Detailed Description}{79}{subsection.5.22.1}
+\contentsline {section}{\numberline {5.23}src/parameters.f90 File Reference}{79}{section.5.23}
+\contentsline {subsection}{\numberline {5.23.1}Detailed Description}{81}{subsection.5.23.1}
+\contentsline {section}{\numberline {5.24}src/sources.f90 File Reference}{81}{section.5.24}
+\contentsline {subsection}{\numberline {5.24.1}Detailed Description}{82}{subsection.5.24.1}
+\contentsline {section}{\numberline {5.25}src/thermal\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}cond.f90 File Reference}{82}{section.5.25}
+\contentsline {subsection}{\numberline {5.25.1}Detailed Description}{83}{subsection.5.25.1}
+\contentsline {section}{\numberline {5.26}src/user\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}\_\discretionary {\unhbox \voidb@x \hbox {\relax \fontsize {7}{8}\selectfont $\leftarrow \joinrel \rhook $}}{}{}mod.f90 File Reference}{83}{section.5.26}
+\contentsline {subsection}{\numberline {5.26.1}Detailed Description}{83}{subsection.5.26.1}
+\contentsline {chapter}{Index}{85}{section*.85}

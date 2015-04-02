@@ -1,0 +1,49 @@
+\hypertarget{hydro__core_8f90}{}\section{src/hydro\+\_\+core.f90 File Reference}
+\label{hydro__core_8f90}\index{src/hydro\+\_\+core.\+f90@{src/hydro\+\_\+core.\+f90}}
+
+
+Hydrodynamical and Magnetohidrodynamocal bacic module.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacehydro__core}{hydro\+\_\+core}
+\begin{DoxyCompactList}\small\item\em Basic hydro (and M\+H\+D) subroutines utilities. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacehydro__core_a360e3d64343b30d94d270cfebc5b4eb3}{hydro\+\_\+core\+::u2prim} (uu, prim, T)
+\begin{DoxyCompactList}\small\item\em Computes the primitive variables and temperature from conserved variables on a single cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a991a14316cc93864150071b30fd9c772}{hydro\+\_\+core\+::calcprim} (u, primit)
+\begin{DoxyCompactList}\small\item\em Updated the primitives, using the conserved variables in the entire domain. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a98cafc8f97d7a1b3f8050b8e442194c3}{hydro\+\_\+core\+::prim2u} (prim, uu)
+\begin{DoxyCompactList}\small\item\em Computes the conserved conserved variables from the primitives in a single cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a725c2c598f080ea420f4043dbda3f996}{hydro\+\_\+core\+::prim2f} (prim, ff)
+\begin{DoxyCompactList}\small\item\em Computes the Euler Fluxes in one cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a64856096f7a7b7f65be1154d31916c2d}{hydro\+\_\+core\+::swapy} (var, neq)
+\begin{DoxyCompactList}\small\item\em Swaps the x and y components in a cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ae4216bc7908e7665f0565aa8c885c821}{hydro\+\_\+core\+::swapz} (var, neq)
+\begin{DoxyCompactList}\small\item\em Swaps the x and z components in a cell. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a27cb7ddb40cc0226e0139bd9eba42dfa}{hydro\+\_\+core\+::csound} (p, d, cs)
+\begin{DoxyCompactList}\small\item\em Computes the sound speed. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ab2655b81626d4d95cb003112248e928a}{hydro\+\_\+core\+::cfast} (p, d, bx, by, bz, cfx, cfy, cfz)
+\begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speeds in the 3 coordinates. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_abd089f71325e32997703c1420db62aa8}{hydro\+\_\+core\+::cfastx} (prim, cf\+X)
+\begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speed in the x direction. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}{hydro\+\_\+core\+::get\+\_\+timestep} (dt)
+\begin{DoxyCompactList}\small\item\em Otains the timestep allowed by the C\+F\+L condition in the entire. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}{hydro\+\_\+core\+::limiter} (P\+L\+L, P\+L, P\+R, P\+R\+R, neq)
+\begin{DoxyCompactList}\small\item\em Performs a linear reconstruction of the primitive variables. \end{DoxyCompactList}\item 
+\hypertarget{hydro__core_8f90_a6d27fe4138b4de2f5bb7448e9eafc4ee}{}real function {\bfseries average} (a, b)\label{hydro__core_8f90_a6d27fe4138b4de2f5bb7448e9eafc4ee}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}

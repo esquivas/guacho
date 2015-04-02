@@ -1,0 +1,301 @@
+\hypertarget{namespacelyman__alpha__utilities}{}\section{lyman\+\_\+alpha\+\_\+utilities Module Reference}
+\label{namespacelyman__alpha__utilities}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+
+
+Lyman\+\_\+alpha\+\_\+utilities.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_a5f97eeffb7ea030271481514d7072efb}{init\+\_\+la} ()
+\begin{DoxyCompactList}\small\item\em Initializes data. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_a75d86f06c6da27d0754752c23c50b54a}{read\+\_\+data} (u, itprint, filepath)
+\begin{DoxyCompactList}\small\item\em reads data from file \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_abdefc59ee98b1526aa3116c0e8f21d98}{getxyz} (i, j, k, x, y, z)
+\begin{DoxyCompactList}\small\item\em gets position of a cell \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_afaddcbb27f079d4300ce631609bbb80d}{rotation\+\_\+x} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the X axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_ae865cec09dd956ff966316caf8ac0c9a}{rotation\+\_\+y} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Y axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_a2c97c4405186edcb70d2e37bbe7306da}{rotation\+\_\+z} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Z axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3}{fill\+\_\+map} (nxmap, nymap, nvmap, vmin, vmax, u, map, dx\+T, dy\+T, theta\+\_\+x, theta\+\_\+y, theta\+\_\+z)
+\begin{DoxyCompactList}\small\item\em Fill target map. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_afdab7ea06bb95956c43102154651cfd1}{write\+\_\+la} (itprint, filepath, nxmap, nymap, nvmap, map)
+\begin{DoxyCompactList}\small\item\em Writes projection to file. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacelyman__alpha__utilities_a826e6fe44f66513e5a47f2b968e1d0b8}{phigauss} (T, vzn, vmin, vmax, nvmap, profile)
+\begin{DoxyCompactList}\small\item\em This routine computes a gaussian line profile. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Utilities to compute the Lyman-\/  
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!fill\+\_\+map@{fill\+\_\+map}}
+\index{fill\+\_\+map@{fill\+\_\+map}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{fill\+\_\+map}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::fill\+\_\+map (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{nxmap, }
+\item[{integer, intent(in)}]{nymap, }
+\item[{integer, intent(in)}]{nvmap, }
+\item[{real, intent(in)}]{vmin, }
+\item[{real, intent(in)}]{vmax, }
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax, nzmin\+:nzmax), intent(in)}]{u, }
+\item[{real, dimension(nxmap,nymap,nvmap), intent(out)}]{map, }
+\item[{real, intent(in)}]{dx\+T, }
+\item[{real, intent(in)}]{dy\+T, }
+\item[{real, intent(in)}]{theta\+\_\+x, }
+\item[{real, intent(in)}]{theta\+\_\+y, }
+\item[{real, intent(in)}]{theta\+\_\+z}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3}
+Fills the target map of one M\+P\+I block 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} nxmap \+: Number of X cells in target \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nymap \+: Number of Y cells in target \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax, nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} map(nxmap,mymap) \+: Target map \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} dx\+T \+: target pixel width \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} dy\+T \+: target pixel height \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetax \+: Rotation around X \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetay \+: Rotation around Y \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetaz \+: Rotation around Z \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 284 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+
+
+Here is the call graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgraph}
+\end{center}
+\end{figure}
+
+
+\hypertarget{namespacelyman__alpha__utilities_abdefc59ee98b1526aa3116c0e8f21d98}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!getxyz@{getxyz}}
+\index{getxyz@{getxyz}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{getxyz}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::getxyz (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, intent(out)}]{x, }
+\item[{real, intent(out)}]{y, }
+\item[{real, intent(out)}]{z}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_abdefc59ee98b1526aa3116c0e8f21d98}
+Returns the position and spherical radius calculated with respect to the center of the grid 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the x direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the z direction \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} x \+: x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} y \+: y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} z \+: z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 185 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_a5f97eeffb7ea030271481514d7072efb}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!init\+\_\+la@{init\+\_\+la}}
+\index{init\+\_\+la@{init\+\_\+la}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{init\+\_\+la}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::init\+\_\+la (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_a5f97eeffb7ea030271481514d7072efb}
+Initializes data, M\+P\+I and other stuff 
+
+Definition at line 36 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_a826e6fe44f66513e5a47f2b968e1d0b8}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!phigauss@{phigauss}}
+\index{phigauss@{phigauss}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{phigauss}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::phigauss (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{T, }
+\item[{real, intent(in)}]{vzn, }
+\item[{real, intent(in)}]{vmin, }
+\item[{real, intent(in)}]{vmax, }
+\item[{integer, intent(in)}]{nvmap, }
+\item[{real, dimension(nvmap), intent(out)}]{profile}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_a826e6fe44f66513e5a47f2b968e1d0b8}
+This routine computes a gaussian line profile 
+
+Definition at line 385 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_a75d86f06c6da27d0754752c23c50b54a}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!read\+\_\+data@{read\+\_\+data}}
+\index{read\+\_\+data@{read\+\_\+data}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{read\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::read\+\_\+data (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(out)}]{u, }
+\item[{integer, intent(in)}]{itprint, }
+\item[{character (len=128), intent(in)}]{filepath}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_a75d86f06c6da27d0754752c23c50b54a}
+reads data from file 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} itprint \+: number of output \\
+\hline
+{\em string} & \mbox{[}in\mbox{]} filepath \+: path where the output is \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 135 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_afaddcbb27f079d4300ce631609bbb80d}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!rotation\+\_\+x@{rotation\+\_\+x}}
+\index{rotation\+\_\+x@{rotation\+\_\+x}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+x}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+x (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_afaddcbb27f079d4300ce631609bbb80d}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 211 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_ae865cec09dd956ff966316caf8ac0c9a}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!rotation\+\_\+y@{rotation\+\_\+y}}
+\index{rotation\+\_\+y@{rotation\+\_\+y}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+y}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+y (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_ae865cec09dd956ff966316caf8ac0c9a}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 235 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_a2c97c4405186edcb70d2e37bbe7306da}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!rotation\+\_\+z@{rotation\+\_\+z}}
+\index{rotation\+\_\+z@{rotation\+\_\+z}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+z}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::rotation\+\_\+z (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_a2c97c4405186edcb70d2e37bbe7306da}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 257 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+
+\hypertarget{namespacelyman__alpha__utilities_afdab7ea06bb95956c43102154651cfd1}{}\index{lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}!write\+\_\+la@{write\+\_\+la}}
+\index{write\+\_\+la@{write\+\_\+la}!lyman\+\_\+alpha\+\_\+utilities@{lyman\+\_\+alpha\+\_\+utilities}}
+\subsubsection[{write\+\_\+la}]{\setlength{\rightskip}{0pt plus 5cm}subroutine lyman\+\_\+alpha\+\_\+utilities\+::write\+\_\+la (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{itprint, }
+\item[{character (len=128), intent(in)}]{filepath, }
+\item[{integer, intent(in)}]{nxmap, }
+\item[{integer, intent(in)}]{nymap, }
+\item[{integer, intent(in)}]{nvmap, }
+\item[{real, dimension(nxmap,nymap,nvmap), intent(in)}]{map}
+\end{DoxyParamCaption}
+)}\label{namespacelyman__alpha__utilities_afdab7ea06bb95956c43102154651cfd1}
+Writes projection to file 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} itprint \+: number of output \\
+\hline
+{\em string} & \mbox{[}in\mbox{]} filepath \+: path where to write \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nxmap \+: Number of X cells in target \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nymap \+: Number of Y cells in target \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nvmap \+: Number of velocity channels \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} map(nxmap,mymap) \+: Target map \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 360 of file lyman\+\_\+alpha\+\_\+tau.\+f90.
+

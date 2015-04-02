@@ -1,0 +1,38 @@
+\hypertarget{cooling__h_8f90}{}\section{src/cooling\+\_\+h.f90 File Reference}
+\label{cooling__h_8f90}\index{src/cooling\+\_\+h.\+f90@{src/cooling\+\_\+h.\+f90}}
+
+
+Cooling with hydrogen rate parametrized cooling.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacecooling__h}{cooling\+\_\+h}
+\begin{DoxyCompactList}\small\item\em Cooling with parametrized cooling and H rate equation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff}{cooling\+\_\+h\+::coolingh} (dt)
+\begin{DoxyCompactList}\small\item\em High level wrapper to apply cooling. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__h_a09de30645cebf531a647b5f53ae143b2}{cooling\+\_\+h\+::alpha} (T)
+\begin{DoxyCompactList}\small\item\em calculates the recombination rate (case B) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__h_a5454f21ef468add797c58753a1e0c773}{cooling\+\_\+h\+::alpha1} (T)
+\begin{DoxyCompactList}\small\item\em calculates the recombination rate to level 1 \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__h_ad5f1352f8925ccb1b352d6e749465a92}{cooling\+\_\+h\+::colf} (T)
+\begin{DoxyCompactList}\small\item\em calculates the collisional ionization rate \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__h_a2a2de25572bd515eae9441391e0ed0f8}{cooling\+\_\+h\+::betah} (T)
+\begin{DoxyCompactList}\small\item\em beta\+H(\+T) \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed}{cooling\+\_\+h\+::aloss} (X1, X2, D\+T, D\+E\+N, D\+H0, T\+E0)
+\begin{DoxyCompactList}\small\item\em Non equilibrium cooling. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982}{cooling\+\_\+h\+::atomic} (dt, uu, tau, radphi)
+\begin{DoxyCompactList}\small\item\em Updates the ionization fraction and applpies cooling. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}
