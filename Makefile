@@ -32,7 +32,7 @@ DOUBLEP= Y
 #   This is compatible with HD solvers (i.e. HLL, HLLC)   
 PMHD = N
 
-#   Enable MHD (Y/N UNDER CONSTRUCTION)
+#   Enable MHD (Y/N)
 #   This is compatible with MHD solvers (HLLE, HLLD, under construction)
 MHD = N
 
@@ -97,17 +97,11 @@ RADDIFF = Y
 # Implementing C2ray
 C2ray = N
 
-# include source terms (Y/N)
-SOURCE = Y
-
-#   Include gravity (Y/N) (from point sources)
-GRAV = Y
-
 #   Include radiative pressure (y/N)
 RADPRES = N
 
 #   Include terms proportional to DIV B (powell et al. 1999) (y/N)
-DIVBCORR = N
+8WAVE = N
 #
 CEXCHANGE = N
 
@@ -292,9 +286,6 @@ endif
 ifeq ($(THERMAL_COND),Y)
 FLAGS += -DTHERMAL_COND
 endif
-ifeq ($(SOURCE),Y)
-FLAGS += -DSOURCE
-endif
 ifeq ($(GRAV),Y)
 FLAGS += -DGRAV
 endif
@@ -307,8 +298,8 @@ endif
 ifeq ($(MHD),Y)
 FLAGS += -DMHD
 endif
-ifeq ($(DIVBCORR),Y)
-FLAGS += -DDIVBCORR
+ifeq ($(8WAVE),Y)
+FLAGS += -D8WAVE
 endif
 ifeq ($(CEXCHANGE),Y)
 FLAGS += -DCEXCHANGE

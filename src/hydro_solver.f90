@@ -81,11 +81,11 @@ end subroutine viscosity
 subroutine step(dt)
   use parameters, only : nx, ny, nz
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
-#ifdef SOURCE
+#ifdef defined(GRAV) || defined(RADPRES) || defined(8WAVE)
   use sources
 #endif
   implicit none
-#ifdef SOURCE
+#ifdef defined(GRAV) || defined(RADPRES) || defined(8WAVE)
   real :: s(neq)
 #endif
   real, intent(in) :: dt
@@ -104,7 +104,7 @@ subroutine step(dt)
                                  -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
                                  -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
 
-#ifdef SOURCE
+#ifdef defined(GRAV) || defined(RADPRES) || defined(8WAVE)
            call source(i,j,k,primit(:,i,j,k),s)
            up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 #endif

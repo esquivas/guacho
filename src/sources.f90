@@ -27,7 +27,8 @@
 !! pressure (not fully tested), and div(B) cleaning if the 8 wave
 !! scheme is used
 
-#ifdef SOURCE
+#if defined(GRAV) || defined(RADPRES) || defined(8WAVE)
+
   module sources
   use parameters, only : neq, neqdyn, nxtot, nytot, nztot, &
                          rsc, rhosc, vsc2, nx, ny, nz
@@ -133,7 +134,8 @@ end subroutine grav_source
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
 
-#ifdef RADPRES  
+#ifdef RADPRES
+
   subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 #ifdef RADDIFF
   use difrad
@@ -163,7 +165,7 @@ end subroutine grav_source
 
 !=======================================================================
 
-#ifdef DIVBCORR
+#ifdef 8WAVE
 
 !> @brief Computes div(B)
 !> @details Computes div(B)
@@ -257,7 +259,7 @@ subroutine source(i,j,k,prim,s)
   !  photoionization radiation pressure
   call radpress_source(i,j,k,x,y,z,r,prim,s)
 #endif
-#ifdef DIVBCORR
+#ifdef 8WAVE
  
   !  divergence correction Powell et al. 1999
   call divbcorr_source(i,j,k,prim,s)
