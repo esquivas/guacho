@@ -221,7 +221,6 @@ subroutine prim2f(prim,ff)
   ff(3) = prim(1)*prim(2)*prim(3)
   ff(4) = prim(1)*prim(2)*prim(4)
   ff(5) = prim(2)*(etot+prim(5))
-
 #endif
   
 #if defined(PMHD) || defined(MHD)
