@@ -99,7 +99,7 @@ subroutine hllEfluxes(choice)
   use hydro_core, only : swapy, swapz, limiter
   implicit none
   integer, intent(in) :: choice
-  integer :: i, j, k, ip, jp, kp, im, jm, km, ip2, jp2, kp2
+  integer :: i, j, k
   real, dimension(neq) :: priml, primr, primll, primrr, ff, uu
   !
   select case(choice)
@@ -110,28 +110,26 @@ subroutine hllEfluxes(choice)
         do j=0,ny
            do k=0,nz
  
-              ip=i+1
-              jp=j+1
-              kp=k+1
- 
               !------- x direction -------------------------------------
-              priml(:)=primit(:,i ,j ,k )
-              primr(:)=primit(:,ip,j ,k )
+              priml(:)=primit(:,i  ,j ,k )
+              primr(:)=primit(:,i+1,j ,k )
  
               call prim2fhlle(priml,primr,ff)
               f(:,i,j,k)=ff(:)
+
               !------- y direction -------------------------------------
-              priml(:)=primit(:,i ,j ,k )
-              primr(:)=primit(:,i, jp,k )
+              priml(:)=primit(:,i ,j  ,k )
+              primr(:)=primit(:,i, j+1,k )
               call swapy(priml,neq)          !swaps primL for L state
               call swapy(primr,neq)          !swaps primR for R state 
  
               call prim2fhlle(priml,primr,ff)  !gets fluxes (swapped)
               call swapy(ff,neq)             !swaps back the fluxes
               g(:,i,j,k)=ff(:)
+
               !------- z direction -------------------------------------
-              priml(:)=primit(:,i ,j ,k )
-              primr(:)=primit(:,i, j, kp)
+              priml(:)=primit(:,i ,j ,k  )
+              primr(:)=primit(:,i, j, k+1)
               call swapz(priml,neq)
               call swapz(primr,neq)
               !
@@ -148,31 +146,22 @@ subroutine hllEfluxes(choice)
      do i=0,nx
         do j=0,ny
            do k=0,nz
- 
-              ip=i+1
-              ip2=i+2
-              im=i-1
-              jp=j+1
-              jp2=j+2
-              jm=j-1
-              kp=k+1
-              kp2=k+2
-              km=k-1
- 
+  
               !------- x direction ------------------------------------
               priml (:)=primit(:,i,  j,k )
-              primr (:)=primit(:,ip, j,k )
-              primll(:)=primit(:,im, j,k )
-              primrr(:)=primit(:,ip2,j,k )
+              primr (:)=primit(:,i+1,j,k )
+              primll(:)=primit(:,i-1,j,k )
+              primrr(:)=primit(:,i+2,j,k )
               call limiter(primll,priml,primr,primrr,neq)
  
               call prim2fhlle(priml,primr,ff)
               f(:,i,j,k)=ff(:)
+ 
               !------- y direction ------------------------------------
               priml (:)=primit(:,i,j  ,k )
-              primr (:)=primit(:,i,jp ,k )
-              primll(:)=primit(:,i,jm ,k )
-              primrr(:)=primit(:,i,jp2,k )
+              primr (:)=primit(:,i,j+1,k )
+              primll(:)=primit(:,i,j-1,k )
+              primrr(:)=primit(:,i,j+2,k )
               call swapy(priml,neq)
               call swapy(primr,neq)
               call swapy(primll,neq)
@@ -182,11 +171,12 @@ subroutine hllEfluxes(choice)
               call prim2fhlle(priml,primr,ff)
               call swapy(ff,neq)
               g(:,i,j,k)=ff(:)
+ 
               !------- z direction ------------------------------------
               priml (:)=primit(:,i,j,k  )
-              primr (:)=primit(:,i,j,kp )
-              primll(:)=primit(:,i,j,km )
-              primrr(:)=primit(:,i,j,kp2)
+              primr (:)=primit(:,i,j,k+1)
+              primll(:)=primit(:,i,j,k-1)
+              primrr(:)=primit(:,i,j,k+2)
               call swapz(priml,neq)
               call swapz(primr,neq)
               call swapz(primll,neq)
@@ -196,7 +186,7 @@ subroutine hllEfluxes(choice)
               call prim2fhlle(priml,primr,ff)
               call swapz(ff,neq)
               h(:,i,j,k)=ff(:)
-              !
+ 
            end do
         end do
      end do
