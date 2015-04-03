@@ -151,7 +151,7 @@ subroutine initmain(time, tprint, itprint)
      tprint=0.
   else
      itprint=itprint0
-     time=timew0
+     time=real(itprint)*dtprint
      if(rank.eq.master) then
         print'(a,i,a,es12.3,a)', 'Warm start , from output ',itprint,' at a tim!e ',time*tsc/yr,' yr'
         print'(a)',' ' 
