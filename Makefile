@@ -97,6 +97,9 @@ RADDIFF = Y
 # Implementing C2ray
 C2ray = N
 
+#   Include gravity (Y/N) (from point sources)   
+GRAV = Y
+
 #   Include radiative pressure (y/N)
 RADPRES = N
 
