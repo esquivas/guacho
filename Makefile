@@ -104,7 +104,7 @@ GRAV = Y
 RADPRES = N
 
 #   Include terms proportional to DIV B (powell et al. 1999) (y/N)
-8WAVE = N
+EIGHT_WAVE = N
 #
 CEXCHANGE = N
 
@@ -301,8 +301,8 @@ endif
 ifeq ($(MHD),Y)
 FLAGS += -DMHD
 endif
-ifeq ($(8WAVE),Y)
-FLAGS += -D8WAVE
+ifeq ($(EIGHT_WAVE),Y)
+FLAGS += -DEIGHT_WAVE
 endif
 ifeq ($(CEXCHANGE),Y)
 FLAGS += -DCEXCHANGE
