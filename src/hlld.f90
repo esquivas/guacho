@@ -47,9 +47,8 @@ contains
 
 subroutine prim2fhlld(priml,primr,ff)
 
-  use parameters, only : new
+  use parameters, only : neq, cv
   use hydro_core, only : cfastX, prim2f
-  use sound 
   implicit none
   real, dimension(neq),intent(in   ) :: priml, primr   
   real, dimension(neq),intent(inout) :: ff
