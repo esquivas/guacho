@@ -1,0 +1,4 @@
+<map id="thermal_cond::get_dt_cond" name="thermal_cond::get_dt_cond">
+<area shape="rect" id="node2" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="224,5,355,32"/>
+<area shape="rect" id="node3" href="$namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="228,56,351,83"/>
+</map>

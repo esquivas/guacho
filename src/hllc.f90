@@ -60,12 +60,12 @@ subroutine prim2fhllc(priml,primr,ff)
   sr=max(priml(2)+csl,primr(2)+csr)
   sl=min(priml(2)-csl,primr(2)-csr)
 
-  if (sl.gt.0) then
+  if (sl > 0) then
     call prim2f(priml,ff)
     return
   endif
   
-  if (sr.lt.0) then
+  if (sr < 0) then
     call prim2f(primr,ff)
     return
   endif
@@ -78,9 +78,9 @@ subroutine prim2fhllc(priml,primr,ff)
   sst = (srmur*rhorur-slmul*rholul-primr(5)+priml(5) )        &  
         / (srmur*primr(1)-slmul*priml(1) )
   
-  if (sst.ge.0.) then
+  if (sst >= 0.) then
     rhost=priml(1)*(slmul)/(sl-sst)
-    ek= 0.5*priml(1)*(priml(2)**2.+priml(3)**2.+priml(4)**2.)+cv*priml(5)
+    ek= 0.5*priml(1)*(priml(2)**2+priml(3)**2+priml(4)**2)+cv*priml(5)
 
     uuk(1)=rhost
     uuk(2)=rhost*sst
@@ -89,7 +89,6 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(5)=rhost*( ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)) )
 
 #ifdef PMHD
-      !uuk(5)= 0.
     uuk(6:8)=rhost*priml(6:8)/priml(1)
 #endif
 #ifdef PASSIVES
@@ -102,9 +101,9 @@ subroutine prim2fhllc(priml,primr,ff)
     return
   endif
 
-  if (sst.le.0.) then
+  if (sst <= 0.) then
     rhost=primr(1)*(srmur)/(sr-sst)
-    ek= 0.5*primr(1)*(primr(2)**2.+primr(3)**2.+primr(4)**2.)+cv*primr(5)
+    ek= 0.5*primr(1)*(primr(2)**2+primr(3)**2+primr(4)**2)+cv*primr(5)
 
     uuk(1)=rhost
     uuk(2)=rhost*sst
@@ -126,7 +125,7 @@ subroutine prim2fhllc(priml,primr,ff)
     return
   endif
 
-  print*, 'Error in hllc' 
+  print*, 'Error in hllc'
   stop
 
 end subroutine prim2fhllc
@@ -155,9 +154,9 @@ subroutine hllcfluxes(choice)
 
   case(1)        ! 1st half timestep
 
-     do i=0,nx
+     do k=0,nz
         do j=0,ny
-           do k=0,nz
+           do i=0,nx
 
               !------- x direction -------------------------------------
               priml(:)=primit(:,i  ,j ,k )
@@ -192,9 +191,9 @@ subroutine hllcfluxes(choice)
 
   case (2)   !  2nd half timestep
 
-     do i=0,nx
+     do k=0,nz
         do j=0,ny
-           do k=0,nz
+           do i=0,nx
 
               !------- x direction ------------------------------------
               priml (:)=primit(:,i,  j,k )

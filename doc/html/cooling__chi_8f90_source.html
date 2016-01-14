@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Guacho 3D: src/cooling_chi.f90 Source File</title>
+<title>Guacho 3D: /Users/esquivel/Desktop/Guacho-Working/src/cooling_chi.f90 Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_7233d820f2f98e85094bac7eeee63ccb.html">Guacho-Working</a></li><li class="navelem"><a class="el" href="dir_994c4e9b21a9136b1b16afcc29f745e6.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -123,7 +123,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35">read_table</a>()</div>
 <div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35">   44</a></span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceparameters.html">parameters</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceparameters.html#afe25db26aa30836573528cd959ee1fca">workdir</a>, <a class="code" href="namespaceparameters.html#a01664304fae28ea43d9a76e212d7cad9">master</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">use </span>parameters<span class="keywordtype">, only</span> : workdir, master</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceglobals.html">globals</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">rank</a></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#ifdef MPIP</span></div>
@@ -132,8 +132,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span>  <span class="keywordtype">integer</span> :: i, err</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="keywordtype">real (kind=8)</span> :: a, b</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordflow">if</span>(<a class="code" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">rank</a> == <a class="code" href="namespaceparameters.html#a01664304fae28ea43d9a76e212d7cad9">master</a>) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;     <span class="keyword">open</span>(unit=10,file= trim(<a class="code" href="namespaceparameters.html#afe25db26aa30836573528cd959ee1fca">workdir</a>)//<span class="stringliteral">&#39;/src/CHIANTIlib/coolingCHIANTI.tab&#39;</span>,status=<span class="stringliteral">&#39;old&#39;</span>)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordflow">if</span>(<a class="code" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">rank</a> == master) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;     <span class="keyword">open</span>(unit=10,file= trim(workdir)//<span class="stringliteral">&#39;/src/CHIANTIlib/coolingCHIANTI.tab&#39;</span>,status=<span class="stringliteral">&#39;old&#39;</span>)</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;     <span class="keywordflow">do</span> i=1,41</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keyword">read</span>(10,*) a, b</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        cooltab(1,i)=a</div>
@@ -172,69 +172,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment">!=======================================================================</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespacecooling__chi.html#a16ac452561e4a332a960a3ea7304f103">coolingchi</a>(dt)</div>
-<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="namespacecooling__chi.html#a16ac452561e4a332a960a3ea7304f103">  103</a></span>&#160;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceparameters.html">parameters</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>, <a class="code" href="namespaceparameters.html#a1a3b8ba995adb2f1c093cdc8b37eb5bd">nx</a>, <a class="code" href="namespaceparameters.html#ab73091bd318f7d283d05a362acdcf146">ny</a>, <a class="code" href="namespaceparameters.html#a743b8648645c72aff60188bf8b87f10a">nz</a>, <a class="code" href="namespaceparameters.html#a755803b69c4c41eab3f29d49aab07080">cv</a>, <a class="code" href="namespaceparameters.html#a95ee496fdf29b48b5e990f029331ea9e">psc</a></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceglobals.html">globals</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>, <a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacehydro__core.html">hydro_core</a><span class="keywordtype">, only</span> : <a class="code" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">implicit none</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">real</span>,    <span class="keywordtype">intent(in)</span>  :: dt</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">real</span>                 :: T ,Eth0, dens</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordtype">real</span>, <span class="keywordtype">parameter</span>      :: Tmin=10000.</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keywordtype">real (kind=8)</span>        :: ALOSS, Ce</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordtype">integer</span>              :: i, j, k</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <span class="keywordflow">do</span> i=1,<a class="code" href="namespaceparameters.html#a1a3b8ba995adb2f1c093cdc8b37eb5bd">nx</a></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;     <span class="keywordflow">do</span> j=1,<a class="code" href="namespaceparameters.html#ab73091bd318f7d283d05a362acdcf146">ny</a></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">do</span> k=1,<a class="code" href="namespaceparameters.html#a743b8648645c72aff60188bf8b87f10a">nz</a></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;           <span class="comment">!   get the primitives (and T)</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;           <span class="keyword">call </span><a class="code" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a>(<a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(:,i,j,k),<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(:,i,j,k),t)</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;           <span class="keywordflow">if</span>(t &gt; tmin) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;              eth0=<a class="code" href="namespaceparameters.html#a755803b69c4c41eab3f29d49aab07080">cv</a>*<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;              aloss=<a class="code" href="namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767">coolchi</a>(t)</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;              dens=<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(1,i,j,k)</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;              ce=(aloss*dble(dens)**2)/(eth0*<a class="code" href="namespaceparameters.html#a95ee496fdf29b48b5e990f029331ea9e">psc</a>)  <span class="comment">! cgs</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;              <span class="comment">!  apply cooling to primitive and conserved variables</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;              <a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)=<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)*exp(-ce*dt)</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;              <a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)=<a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)-eth0+<a class="code" href="namespaceparameters.html#a755803b69c4c41eab3f29d49aab07080">cv</a>*<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(<a class="code" href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">neqdyn</a>,i,j,k)</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="keywordflow">           end if</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keywordflow">        end do</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keywordflow">     end do</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keywordflow">  end do</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="keyword">end subroutine </span><a class="code" href="namespacecooling__chi.html#a16ac452561e4a332a960a3ea7304f103">coolingchi</a></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment">!======================================================================</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keyword">end module </span><a class="code" href="namespacecooling__chi.html">cooling_chi</a></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">!========================================================================</span></div>
-<div class="ttc" id="namespaceparameters_html"><div class="ttname"><a href="namespaceparameters.html">parameters</a></div><div class="ttdoc">Parameters module. </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00029">parameters.f90:29</a></div></div>
-<div class="ttc" id="namespaceparameters_html_a95ee496fdf29b48b5e990f029331ea9e"><div class="ttname"><a href="namespaceparameters.html#a95ee496fdf29b48b5e990f029331ea9e">parameters::psc</a></div><div class="ttdeci">real, parameter psc</div><div class="ttdoc">Pressure scaling. </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00085">parameters.f90:85</a></div></div>
-<div class="ttc" id="namespaceparameters_html_afe25db26aa30836573528cd959ee1fca"><div class="ttname"><a href="namespaceparameters.html#afe25db26aa30836573528cd959ee1fca">parameters::workdir</a></div><div class="ttdeci">character(len=128), parameter workdir</div><div class="ttdoc">working directory </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00038">parameters.f90:38</a></div></div>
-<div class="ttc" id="namespaceparameters_html_a01664304fae28ea43d9a76e212d7cad9"><div class="ttname"><a href="namespaceparameters.html#a01664304fae28ea43d9a76e212d7cad9">parameters::master</a></div><div class="ttdeci">integer, parameter master</div><div class="ttdoc">rank of master of MPI processes </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00131">parameters.f90:131</a></div></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespacecooling__chi.html#a666df501be07ce1e3612d3c3796cf2a3">coolingchi</a>()</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="namespacecooling__chi.html#a666df501be07ce1e3612d3c3796cf2a3">  102</a></span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">use </span>parameters<span class="keywordtype">, only</span> : nx, ny, nz, cv, psc, tsc</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceglobals.html">globals</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>, <a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>, <a class="code" href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">dt_cfl</a></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacehydro__core.html">hydro_core</a><span class="keywordtype">, only</span> : <a class="code" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keywordtype">implicit none</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  <span class="keywordtype">real</span>                 :: T ,Eth0, dens</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keywordtype">real</span>, <span class="keywordtype">parameter</span>      :: Tmin=10000.</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;  <span class="keywordtype">real (kind=8)</span>        :: ALOSS, Ce</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  <span class="keywordtype">integer</span>              :: i, j, k</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keywordtype">real</span> :: dt_seconds</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  dt_seconds = <a class="code" href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">dt_cfl</a>*tsc</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;  <span class="keywordflow">do</span> k=1,nz</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;     <span class="keywordflow">do</span> j=1,ny</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keywordflow">do</span> i=1,nx</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;           <span class="comment">!   get the primitives (and T)</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;           <span class="keyword">call </span><a class="code" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a>(<a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(:,i,j,k),<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(:,i,j,k),t)</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;           <span class="keywordflow">if</span>(t &gt; tmin) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;              eth0=cv*<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(5,i,j,k)</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;              aloss=<a class="code" href="namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767">coolchi</a>(t)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;              dens=<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(1,i,j,k)</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;              ce=(aloss*dble(dens)**2)/(eth0*psc)  <span class="comment">! cgs</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;              <span class="comment">!  apply cooling to primitive and conserved variables</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;              <a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(5,i,j,k)=<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(5,i,j,k)*exp(-ce*dt_seconds)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;              <a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(5,i,j,k)=<a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>(5,i,j,k)-eth0+cv*<a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>(5,i,j,k)</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="keywordflow">           end if</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="keywordflow">        end do</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keywordflow">     end do</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="keywordflow">  end do</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keyword">end subroutine </span><a class="code" href="namespacecooling__chi.html#a666df501be07ce1e3612d3c3796cf2a3">coolingchi</a></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">!======================================================================</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="keyword">end module </span><a class="code" href="namespacecooling__chi.html">cooling_chi</a></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="comment">!========================================================================</span></div>
 <div class="ttc" id="namespacecooling__chi_html"><div class="ttname"><a href="namespacecooling__chi.html">cooling_chi</a></div><div class="ttdoc">Cooling module with CHIANTI generated cooling curves. </div><div class="ttdef"><b>Definition:</b> <a href="cooling__chi_8f90_source.html#l00030">cooling_chi.f90:30</a></div></div>
-<div class="ttc" id="namespaceparameters_html_ab73091bd318f7d283d05a362acdcf146"><div class="ttname"><a href="namespaceparameters.html#ab73091bd318f7d283d05a362acdcf146">parameters::ny</a></div><div class="ttdeci">integer, parameter ny</div><div class="ttdoc">number of physical cells in y in each MPI block </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00115">parameters.f90:115</a></div></div>
 <div class="ttc" id="namespaceglobals_html_ae6519b751f8ef608c2074e27024335b7"><div class="ttname"><a href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">globals::u</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable u</div><div class="ttdoc">conserved varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00032">globals.f90:32</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a149bece4e7407071629f69a8c7deb03a"><div class="ttname"><a href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">globals::primit</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable primit</div><div class="ttdoc">primitive varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00034">globals.f90:34</a></div></div>
-<div class="ttc" id="namespaceparameters_html_a743b8648645c72aff60188bf8b87f10a"><div class="ttname"><a href="namespaceparameters.html#a743b8648645c72aff60188bf8b87f10a">parameters::nz</a></div><div class="ttdeci">integer, parameter nz</div><div class="ttdoc">number of physical cells in z in each MPI block </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00117">parameters.f90:117</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a1599fd11dcd5dfa9104003de3a2d03e5"><div class="ttname"><a href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">globals::dt_cfl</a></div><div class="ttdeci">real dt_cfl</div><div class="ttdoc">Current CFL $ t$. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00059">globals.f90:59</a></div></div>
 <div class="ttc" id="namespacecooling__chi_html_a20c87eb43e4f324fa7d83fe9174fd767"><div class="ttname"><a href="namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767">cooling_chi::coolchi</a></div><div class="ttdeci">real(kind=8) function coolchi(T)</div><div class="ttdoc">Returns the cooling coefficient interpolating the table. </div><div class="ttdef"><b>Definition:</b> <a href="cooling__chi_8f90_source.html#l00075">cooling_chi.f90:75</a></div></div>
-<div class="ttc" id="namespaceparameters_html_a755803b69c4c41eab3f29d49aab07080"><div class="ttname"><a href="namespaceparameters.html#a755803b69c4c41eab3f29d49aab07080">parameters::cv</a></div><div class="ttdeci">real, parameter cv</div><div class="ttdoc">Specific heat at constant volume (/R) </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00076">parameters.f90:76</a></div></div>
-<div class="ttc" id="namespaceparameters_html_a1a3b8ba995adb2f1c093cdc8b37eb5bd"><div class="ttname"><a href="namespaceparameters.html#a1a3b8ba995adb2f1c093cdc8b37eb5bd">parameters::nx</a></div><div class="ttdeci">integer, parameter nx</div><div class="ttdoc">number of physical cells in x in each MPI block </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00113">parameters.f90:113</a></div></div>
-<div class="ttc" id="namespacecooling__chi_html_a16ac452561e4a332a960a3ea7304f103"><div class="ttname"><a href="namespacecooling__chi.html#a16ac452561e4a332a960a3ea7304f103">cooling_chi::coolingchi</a></div><div class="ttdeci">subroutine coolingchi(dt)</div><div class="ttdoc">High level wrapper to apply cooling with CHIANTI tables. </div><div class="ttdef"><b>Definition:</b> <a href="cooling__chi_8f90_source.html#l00103">cooling_chi.f90:103</a></div></div>
+<div class="ttc" id="namespacecooling__chi_html_a666df501be07ce1e3612d3c3796cf2a3"><div class="ttname"><a href="namespacecooling__chi.html#a666df501be07ce1e3612d3c3796cf2a3">cooling_chi::coolingchi</a></div><div class="ttdeci">subroutine coolingchi()</div><div class="ttdoc">High level wrapper to apply cooling with CHIANTI tables. </div><div class="ttdef"><b>Definition:</b> <a href="cooling__chi_8f90_source.html#l00102">cooling_chi.f90:102</a></div></div>
 <div class="ttc" id="namespacehydro__core_html"><div class="ttname"><a href="namespacehydro__core.html">hydro_core</a></div><div class="ttdoc">Basic hydro (and MHD) subroutines utilities. </div><div class="ttdef"><b>Definition:</b> <a href="hydro__core_8f90_source.html#l00030">hydro_core.f90:30</a></div></div>
-<div class="ttc" id="namespaceparameters_html_ad2e282b7f56de824d72b1acf9f8aa674"><div class="ttname"><a href="namespaceparameters.html#ad2e282b7f56de824d72b1acf9f8aa674">parameters::neqdyn</a></div><div class="ttdeci">integer, parameter neqdyn</div><div class="ttdoc">num. of eqs (+scal) </div><div class="ttdef"><b>Definition:</b> <a href="parameters_8f90_source.html#l00041">parameters.f90:41</a></div></div>
 <div class="ttc" id="namespacecooling__chi_html_acdcfaea636dd68b666577d8daf434d35"><div class="ttname"><a href="namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35">cooling_chi::read_table</a></div><div class="ttdeci">subroutine read_table()</div><div class="ttdoc">Reads the cooling curve table. </div><div class="ttdef"><b>Definition:</b> <a href="cooling__chi_8f90_source.html#l00044">cooling_chi.f90:44</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a93f283242b146b3ef8b53fd1b1ad7bac"><div class="ttname"><a href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">globals::rank</a></div><div class="ttdeci">integer rank</div><div class="ttdoc">MPI rank. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00053">globals.f90:53</a></div></div>
 <div class="ttc" id="namespacehydro__core_html_a360e3d64343b30d94d270cfebc5b4eb3"><div class="ttname"><a href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">hydro_core::u2prim</a></div><div class="ttdeci">subroutine u2prim(uu, prim, T)</div><div class="ttdoc">Computes the primitive variables and temperature from conserved variables on a single cell...</div><div class="ttdef"><b>Definition:</b> <a href="hydro__core_8f90_source.html#l00044">hydro_core.f90:44</a></div></div>
@@ -242,7 +236,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

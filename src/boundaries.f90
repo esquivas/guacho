@@ -43,18 +43,14 @@ contains
 !>@details Boundary conditions for 1st order half timestep
 !! @n The conditions only are imposed at the innermost ghost cell, 
 !! on the u (unstepped) variables
-!> @param real [in] optional, time : integration time
-!> @param real [in] optional, dt : timestep
 
-subroutine boundaryI(time,dt)
+subroutine boundaryI()
 
   implicit none
 
 #ifdef MPIP
   include "mpif.h"
 #endif
-  real, intent(in), optional :: time
-  real, intent(in), optional :: dt
   integer, parameter :: nxm1=nx-1 ,nxp1=nx+1
   integer, parameter :: nym1=ny-1, nyp1=ny+1
   integer, parameter :: nzm1=nz-1, nzp1=nz+1
@@ -121,7 +117,7 @@ subroutine boundaryI(time,dt)
         u(:,0,:,:)=u(:,nx,:,:)
      endif
      !   Right BC
-     if (coords(0).eq.mpicol-1) then
+     if (coords(0).eq.MPI_NBX-1) then
         u(:,nxp1,:,:)=u(:,1,:,:)
      endif
 #endif
@@ -132,7 +128,7 @@ subroutine boundaryI(time,dt)
         u(:,:,0,:)= u(:,:,ny,:)
      endif
      !   top BC
-     if (coords(1).eq.mpirow-1) then
+     if (coords(1).eq.MPI_NBY-1) then
         u(:,:,nyp1,:)= u(:,:,1,:)
      endif
 #endif
@@ -143,7 +139,7 @@ subroutine boundaryI(time,dt)
         u(:,:,:,0)= u(:,:,:,nz)
      endif
      !   in BC
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
         u(:,:,:,nzp1)= u(:,:,:,1)
      endif
 #endif
@@ -161,7 +157,7 @@ subroutine boundaryI(time,dt)
 #endif
 
 #ifdef REFXR
-     if (coords(0).eq.(mpicol-1)) then
+     if (coords(0).eq.(MPI_NBX-1)) then
         u(1       ,nxp1,0:nyp1,0:nzp1) = u(1       ,nx,0:nyp1,0:nzp1)
         u(2       ,nxp1,0:nyp1,0:nzp1) =-u(2       ,nx,0:nyp1,0:nzp1)
         u(3:neq,nxp1,0:nyp1,0:nzp1) = u(3:neq,nx,0:nyp1,0:nzp1)
@@ -177,7 +173,7 @@ subroutine boundaryI(time,dt)
 #endif
 
 #ifdef REFYT
-     if (coords(1).eq.(mpirow-1)) then
+     if (coords(1).eq.(MPI_NBY-1)) then
         u(1:2     ,0:nxp1,nyp1,0:nzp1) = u(1:2     ,0:nxp1,ny,0:nzp1)
         u(3       ,0:nxp1,nyp1,0:nzp1) =-u(3       ,0:nxp1,ny,0:nzp1)
         u(4:neq,0:nxp1,nyp1,0:nzp1) = u(4:neq,0:nxp1,ny,0:nzp1)
@@ -193,7 +189,7 @@ subroutine boundaryI(time,dt)
 #endif
 
 #ifdef REFZI
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
            u(1:3     ,0:nxp1,0:nyp1,nzp1) = u(1:3     ,0:nxp1,0:nyp1,nz)
            u(4       ,0:nxp1,0:nyp1,nzp1) =-u(4       ,0:nxp1,0:nyp1,nz)
            u(5:neq,0:nxp1,0:nyp1,nzp1) = u(5:neq,0:nxp1,0:nyp1,nz)
@@ -211,7 +207,7 @@ subroutine boundaryI(time,dt)
 
      !   right
 #ifdef OUTFXR
-     if (coords(0).eq.mpicol-1) then
+     if (coords(0).eq.MPI_NBX-1) then
         u(:,nxp1,0:nyp1,0:nzp1)=u(:,nx,0:nyp1,0:nzp1)
      endif
 #endif
@@ -225,7 +221,7 @@ subroutine boundaryI(time,dt)
 
      !   top
 #ifdef OUTFYT
-     if (coords(1).eq.mpirow-1) then
+     if (coords(1).eq.MPI_NBY-1) then
         u(:,0:nxp1,nyp1,0:nzp1)=u(:,0:nxp1,ny,0:nzp1)
      endif
 #endif
@@ -239,14 +235,14 @@ subroutine boundaryI(time,dt)
 
      !   in
 #ifdef OUTFZI
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
            u(:,0:nxp1,0:nyp1,nzp1)=u(:,0:nxp1,0:nyp1,nz)
      endif
 #endif
      !   other type of boundaries
 #ifdef OTHERB
 
-    call impose_user_bc(u,time)
+    call impose_user_bc(u)
 
 #endif
 
@@ -258,17 +254,14 @@ end subroutine boundaryI
 !>@details Boundary conditions for 2nd order half timestep
 !! @n The conditions only are imposed in two ghost cells
 !! on the up (stepped) variables
-!> @param real [in] optional, time : integration time
-!> @param real [in] optional, dt : timestep
-subroutine boundaryII(time,dt)
+
+subroutine boundaryII()
  
   implicit none
 
 #ifdef MPIP
   include "mpif.h"
-#endif  
-  real, intent(in), optional :: time
-  real, intent(in), optional :: dt
+#endif
   integer, parameter :: nxmg=nx-nghost+1 ,nxp=nx+1
   integer, parameter :: nymg=ny-nghost+1, nyp=ny+1
   integer, parameter :: nzmg=nz-nghost+1, nzp=nz+1
@@ -350,7 +343,7 @@ subroutine boundaryII(time,dt)
         up(:,nxmin:0,:,:)=up(:,nxmg:nx,:,:)
      endif
      !   Right BC
-     if (coords(0).eq.mpicol-1) then
+     if (coords(0).eq.MPI_NBX-1) then
         up(:,nxp:nxmax,:,:)=up(:,1:nghost,:,:)
      endif
 #endif
@@ -361,7 +354,7 @@ subroutine boundaryII(time,dt)
         up(:,:,nymin:0,:)= up(:,:,nymg:ny,:)
      endif
      !   top BC
-     if (coords(1).eq.mpirow-1) then
+     if (coords(1).eq.MPI_NBY-1) then
         up(:,:,nyp:nymax,:)= up(:,:,1:nghost,:)
      endif
 #endif
@@ -372,7 +365,7 @@ subroutine boundaryII(time,dt)
         up(:,:,:,nzmin:0)= up(:,:,:,nzmg:nz)
      endif
      !   in BC
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
         up(:,:,:,nzp:nzmax)= up(:,:,:,1:nghost)
      endif
 #endif
@@ -394,7 +387,7 @@ subroutine boundaryII(time,dt)
 #endif
 
 #ifdef REFXR
-     if (coords(0).eq.mpicol-1) then
+     if (coords(0).eq.MPI_NBX-1) then
         j=nx
         do i=nxp,nxmax
            up(1  ,i,:,:) = up(1  ,j,:,:)
@@ -418,7 +411,7 @@ subroutine boundaryII(time,dt)
 #endif
 
 #ifdef REFYT
-     if (coords(1).eq.(mpirow-1)) then
+     if (coords(1).eq.(MPI_NBY-1)) then
         j=ny
         do i=nyp,nymax
            up(1:2,:,i,:) = up(1:2,:,j,:)
@@ -442,7 +435,7 @@ subroutine boundaryII(time,dt)
 #endif
 
 #ifdef REFZI
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
         j=nz
         do i=nzp,nzmax
            up(1:3,:,:,i) = up(1:3,:,:,j)
@@ -466,7 +459,7 @@ subroutine boundaryII(time,dt)
 
      !   right
 #ifdef OUTFXR
-     if (coords(0).eq.mpicol-1) then
+     if (coords(0).eq.MPI_NBX-1) then
         do i=nxp,nxmax
            up(:,i,:,:)=up(:,nx,:,:)
         enddo
@@ -484,7 +477,7 @@ subroutine boundaryII(time,dt)
 
      !   top
 #ifdef OUTFYT
-     if (coords(1).eq.mpirow-1) then
+     if (coords(1).eq.MPI_NBY-1) then
         do i=nyp,nymax
            up(:,:,i,:)=up(:,:,ny,:)
         enddo
@@ -502,7 +495,7 @@ subroutine boundaryII(time,dt)
 
      !   in
 #ifdef OUTFZI
-     if (coords(2).eq.mpirowz-1) then
+     if (coords(2).eq.MPI_NBZ-1) then
         do i=nzp,nzmax
            up(:,:,:,i)=up(:,:,:,nz)
         enddo
@@ -512,7 +505,7 @@ subroutine boundaryII(time,dt)
      !   other type of bounadries  <e.g. winds jets outflows>
 #ifdef OTHERB
 
-     call impose_user_bc(up,time)
+     call impose_user_bc(up)
 
 #endif
   !

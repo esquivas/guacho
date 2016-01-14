@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['source',['source',['../namespacesources.html#a6a66dd1f8baf424ff64a30112f39c632',1,'sources']]],
-  ['st_5fsteps',['st_steps',['../namespacethermal__cond.html#a4c74dc0fd6a165d0fea419b560943701',1,'thermal_cond']]],
-  ['starsource',['starsource',['../namespacedifrad.html#a180fbbe2c9b0639cc33dd6ef57a61ec4',1,'difrad']]],
-  ['step',['step',['../namespacehydro__solver.html#ac34a166e9ddd81f20f2b271138458a1a',1,'hydro_solver']]],
-  ['substep',['substep',['../namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294',1,'thermal_cond']]],
-  ['superstep',['superstep',['../namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06',1,'thermal_cond']]],
-  ['swapy',['swapy',['../namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d',1,'hydro_core']]],
-  ['swapz',['swapz',['../namespacehydro__core.html#ae4216bc7908e7665f0565aa8c885c821',1,'hydro_core']]]
+  ['radbounds',['radbounds',['../namespacedifrad.html#afe6e9d2182e755ae483aeaa2c91f2710',1,'difrad']]],
+  ['radpress_5fsource',['radpress_source',['../namespacesources.html#a36b548c9c578b74c5f439ffaec7d3a9a',1,'sources']]],
+  ['random_5fversor',['random_versor',['../namespacedifrad.html#ac7efbacd89420f5c298f7fb666ba14f9',1,'difrad']]],
+  ['read_5fdata',['read_data',['../namespacecoldens__utilities.html#a2dafe54f1edb888f313949f4f801e2d6',1,'coldens_utilities::read_data()'],['../namespaceh__alpha__utilities.html#a5549bf9fd812d02d9189d27f380c01c0',1,'h_alpha_utilities::read_data()'],['../namespacelyman__alpha__utilities.html#a75d86f06c6da27d0754752c23c50b54a',1,'lyman_alpha_utilities::read_data()']]],
+  ['read_5ftable',['read_table',['../namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35',1,'cooling_chi::read_table()'],['../namespacecooling__dmc.html#a7874b4f8a76399e87e0a22aecd088cf8',1,'cooling_dmc::read_table()']]],
+  ['rotation_5fx',['rotation_x',['../namespacecoldens__utilities.html#af7f94bfb5ffee491708d3f221915abcf',1,'coldens_utilities::rotation_x()'],['../namespaceh__alpha__utilities.html#a65ad5d15c1265e31f4d191ebf771e669',1,'h_alpha_utilities::rotation_x()'],['../namespacelyman__alpha__utilities.html#afaddcbb27f079d4300ce631609bbb80d',1,'lyman_alpha_utilities::rotation_x()']]],
+  ['rotation_5fy',['rotation_y',['../namespacecoldens__utilities.html#a989fb82adc69b6b1c00a2d2400c9854a',1,'coldens_utilities::rotation_y()'],['../namespaceh__alpha__utilities.html#ab643f1bac838912c58b25923b5de40ca',1,'h_alpha_utilities::rotation_y()'],['../namespacelyman__alpha__utilities.html#ae865cec09dd956ff966316caf8ac0c9a',1,'lyman_alpha_utilities::rotation_y()']]],
+  ['rotation_5fz',['rotation_z',['../namespacecoldens__utilities.html#a062761acebb4d5a76b3706256a491687',1,'coldens_utilities::rotation_z()'],['../namespaceh__alpha__utilities.html#acaf25f2c0ad80c5d7e2f451f58522a49',1,'h_alpha_utilities::rotation_z()'],['../namespacelyman__alpha__utilities.html#a2c97c4405186edcb70d2e37bbe7306da',1,'lyman_alpha_utilities::rotation_z()']]]
 ];

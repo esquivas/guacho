@@ -101,9 +101,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:af987bbf144f596d57b154427bbb82ae5"><td class="memItemLeft" align="right" valign="top">real(kind=8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#af987bbf144f596d57b154427bbb82ae5">cooldmc</a> (T)</td></tr>
 <tr class="memdesc:af987bbf144f596d57b154427bbb82ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cooling coefficient interpolating the table.  <a href="#af987bbf144f596d57b154427bbb82ae5">More...</a><br /></td></tr>
 <tr class="separator:af987bbf144f596d57b154427bbb82ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad51341dd3b898a1fe0f7c298cf7e49ce"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#ad51341dd3b898a1fe0f7c298cf7e49ce">coolingdmc</a> (dt)</td></tr>
-<tr class="memdesc:ad51341dd3b898a1fe0f7c298cf7e49ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">High level wrapper to apply cooling with DMC table.  <a href="#ad51341dd3b898a1fe0f7c298cf7e49ce">More...</a><br /></td></tr>
-<tr class="separator:ad51341dd3b898a1fe0f7c298cf7e49ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7af28062f0cd20c4bb0d86c895f4a8d6"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a7af28062f0cd20c4bb0d86c895f4a8d6">coolingdmc</a> ()</td></tr>
+<tr class="memdesc:a7af28062f0cd20c4bb0d86c895f4a8d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">High level wrapper to apply cooling with DMC table.  <a href="#a7af28062f0cd20c4bb0d86c895f4a8d6">More...</a><br /></td></tr>
+<tr class="separator:a7af28062f0cd20c4bb0d86c895f4a8d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -139,35 +139,28 @@ real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom
 
 </div>
 </div>
-<a class="anchor" id="ad51341dd3b898a1fe0f7c298cf7e49ce"></a>
+<a class="anchor" id="a7af28062f0cd20c4bb0d86c895f4a8d6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine cooling_dmc::coolingdmc </td>
           <td>(</td>
-          <td class="paramtype">real, intent(in)&#160;</td>
-          <td class="paramname"><em>dt</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>High level wrapper to apply cooling with DMC table <br />
- cooling is applied in the entire domain and updates both the conserved and primitive variables </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">real</td><td>[in] dt : timestep (in seconds) </td></tr>
-  </table>
-  </dd>
-</dl>
+ cooling is applied in the entire domain and updates both the conserved and primitive variables </p>
 
-<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00104">104</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
+<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00103">103</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph.png" border="0" usemap="#namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph" alt=""/></div>
-<map name="namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph" id="namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph">
-<area shape="rect" id="node2" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="233,5,371,32"/><area shape="rect" id="node3" href="namespacecooling__dmc.html#af987bbf144f596d57b154427bbb82ae5" title="Returns the cooling coefficient interpolating the table. " alt="" coords="225,56,379,83"/></map>
+<div class="center"><img src="namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6_cgraph.png" border="0" usemap="#namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6_cgraph" alt=""/></div>
+<!-- MAP 0 -->
 </div>
 </p>
 
@@ -194,7 +187,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

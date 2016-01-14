@@ -30,9 +30,9 @@ This module adds the source terms from gravity, radiation pressure (not fully te
 \index{divbcorr\+\_\+source@{divbcorr\+\_\+source}!sources@{sources}}
 \subsubsection[{divbcorr\+\_\+source}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::divbcorr\+\_\+source (
 \begin{DoxyParamCaption}
-\item[{integer}]{i, }
-\item[{integer}]{j, }
-\item[{integer}]{k, }
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
 \item[{real, dimension(neq), intent(in)}]{pp, }
 \item[{real, dimension(neq), intent(inout)}]{s}
 \end{DoxyParamCaption}
@@ -52,7 +52,7 @@ Adds terms proportional to div B in Faraday\textquotesingle{}s Law, momentum equ
 \end{DoxyParams}
 
 
-Definition at line 199 of file sources.\+f90.
+Definition at line 201 of file sources.\+f90.
 
 
 
@@ -60,7 +60,7 @@ Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph}
+\includegraphics[width=345pt]{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph}
 \end{center}
 \end{figure}
 
@@ -88,7 +88,7 @@ Computes div(\+B)
 \end{DoxyParams}
 
 
-Definition at line 176 of file sources.\+f90.
+Definition at line 178 of file sources.\+f90.
 
 \hypertarget{namespacesources_a378a8116ae16db2efa853343f88156d3}{}\index{sources@{sources}!getpos@{getpos}}
 \index{getpos@{getpos}!sources@{sources}}
@@ -122,7 +122,7 @@ Gets the position and spherical radius calculated with respect to the center of 
 \end{DoxyParams}
 
 
-Definition at line 54 of file sources.\+f90.
+Definition at line 55 of file sources.\+f90.
 
 \hypertarget{namespacesources_aef9f6ca4bc770f0e768dbbba91b67415}{}\index{sources@{sources}!grav\+\_\+source@{grav\+\_\+source}}
 \index{grav\+\_\+source@{grav\+\_\+source}!sources@{sources}}
@@ -150,7 +150,7 @@ Adds the gravitational force due to point particles, at this moment is fixed to 
 \end{DoxyParams}
 
 
-Definition at line 81 of file sources.\+f90.
+Definition at line 82 of file sources.\+f90.
 
 \hypertarget{namespacesources_a36b548c9c578b74c5f439ffaec7d3a9a}{}\index{sources@{sources}!radpress\+\_\+source@{radpress\+\_\+source}}
 \index{radpress\+\_\+source@{radpress\+\_\+source}!sources@{sources}}
@@ -190,7 +190,7 @@ Adds the radiaiton pressure force due to photo-\/ionization
 \end{DoxyParams}
 
 
-Definition at line 138 of file sources.\+f90.
+Definition at line 140 of file sources.\+f90.
 
 \hypertarget{namespacesources_a6a66dd1f8baf424ff64a30112f39c632}{}\index{sources@{sources}!source@{source}}
 \index{source@{source}!sources@{sources}}
@@ -219,7 +219,7 @@ Upper level wrapper for sources ~\newline
 \end{DoxyParams}
 
 
-Definition at line 238 of file sources.\+f90.
+Definition at line 240 of file sources.\+f90.
 
 
 

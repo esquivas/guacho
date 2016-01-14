@@ -8,7 +8,7 @@ Cooling with parametrized cooling and H rate equation.
 \subsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-subroutine \hyperlink{namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff}{coolingh} (dt)
+subroutine \hyperlink{namespacecooling__h_aee85faa3b36e05a8efb05c1588f34ef2}{coolingh} ()
 \begin{DoxyCompactList}\small\item\em High level wrapper to apply cooling. \end{DoxyCompactList}\item 
 real(kind=8) function \hyperlink{namespacecooling__h_a09de30645cebf531a647b5f53ae143b2}{alpha} (T)
 \begin{DoxyCompactList}\small\item\em calculates the recombination rate (case B) \end{DoxyCompactList}\item 
@@ -57,7 +57,7 @@ Non-\/equilibrium energy loss for low temperatures considering the collisional e
 \end{DoxyParams}
 
 
-Definition at line 163 of file cooling\+\_\+h.\+f90.
+Definition at line 164 of file cooling\+\_\+h.\+f90.
 
 
 
@@ -65,7 +65,7 @@ Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=294pt]{namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph}
+\includegraphics[width=284pt]{namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph}
 \end{center}
 \end{figure}
 
@@ -84,7 +84,7 @@ calculates the recombination rate (case B)
 \end{DoxyParams}
 
 
-Definition at line 79 of file cooling\+\_\+h.\+f90.
+Definition at line 80 of file cooling\+\_\+h.\+f90.
 
 \hypertarget{namespacecooling__h_a5454f21ef468add797c58753a1e0c773}{}\index{cooling\+\_\+h@{cooling\+\_\+h}!alpha1@{alpha1}}
 \index{alpha1@{alpha1}!cooling\+\_\+h@{cooling\+\_\+h}}
@@ -100,7 +100,7 @@ calculates the recombination rate to level 1
 \end{DoxyParams}
 
 
-Definition at line 96 of file cooling\+\_\+h.\+f90.
+Definition at line 97 of file cooling\+\_\+h.\+f90.
 
 \hypertarget{namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982}{}\index{cooling\+\_\+h@{cooling\+\_\+h}!atomic@{atomic}}
 \index{atomic@{atomic}!cooling\+\_\+h@{cooling\+\_\+h}}
@@ -125,7 +125,7 @@ Calculates the new ionization state and energy density using a time dependent io
 \end{DoxyParams}
 
 
-Definition at line 260 of file cooling\+\_\+h.\+f90.
+Definition at line 264 of file cooling\+\_\+h.\+f90.
 
 
 
@@ -152,7 +152,7 @@ $ \beta_H(T) $
 \end{DoxyParams}
 
 
-Definition at line 129 of file cooling\+\_\+h.\+f90.
+Definition at line 130 of file cooling\+\_\+h.\+f90.
 
 \hypertarget{namespacecooling__h_ad5f1352f8925ccb1b352d6e749465a92}{}\index{cooling\+\_\+h@{cooling\+\_\+h}!colf@{colf}}
 \index{colf@{colf}!cooling\+\_\+h@{cooling\+\_\+h}}
@@ -168,33 +168,23 @@ calculates the collisional ionization rate
 \end{DoxyParams}
 
 
-Definition at line 112 of file cooling\+\_\+h.\+f90.
+Definition at line 113 of file cooling\+\_\+h.\+f90.
 
-\hypertarget{namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff}{}\index{cooling\+\_\+h@{cooling\+\_\+h}!coolingh@{coolingh}}
+\hypertarget{namespacecooling__h_aee85faa3b36e05a8efb05c1588f34ef2}{}\index{cooling\+\_\+h@{cooling\+\_\+h}!coolingh@{coolingh}}
 \index{coolingh@{coolingh}!cooling\+\_\+h@{cooling\+\_\+h}}
 \subsubsection[{coolingh}]{\setlength{\rightskip}{0pt plus 5cm}subroutine cooling\+\_\+h\+::coolingh (
 \begin{DoxyParamCaption}
-\item[{real, intent(in)}]{dt}
+{}
 \end{DoxyParamCaption}
-)}\label{namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff}
+)}\label{namespacecooling__h_aee85faa3b36e05a8efb05c1588f34ef2}
 High level wrapper to apply cooling ~\newline
  parametrized cooling curve, uses the ionization state of hydrogen and ties the O I and I\+I to it 
-\begin{DoxyParams}{Parameters}
-{\em real} & \mbox{[}in\mbox{]} dt \+: timestep in seconds \\
-\hline
-\end{DoxyParams}
 
-
-Definition at line 43 of file cooling\+\_\+h.\+f90.
+Definition at line 42 of file cooling\+\_\+h.\+f90.
 
 
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff_cgraph}
-\end{center}
-\end{figure}
+Here is the call graph for this function\+:
+% FIG 0
 
 

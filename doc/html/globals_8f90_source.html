@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Guacho 3D: src/globals.f90 Source File</title>
+<title>Guacho 3D: /Users/esquivel/Desktop/Guacho-Working/src/globals.f90 Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_7233d820f2f98e85094bac7eeee63ccb.html">Guacho-Working</a></li><li class="navelem"><a class="el" href="dir_994c4e9b21a9136b1b16afcc29f745e6.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -136,10 +136,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">   53</a></span>&#160;  <span class="keywordtype">integer</span> :: <a class="code" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">rank</a></div>
 <div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespaceglobals.html#a4bc8f1b5670efd802d57dce2c385b6d9">   54</a></span>&#160;  <span class="keywordtype">integer</span> :: <a class="code" href="namespaceglobals.html#a4bc8f1b5670efd802d57dce2c385b6d9">comm3d</a></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">!</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">end module </span><a class="code" href="namespaceglobals.html">globals</a></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">!=======================================================================</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="namespaceglobals.html#acc5c9a03b08561f9eeb530eb65221dbb">   57</a></span>&#160;  <span class="keywordtype">real</span> :: <a class="code" href="namespaceglobals.html#acc5c9a03b08561f9eeb530eb65221dbb">time</a></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">   59</a></span>&#160;  <span class="keywordtype">real</span> :: <a class="code" href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">dt_cfl</a></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="namespaceglobals.html#a6966cf52ad4f442a7fe69efa6d5c0bee">   61</a></span>&#160;  <span class="keywordtype">integer</span> :: <a class="code" href="namespaceglobals.html#a6966cf52ad4f442a7fe69efa6d5c0bee">currentiteration</a></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifdef THERMAL_COND</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="namespaceglobals.html#a6942102ba8bd15a3350901de0b99bafa">   64</a></span>&#160;<span class="preprocessor"></span>  <span class="keywordtype">real</span>, <span class="keywordtype">allocatable</span> :: <a class="code" href="namespaceglobals.html#a6942102ba8bd15a3350901de0b99bafa">temp</a>(:,:,:)</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">end module </span><a class="code" href="namespaceglobals.html">globals</a></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment">!=======================================================================</span></div>
 <div class="ttc" id="namespaceglobals_html_a5fb85172ca54e822fdb8c522da890717"><div class="ttname"><a href="namespaceglobals.html#a5fb85172ca54e822fdb8c522da890717">globals::f</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable f</div><div class="ttdoc">X fluxes. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00035">globals.f90:35</a></div></div>
 <div class="ttc" id="namespaceglobals_html_aba9a16c1b0ed3e52dce83157476d099c"><div class="ttname"><a href="namespaceglobals.html#aba9a16c1b0ed3e52dce83157476d099c">globals::left</a></div><div class="ttdeci">integer left</div><div class="ttdoc">MPI neighbor in the -x direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00046">globals.f90:46</a></div></div>
 <div class="ttc" id="namespaceglobals_html_aafee650389fdf595e41e37cb340155ae"><div class="ttname"><a href="namespaceglobals.html#aafee650389fdf595e41e37cb340155ae">globals::dx</a></div><div class="ttdeci">real dx</div><div class="ttdoc">grid spacing in X </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00039">globals.f90:39</a></div></div>
@@ -150,19 +158,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="namespaceglobals_html_a149bece4e7407071629f69a8c7deb03a"><div class="ttname"><a href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">globals::primit</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable primit</div><div class="ttdoc">primitive varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00034">globals.f90:34</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a9b12323045a0672fe06f9b7091cd3e7a"><div class="ttname"><a href="namespaceglobals.html#a9b12323045a0672fe06f9b7091cd3e7a">globals::dy</a></div><div class="ttdeci">real dy</div><div class="ttdoc">grid spacing in Y </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00040">globals.f90:40</a></div></div>
 <div class="ttc" id="namespaceglobals_html_add36bccef8d272ff40330a62d0307580"><div class="ttname"><a href="namespaceglobals.html#add36bccef8d272ff40330a62d0307580">globals::top</a></div><div class="ttdeci">integer top</div><div class="ttdoc">MPI neighbor in the -y direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00048">globals.f90:48</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a1599fd11dcd5dfa9104003de3a2d03e5"><div class="ttname"><a href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">globals::dt_cfl</a></div><div class="ttdeci">real dt_cfl</div><div class="ttdoc">Current CFL $ t$. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00059">globals.f90:59</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a0124c44fda4a3092edd2789f79dec648"><div class="ttname"><a href="namespaceglobals.html#a0124c44fda4a3092edd2789f79dec648">globals::g</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable g</div><div class="ttdoc">Y fluxes. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00036">globals.f90:36</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a3188a89193263f9f063099801321d525"><div class="ttname"><a href="namespaceglobals.html#a3188a89193263f9f063099801321d525">globals::bottom</a></div><div class="ttdeci">integer bottom</div><div class="ttdoc">MPI neighbor in the +y direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00049">globals.f90:49</a></div></div>
 <div class="ttc" id="namespaceglobals_html_ac3375149d8b96b3b5470274034850ecc"><div class="ttname"><a href="namespaceglobals.html#ac3375149d8b96b3b5470274034850ecc">globals::out</a></div><div class="ttdeci">integer out</div><div class="ttdoc">MPI neighbor in the -z direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00050">globals.f90:50</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a81293f145f1af171eb88b6feced78c95"><div class="ttname"><a href="namespaceglobals.html#a81293f145f1af171eb88b6feced78c95">globals::dz</a></div><div class="ttdeci">real dz</div><div class="ttdoc">grid spacing in Z </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00041">globals.f90:41</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a93f283242b146b3ef8b53fd1b1ad7bac"><div class="ttname"><a href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">globals::rank</a></div><div class="ttdeci">integer rank</div><div class="ttdoc">MPI rank. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00053">globals.f90:53</a></div></div>
+<div class="ttc" id="namespaceglobals_html_acc5c9a03b08561f9eeb530eb65221dbb"><div class="ttname"><a href="namespaceglobals.html#acc5c9a03b08561f9eeb530eb65221dbb">globals::time</a></div><div class="ttdeci">real time</div><div class="ttdoc">Current time. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00057">globals.f90:57</a></div></div>
 <div class="ttc" id="namespaceglobals_html"><div class="ttname"><a href="namespaceglobals.html">globals</a></div><div class="ttdoc">Module containing global variables. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00029">globals.f90:29</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a6942102ba8bd15a3350901de0b99bafa"><div class="ttname"><a href="namespaceglobals.html#a6942102ba8bd15a3350901de0b99bafa">globals::temp</a></div><div class="ttdeci">real, dimension(:,:,:), allocatable temp</div><div class="ttdoc">Temperature array [K]. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00064">globals.f90:64</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a6a2cc973507c2f9ea75f44a9f976d659"><div class="ttname"><a href="namespaceglobals.html#a6a2cc973507c2f9ea75f44a9f976d659">globals::in</a></div><div class="ttdeci">integer in</div><div class="ttdoc">MPI neighbor in the +z direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00051">globals.f90:51</a></div></div>
 <div class="ttc" id="namespaceglobals_html_a8d38eca539ad2b24a66616e42b79ac4c"><div class="ttname"><a href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">globals::coords</a></div><div class="ttdeci">integer, dimension(0:2) coords</div><div class="ttdoc">position of neighboring MPI blocks </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00044">globals.f90:44</a></div></div>
 <div class="ttc" id="namespaceglobals_html_af6262d058b86075848725c846e7cc9cc"><div class="ttname"><a href="namespaceglobals.html#af6262d058b86075848725c846e7cc9cc">globals::h</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable h</div><div class="ttdoc">Z fluxes. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00037">globals.f90:37</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a6966cf52ad4f442a7fe69efa6d5c0bee"><div class="ttname"><a href="namespaceglobals.html#a6966cf52ad4f442a7fe69efa6d5c0bee">globals::currentiteration</a></div><div class="ttdeci">integer currentiteration</div><div class="ttdoc">Current iteration. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00061">globals.f90:61</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

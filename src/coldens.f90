@@ -63,9 +63,9 @@ implicit none
   period(0)=perx
   period(1)=pery
   period(2)=perz
-  dims(0)  =mpicol
-  dims(1)  =mpirow
-  dims(2)  =mpirowz
+  dims(0)  =MPI_NBX
+  dims(1)  =MPI_NBY
+  dims(2)  =MPI_NBZ
   
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
@@ -158,7 +158,7 @@ subroutine read_data(u,itprint,filepath)
               trim(filepath)//'BIN/points',itprint,'.bin'
          unitin=10
 #endif
-         open(unit=unitin,file=file1,status='unknown',form='unformatted', &
+         open(unit=unitin,file=file1,status='unknown',acess='stream', &
               convert='LITTLE_ENDIAN')
          !
          read(unitin) u(:,:,:,:)
@@ -298,9 +298,9 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
   integer :: i,j,k, iobs, jobs
   real :: x,y,z,xn,yn,zn
   
-  do i=1,nx
+  do k=1,nz
      do j=1,ny
-        do k=1,nz
+        do i=1,nx
 
           !  obtain original position
           call getXYZ(i,j,k, x,y,z)

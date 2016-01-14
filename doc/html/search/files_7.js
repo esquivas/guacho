@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['lyman_5falpha_5ftau_2ef90',['lyman_alpha_tau.f90',['../lyman__alpha__tau_8f90.html',1,'']]]
+  ['main_2ef90',['main.f90',['../main_8f90.html',1,'']]],
+  ['mainpage_2eh',['mainpage.h',['../mainpage_8h.html',1,'']]]
 ];

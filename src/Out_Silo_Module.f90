@@ -74,7 +74,7 @@ else
   imin=0
   lo_offset(1)=1
 end if
-if ( coords(0).eq.(mpicol-1) ) then
+if ( coords(0).eq.(MPI_NBX-1) ) then
     imax=nx
     hi_offset(1)=0
   else
@@ -90,7 +90,7 @@ else
   jmin=0
   lo_offset(2)=1
 end if
-if ( coords(1).eq.(mpirow-1) ) then
+if ( coords(1).eq.(MPI_NBY-1) ) then
   jmax=ny
   hi_offset(2)=0
 else
@@ -106,7 +106,7 @@ else
   kmin=0
   lo_offset(3)=1
 end if
-if ( coords(2).eq.(mpirowz-1) ) then
+if ( coords(2).eq.(MPI_NBZ-1) ) then
   kmax=nz
   hi_offset(3)=0
 else

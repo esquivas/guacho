@@ -54,7 +54,7 @@ subroutine read_table()
 
 
   if(rank.eq.master) then
-     open(unit=10,file=trim(workdir)//'/src/DMClib/coolingDMC.tab',status='old')
+     open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',status='old')
      do i=1,41
         read(10,*) a, b
         cooltab(1,i)=10.d0**(a)
@@ -63,7 +63,7 @@ subroutine read_table()
      close(unit=10)
   endif
 #ifdef MPIP
-  call mpi_bcast(cooltab,82,mpi_double_precision,0,mpi_comm_world,err)
+  call mpi_bcast(cooltab,82,mpi_real8,0,mpi_comm_world,err)
 #endif
 
 end subroutine read_table
@@ -98,40 +98,41 @@ end function cooldmc
 !> @details High level wrapper to apply cooling with DMC table
 !> @n cooling is applied in the entire domain and updates both the 
 !! conserved and primitive variables
-!> @param real [in] dt : timestep (in seconds)
 
-subroutine coolingdmc(dt)
+subroutine coolingdmc()
 
-  use parameters, only : neqdyn, nx, ny, nz, cv, Psc
-  use globals, only : u, primit
+  use parameters, only : nx, ny, nz, cv, Psc, tsc
+  use globals, only : u, primit, dt_CFL
   use hydro_core, only : u2prim
   implicit none
-  real,    intent(in)  :: dt
   real                 :: T ,Eth0, dens
   real, parameter :: Tmin=10000.
   real (kind=8)        :: ALOSS, Ce
   integer :: i, j, k
+  real :: dt_seconds
 
-  do i=1,nx
+  dt_seconds = dt_CFL*tsc
+
+  do k=1,nz
      do j=1,ny
-        do k=1,nz
+        do i=1,nx
 
            !   get the primitives (and T)
            call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
 
            if(T > Tmin) then
 
-              Eth0=cv*primit(neqdyn,i,j,k)
+              Eth0=cv*primit(5,i,j,k)
 
               Aloss=cooldmc(T)
               dens=primit(1,i,j,k)
               Ce=(Aloss*dble(dens)**2)/(Eth0*Psc)  ! cgs
 
               !  apply cooling to primitive and conserved variables
-              primit(neqdyn,i,j,k)=primit(neqdyn,i,j,k)*exp(-ce*dt)
+              primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)
 
               !   u(neqdyn,new)=Ekin0+Eth_new
-              u(neqdyn,i,j,k)=u(neqdyn,i,j,k)-Eth0+cv*primit(neqdyn,i,j,k)
+              u(5,i,j,k)=u(5,i,j,k)-Eth0+cv*primit(5,i,j,k)
 
            end if
 

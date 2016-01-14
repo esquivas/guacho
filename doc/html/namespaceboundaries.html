@@ -94,110 +94,58 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:a3742debeb694e374aed0d5b1e6970b8a"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboundaries.html#a3742debeb694e374aed0d5b1e6970b8a">boundaryi</a> (time, dt)</td></tr>
-<tr class="memdesc:a3742debeb694e374aed0d5b1e6970b8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boundary conditions for 1st order half timestep.  <a href="#a3742debeb694e374aed0d5b1e6970b8a">More...</a><br /></td></tr>
-<tr class="separator:a3742debeb694e374aed0d5b1e6970b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74a7f6b33366d1adac94ac3bc438104"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboundaries.html#ae74a7f6b33366d1adac94ac3bc438104">boundaryii</a> (time, dt)</td></tr>
-<tr class="memdesc:ae74a7f6b33366d1adac94ac3bc438104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boundary conditions for 2nd order half timestep.  <a href="#ae74a7f6b33366d1adac94ac3bc438104">More...</a><br /></td></tr>
-<tr class="separator:ae74a7f6b33366d1adac94ac3bc438104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6292ba1e627b19087dc005cdc415213d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboundaries.html#a6292ba1e627b19087dc005cdc415213d">boundaryi</a> ()</td></tr>
+<tr class="memdesc:a6292ba1e627b19087dc005cdc415213d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boundary conditions for 1st order half timestep.  <a href="#a6292ba1e627b19087dc005cdc415213d">More...</a><br /></td></tr>
+<tr class="separator:a6292ba1e627b19087dc005cdc415213d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acca5de134bd57d541d58574471fd8419"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceboundaries.html#acca5de134bd57d541d58574471fd8419">boundaryii</a> ()</td></tr>
+<tr class="memdesc:acca5de134bd57d541d58574471fd8419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boundary conditions for 2nd order half timestep.  <a href="#acca5de134bd57d541d58574471fd8419">More...</a><br /></td></tr>
+<tr class="separator:acca5de134bd57d541d58574471fd8419"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Sets boundary conditions, the type of boundaries is set in the Makefile </p>
 </div><h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a class="anchor" id="a3742debeb694e374aed0d5b1e6970b8a"></a>
+<a class="anchor" id="a6292ba1e627b19087dc005cdc415213d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine boundaries::boundaryi </td>
           <td>(</td>
-          <td class="paramtype">real, intent(in), optional&#160;</td>
-          <td class="paramname"><em>time</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">real, intent(in), optional&#160;</td>
-          <td class="paramname"><em>dt</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Boundary conditions for 1st order half timestep <br />
- The conditions only are imposed at the innermost ghost cell, on the u (unstepped) variables </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">real</td><td>[in] optional, time : integration time </td></tr>
-    <tr><td class="paramname">real</td><td>[in] optional, dt : timestep </td></tr>
-  </table>
-  </dd>
-</dl>
+ The conditions only are imposed at the innermost ghost cell, on the u (unstepped) variables </p>
 
-<p>Definition at line <a class="el" href="boundaries_8f90_source.html#l00050">50</a> of file <a class="el" href="boundaries_8f90_source.html">boundaries.f90</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph.png" border="0" usemap="#namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph" alt=""/></div>
-<map name="namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph" id="namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph">
-<area shape="rect" id="node2" href="namespaceuser__mod.html#a6028f43a668931350eba8020d0466e4f" title="User Defined Boundary conditions. " alt="" coords="207,5,393,32"/><area shape="rect" id="node3" href="namespaceexoplanet.html#a025d8839492b18a794c76b5018f43f91" title="Inject sources of wind. " alt="" coords="441,5,600,32"/></map>
-</div>
-</p>
+<p>Definition at line <a class="el" href="boundaries_8f90_source.html#l00048">48</a> of file <a class="el" href="boundaries_8f90_source.html">boundaries.f90</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ae74a7f6b33366d1adac94ac3bc438104"></a>
+<a class="anchor" id="acca5de134bd57d541d58574471fd8419"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine boundaries::boundaryii </td>
           <td>(</td>
-          <td class="paramtype">real, intent(in), optional&#160;</td>
-          <td class="paramname"><em>time</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">real, intent(in), optional&#160;</td>
-          <td class="paramname"><em>dt</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Boundary conditions for 2nd order half timestep <br />
- The conditions only are imposed in two ghost cells on the up (stepped) variables </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">real</td><td>[in] optional, time : integration time </td></tr>
-    <tr><td class="paramname">real</td><td>[in] optional, dt : timestep </td></tr>
-  </table>
-  </dd>
-</dl>
+ The conditions only are imposed in two ghost cells on the up (stepped) variables </p>
 
-<p>Definition at line <a class="el" href="boundaries_8f90_source.html#l00264">264</a> of file <a class="el" href="boundaries_8f90_source.html">boundaries.f90</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph.png" border="0" usemap="#namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph" alt=""/></div>
-<map name="namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph" id="namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph">
-<area shape="rect" id="node2" href="namespaceuser__mod.html#a6028f43a668931350eba8020d0466e4f" title="User Defined Boundary conditions. " alt="" coords="211,5,397,32"/><area shape="rect" id="node3" href="namespaceexoplanet.html#a025d8839492b18a794c76b5018f43f91" title="Inject sources of wind. " alt="" coords="445,5,604,32"/></map>
-</div>
-</p>
+<p>Definition at line <a class="el" href="boundaries_8f90_source.html#l00259">259</a> of file <a class="el" href="boundaries_8f90_source.html">boundaries.f90</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

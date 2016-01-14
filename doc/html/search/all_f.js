@@ -7,15 +7,10 @@ var searchData=
   ['read_5fdata',['read_data',['../namespacecoldens__utilities.html#a2dafe54f1edb888f313949f4f801e2d6',1,'coldens_utilities::read_data()'],['../namespaceh__alpha__utilities.html#a5549bf9fd812d02d9189d27f380c01c0',1,'h_alpha_utilities::read_data()'],['../namespacelyman__alpha__utilities.html#a75d86f06c6da27d0754752c23c50b54a',1,'lyman_alpha_utilities::read_data()']]],
   ['read_5ftable',['read_table',['../namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35',1,'cooling_chi::read_table()'],['../namespacecooling__dmc.html#a7874b4f8a76399e87e0a22aecd088cf8',1,'cooling_dmc::read_table()']]],
   ['rg',['rg',['../namespaceconstants.html#aab4c0a2b0e8b8cda79e9d683b3e650f6',1,'constants']]],
-  ['rhosc',['rhosc',['../namespaceparameters.html#a0e7200e85023d763950f5d027c265b47',1,'parameters']]],
   ['right',['right',['../namespaceglobals.html#a0b27e5c90473860434fc5dd58a255111',1,'globals']]],
   ['rjup',['rjup',['../namespaceconstants.html#a4cbd85fb12d8faa8be8463982fa6fd29',1,'constants']]],
-  ['rorb',['rorb',['../namespaceexoplanet.html#af870fc778f9e46f3b9ff74a65a116165',1,'exoplanet']]],
   ['rotation_5fx',['rotation_x',['../namespacecoldens__utilities.html#af7f94bfb5ffee491708d3f221915abcf',1,'coldens_utilities::rotation_x()'],['../namespaceh__alpha__utilities.html#a65ad5d15c1265e31f4d191ebf771e669',1,'h_alpha_utilities::rotation_x()'],['../namespacelyman__alpha__utilities.html#afaddcbb27f079d4300ce631609bbb80d',1,'lyman_alpha_utilities::rotation_x()']]],
   ['rotation_5fy',['rotation_y',['../namespacecoldens__utilities.html#a989fb82adc69b6b1c00a2d2400c9854a',1,'coldens_utilities::rotation_y()'],['../namespaceh__alpha__utilities.html#ab643f1bac838912c58b25923b5de40ca',1,'h_alpha_utilities::rotation_y()'],['../namespacelyman__alpha__utilities.html#ae865cec09dd956ff966316caf8ac0c9a',1,'lyman_alpha_utilities::rotation_y()']]],
   ['rotation_5fz',['rotation_z',['../namespacecoldens__utilities.html#a062761acebb4d5a76b3706256a491687',1,'coldens_utilities::rotation_z()'],['../namespaceh__alpha__utilities.html#acaf25f2c0ad80c5d7e2f451f58522a49',1,'h_alpha_utilities::rotation_z()'],['../namespacelyman__alpha__utilities.html#a2c97c4405186edcb70d2e37bbe7306da',1,'lyman_alpha_utilities::rotation_z()']]],
-  ['rpw',['rpw',['../namespaceexoplanet.html#a6a04838fd3adcdaa194dc432237a0054',1,'exoplanet']]],
-  ['rsc',['rsc',['../namespaceparameters.html#aae00fb44c9445b75ac9e9fe1a3836668',1,'parameters']]],
-  ['rsun',['rsun',['../namespaceconstants.html#a86e80095a8a44315466905ab42ec2814',1,'constants']]],
-  ['rsw',['rsw',['../namespaceexoplanet.html#a66ee761b561801f58b0bf10b26b62a0c',1,'exoplanet']]]
+  ['rsun',['rsun',['../namespaceconstants.html#a86e80095a8a44315466905ab42ec2814',1,'constants']]]
 ];

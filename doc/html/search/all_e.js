@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['parameters',['parameters',['../namespaceparameters.html',1,'']]],
-  ['parameters_2ef90',['parameters.f90',['../parameters_8f90.html',1,'']]],
   ['pc',['pc',['../namespaceconstants.html#aa5d9aea15e53a1abbc29e5f419b38601',1,'constants']]],
   ['ph',['ph',['../namespacedifrad.html#ab532f1879434284f63aa97c79c305236',1,'difrad::ph()'],['../namespacethermal__cond.html#a37c3e000231baaaa4668f7c05f021ce0',1,'thermal_cond::ph()']]],
   ['phigauss',['phigauss',['../namespacelyman__alpha__utilities.html#a826e6fe44f66513e5a47f2b968e1d0b8',1,'lyman_alpha_utilities']]],
@@ -20,6 +18,5 @@ var searchData=
   ['prim2fhlle',['prim2fhlle',['../namespacehlle.html#a5646b0259c574b5e8dd3754a493d358d',1,'hlle']]],
   ['prim2u',['prim2u',['../namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3',1,'hydro_core']]],
   ['primit',['primit',['../namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a',1,'globals']]],
-  ['progress',['progress',['../namespacedifrad.html#a17151a5334db41fd14315d454e883b8e',1,'difrad::progress()'],['../namespacethermal__cond.html#a5283f7a2b8b4a4226ce624fb49445f43',1,'thermal_cond::progress()']]],
-  ['psc',['psc',['../namespaceparameters.html#a95ee496fdf29b48b5e990f029331ea9e',1,'parameters']]]
+  ['progress',['progress',['../namespacedifrad.html#a17151a5334db41fd14315d454e883b8e',1,'difrad::progress()'],['../namespacethermal__cond.html#a5283f7a2b8b4a4226ce624fb49445f43',1,'thermal_cond::progress()']]]
 ];

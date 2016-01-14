@@ -1,12 +1,12 @@
 <map id="lyman_alpha_tau" name="lyman_alpha_tau">
-<area shape="rect" id="node2" href="$namespacelyman__alpha__utilities.html#a5f97eeffb7ea030271481514d7072efb" title="Initializes data. " alt="" coords="177,25,323,66"/>
-<area shape="rect" id="node3" href="$namespacelyman__alpha__utilities.html#a75d86f06c6da27d0754752c23c50b54a" title="reads data from file " alt="" coords="177,90,323,131"/>
-<area shape="rect" id="node4" href="$namespacelyman__alpha__utilities.html#a7ca5810d29123f1c5c6fd3170f5f5bf3" title="Fill target map. " alt="" coords="177,155,323,197"/>
-<area shape="rect" id="node11" href="$namespacelyman__alpha__utilities.html#afdab7ea06bb95956c43102154651cfd1" title="Writes projection to file. " alt="" coords="177,221,323,262"/>
-<area shape="rect" id="node5" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="375,5,512,32"/>
-<area shape="rect" id="node6" href="$namespacelyman__alpha__utilities.html#abdefc59ee98b1526aa3116c0e8f21d98" title="gets position of a cell " alt="" coords="371,57,516,98"/>
-<area shape="rect" id="node7" href="$namespacelyman__alpha__utilities.html#afaddcbb27f079d4300ce631609bbb80d" title="Rotation around the X axis. " alt="" coords="371,122,516,163"/>
-<area shape="rect" id="node8" href="$namespacelyman__alpha__utilities.html#ae865cec09dd956ff966316caf8ac0c9a" title="Rotation around the Y axis. " alt="" coords="371,187,516,229"/>
-<area shape="rect" id="node9" href="$namespacelyman__alpha__utilities.html#a2c97c4405186edcb70d2e37bbe7306da" title="Rotation around the Z axis. " alt="" coords="371,253,516,294"/>
-<area shape="rect" id="node10" href="$namespacelyman__alpha__utilities.html#a826e6fe44f66513e5a47f2b968e1d0b8" title="This routine computes a gaussian line profile. " alt="" coords="371,318,516,359"/>
+<area shape="rect" id="node2" href="$namespacelyman__alpha__utilities.html#a5f97eeffb7ea030271481514d7072efb" title="Initializes data. " alt="" coords="175,25,313,66"/>
+<area shape="rect" id="node3" href="$namespacelyman__alpha__utilities.html#a75d86f06c6da27d0754752c23c50b54a" title="reads data from file " alt="" coords="175,90,313,131"/>
+<area shape="rect" id="node4" href="$namespacelyman__alpha__utilities.html#a7ca5810d29123f1c5c6fd3170f5f5bf3" title="Fill target map. " alt="" coords="175,155,313,197"/>
+<area shape="rect" id="node11" href="$namespacelyman__alpha__utilities.html#afdab7ea06bb95956c43102154651cfd1" title="Writes projection to file. " alt="" coords="175,221,313,262"/>
+<area shape="rect" id="node5" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="367,5,494,32"/>
+<area shape="rect" id="node6" href="$namespacelyman__alpha__utilities.html#abdefc59ee98b1526aa3116c0e8f21d98" title="gets position of a cell " alt="" coords="361,57,500,98"/>
+<area shape="rect" id="node7" href="$namespacelyman__alpha__utilities.html#afaddcbb27f079d4300ce631609bbb80d" title="Rotation around the X axis. " alt="" coords="361,122,500,163"/>
+<area shape="rect" id="node8" href="$namespacelyman__alpha__utilities.html#ae865cec09dd956ff966316caf8ac0c9a" title="Rotation around the Y axis. " alt="" coords="361,187,500,229"/>
+<area shape="rect" id="node9" href="$namespacelyman__alpha__utilities.html#a2c97c4405186edcb70d2e37bbe7306da" title="Rotation around the Z axis. " alt="" coords="361,253,500,294"/>
+<area shape="rect" id="node10" href="$namespacelyman__alpha__utilities.html#a826e6fe44f66513e5a47f2b968e1d0b8" title="This routine computes a gaussian line profile. " alt="" coords="361,318,500,359"/>
 </map>

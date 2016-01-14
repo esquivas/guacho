@@ -55,9 +55,9 @@ subroutine viscosity()
   implicit none
   integer :: i, j, k
   
-  do i=1,nx
+  do k=1,nz
      do j=1,ny
-        do k=1,nz
+        do i=1,nx
            up(:,i,j,k)=up(:,i,j,k)+eta*( u(:,i+1,j,k)+u(:,i-1,j,k)       &
                                         +u(:,i,j+1,k)+u(:,i,j-1,k)       &
                                         +u(:,i,j,k+1)+u(:,i,j,k-1)       &
@@ -81,11 +81,11 @@ end subroutine viscosity
 subroutine step(dt)
   use parameters, only : nx, ny, nz
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
-#ifdef defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
+#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   use sources
 #endif
   implicit none
-#ifdef defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
+#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   real :: s(neq)
 #endif
   real, intent(in) :: dt
@@ -96,15 +96,15 @@ subroutine step(dt)
   dtdy=dt/dy
   dtdz=dt/dz
 
-  do i=1,nx
+  do k=1,nz
      do j=1,ny
-        do k=1,nz
-           !
+        do i=1,nx
+           
            up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
                                  -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
                                  -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
 
-#ifdef defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
+#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
            call source(i,j,k,primit(:,i,j,k),s)
            up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 #endif
@@ -119,10 +119,8 @@ end subroutine step
 !> @brief High level wrapper to advancce the simulation
 !> @details High level wrapper to advancce the simulation
 !! @n The variables are taken from the globals module.
-!> @param real [in] time :  integration time
-!> @param real [in] dt   :  timestep
 
-subroutine tstep(time,dt)
+subroutine tstep()
 
   use parameters, only : tsc
   use globals
@@ -148,11 +146,10 @@ subroutine tstep(time,dt)
   use thermal_cond
 #endif
   implicit none
-  real, intent(in):: dt, time
-  real            :: dtm
+  real :: dtm
    
   !  1st half timestep ========================   
-  dtm=dt/2.
+  dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
 #ifdef HLL
@@ -176,7 +173,7 @@ subroutine tstep(time,dt)
   
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
-  call boundaryII(time,dt)
+  call boundaryII()
   call calcprim(up,primit)
 
   !   calculate the fluxes using the primitives
@@ -195,7 +192,7 @@ subroutine tstep(time,dt)
 #endif
 
   !  upwind timestep
-   call step(dt)
+   call step(dt_CFL)
 
   !  add viscosity
   call viscosity()
@@ -219,15 +216,15 @@ subroutine tstep(time,dt)
   !   apply cooling/heating
 #ifdef COOLINGH
   !   add cooling to the conserved variables
-  call coolingh(dt*tsc)
+  call coolingh()
 #endif
 #ifdef COOLINGDMC
   !   the primitives are updated in the cooling routine
-  call coolingdmc(dt*tsc)
+  call coolingdmc()
 #endif
 #ifdef COOLINGCHI
   !   the primitives are updated in the cooling routine
-  call coolingchi(dt*tsc)
+  call coolingchi()
 #endif
   !   BBC cooling not implemented yet
 
@@ -237,15 +234,15 @@ subroutine tstep(time,dt)
 
 #ifdef C2ray
   !  Apply Rad transfer, and heating & Cooling w/C2-Ray
-  call C2ray_radiative_transfer(dt*tsc)
+  call C2ray_radiative_transfer(dt_CFL*tsc)
 #endif
 
   !   boundary contiditions on u
-  call boundaryI(time,dt)
+  call boundaryI()
 
 #ifdef THERMAL_COND
   !  Thermal conduction
-  call thermal_conduction(dt*tsc)
+  call thermal_conduction()
 #endif
 
 end subroutine tstep

@@ -64,20 +64,24 @@ program guacho
 #ifdef C2ray
   use C2Ray_init
 #endif
+#ifdef THERMAL_COND
+  use thermal_cond, only : tc_log
+#endif
 
   implicit none
   integer :: err
   integer :: itprint
-  real    :: time, dt, tprint
+  real    :: tprint
+  logical :: dump_out = .false.
 
   !   initializes mpi, and global variables
-  call initmain(time, tprint, itprint)
+  call initmain(tprint, itprint)
 
   !   initialize u's
   call initflow(itprint)
 
   !   impose  boundaries (needed if imposing special BCs)
-  call boundaryI(time,0.0)
+  call boundaryI()
 
   !   update primitives with u
   call calcprim(u,primit)
@@ -85,6 +89,13 @@ program guacho
 #ifdef RADDIFF
   call diffuse_rad()
 #endif
+
+  !  writes the initial conditions
+  if (iwarm == .false. ) then
+    call write_output(itprint)
+    itprint = itprint +1
+  end if
+
 #ifdef C2ray
   call C2ray_initialization()
 #endif
@@ -94,36 +105,46 @@ program guacho
 #endif
 
   !   time integration
-  do while (time.le.tmax)
+  do while (time <= tmax)
   
-     !   output at intervals tprint
-     if(time.ge.tprint) then
-        !call diffuse_rad()
-        call write_output(itprint)
-        if (rank.eq.0) then
-           print'(a,i4)', &
-           '****************** wrote output *************** &
-            & :' , itprint
-        end if
-        tprint=tprint+dtprint
-        itprint=itprint+1
-     end if
+    !   computes the timestep
+    call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
 
-     !   computes the timestep
-     call get_timestep(dt)
-     time = time + dt
-     if (rank.eq.0) print'(a,es12.3,a,es12.3,a,es12.3,a)',            &
-     !'time=',time,'  dt=', dt,' tprint=',tprint
-     'time=',time*tsc/day,' day  dt=', dt*tsc/day,' day tprint=',tprint*tsc/day,' day'
-     !'time=',time*tsc/myr,' Myr  dt=', dt*tsc/myr,' Myr tprint=',tprint*tsc/myr,' yr'
-     
-     !   advances the solution
-     call tstep(time,dt)
-     
+    if (rank == 0) print'(a,i,a,es12.3,a,es12.3,a,es12.3,a)',         &
+      'Iteration ', currentIteration,                                 &
+      ' | time:', time*tsc         ,                                  &
+      ' | dt:', dt_CFL*tsc           ,                                &
+      ' | tprint:', tprint*tsc
+
+    !   advances the solution
+    call tstep()
+
+    time = time + dt_CFL
+    
+      !   output at intervals tprint
+    if(dump_out) then
+      !call diffuse_rad()
+      call write_output(itprint)
+      if (rank == 0) then
+         print'(a,i4)', &
+         '****************** wrote output *************** &
+          & :' , itprint
+      end if
+      tprint=tprint+dtprint
+      itprint=itprint+1
+      dump_out = .false.
+    end if
+
+    currentIteration = currentIteration + 1
+
   end do
 
   !   finishes
   if (rank.eq.0) print'(a)',"--- My work here is done, have a nice day ---"
+
+#ifdef THERMAL_COND
+  if (rank == master) close(tc_log)
+#endif
 
 #ifdef MPIP
   call mpi_finalize(err)

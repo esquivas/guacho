@@ -1,15 +1,15 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014/MacPorts 2014_7) (preloaded format=pdflatex 2014.10.21)  2 APR 2015 12:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.12.8)  14 JAN 2016 12:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **refman
 (./refman.tex
-LaTeX2e <2014/05/01>
-Babel <3.9k> and hyphenation patterns for 43 languages loaded.
-(/opt/local/share/texmf-texlive/tex/latex/base/book.cls
-Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
-(/opt/local/share/texmf-texlive/tex/latex/base/bk10.clo
-File: bk10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/bk10.clo
+File: bk10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@chapter=\count80
@@ -24,37 +24,41 @@ File: bk10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/opt/local/share/texmf-texlive/tex/latex/base/fixltx2e.sty
-Package: fixltx2e 2014/05/13 v1.1q fixes to LaTeX
-LaTeX Info: Redefining \em on input line 429.
-)
-(/opt/local/share/texmf-texlive/tex/latex/tools/calc.sty
-Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/fixltx2e.sty
+Package: fixltx2e 2015/02/21 v2.0a fixes to LaTeX (obsolete)
+
+
+Package fixltx2e Warning: fixltx2e is not required with releases after 2015
+(fixltx2e)                All fixes are now in the LaTeX kernel.
+(fixltx2e)                See the latexrelease package for details.
+
+) (/usr/local/texlive/2015/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
 \calc@Acount=\count88
 \calc@Bcount=\count89
 \calc@Adimen=\dimen103
 \calc@Bdimen=\dimen104
 \calc@Askip=\skip43
 \calc@Bskip=\skip44
-LaTeX Info: Redefining \setlength on input line 75.
-LaTeX Info: Redefining \addtolength on input line 76.
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
 \calc@Ccount=\count90
 \calc@Cskip=\skip45
 ) (./doxygen.sty
 Package: doxygen 
 
-(/opt/local/share/texmf-texlive/tex/latex/base/alltt.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/alltt.sty
 Package: alltt 1997/06/16 v2.0g defines alltt environment
 )
-(/opt/local/share/texmf-texlive/tex/latex/tools/array.sty
-Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/array.sty
+Package: array 2014/10/28 v2.4c Tabular extension package (FMi)
 \col@sep=\dimen105
 \extrarowheight=\dimen106
 \NC@list=\toks14
 \extratabsurround=\skip46
 \backup@length=\skip47
 )
-(/opt/local/share/texmf-texlive/tex/latex/float/float.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count91
 \float@exts=\toks15
@@ -62,35 +66,35 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks16
 \@floatcapt=\box27
 )
-(/opt/local/share/texmf-texlive/tex/latex/base/ifthen.sty
-Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-(/opt/local/share/texmf-texlive/tex/latex/tools/verbatim.sty
-Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks17
 \verbatim@line=\toks18
 \verbatim@in@stream=\read1
 )
-(/opt/local/share/texmf-texlive/tex/latex/xcolor/xcolor.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
 
-(/opt/local/share/texmf-texlive/tex/latex/latexconfig/color.cfg
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package xcolor Info: Driver file: pdftex.def on input line 225.
 
-(/opt/local/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/pdftex-def/pdftex.def
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/infwarerr.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/infwarerr.sty
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/ltxcmds.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count92
 )
-(/opt/local/share/texmf-texlive/tex/latex/colortbl/colortbl.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
 \everycr=\toks19
 \minrowclearance=\skip48
@@ -106,7 +110,7 @@ Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
 )
-(/opt/local/share/texmf-texlive/tex/latex/xtab/xtab.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/xtab/xtab.sty
 Package: xtab 2011/07/31 v2.3f Extended supertabular package
 \c@tracingst=\count94
 \PWSTcapht=\dimen107
@@ -139,44 +143,46 @@ Package: xtab 2011/07/31 v2.3f Extended supertabular package
 \xreflength=\skip52
 \tmplength=\skip53
 )
-(/opt/local/share/texmf-texlive/tex/latex/adjustbox/adjustbox.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/adjustbox/adjustbox.sty
 Package: adjustbox 2012/05/21 v1.0 Adjusting TeX boxes (trim, clip, ...)
 
-(/opt/local/share/texmf-texlive/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2014/05/09 v2.6d package option processing (HA)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
 
-(/opt/local/share/texmf-texlive/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2015/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2015/texmf-dist/tex/generic/xkeyval/xkvutils.tex
 \XKV@toks=\toks20
 \XKV@tempa@toks=\toks21
-\XKV@depth=\count101
-File: xkeyval.tex 2014/05/09 v2.6d key=value parser (HA)
 
-(/opt/local/share/texmf-texlive/tex/generic/xkeyval/keyval.tex)))
-(/opt/local/share/texmf-texlive/tex/latex/adjustbox/adjcalc.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/xkeyval/keyval.tex))
+\XKV@depth=\count101
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/adjustbox/adjcalc.sty
 Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back
 -ends (calc, etex, pgfmath)
 )
-(/opt/local/share/texmf-texlive/tex/latex/adjustbox/trimclip.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/adjustbox/trimclip.sty
 Package: trimclip 2012/05/16 v1.0 Trim and clip general TeX material
 
-(/opt/local/share/texmf-texlive/tex/latex/graphics/graphicx.sty
-Package: graphicx 2014/04/25 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/opt/local/share/texmf-texlive/tex/latex/graphics/graphics.sty
-Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
 
-(/opt/local/share/texmf-texlive/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/opt/local/share/texmf-texlive/tex/latex/latexconfig/graphics.cfg
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/graphics.cfg
 File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 )
-Package graphics Info: Driver file: pdftex.def on input line 91.
+Package graphics Info: Driver file: pdftex.def on input line 94.
 )
 \Gin@req@height=\dimen122
 \Gin@req@width=\dimen123
 )
-(/opt/local/share/texmf-texlive/tex/latex/collectbox/collectbox.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/collectbox/collectbox.sty
 Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
 \collectedbox=\box30
 )
@@ -186,7 +192,7 @@ Package: collectbox 2012/05/17 v0.4b Collect macro arguments as boxes
 \tc@ury=\dimen127
 Package trimclip Info: Using driver 'tc-pdftex.def'.
 
-(/opt/local/share/texmf-texlive/tex/latex/adjustbox/tc-pdftex.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/adjustbox/tc-pdftex.def
 File: tc-pdftex.def 2012/05/13 v1.0 Clipping driver for pdftex
 ))
 \adjbox@Width=\dimen128
@@ -194,31 +200,31 @@ File: tc-pdftex.def 2012/05/13 v1.0 Clipping driver for pdftex
 \adjbox@Depth=\dimen130
 \adjbox@Totalheight=\dimen131
 
-(/opt/local/share/texmf-texlive/tex/latex/ifoddpage/ifoddpage.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
 Package: ifoddpage 2011/09/13 v1.0 Conditionals for odd/even page detection
 \c@checkoddpage=\count102
 )
-(/opt/local/share/texmf-texlive/tex/latex/varwidth/varwidth.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
 \@vwid@box=\box31
 \sift@deathcycles=\count103
 \@vwid@loff=\dimen132
 \@vwid@roff=\dimen133
 ))
-(/opt/local/share/texmf-texlive/tex/latex/base/inputenc.sty
-Package: inputenc 2014/04/30 v1.2b Input encoding file
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2015/03/17 v1.2c Input encoding file
 \inpenc@prehook=\toks22
 \inpenc@posthook=\toks23
 
-(/opt/local/share/texmf-texlive/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2014/09/29 v1.1m UTF-8 support for inputenc
 Now handling font encoding OML ...
 ... no UTF-8 mapping file for font encoding OML
 Now handling font encoding T1 ...
 ... processing UTF-8 mapping file for font encoding T1
 
-(/opt/local/share/texmf-texlive/tex/latex/base/t1enc.dfu
-File: t1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/t1enc.dfu
+File: t1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00AB (decimal 171)
@@ -367,8 +373,8 @@ File: t1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
 Now handling font encoding OT1 ...
 ... processing UTF-8 mapping file for font encoding OT1
 
-(/opt/local/share/texmf-texlive/tex/latex/base/ot1enc.dfu
-File: ot1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/ot1enc.dfu
+File: ot1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00B8 (decimal 184)
@@ -398,8 +404,8 @@ File: ot1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
 Now handling font encoding OMS ...
 ... processing UTF-8 mapping file for font encoding OMS
 
-(/opt/local/share/texmf-texlive/tex/latex/base/omsenc.dfu
-File: omsenc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omsenc.dfu
+File: omsenc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A7 (decimal 167)
    defining Unicode char U+00B6 (decimal 182)
    defining Unicode char U+00B7 (decimal 183)
@@ -422,11 +428,11 @@ Now handling font encoding U ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
-(/opt/local/share/texmf-texlive/tex/latex/base/makeidx.sty
-Package: makeidx 2000/03/29 v1.0m Standard LaTeX package
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/makeidx.sty
+Package: makeidx 2014/09/29 v1.0m Standard LaTeX package
 )
-(/opt/local/share/texmf-texlive/tex/latex/tools/multicol.sty
-Package: multicol 2014/04/23 v1.8e multicolumn formatting (FMi)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tools/multicol.sty
+Package: multicol 2015/03/31 v1.8m multicolumn formatting (FMi)
 \c@tracingmulticols=\count104
 \mult@box=\box32
 \multicol@leftmargin=\dimen134
@@ -474,10 +480,10 @@ Package: multicol 2014/04/23 v1.8e multicolumn formatting (FMi)
 \colbreak@box=\box57
 \mc@col@check@num=\count112
 )
-(/opt/local/share/texmf-texlive/tex/latex/multirow/multirow.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen143
 )
-(/opt/local/share/texmf-texlive/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
 Package textcomp Info: Sub-encoding information:
 (textcomp)               5 = only ISO-Adobe without \textcurrency
@@ -490,15 +496,15 @@ Package textcomp Info: Sub-encoding information:
 (textcomp)             only a restricted character set as indicated.
 (textcomp)             Family '?' is the default used for unknown fonts.
 (textcomp)             See the documentation for details.
-Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 71.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
 
-(/opt/local/share/texmf-texlive/tex/latex/base/ts1enc.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1enc.def
 File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
 Now handling font encoding TS1 ...
 ... processing UTF-8 mapping file for font encoding TS1
 
-(/opt/local/share/texmf-texlive/tex/latex/base/ts1enc.dfu
-File: ts1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+00A2 (decimal 162)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00A4 (decimal 164)
@@ -569,92 +575,93 @@ File: ts1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
    defining Unicode char U+25EF (decimal 9711)
    defining Unicode char U+266A (decimal 9834)
 ))
-LaTeX Info: Redefining \oldstylenums on input line 266.
-Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 281.
-Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 282.
-Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 283.
-Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 284.
-Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 285.
-Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 286.
-Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 287.
-Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 288.
-Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 289.
-Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 290.
-Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 291.
-Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 292.
-Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 293.
-Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 294.
-Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 295.
-Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 296.
-Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 297.
-Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 298.
-Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 299.
-Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 300.
-Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 301.
-Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 302.
-Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 303.
-Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 304.
+LaTeX Info: Redefining \oldstylenums on input line 334.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 351.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 352.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 353.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 354.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 355.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 356.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 357.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 358.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 359.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 360.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 361.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 362.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 363.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 364.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 365.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 366.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 367.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 368.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 369.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 370.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 371.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 372.
 
-Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 305.
-Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 306.
-Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 307.
-Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 308.
-Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 309.
-Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 310.
-Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 311.
-Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 312.
-Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 313.
-Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 314.
-Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 315.
-Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 316.
-Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 317.
-Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 318.
-Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 319.
-Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 320.
-Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 321.
-Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 322.
-Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 323.
-Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 324.
-Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 325.
-Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 326.
-Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 327.
-Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 328.
-Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 329.
-Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 330.
-Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 331.
-Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 332.
-Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 333.
-Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 334.
-Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 335.
-Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 336.
-Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 337.
-Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 338.
-Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 339.
-Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 373.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 374.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 375.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 376.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 377.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 378.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 379.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 380.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 381.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 382.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 383.
+Package textcomp Info: Setting lmtt sub-encoding to TS1/0 on input line 384.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 385.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 386.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 387.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 388.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 389.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 390.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 391.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 392.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 393.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 394.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 395.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 396.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 397.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 398.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 399.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 400.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 401.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 402.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 403.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 404.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 405.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
 )
-(/opt/local/share/texmf-texlive/tex/latex/wasysym/wasysym.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/wasysym/wasysym.sty
 Package: wasysym 2003/10/30 v2.0 Wasy-2 symbol support package
 \symwasy=\mathgroup4
 LaTeX Font Info:    Overwriting symbol font `wasy' in version `bold'
 (Font)                  U/wasy/m/n --> U/wasy/b/n on input line 90.
 )
-(/opt/local/share/texmf-texlive/tex/latex/base/fontenc.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
 
-(/opt/local/share/texmf-texlive/tex/latex/base/t1enc.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/base/t1enc.def
 File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
-LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
-(/opt/local/share/texmf-texlive/tex/latex/psnfss/helvet.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/helvet.sty
 Package: helvet 2005/04/12 PSNFSS-v9.2a (WaS) 
 )
-(/opt/local/share/texmf-texlive/tex/latex/psnfss/courier.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/courier.sty
 Package: courier 2005/04/12 PSNFSS-v9.2a (WaS) 
 )
-(/opt/local/share/texmf-texlive/tex/latex/amsfonts/amssymb.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(/opt/local/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks24
 \symAMSa=\mathgroup5
@@ -662,22 +669,22 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-(/opt/local/share/texmf-texlive/tex/latex/sectsty/sectsty.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/sectsty/sectsty.sty
 Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
 les
 )
-(/opt/local/share/texmf-texlive/tex/latex/geometry/geometry.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
 
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/ifpdf.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifpdf.sty
 Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
 Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/ifvtex.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifvtex.sty
 Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
 Package ifvtex Info: VTeX not detected.
 )
-(/opt/local/share/texmf-texlive/tex/generic/ifxetex/ifxetex.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/ifxetex/ifxetex.sty
 Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 )
 \Gm@cnth=\count113
@@ -693,7 +700,7 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \Gm@layoutvoffset=\dimen151
 \Gm@dimlist=\toks25
 )
-(/opt/local/share/texmf-texlive/tex/latex/fancyhdr/fancyhdr.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
 \fancy@headwidth=\skip56
 \f@ncyO@elh=\skip57
 \f@ncyO@erh=\skip58
@@ -704,14 +711,14 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \f@ncyO@olf=\skip63
 \f@ncyO@orf=\skip64
 )
-(/opt/local/share/texmf-texlive/tex/latex/latex-esq/aa-package/bibtex/natbib.st
-y
-Package: natbib 2006/03/22 7.3 (PWD)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip65
 \bibsep=\skip66
-LaTeX Info: Redefining \cite on input line 541.
+LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count116
-) (/opt/local/share/texmf-texlive/tex/latex/tocloft/tocloft.sty
+)
+(/usr/local/texlive/2015/texmf-dist/tex/latex/tocloft/tocloft.sty
 Package: tocloft 2013/05/02 v2.3f parameterised ToC, etc., typesetting
 Package tocloft Info: The document has chapter divisions on input line 44.
 \cftparskip=\skip67
@@ -756,14 +763,14 @@ Package tocloft Info: The document has chapter divisions on input line 44.
 
 
 Writing index file refman.idx
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
 
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
 Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
 
 
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/hobsub-generic.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
 Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
 Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
 Package hobsub Info: Skipping package `infwarerr' (already loaded).
@@ -802,24 +809,24 @@ Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
 Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
 Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
 )
-(/opt/local/share/texmf-texlive/tex/latex/oberdiek/auxhook.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/auxhook.sty
 Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
 )
-(/opt/local/share/texmf-texlive/tex/latex/oberdiek/kvoptions.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
 )
 \@linkdim=\dimen152
 \Hy@linkcounter=\count119
 \Hy@pagecounter=\count120
 
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
 \Hy@SavedSpaceFactor=\count121
 
-(/opt/local/share/texmf-texlive/tex/latex/latexconfig/hyperref.cfg
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
 Package hyperref Info: Hyper figures OFF on input line 4443.
@@ -830,17 +837,17 @@ Package hyperref Info: Backreferencing ON on input line 4461.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4688.
 
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/backref.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/backref.sty
 Package: backref 2012/07/25 v1.38 Bibliographical back referencing
 
-(/opt/local/share/texmf-texlive/tex/latex/oberdiek/rerunfilecheck.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
 Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 82.
 ))
 \c@Hy@tempcnt=\count122
 
-(/opt/local/share/texmf-texlive/tex/latex/url/url.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
@@ -865,7 +872,7 @@ LaTeX Info: Redefining \pageref on input line 6369.
 
 Package hyperref Message: Driver: hpdftex.
 
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
 \Fld@listcount=\count127
 \c@bookmark@seq@number=\count128
@@ -874,7 +881,7 @@ File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
 Package hyperref Info: Option `colorlinks' set `true' on input line 105.
 Package hyperref Info: Option `unicode' set `true' on input line 105.
 
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/puenc.def
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2012/11/06 v6.83m Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -1004,70 +1011,6 @@ LaTeX Warning: Label `namespacedifrad_a1d5243b742ea3504f1b6b09132417333' multip
 ly defined.
 
 
-LaTeX Warning: Label `namespaceexoplanet_a66ee761b561801f58b0bf10b26b62a0c' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_ab4fe33dc35a585b62f339476e181d78d' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a59991e54f31b0354111d5b9e66592f11' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a6bfca263a1237efbec66b4e9250dc3c2' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_ac8978c4c18d8b1383bfddd3b80eb3d6a' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a6a04838fd3adcdaa194dc432237a0054' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_adc77883dd9079c086cf5c6ddce9c048b' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a3e2bb7a565f6afe21cd68aa8b27a501e' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_ace0f5d8d95a226ed1b2c35e0cfc47e1e' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a80a5560542e8adccc618c163c2f03fe5' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_af870fc778f9e46f3b9ff74a65a116165' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a1f19a662a76852a830a08c66be8796bb' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a42dc35a9cdd9b1b8c10ddf245a1f2b8b' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a26bd2e233f9fb48ab288f5378aa12615' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_a4beb49f2e3a5335b97cd702b68651fab' mul
-tiply defined.
-
-
-LaTeX Warning: Label `namespaceexoplanet_ad888a61279bbe33aed243934d0279253' mul
-tiply defined.
-
-
 LaTeX Warning: Label `namespaceglobals_ae6519b751f8ef608c2074e27024335b7' multi
 ply defined.
 
@@ -1140,180 +1083,20 @@ LaTeX Warning: Label `namespaceglobals_a4bc8f1b5670efd802d57dce2c385b6d9' multi
 ply defined.
 
 
-LaTeX Warning: Label `namespaceparameters_adfc2b2bb3e3f9614e8b171561f9eb78d' mu
-ltiply defined.
+LaTeX Warning: Label `namespaceglobals_acc5c9a03b08561f9eeb530eb65221dbb' multi
+ply defined.
 
 
-LaTeX Warning: Label `namespaceparameters_afe25db26aa30836573528cd959ee1fca' mu
-ltiply defined.
+LaTeX Warning: Label `namespaceglobals_a1599fd11dcd5dfa9104003de3a2d03e5' multi
+ply defined.
 
 
-LaTeX Warning: Label `namespaceparameters_ad2e282b7f56de824d72b1acf9f8aa674' mu
-ltiply defined.
+LaTeX Warning: Label `namespaceglobals_a6966cf52ad4f442a7fe69efa6d5c0bee' multi
+ply defined.
 
 
-LaTeX Warning: Label `namespaceparameters_af1edd81ebd6b46141bb93b90084b172e' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a5cce81231f97dddc9a7abc8ad2691fcf' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a30c7f7c0e13eedb6214b5d6de69a9a13' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a40b20d533d3bf5defbb402e4ed4f26f1' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_aa0fce0eedffad5d18a2c54406babd6a0' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a06bfa99536c53df3ef70fded1d563c3b' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a5cf63ae056650e314df11497f8b13e28' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a15b7777c042a615b8c2d18578682e177' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_aeb329f6b921d76584073753e2596e410' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_af4a703fa8afb09b800dbca84a465ed73' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a52f0c9493ee24c99cb8fad63d3ecddc8' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_af38b91fa583e6da2e09cac965ad56fcf' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a1c9cf29115f4fd4cf4820e25de385fe8' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_ae3e749942c74fc165950811be811fbbf' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a755803b69c4c41eab3f29d49aab07080' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a106ef8f4b97ef7fba8e7845c774c31fd' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a9b9fbce5a8439155ee7ae1ac23feef54' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_aae00fb44c9445b75ac9e9fe1a3836668' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a0e7200e85023d763950f5d027c265b47' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_aeb110c6e84304ed31d7e4a4f86fa07c0' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a09f3a853f8927374a15bc5b14395e397' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a95ee496fdf29b48b5e990f029331ea9e' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a3986a90c2750989207cff0593c325ce1' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a8b8971e5b07f3249e787d4a06461f9db' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a32153ac2f0853357f00212ed40525b85' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_aa82f078b9d5e200c98460fd8fdecd77f' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a10cf58c7e097b82e96d1c149530dad37' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a0f11692236dfb49ab2bb451103faf8f1' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_afc7a92e21b69eb6d20e4488030bd1300' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_af9639278be37d485bbe316a0a4389157' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a37fe125b9070b83bc96f133a6485b0f2' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a1a3b8ba995adb2f1c093cdc8b37eb5bd' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_ab73091bd318f7d283d05a362acdcf146' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a743b8648645c72aff60188bf8b87f10a' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a19bcd2dc8bcf4a1be3db412ccca70308' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_ac65196ab662a1d7a4485ff3db2092304' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a907a8edcef1c67359c2f593a4a23f768' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_ab1106d13b42bd50bee92066b8df41d80' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a2e2d7c16e3034394c493dcc0f8f3368e' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_ad1a2fd8c36d344e74949aab19206d23c' mu
-ltiply defined.
-
-
-LaTeX Warning: Label `namespaceparameters_a01664304fae28ea43d9a76e212d7cad9' mu
-ltiply defined.
+LaTeX Warning: Label `namespaceglobals_a6942102ba8bd15a3350901de0b99bafa' multi
+ply defined.
 
 
 LaTeX Warning: Label `namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0'
@@ -1328,16 +1111,20 @@ LaTeX Warning: Label `namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728'
  multiply defined.
 
 
-LaTeX Warning: Label `namespacethermal__cond_a35e92d8dd3107b43d3326f014577fa9e'
+LaTeX Warning: Label `namespacethermal__cond_a5420f28be46174eb6852f14281ec7ace'
  multiply defined.
 
 
-LaTeX Warning: Label `namespacethermal__cond_a59c290133a4485e731bfc0185d006091'
+LaTeX Warning: Label `namespacethermal__cond_ae13a8d994e65b9e57ebb80e892c72aac'
  multiply defined.
 
 
-LaTeX Warning: Label `namespaceuser__mod_a302a8099e4696e80b634ec347d6a3bec' mul
-tiply defined.
+LaTeX Warning: Label `namespacethermal__cond_a0d692500ab9d6becafcf89d733d3f76f'
+ multiply defined.
+
+
+LaTeX Warning: Label `namespacethermal__cond_a03140c73c7461f1882cd286b3e378abc'
+ multiply defined.
 
 )
 \openout1 = `refman.aux'.
@@ -1357,8 +1144,8 @@ LaTeX Font Info:    ... okay on input line 115.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 115.
 LaTeX Font Info:    Try loading font information for TS1+cmr on input line 115.
 
- (/opt/local/share/texmf-texlive/tex/latex/base/ts1cmr.fd
-File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+ (/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 115.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 115.
@@ -1367,13 +1154,13 @@ LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 115.
 LaTeX Font Info:    ... okay on input line 115.
 LaTeX Font Info:    Try loading font information for T1+phv on input line 115.
 
-(/opt/local/share/texmf-texlive/tex/latex/psnfss/t1phv.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 (Font)              scaled to size 8.99994pt on input line 115.
 
-(/opt/local/share/texmf-texlive/tex/context/base/supp-pdf.mkii
+(/usr/local/texlive/2015/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count129
 \scratchdimen=\dimen156
@@ -1386,10 +1173,10 @@ LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 \MPnumerator=\count133
 \makeMPintoPDFobject=\count134
 \everyMPtoPDFconversion=\toks27
-) (/opt/local/share/texmf-texlive/tex/latex/oberdiek/epstopdf-base.sty
+) (/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
 
-(/opt/local/share/texmf-texlive/tex/latex/oberdiek/grfext.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/grfext.sty
 Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
 )
 Package grfext Info: Graphics extension search list:
@@ -1397,7 +1184,7 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 452.
 
-(/opt/local/share/texmf-texlive/tex/latex/latexconfig/epstopdf-sys.cfg
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
@@ -1438,10 +1225,10 @@ e
 \AtBeginShipoutBox=\box59
 Package backref Info: ** backref set up for natbib ** on input line 115.
 Package hyperref Info: Link coloring ON on input line 115.
-(/opt/local/share/texmf-texlive/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2015/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
-(/opt/local/share/texmf-texlive/tex/generic/oberdiek/gettitlestring.sty
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count135
@@ -1468,17 +1255,17 @@ LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 (Font)              scaled to size 6.29996pt on input line 127.
 LaTeX Font Info:    Try loading font information for U+wasy on input line 127.
-(/opt/local/share/texmf-texlive/tex/latex/wasysym/uwasy.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2003/10/30 v2.0 Wasy-2 symbol font definitions
 )
 LaTeX Font Info:    Try loading font information for U+msa on input line 127.
 
-(/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 127.
 
-(/opt/local/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
@@ -1488,7 +1275,7 @@ LaTeX Font Info:    Font shape `T1/phv/m/n' will be
  [1
 
 
-{/opt/local/var/db/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
+{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
 
 ]
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
@@ -1508,10 +1295,10 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <7> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 1.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
 (Font)              scaled to size 6.29996pt on input line 1.
- [3
 
-] [4] [5]
-[6] [7] [8])
+[3
+
+] [4] [5] [6] [7] [8])
 \tf@toc=\write5
 \openout5 = `refman.toc'.
 
@@ -1546,7 +1333,7 @@ LaTeX Font Info:    Font shape `T1/phv/b/n' will be
 LaTeX Font Info:    Font shape `T1/phv/bc/n' will be
 (Font)              scaled to size 12.9599pt on input line 4.
 LaTeX Font Info:    Try loading font information for T1+pcr on input line 12.
-(/opt/local/share/texmf-texlive/tex/latex/psnfss/t1pcr.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
@@ -1559,17 +1346,9 @@ LaTeX Font Info:    Font shape `T1/phv/m/n' will be
 Chapter 2.
 (./namespaces.tex [3]) [4]
 Chapter 3.
-(./files.tex
+(./files.tex [5
 
-LaTeX Warning: Reference `_makefile' on page 5 undefined on input line 3.
-
-
-Underfull \vbox (badness 2856) has occurred while \output is active []
-
- [5
-
-])
-[6]
+]) [6]
 Chapter 4.
 (./namespaceboundaries.tex
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
@@ -1580,7 +1359,7 @@ LaTeX Font Info:    Font shape `T1/phv/bc/n' will be
 (Font)              scaled to size 10.79993pt on input line 8.
 LaTeX Font Info:    Try loading font information for TS1+phv on input line 11.
 
-(/opt/local/share/texmf-texlive/tex/latex/psnfss/ts1phv.fd
+(/usr/local/texlive/2015/texmf-dist/tex/latex/psnfss/ts1phv.fd
 File: ts1phv.fd 2001/06/04 scalable font definitions for TS1/phv.
 )
 LaTeX Font Info:    Font shape `TS1/phv/m/n' will be
@@ -1589,236 +1368,183 @@ LaTeX Font Info:    Font shape `T1/phv/m/it' in size <9> not available
 (Font)              Font shape `T1/phv/m/sl' tried instead on input line 12.
 LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
 (Font)              scaled to size 8.09995pt on input line 12.
-LaTeX Font Info:    Font shape `T1/phv/bc/it' in size <10> not available
-(Font)              Font shape `T1/phv/bc/sl' tried instead on input line 28.
-LaTeX Font Info:    Font shape `T1/phv/bc/sl' will be
-(Font)              scaled to size 8.99994pt on input line 28.
-LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 32.
-LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
-(Font)              scaled to size 8.99994pt on input line 32.
-
-<namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph.pdf, id=1409, 527
-.9725pt x 100.375pt>
-File: namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph.pdf Graphic 
-file (type pdf)
-
-<use namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph.pdf>
-Package pdftex.def Info: namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_
-cgraph.pdf used on input line 47.
-(pdftex.def)             Requested size: 350.0pt x 66.5387pt.
- [7
-
- <./namespaceboundaries_a3742debeb694e374aed0d5b1e6970b8a_cgraph.pdf>] [8]
-<namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph.pdf, id=1432, 530
-.98375pt x 100.375pt>
-File: namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph.pdf Graphic 
-file (type pdf)
-
-<use namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph.pdf>
-Package pdftex.def Info: namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_
-cgraph.pdf used on input line 78.
-(pdftex.def)             Requested size: 350.0pt x 66.16345pt.
 )
-(./namespacecoldens__utilities.tex
+(./namespacecoldens__utilities.tex [7
+
+]
+LaTeX Font Info:    Font shape `T1/phv/bc/it' in size <10> not available
+(Font)              Font shape `T1/phv/bc/sl' tried instead on input line 47.
+LaTeX Font Info:    Font shape `T1/phv/bc/sl' will be
+(Font)              scaled to size 8.99994pt on input line 47.
 LaTeX Font Info:    Font shape `T1/phv/bc/it' in size <7> not available
 (Font)              Font shape `T1/phv/bc/sl' tried instead on input line 47.
 LaTeX Font Info:    Font shape `T1/phv/bc/sl' will be
 (Font)              scaled to size 6.29996pt on input line 47.
- [9 <./namespaceboundaries_ae74a7f6b33366d1adac94ac3bc438104_cgraph.pdf>]
+LaTeX Font Info:    Font shape `T1/phv/m/it' in size <10> not available
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 50.
+LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
+(Font)              scaled to size 8.99994pt on input line 50.
+
 <namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph.pdf, id=1
-465, 313.17pt x 298.11375pt>
+394, 297.11pt x 298.11375pt>
 File: namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph.pdf 
 Graphic file (type pdf)
 
 <use namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph.pdf>
 Package pdftex.def Info: namespacecoldens__utilities_af035b829538114f8b62f54365
 269bdab_cgraph.pdf used on input line 79.
-(pdftex.def)             Requested size: 312.0pt x 297.01219pt.
+(pdftex.def)             Requested size: 296.0pt x 297.01219pt.
 
-[10 <./namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph.pdf
->] [11]) (./namespaceconstants.tex [12]
+Underfull \vbox (badness 2564) has occurred while \output is active []
+
+ [8]
+[9 <./namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph.pdf>
+] [10]) (./namespaceconstants.tex
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <7> not available
 (Font)              Font shape `T1/phv/m/sl' tried instead on input line 46.
 LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
 (Font)              scaled to size 6.29996pt on input line 46.
-) (./namespacecooling__chi.tex [13]
-<namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph.pdf, id=1538, 3
-37.26pt x 138.5175pt>
-File: namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph.pdf Graphi
-c file (type pdf)
-
-<use namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph.pdf>
-Package pdftex.def Info: namespacecooling__chi_a16ac452561e4a332a960a3ea7304f10
-3_cgraph.pdf used on input line 69.
-(pdftex.def)             Requested size: 336.0pt x 138.00354pt.
-)
-(./namespacecooling__dmc.tex [14 <./namespacecooling__chi_a16ac452561e4a332a960
-a3ea7304f103_cgraph.pdf>]
-<namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph.pdf, id=1562, 3
-61.35pt x 138.5175pt>
-File: namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph.pdf Graphi
-c file (type pdf)
-
-<use namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph.pdf>
-Package pdftex.def Info: namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49c
-e_cgraph.pdf used on input line 69.
-(pdftex.def)             Requested size: 350.0pt x 134.16734pt.
-)
-(./namespacecooling__h.tex [15 <./namespacecooling__dmc_ad51341dd3b898a1fe0f7c2
-98cf7e49ce_cgraph.pdf>]
-<namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf, id=1586, 295
-.1025pt x 100.375pt>
+ [11]) (./namespacecooling__chi.tex)
+(./namespacecooling__dmc.tex [12]) (./namespacecooling__h.tex [13]
+<namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf, id=1502, 285
+.065pt x 100.375pt>
 File: namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf Graphic 
 file (type pdf)
 
 <use namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf>
 Package pdftex.def Info: namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_
 cgraph.pdf used on input line 68.
-(pdftex.def)             Requested size: 294.0pt x 100.00255pt.
- [16 <./namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf>]
-<namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf, id=1606, 440
-.64626pt x 214.8025pt>
+(pdftex.def)             Requested size: 284.0pt x 99.9995pt.
+ [14 <./namespacecooling__h_a92cfd14c9b02e853eb33d22857fabeed_cgraph.pdf>] [15]
+
+<namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf, id=1529, 420
+.57124pt x 214.8025pt>
 File: namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf Graphic 
 file (type pdf)
 
 <use namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf>
 Package pdftex.def Info: namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_
 cgraph.pdf used on input line 136.
-(pdftex.def)             Requested size: 350.0pt x 170.61967pt.
- [17 <./namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf>]
-<namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff_cgraph.pdf, id=1622, 579
-.16376pt x 214.8025pt>
-File: namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff_cgraph.pdf Graphic 
-file (type pdf)
-
-<use namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff_cgraph.pdf>
-Package pdftex.def Info: namespacecooling__h_ad092ffe4588667ec0c7360154f3ca7ff_
-cgraph.pdf used on input line 196.
-(pdftex.def)             Requested size: 350.0pt x 129.81006pt.
-)
-(./namespacedifrad.tex [18 <./namespacecooling__h_ad092ffe4588667ec0c7360154f3c
-a7ff_cgraph.pdf>]
-<namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf, id=1661, 427.597
-5pt x 176.66pt>
+(pdftex.def)             Requested size: 350.0pt x 178.76128pt.
+ [16 <./namespacecooling__h_aef95dbca5e7aef78d66a225cc217c982_cgraph.pdf>])
+(./namespacedifrad.tex [17]
+<namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf, id=1580, 409.53p
+t x 176.66pt>
 File: namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf Graphic file
  (type pdf)
 
 <use namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf>
 Package pdftex.def Info: namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgra
 ph.pdf used on input line 86.
-(pdftex.def)             Requested size: 350.0pt x 144.60065pt.
- [19]
-<namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf, id=1682, 294.098
-75pt x 100.375pt>
+(pdftex.def)             Requested size: 350.0pt x 150.98924pt.
+ [18 <./namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf>]
+<namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf, id=1601, 280.046
+25pt x 100.375pt>
 File: namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf Graphic file
  (type pdf)
 
 <use namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf>
 Package pdftex.def Info: namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgra
 ph.pdf used on input line 113.
-(pdftex.def)             Requested size: 293.0pt x 100.00102pt.
- [20 <./namespacedifrad_aeec1cd3dae50e6946aadb42abef934ec_cgraph.pdf> <./namesp
-acedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf
+(pdftex.def)             Requested size: 279.0pt x 100.00409pt.
 
-pdfTeX warning: pdflatex (file ./namespacedifrad_a1ccb144621689571d836f2f76c5fa
-bae_cgraph.pdf): PDF inclusion: multiple pdfs with page group included in a sin
-gle page
->]
-<namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgraph.pdf, id=1704, 294.098
-75pt x 100.375pt>
+<namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgraph.pdf, id=1602, 284.061
+25pt x 100.375pt>
 File: namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgraph.pdf Graphic file
  (type pdf)
 
 <use namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgraph.pdf>
 Package pdftex.def Info: namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgra
 ph.pdf used on input line 199.
-(pdftex.def)             Requested size: 293.0pt x 100.00102pt.
- [21 <./namespacedifrad_afe6e9d2182e755ae483aeaa2c91f2710_cgraph.pdf>])
-(./namespaceexoplanet.tex [22]) (./namespaceglobals.tex [23])
-(./namespaceh__alpha__utilities.tex [24]
+(pdftex.def)             Requested size: 283.0pt x 100.01021pt.
+ [19 <./namespacedifrad_a1ccb144621689571d836f2f76c5fabae_cgraph.pdf>])
+(./namespaceglobals.tex [20 <./namespacedifrad_afe6e9d2182e755ae483aeaa2c91f271
+0_cgraph.pdf>]) (./namespaceh__alpha__utilities.tex [21]
 <namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a_cgraph.pdf, id=
-1825, 314.17375pt x 298.11375pt>
+1687, 300.12125pt x 298.11375pt>
 File: namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a_cgraph.pdf
  Graphic file (type pdf)
 
 <use namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a_cgraph.pdf>
 Package pdftex.def Info: namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039ca
 e21ed35a_cgraph.pdf used on input line 81.
-(pdftex.def)             Requested size: 313.0pt x 297.01219pt.
-
-Underfull \vbox (badness 1038) has occurred while \output is active []
-
- [25 <./namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a_cgraph.p
-df>]
-[26] [27]) (./namespacehll.tex [28]
-<namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf, id=1855, 425.59pt x
- 252.945pt>
+(pdftex.def)             Requested size: 299.0pt x 297.02583pt.
+[22] [23 <./namespaceh__alpha__utilities_aafc5cae88b562d0bd2d039cae21ed35a_cgra
+ph.pdf>] [24]) (./namespacehll.tex [25] [26]
+<namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf, id=1732, 411.5375pt
+ x 252.945pt>
 File: namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf Graphic file (t
 ype pdf)
  <use namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf>
 Package pdftex.def Info: namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.
 pdf used on input line 44.
-(pdftex.def)             Requested size: 350.0pt x 208.02992pt.
+(pdftex.def)             Requested size: 350.0pt x 215.12392pt.
 
-[29 <./namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf>]
-<namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf, id=1872, 291.0875pt
- x 176.66pt>
+<namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf, id=1733, 277.035pt 
+x 176.66pt>
 File: namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf Graphic file (t
 ype pdf)
  <use namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf>
 Package pdftex.def Info: namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.
 pdf used on input line 78.
-(pdftex.def)             Requested size: 290.0pt x 176.0126pt.
-)
-(./namespacehllc.tex
-<namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgraph.pdf, id=1875, 435.6275p
-t x 252.945pt>
+(pdftex.def)             Requested size: 276.0pt x 176.00183pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [27 <./namespacehll_a27386fb5bcf705be5e8c2650484966c6_cgraph.pdf>]) (./namespa
+cehllc.tex
+<namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgraph.pdf, id=1750, 420.57124
+pt x 252.945pt>
 File: namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgraph.pdf Graphic file (
 type pdf)
 
 <use namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgraph.pdf>
 Package pdftex.def Info: namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgraph
 .pdf used on input line 44.
-(pdftex.def)             Requested size: 350.0pt x 203.22469pt.
- [30 <./namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf>]
-<namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf, id=1893, 301.125pt
- x 176.66pt>
+(pdftex.def)             Requested size: 350.0pt x 210.50394pt.
+
+Underfull \vbox (badness 2343) has occurred while \output is active []
+
+ [28 <./namespacehll_aa67c7db7e17f7dedf7286320baeda1dd_cgraph.pdf>]
+<namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf, id=1766, 286.06876
+pt x 176.66pt>
 File: namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf Graphic file (
 type pdf)
- <use namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf>
+
+<use namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf>
 Package pdftex.def Info: namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph
 .pdf used on input line 78.
-(pdftex.def)             Requested size: 300.0pt x 176.0153pt.
+(pdftex.def)             Requested size: 285.0pt x 176.00183pt.
 )
-(./namespacehlld.tex [31 <./namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgr
+(./namespacehlld.tex [29 <./namespacehllc_a702fd4ba2d419a6ac6d21a9bc25ba230_cgr
 aph.pdf> <./namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f80_cgraph.pdf
 
 pdfTeX warning: pdflatex (file ./namespacehllc_a25f1f218ed55fbda8b6311baa3ff6f8
 0_cgraph.pdf): PDF inclusion: multiple pdfs with page group included in a singl
 e page
 >]
-<namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf, id=1917, 435.6275p
-t x 252.945pt>
+<namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf, id=1788, 416.55624
+pt x 233.87375pt>
 File: namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf Graphic file (
 type pdf)
 
 <use namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf>
 Package pdftex.def Info: namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph
 .pdf used on input line 44.
-(pdftex.def)             Requested size: 350.0pt x 203.22469pt.
- [32 <./namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf>]
-<namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf, id=1934, 301.125pt
- x 176.66pt>
+(pdftex.def)             Requested size: 350.0pt x 196.51682pt.
+ [30 <./namespacehlld_a2640822e1b56d5b174f6293c26d75e22_cgraph.pdf>]
+<namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf, id=1804, 282.05376
+pt x 138.5175pt>
 File: namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf Graphic file (
 type pdf)
- <use namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf>
+
+<use namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf>
 Package pdftex.def Info: namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph
 .pdf used on input line 78.
-(pdftex.def)             Requested size: 300.0pt x 176.0153pt.
+(pdftex.def)             Requested size: 281.0pt x 138.00987pt.
 )
 (./namespacehlle.tex
-<namespacehlle_a03540214994c25ce07877114dd37b641_cgraph.pdf, id=1937, 435.6275p
+<namespacehlle_a03540214994c25ce07877114dd37b641_cgraph.pdf, id=1807, 419.5675p
 t x 252.945pt>
 File: namespacehlle_a03540214994c25ce07877114dd37b641_cgraph.pdf Graphic file (
 type pdf)
@@ -1826,102 +1552,50 @@ type pdf)
 <use namespacehlle_a03540214994c25ce07877114dd37b641_cgraph.pdf>
 Package pdftex.def Info: namespacehlle_a03540214994c25ce07877114dd37b641_cgraph
 .pdf used on input line 44.
-(pdftex.def)             Requested size: 350.0pt x 203.22469pt.
- [33 <./namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf>]
-<namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph.pdf, id=1956, 301.125pt
+(pdftex.def)             Requested size: 350.0pt x 211.00569pt.
+ [31 <./namespacehlld_adb0dbc5abe3e062f2ee4e333c6794bc8_cgraph.pdf>]
+<namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph.pdf, id=1824, 285.065pt
  x 176.66pt>
 File: namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph.pdf Graphic file (
 type pdf)
  <use namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph.pdf>
 Package pdftex.def Info: namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph
 .pdf used on input line 78.
-(pdftex.def)             Requested size: 300.0pt x 176.0153pt.
+(pdftex.def)             Requested size: 284.0pt x 175.99913pt.
 )
-(./namespacehydro__core.tex [34 <./namespacehlle_a03540214994c25ce07877114dd37b
+(./namespacehydro__core.tex [32 <./namespacehlle_a03540214994c25ce07877114dd37b
 641_cgraph.pdf> <./namespacehlle_a5646b0259c574b5e8dd3754a493d358d_cgraph.pdf
 
 pdfTeX warning: pdflatex (file ./namespacehlle_a5646b0259c574b5e8dd3754a493d358
 d_cgraph.pdf): PDF inclusion: multiple pdfs with page group included in a singl
 e page
 >]
-<namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf, id=1989, 32
-9.23pt x 100.375pt>
+<namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf, id=1855, 31
+3.17pt x 100.375pt>
 File: namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf Graphic
  file (type pdf)
 
 <use namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf>
 Package pdftex.def Info: namespacehydro__core_a991a14316cc93864150071b30fd9c772
 _cgraph.pdf used on input line 64.
-(pdftex.def)             Requested size: 328.0pt x 100.00255pt.
+(pdftex.def)             Requested size: 312.0pt x 100.00409pt.
 
-[35 <./namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf>]
-<namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph.pdf, id=2015, 35
-0.30875pt x 138.5175pt>
-File: namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph.pdf Graphic
- file (type pdf)
-
-<use namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph.pdf>
-Package pdftex.def Info: namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53
-_cgraph.pdf used on input line 167.
-(pdftex.def)             Requested size: 349.0pt x 138.00987pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [36]
-[37 <./namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph.pdf>]
-[38]) (./namespacehydro__solver.tex [39] [40]
-<namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf, id=2056, 
-624.3325pt x 214.8025pt>
+[33 <./namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.pdf>]
+[34] [35] [36]) (./namespacehydro__solver.tex
+<namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf, id=1896, 
+600.2425pt x 214.8025pt>
 File: namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf Graph
 ic file (type pdf)
 
 <use namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf>
 Package pdftex.def Info: namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a
 1a_cgraph.pdf used on input line 45.
-(pdftex.def)             Requested size: 350.0pt x 120.41968pt.
+(pdftex.def)             Requested size: 350.0pt x 125.25417pt.
 
-<namespacehydro__solver_aca1a384e66d388e79ca981c0c84680a0_cgraph.pdf, id=2057, 
-846.16125pt x 913.4125pt>
-File: namespacehydro__solver_aca1a384e66d388e79ca981c0c84680a0_cgraph.pdf Graph
-ic file (type pdf)
-
-<use namespacehydro__solver_aca1a384e66d388e79ca981c0c84680a0_cgraph.pdf>
-Package pdftex.def Info: namespacehydro__solver_aca1a384e66d388e79ca981c0c84680
-a0_cgraph.pdf used on input line 76.
-(pdftex.def)             Requested size: 350.0pt x 377.80475pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [41 <./namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf>])
-(./namespaceinit.tex [42 <./namespacehydro__solver_aca1a384e66d388e79ca981c0c84
-680a0_cgraph.pdf>]
-<namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9_cgraph.pdf, id=2089, 477.785pt
- x 100.375pt>
-File: namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9_cgraph.pdf Graphic file (
-type pdf)
- <use namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9_cgraph.pdf>
-Package pdftex.def Info: namespaceinit_ab5415b25da1a9e732d3f557f4d6008b9_cgraph
-.pdf used on input line 43.
-(pdftex.def)             Requested size: 350.0pt x 73.5289pt.
-
-<namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99_cgraph.pdf, id=2091, 451.6875p
-t x 264.99pt>
-File: namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99_cgraph.pdf Graphic file (
-type pdf)
- <use namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99_cgraph.pdf>
-Package pdftex.def Info: namespaceinit_a14acb8c0d784a1c51d1a646ee4384e99_cgraph
-.pdf used on input line 76.
-(pdftex.def)             Requested size: 350.0pt x 205.34491pt.
-) (./namespacelyman__alpha__utilities.tex [43 <./namespaceinit_ab5415b25da1a9e7
-32d3f557f4d6008b9_cgraph.pdf> <./namespaceinit_a14acb8c0d784a1c51d1a646ee4384e9
-9_cgraph.pdf
-
-pdfTeX warning: pdflatex (file ./namespaceinit_a14acb8c0d784a1c51d1a646ee4384e9
-9_cgraph.pdf): PDF inclusion: multiple pdfs with page group included in a singl
-e page
->] [44]
+[37 <./namespacehydro__solver_ac34a166e9ddd81f20f2b271138458a1a_cgraph.pdf>])
+(./namespaceinit.tex [38]) (./namespacelyman__alpha__utilities.tex [39]
 <namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgraph.pdf,
- id=2136, 335.2525pt x 347.2975pt>
+ id=1949, 325.215pt x 347.2975pt>
 File: namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgraph
 .pdf Graphic file (type pdf)
 
@@ -1929,134 +1603,121 @@ File: namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgraph
 pdf>
 Package pdftex.def Info: namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6f
 d3170f5f5bf3_cgraph.pdf used on input line 84.
-(pdftex.def)             Requested size: 334.0pt x 345.9983pt.
- [45 <./namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgra
-ph.pdf>] [46]) (./namespaceout__silo__module.tex [47]
-<namespaceout__silo__module_a65763f848b9b5da2a20d8b55f53f8515_cgraph.pdf, id=21
-67, 402.50375pt x 138.5175pt>
+(pdftex.def)             Requested size: 324.0pt x 346.0248pt.
+ [40 <./namespacelyman__alpha__utilities_a7ca5810d29123f1c5c6fd3170f5f5bf3_cgra
+ph.pdf>] [41]) (./namespaceout__bin__module.tex [42] [43]
+<namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59_cgraph.pdf, id=197
+9, 349.305pt x 111.41624pt>
+File: namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59_cgraph.pdf Gr
+aphic file (type pdf)
+
+<use namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59_cgraph.pdf>
+Package pdftex.def Info: namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27be
+b0f59_cgraph.pdf used on input line 43.
+(pdftex.def)             Requested size: 348.0pt x 111.00624pt.
+)
+(./namespaceout__silo__module.tex [44 <./namespaceout__bin__module_ac5772f05ffd
+d0227d2fc17e27beb0f59_cgraph.pdf>]
+<namespaceout__silo__module_a65763f848b9b5da2a20d8b55f53f8515_cgraph.pdf, id=19
+99, 381.425pt x 138.5175pt>
 File: namespaceout__silo__module_a65763f848b9b5da2a20d8b55f53f8515_cgraph.pdf G
 raphic file (type pdf)
 
 <use namespaceout__silo__module_a65763f848b9b5da2a20d8b55f53f8515_cgraph.pdf>
 Package pdftex.def Info: namespaceout__silo__module_a65763f848b9b5da2a20d8b55f5
 3f8515_cgraph.pdf used on input line 45.
-(pdftex.def)             Requested size: 350.0pt x 120.44794pt.
+(pdftex.def)             Requested size: 350.0pt x 127.11002pt.
 )
-(./namespaceoutput.tex [48 <./namespaceout__silo__module_a65763f848b9b5da2a20d8
-b55f53f8515_cgraph.pdf>] [49]
-<namespaceoutput_a9a6f65196f6b514f504929c9e1f7582f_cgraph.pdf, id=2188, 543.028
-75pt x 157.58875pt>
+(./namespaceout__vtk__module.tex [45 <./namespaceout__silo__module_a65763f848b9
+b5da2a20d8b55f53f8515_cgraph.pdf>] [46]
+<namespaceout__vtk__module_ac34f91e1b74dd533461d7ead905bf937_cgraph.pdf, id=202
+1, 335.2525pt x 100.375pt>
+File: namespaceout__vtk__module_ac34f91e1b74dd533461d7ead905bf937_cgraph.pdf Gr
+aphic file (type pdf)
+
+<use namespaceout__vtk__module_ac34f91e1b74dd533461d7ead905bf937_cgraph.pdf>
+Package pdftex.def Info: namespaceout__vtk__module_ac34f91e1b74dd533461d7ead905
+bf937_cgraph.pdf used on input line 41.
+(pdftex.def)             Requested size: 334.0pt x 99.9995pt.
+)
+(./namespaceoutput.tex
+<namespaceoutput_a9a6f65196f6b514f504929c9e1f7582f_cgraph.pdf, id=2023, 515.927
+5pt x 226.8475pt>
 File: namespaceoutput_a9a6f65196f6b514f504929c9e1f7582f_cgraph.pdf Graphic file
  (type pdf)
 
 <use namespaceoutput_a9a6f65196f6b514f504929c9e1f7582f_cgraph.pdf>
 Package pdftex.def Info: namespaceoutput_a9a6f65196f6b514f504929c9e1f7582f_cgra
 ph.pdf used on input line 42.
-(pdftex.def)             Requested size: 350.0pt x 101.57542pt.
-)
-(./namespaceparameters.tex [50 <./namespaceoutput_a9a6f65196f6b514f504929c9e1f7
-582f_cgraph.pdf>] [51]) (./namespacesources.tex [52] [53]
-<namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf, id=2353, 362.35
-374pt x 100.375pt>
+(pdftex.def)             Requested size: 350.0pt x 153.89426pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [47 <./namespaceout__vtk__module_ac34f91e1b74dd533461d7ead905bf937_cgraph.pdf>
+])
+(./namespacesources.tex [48 <./namespaceoutput_a9a6f65196f6b514f504929c9e1f7582
+f_cgraph.pdf>]
+<namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf, id=2063, 346.29
+375pt x 100.375pt>
 File: namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf Graphic fil
 e (type pdf)
 
 <use namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf>
 Package pdftex.def Info: namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgr
 aph.pdf used on input line 63.
-(pdftex.def)             Requested size: 350.0pt x 96.95468pt.
- [54 <./namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf>]
-<namespacesources_a6a66dd1f8baf424ff64a30112f39c632_cgraph.pdf, id=2367, 489.83
-pt x 214.8025pt>
+(pdftex.def)             Requested size: 345.0pt x 100.00255pt.
+ [49 <./namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91_cgraph.pdf>]
+<namespacesources_a6a66dd1f8baf424ff64a30112f39c632_cgraph.pdf, id=2076, 470.75
+874pt x 214.8025pt>
 File: namespacesources_a6a66dd1f8baf424ff64a30112f39c632_cgraph.pdf Graphic fil
 e (type pdf)
 
 <use namespacesources_a6a66dd1f8baf424ff64a30112f39c632_cgraph.pdf>
 Package pdftex.def Info: namespacesources_a6a66dd1f8baf424ff64a30112f39c632_cgr
 aph.pdf used on input line 230.
-(pdftex.def)             Requested size: 350.0pt x 153.48756pt.
+(pdftex.def)             Requested size: 350.0pt x 159.70193pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [55])
-(./namespacethermal__cond.tex [56 <./namespacesources_a6a66dd1f8baf424ff64a3011
+ [50])
+(./namespacethermal__cond.tex [51 <./namespacesources_a6a66dd1f8baf424ff64a3011
 2f39c632_cgraph.pdf>]
-<namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph.pdf, id=2418, 
-333.245pt x 100.375pt>
-File: namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph.pdf Graph
+<namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph.pdf, id=2134, 
+343.2825pt x 138.5175pt>
+File: namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph.pdf Graph
 ic file (type pdf)
 
-<use namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph.pdf>
-Package pdftex.def Info: namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a6
-1f_cgraph.pdf used on input line 77.
-(pdftex.def)             Requested size: 332.0pt x 100.00716pt.
+<use namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph.pdf>
+Package pdftex.def Info: namespacethermal__cond_a074d4829b3477fa8003983819e7752
+3d_cgraph.pdf used on input line 89.
+(pdftex.def)             Requested size: 342.0pt x 137.99931pt.
 
-<namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf, id=2419, 
-343.2825pt x 100.375pt>
+<namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf, id=2135, 
+335.2525pt x 138.5175pt>
 File: namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf Graph
 ic file (type pdf)
 
 <use namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf>
 Package pdftex.def Info: namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333
-bc_cgraph.pdf used on input line 100.
-(pdftex.def)             Requested size: 342.0pt x 99.9995pt.
+bc_cgraph.pdf used on input line 112.
+(pdftex.def)             Requested size: 334.0pt x 137.99931pt.
 
-[57 <./namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph.pdf> <./
-namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf
-
-pdfTeX warning: pdflatex (file ./namespacethermal__cond_abc5c4fc622aea2f85fc5a0
-c2fee333bc_cgraph.pdf): PDF inclusion: multiple pdfs with page group included i
-n a single page
->]
-<namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf, id=2444, 
-364.36125pt x 100.375pt>
+[52 <./namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph.pdf>]
+[53 <./namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.pdf>]
+<namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf, id=2166, 
+349.305pt x 100.375pt>
 File: namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf Graph
 ic file (type pdf)
 
 <use namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf>
 Package pdftex.def Info: namespacethermal__cond_a4c74dc0fd6a165d0fea419b5609437
-01_cgraph.pdf used on input line 179.
-(pdftex.def)             Requested size: 350.0pt x 96.42168pt.
+01_cgraph.pdf used on input line 243.
+(pdftex.def)             Requested size: 348.0pt x 100.00562pt.
 
-[58 <./namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf>]
-<namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph.pdf, id=2459, 
-495.8525pt x 188.705pt>
-File: namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph.pdf Graph
-ic file (type pdf)
+[54 <./namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.pdf>])
+[55] [56
 
-<use namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph.pdf>
-Package pdftex.def Info: namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e6
-46_cgraph.pdf used on input line 258.
-(pdftex.def)             Requested size: 350.0pt x 133.19827pt.
-)
-(./namespaceuser__mod.tex [59 <./namespacethermal__cond_a685d70692ba68e1ebc0b5d
-6d8ee8e646_cgraph.pdf>]
-<namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_cgraph.pdf, id=2478, 376.
-40625pt x 100.375pt>
-File: namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_cgraph.pdf Graphic f
-ile (type pdf)
-
-<use namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_cgraph.pdf>
-Package pdftex.def Info: namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_c
-graph.pdf used on input line 50.
-(pdftex.def)             Requested size: 350.0pt x 93.3401pt.
-
-<namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_cgraph.pdf, id=2479, 376.
-40625pt x 100.375pt>
-File: namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_cgraph.pdf Graphic f
-ile (type pdf)
-
-<use namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_cgraph.pdf>
-Package pdftex.def Info: namespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_c
-graph.pdf used on input line 80.
-(pdftex.def)             Requested size: 350.0pt x 93.3401pt.
-) [60 <./namespaceuser__mod_a6028f43a668931350eba8020d0466e4f_cgraph.pdf> <./na
-mespaceuser__mod_af84e741a381f9d0caa55ccacc24d5244_cgraph.pdf
-
-pdfTeX warning: pdflatex (file ./namespaceuser__mod_af84e741a381f9d0caa55ccacc2
-4d5244_cgraph.pdf): PDF inclusion: multiple pdfs with page group included in a 
-single page
->]
+]
 Chapter 5.
 (./mainpage_8h.tex) (./boundaries_8f90.tex
 Underfull \hbox (badness 10000) detected at line 23
@@ -2068,9 +1729,7 @@ Underfull \hbox (badness 10000) detected at line 26
 [][][]
  []
 
-) (./coldens_8f90.tex [61
-
-]
+) (./coldens_8f90.tex [57]
 Underfull \hbox (badness 10000) detected at line 37
 [][][]
  []
@@ -2081,16 +1740,16 @@ Underfull \hbox (badness 10000) detected at line 40
  []
 
 
-<coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf, id=2522, 401.5pt x 
-308.15125pt>
+<coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf, id=2207, 385.44pt x
+ 308.15125pt>
 File: coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf Graphic file (t
 ype pdf)
  <use coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf>
 Package pdftex.def Info: coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.
 pdf used on input line 64.
-(pdftex.def)             Requested size: 350.0pt x 268.64424pt.
+(pdftex.def)             Requested size: 350.0pt x 279.81621pt.
 
-[62]) (./constants_8f90.texpdfTeX warning (ext4): destination with the same ide
+[58]) (./constants_8f90.texpdfTeX warning (ext4): destination with the same ide
 ntifier (name{namespaceconstants_a815ad954ef712211ed1b1fdb8be42487}) has been a
 lready used, duplicate ignored
 <to be read again> 
@@ -2146,16 +1805,16 @@ red
                    \relax 
 l.37 ...tants_a47dcdcdf147127ab93252565436ce046}{}
                                                   real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacecons
-tants_a86e80095a8a44315466905ab42ec2814}) has been already used, duplicate igno
-red
+[59 <./coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf>]pdfTeX warnin
+g (ext4): destination with the same identifier (name{namespaceconstants_a86e800
+95a8a44315466905ab42ec2814}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.40 ...tants_a86e80095a8a44315466905ab42ec2814}{}
                                                   real, parameter \hyperlink...
-[63 <./coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.pdf>]pdfTeX warnin
-g (ext4): destination with the same identifier (name{namespaceconstants_a399e5e
-2bceae23d80dfe33489603dfa5}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{namespacecons
+tants_a399e5e2bceae23d80dfe33489603dfa5}) has been already used, duplicate igno
+red
 <to be read again> 
                    \relax 
 l.43 ...tants_a399e5e2bceae23d80dfe33489603dfa5}{}
@@ -2233,7 +1892,7 @@ tifier (name{namespacecooling__chi_a37baf8c1757edb98fcaa8b62587d7b2f}) has been
                    \relax 
 l.25 ...__chi_a37baf8c1757edb98fcaa8b62587d7b2f}{}
                                                   real(kind=8), dimension(2,...
-[64]
+[60]
 Underfull \hbox (badness 10000) detected at line 31
 [][][]
  []
@@ -2260,7 +1919,7 @@ Underfull \hbox (badness 10000) detected at line 34
 [][][]
  []
 
-) (./cooling__h_8f90.tex [65]
+) (./cooling__h_8f90.tex [61]
 Underfull \hbox (badness 10000) detected at line 33
 [][][]
  []
@@ -2270,7 +1929,7 @@ Underfull \hbox (badness 10000) detected at line 36
 [][][]
  []
 
-) (./difrad_8f90.tex [66]pdfTeX warning (ext4): destination with the same ident
+) (./difrad_8f90.tex [62]pdfTeX warning (ext4): destination with the same ident
 ifier (name{namespacedifrad_a0062472e34b740c2c1cb5084d3284056}) has been alread
 y used, duplicate ignored
 <to be read again> 
@@ -2357,131 +2016,9 @@ Underfull \hbox (badness 10000) detected at line 74
 [][][]
  []
 
-) (./exoplanet_8f90.tex [67]pdfTeX warning (ext4): destination with the same id
-entifier (name{namespaceexoplanet_a66ee761b561801f58b0bf10b26b62a0c}) has been 
-already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.23 ...lanet_a66ee761b561801f58b0bf10b26b62a0c}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_ab4fe33dc35a585b62f339476e181d78d}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.26 ...lanet_ab4fe33dc35a585b62f339476e181d78d}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a59991e54f31b0354111d5b9e66592f11}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.29 ...lanet_a59991e54f31b0354111d5b9e66592f11}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a6bfca263a1237efbec66b4e9250dc3c2}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.32 ...lanet_a6bfca263a1237efbec66b4e9250dc3c2}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_ac8978c4c18d8b1383bfddd3b80eb3d6a}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.35 ...lanet_ac8978c4c18d8b1383bfddd3b80eb3d6a}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a6a04838fd3adcdaa194dc432237a0054}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.38 ...lanet_a6a04838fd3adcdaa194dc432237a0054}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_adc77883dd9079c086cf5c6ddce9c048b}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.41 ...lanet_adc77883dd9079c086cf5c6ddce9c048b}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a3e2bb7a565f6afe21cd68aa8b27a501e}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.44 ...lanet_a3e2bb7a565f6afe21cd68aa8b27a501e}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_ace0f5d8d95a226ed1b2c35e0cfc47e1e}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.47 ...lanet_ace0f5d8d95a226ed1b2c35e0cfc47e1e}{}
-                                                  real {\bfseries exoplanet\...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a80a5560542e8adccc618c163c2f03fe5}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.50 ...lanet_a80a5560542e8adccc618c163c2f03fe5}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_af870fc778f9e46f3b9ff74a65a116165}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.53 ...lanet_af870fc778f9e46f3b9ff74a65a116165}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a1f19a662a76852a830a08c66be8796bb}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.56 ...lanet_a1f19a662a76852a830a08c66be8796bb}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a42dc35a9cdd9b1b8c10ddf245a1f2b8b}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.59 ...lanet_a42dc35a9cdd9b1b8c10ddf245a1f2b8b}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a26bd2e233f9fb48ab288f5378aa12615}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.62 ...lanet_a26bd2e233f9fb48ab288f5378aa12615}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_a4beb49f2e3a5335b97cd702b68651fab}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.65 ...lanet_a4beb49f2e3a5335b97cd702b68651fab}{}
-                                                  real \hyperlink{namespacee...
-pdfTeX warning (ext4): destination with the same identifier (name{namespaceexop
-lanet_ad888a61279bbe33aed243934d0279253}) has been already used, duplicate igno
-red
-<to be read again> 
-                   \relax 
-l.68 ...lanet_ad888a61279bbe33aed243934d0279253}{}
-                                                  real \hyperlink{namespacee...
-
-Underfull \hbox (badness 10000) detected at line 74
-[][][]
- []
-
-[68]
-Underfull \hbox (badness 10000) detected at line 77
-[][][]
- []
-
-) (./globals_8f90.texpdfTeX warning (ext4): destination with the same identifie
-r (name{namespaceglobals_ae6519b751f8ef608c2074e27024335b7}) has been already u
-sed, duplicate ignored
+) (./globals_8f90.tex [63]pdfTeX warning (ext4): destination with the same iden
+tifier (name{namespaceglobals_ae6519b751f8ef608c2074e27024335b7}) has been alre
+ady used, duplicate ignored
 <to be read again> 
                    \relax 
 l.16 ...obals_ae6519b751f8ef608c2074e27024335b7}{}
@@ -2598,24 +2135,52 @@ d
                    \relax 
 l.64 ...obals_a93f283242b146b3ef8b53fd1b1ad7bac}{}
                                                   integer \hyperlink{namespa...
-[69]pdfTeX warning (ext4): destination with the same identifier (name{namespace
-globals_a4bc8f1b5670efd802d57dce2c385b6d9}) has been already used, duplicate ig
-nored
+pdfTeX warning (ext4): destination with the same identifier (name{namespaceglob
+als_a4bc8f1b5670efd802d57dce2c385b6d9}) has been already used, duplicate ignore
+d
 <to be read again> 
                    \relax 
 l.67 ...obals_a4bc8f1b5670efd802d57dce2c385b6d9}{}
                                                   integer \hyperlink{namespa...
-
-Underfull \hbox (badness 10000) detected at line 73
+pdfTeX warning (ext4): destination with the same identifier (name{namespaceglob
+als_acc5c9a03b08561f9eeb530eb65221dbb}) has been already used, duplicate ignore
+d
+<to be read again> 
+                   \relax 
+l.70 ...obals_acc5c9a03b08561f9eeb530eb65221dbb}{}
+                                                  real \hyperlink{namespaceg...
+pdfTeX warning (ext4): destination with the same identifier (name{namespaceglob
+als_a1599fd11dcd5dfa9104003de3a2d03e5}) has been already used, duplicate ignore
+d
+<to be read again> 
+                   \relax 
+l.73 ...obals_a1599fd11dcd5dfa9104003de3a2d03e5}{}
+                                                  real \hyperlink{namespaceg...
+pdfTeX warning (ext4): destination with the same identifier (name{namespaceglob
+als_a6966cf52ad4f442a7fe69efa6d5c0bee}) has been already used, duplicate ignore
+d
+<to be read again> 
+                   \relax 
+l.76 ...obals_a6966cf52ad4f442a7fe69efa6d5c0bee}{}
+                                                  integer \hyperlink{namespa...
+pdfTeX warning (ext4): destination with the same identifier (name{namespaceglob
+als_a6942102ba8bd15a3350901de0b99bafa}) has been already used, duplicate ignore
+d
+<to be read again> 
+                   \relax 
+l.79 ...obals_a6942102ba8bd15a3350901de0b99bafa}{}
+                                                  real, dimension(\+:,\+:,\+...
+[64]
+Underfull \hbox (badness 10000) detected at line 85
 [][][]
  []
 
 
-Underfull \hbox (badness 10000) detected at line 76
+Underfull \hbox (badness 10000) detected at line 88
 [][][]
  []
 
-) (./h__alpha__proj_8f90.tex [70]
+) (./h__alpha__proj_8f90.tex
 Underfull \hbox (badness 10000) detected at line 39
 [][][]
  []
@@ -2625,18 +2190,18 @@ Underfull \hbox (badness 10000) detected at line 42
 [][][]
  []
 
-
-<h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cgraph.pdf, id=2699, 424
-.58624pt x 308.15125pt>
+[65]
+<h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cgraph.pdf, id=2361, 409
+.53pt x 308.15125pt>
 File: h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cgraph.pdf Graphic 
 file (type pdf)
 
 <use h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cgraph.pdf>
 Package pdftex.def Info: h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_
 cgraph.pdf used on input line 66.
-(pdftex.def)             Requested size: 350.0pt x 254.03041pt.
+(pdftex.def)             Requested size: 350.0pt x 263.37329pt.
 )
-(./hll_8f90.tex [71 <./h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cg
+(./hll_8f90.tex [66 <./h__alpha__proj_8f90_ae4326230e4f19e2e66573778f131e5c3_cg
 raph.pdf>]
 Underfull \hbox (badness 10000) detected at line 23
 [][][]
@@ -2657,7 +2222,7 @@ Underfull \hbox (badness 10000) detected at line 26
 [][][]
  []
 
-) (./hlld_8f90.tex [72]
+) (./hlld_8f90.tex [67]
 Underfull \hbox (badness 10000) detected at line 23
 [][][]
  []
@@ -2677,7 +2242,7 @@ Underfull \hbox (badness 10000) detected at line 26
 [][][]
  []
 
-) (./hydro__core_8f90.tex [73]
+) (./hydro__core_8f90.tex [68]
 Underfull \hbox (badness 10000) detected at line 44
 [][][]
  []
@@ -2687,7 +2252,7 @@ Underfull \hbox (badness 10000) detected at line 47
 [][][]
  []
 
-) (./hydro__solver_8f90.tex [74]
+) (./hydro__solver_8f90.tex [69]
 Underfull \hbox (badness 10000) detected at line 25
 [][][]
  []
@@ -2707,7 +2272,7 @@ Underfull \hbox (badness 10000) detected at line 26
 [][][]
  []
 
-) (./lyman__alpha__tau_8f90.tex [75]
+) (./lyman__alpha__tau_8f90.tex [70]
 Underfull \hbox (badness 10000) detected at line 39
 [][][]
  []
@@ -2718,20 +2283,20 @@ Underfull \hbox (badness 10000) detected at line 42
  []
 
 
-<lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe7_cgraph.pdf, id=2790, 
-464.73625pt x 347.2975pt>
+<lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe7_cgraph.pdf, id=2451, 
+452.69125pt x 347.2975pt>
 File: lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe7_cgraph.pdf Graph
 ic file (type pdf)
 
 <use lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe7_cgraph.pdf>
 Package pdftex.def Info: lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262f
 e7_cgraph.pdf used on input line 66.
-(pdftex.def)             Requested size: 350.0pt x 261.56413pt.
+(pdftex.def)             Requested size: 350.0pt x 268.51155pt.
 
 Underfull \vbox (badness 7221) has occurred while \output is active []
 
- [76])
-(./main_8f90.tex [77 <./lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe
+ [71])
+(./main_8f90.tex [72 <./lyman__alpha__tau_8f90_ac17b5fa88f45d76c5707da8a09262fe
 7_cgraph.pdf>]
 Underfull \hbox (badness 10000) detected at line 37
 [][][]
@@ -2742,7 +2307,17 @@ Underfull \hbox (badness 10000) detected at line 40
 [][][]
  []
 
-) (./_out___silo___module_8f90.tex
+) (./_out___b_i_n___module_8f90.tex
+Underfull \hbox (badness 10000) detected at line 23
+[][][]
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 26
+[][][]
+ []
+
+) (./_out___silo___module_8f90.tex [73]
 Underfull \hbox (badness 10000) detected at line 25
 [][][]
  []
@@ -2752,7 +2327,7 @@ Underfull \hbox (badness 10000) detected at line 28
 [][][]
  []
 
-) (./output_8f90.tex [78]
+) (./_out___v_t_k___module_8f90.tex
 Underfull \hbox (badness 10000) detected at line 21
 [][][]
  []
@@ -2762,325 +2337,17 @@ Underfull \hbox (badness 10000) detected at line 24
 [][][]
  []
 
-) (./parameters_8f90.texpdfTeX warning (ext4): destination with the same identi
-fier (name{namespaceparameters_adfc2b2bb3e3f9614e8b171561f9eb78d}) has been alr
-eady used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.16 ...eters_adfc2b2bb3e3f9614e8b171561f9eb78d}{}
-                                                  character(len=128), parame...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_afe25db26aa30836573528cd959ee1fca}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.19 ...eters_afe25db26aa30836573528cd959ee1fca}{}
-                                                  character(len=128), parame...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ad2e282b7f56de824d72b1acf9f8aa674}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.22 ...eters_ad2e282b7f56de824d72b1acf9f8aa674}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_af1edd81ebd6b46141bb93b90084b172e}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.25 ...eters_af1edd81ebd6b46141bb93b90084b172e}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a5cce81231f97dddc9a7abc8ad2691fcf}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.28 ...eters_a5cce81231f97dddc9a7abc8ad2691fcf}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a30c7f7c0e13eedb6214b5d6de69a9a13}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.31 ...eters_a30c7f7c0e13eedb6214b5d6de69a9a13}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a40b20d533d3bf5defbb402e4ed4f26f1}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.34 ...eters_a40b20d533d3bf5defbb402e4ed4f26f1}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_aa0fce0eedffad5d18a2c54406babd6a0}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.37 ...eters_aa0fce0eedffad5d18a2c54406babd6a0}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a06bfa99536c53df3ef70fded1d563c3b}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.40 ...eters_a06bfa99536c53df3ef70fded1d563c3b}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a5cf63ae056650e314df11497f8b13e28}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.43 ...eters_a5cf63ae056650e314df11497f8b13e28}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a15b7777c042a615b8c2d18578682e177}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.46 ...eters_a15b7777c042a615b8c2d18578682e177}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_aeb329f6b921d76584073753e2596e410}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.49 ...eters_aeb329f6b921d76584073753e2596e410}{}
-                                                  integer, parameter \hyperl...
-[79]pdfTeX warning (ext4): destination with the same identifier (name{namespace
-parameters_af4a703fa8afb09b800dbca84a465ed73}) has been already used, duplicate
- ignored
-<to be read again> 
-                   \relax 
-l.52 ...eters_af4a703fa8afb09b800dbca84a465ed73}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a52f0c9493ee24c99cb8fad63d3ecddc8}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.55 ...eters_a52f0c9493ee24c99cb8fad63d3ecddc8}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_af38b91fa583e6da2e09cac965ad56fcf}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.58 ...eters_af38b91fa583e6da2e09cac965ad56fcf}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a1c9cf29115f4fd4cf4820e25de385fe8}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.61 ...eters_a1c9cf29115f4fd4cf4820e25de385fe8}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ae3e749942c74fc165950811be811fbbf}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.64 ...eters_ae3e749942c74fc165950811be811fbbf}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a755803b69c4c41eab3f29d49aab07080}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.67 ...eters_a755803b69c4c41eab3f29d49aab07080}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a106ef8f4b97ef7fba8e7845c774c31fd}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.70 ...eters_a106ef8f4b97ef7fba8e7845c774c31fd}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a9b9fbce5a8439155ee7ae1ac23feef54}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.73 ...eters_a9b9fbce5a8439155ee7ae1ac23feef54}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_aae00fb44c9445b75ac9e9fe1a3836668}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.76 ...eters_aae00fb44c9445b75ac9e9fe1a3836668}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a0e7200e85023d763950f5d027c265b47}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.79 ...eters_a0e7200e85023d763950f5d027c265b47}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_aeb110c6e84304ed31d7e4a4f86fa07c0}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.82 ...eters_aeb110c6e84304ed31d7e4a4f86fa07c0}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a09f3a853f8927374a15bc5b14395e397}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.85 ...eters_a09f3a853f8927374a15bc5b14395e397}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a95ee496fdf29b48b5e990f029331ea9e}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.88 ...eters_a95ee496fdf29b48b5e990f029331ea9e}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a3986a90c2750989207cff0593c325ce1}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.91 ...eters_a3986a90c2750989207cff0593c325ce1}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a8b8971e5b07f3249e787d4a06461f9db}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.94 ...eters_a8b8971e5b07f3249e787d4a06461f9db}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a32153ac2f0853357f00212ed40525b85}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.97 ...eters_a32153ac2f0853357f00212ed40525b85}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_aa82f078b9d5e200c98460fd8fdecd77f}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.100 ...ters_aa82f078b9d5e200c98460fd8fdecd77f}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a10cf58c7e097b82e96d1c149530dad37}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.103 ...ters_a10cf58c7e097b82e96d1c149530dad37}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a0f11692236dfb49ab2bb451103faf8f1}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.106 ...ters_a0f11692236dfb49ab2bb451103faf8f1}{}
-                                                  real, parameter \hyperlink...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_afc7a92e21b69eb6d20e4488030bd1300}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.109 ...ters_afc7a92e21b69eb6d20e4488030bd1300}{}
-                                                  logical, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_af9639278be37d485bbe316a0a4389157}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.112 ...ters_af9639278be37d485bbe316a0a4389157}{}
-                                                  integer \hyperlink{namespa...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a37fe125b9070b83bc96f133a6485b0f2}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.115 ...ters_a37fe125b9070b83bc96f133a6485b0f2}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a1a3b8ba995adb2f1c093cdc8b37eb5bd}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.118 ...ters_a1a3b8ba995adb2f1c093cdc8b37eb5bd}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ab73091bd318f7d283d05a362acdcf146}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.121 ...ters_ab73091bd318f7d283d05a362acdcf146}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a743b8648645c72aff60188bf8b87f10a}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.124 ...ters_a743b8648645c72aff60188bf8b87f10a}{}
-                                                  integer, parameter \hyperl...
-[80]pdfTeX warning (ext4): destination with the same identifier (name{namespace
-parameters_a19bcd2dc8bcf4a1be3db412ccca70308}) has been already used, duplicate
- ignored
-<to be read again> 
-                   \relax 
-l.127 ...ters_a19bcd2dc8bcf4a1be3db412ccca70308}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ac65196ab662a1d7a4485ff3db2092304}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.130 ...ters_ac65196ab662a1d7a4485ff3db2092304}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a907a8edcef1c67359c2f593a4a23f768}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.133 ...ters_a907a8edcef1c67359c2f593a4a23f768}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ab1106d13b42bd50bee92066b8df41d80}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.136 ...ters_ab1106d13b42bd50bee92066b8df41d80}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a2e2d7c16e3034394c493dcc0f8f3368e}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.139 ...ters_a2e2d7c16e3034394c493dcc0f8f3368e}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_ad1a2fd8c36d344e74949aab19206d23c}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.142 ...ters_ad1a2fd8c36d344e74949aab19206d23c}{}
-                                                  integer, parameter \hyperl...
-pdfTeX warning (ext4): destination with the same identifier (name{namespacepara
-meters_a01664304fae28ea43d9a76e212d7cad9}) has been already used, duplicate ign
-ored
-<to be read again> 
-                   \relax 
-l.145 ...ters_a01664304fae28ea43d9a76e212d7cad9}{}
-                                                  integer, parameter \hyperl...
-
-Underfull \hbox (badness 10000) detected at line 153
+) (./output_8f90.tex [74]
+Underfull \hbox (badness 10000) detected at line 21
 [][][]
  []
 
 
-Underfull \hbox (badness 10000) detected at line 156
+Underfull \hbox (badness 10000) detected at line 24
 [][][]
  []
 
-) (./sources_8f90.tex [81]
+) (./sources_8f90.tex
 Underfull \hbox (badness 10000) detected at line 31
 [][][]
  []
@@ -3090,119 +2357,216 @@ Underfull \hbox (badness 10000) detected at line 34
 [][][]
  []
 
-) (./thermal__cond_8f90.texpdfTeX warning (ext4): destination with the same ide
-ntifier (name{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}) has be
-en already used, duplicate ignored
+) (./thermal__cond_8f90.tex [75]pdfTeX warning (ext4): destination with the sam
+e identifier (name{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}) h
+as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.39 ..._cond_a37c3e000231baaaa4668f7c05f021ce0}{}
+l.45 ..._cond_a37c3e000231baaaa4668f7c05f021ce0}{}
                                                   real, parameter \hyperlink...
 pdfTeX warning (ext4): destination with the same identifier (name{namespacether
 mal__cond_a38896e6bbd3b053ca066e407e4b3817f}) has been already used, duplicate 
 ignored
 <to be read again> 
                    \relax 
-l.42 ..._cond_a38896e6bbd3b053ca066e407e4b3817f}{}
-                                                  real, parameter \hyperlink...
-[82]pdfTeX warning (ext4): destination with the same identifier (name{namespace
-thermal__cond_a53b14d15ce11990f6453a335c81d1728}) has been already used, duplic
-ate ignored
-<to be read again> 
-                   \relax 
-l.45 ..._cond_a53b14d15ce11990f6453a335c81d1728}{}
+l.48 ..._cond_a38896e6bbd3b053ca066e407e4b3817f}{}
                                                   real, parameter \hyperlink...
 pdfTeX warning (ext4): destination with the same identifier (name{namespacether
-mal__cond_a35e92d8dd3107b43d3326f014577fa9e}) has been already used, duplicate 
+mal__cond_a53b14d15ce11990f6453a335c81d1728}) has been already used, duplicate 
 ignored
 <to be read again> 
                    \relax 
-l.48 ..._cond_a35e92d8dd3107b43d3326f014577fa9e}{}
-                                                  real, dimension(\+:,\+:,\+...
+l.51 ..._cond_a53b14d15ce11990f6453a335c81d1728}{}
+                                                  real, parameter \hyperlink...
 pdfTeX warning (ext4): destination with the same identifier (name{namespacether
-mal__cond_a59c290133a4485e731bfc0185d006091}) has been already used, duplicate 
+mal__cond_a5420f28be46174eb6852f14281ec7ace}) has been already used, duplicate 
 ignored
 <to be read again> 
                    \relax 
-l.51 ..._cond_a59c290133a4485e731bfc0185d006091}{}
+l.54 ..._cond_a5420f28be46174eb6852f14281ec7ace}{}
+                                                  integer, parameter \hyperl...
+pdfTeX warning (ext4): destination with the same identifier (name{namespacether
+mal__cond_ae13a8d994e65b9e57ebb80e892c72aac}) has been already used, duplicate 
+ignored
+<to be read again> 
+                   \relax 
+l.57 ..._cond_ae13a8d994e65b9e57ebb80e892c72aac}{}
+                                                  real, parameter \hyperlink...
+pdfTeX warning (ext4): destination with the same identifier (name{namespacether
+mal__cond_a0d692500ab9d6becafcf89d733d3f76f}) has been already used, duplicate 
+ignored
+<to be read again> 
+                   \relax 
+l.60 ..._cond_a0d692500ab9d6becafcf89d733d3f76f}{}
                                                   real \hyperlink{namespacet...
-
-Underfull \hbox (badness 10000) detected at line 57
-[][][]
- []
-
-
-Underfull \hbox (badness 10000) detected at line 60
-[][][]
- []
-
-) (./user__mod_8f90.texpdfTeX warning (ext4): destination with the same identif
-ier (name{namespaceuser__mod_a302a8099e4696e80b634ec347d6a3bec}) has been alrea
-dy used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{namespacether
+mal__cond_a03140c73c7461f1882cd286b3e378abc}) has been already used, duplicate 
+ignored
 <to be read again> 
                    \relax 
-l.16 ...__mod_a302a8099e4696e80b634ec347d6a3bec}{}
-                                                  subroutine \hyperlink{name...
-
-Underfull \hbox (badness 10000) detected at line 27
+l.63 ..._cond_a03140c73c7461f1882cd286b3e378abc}{}
+                                                  integer \hyperlink{namespa...
+[76]
+Underfull \hbox (badness 10000) detected at line 69
 [][][]
  []
 
 
-Underfull \hbox (badness 10000) detected at line 30
+Underfull \hbox (badness 10000) detected at line 72
 [][][]
  []
 
-) [83] [84
+) [77] [78
 
-] (./refman.ind [85
+] (./refman.ind
+Underfull \hbox (badness 10000) in paragraph at lines 5--7
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/[]Out[]_[][
+]B[]I[]
+ []
 
 
-] [86] [87] [88
+Underfull \hbox (badness 10000) in paragraph at lines 7--9
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/[]Out[]_[][
+]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 9--11
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/[]Out[]_[][
+]V[]
+ []
+
+
+Overfull \hbox (17.0702pt too wide) in paragraph at lines 11--13
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/boundaries.
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 17--19
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/cooling[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--21
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/cooling[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--23
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/cooling[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--25
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/difrad.[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 27--29
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/h[]_[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--33
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/hllc.[]f90,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--35
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/hlld.[]f90,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/hlle.[]f90,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 37--39
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/hydro[]_[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--41
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/hydro[]_[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 41--43
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/init.[]f90,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 43--45
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/lyman[]_[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 45--47
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/main.[]f90,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--49
+[]\T1/phv/m/n/10 /[]Users/esquivel/[]Desktop/[]Guacho-[]Working/src/output.[]
+ []
+
+[79
+
+
+] [80] [81] [82
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 209.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 209.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 207.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 207.
  (./refman.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 209.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 209.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 207.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 207.
 Package rerunfilecheck Info: File `refman.out' has not changed.
-(rerunfilecheck)             Checksum: 1D7C4F3E7880C2969630B07D6DFE6CA6;46441.
-
-
-LaTeX Warning: There were undefined references.
+(rerunfilecheck)             Checksum: 0B5DCCD23269ECEE80C60CF8B66DFD9B;50262.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 209.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 207.
  ) 
 Here is how much of TeX's memory you used:
- 14462 strings out of 494213
- 230550 string characters out of 6157462
- 287601 words of memory out of 5000000
- 16697 multiletter control sequences out of 15000+600000
+ 14345 strings out of 493089
+ 222966 string characters out of 6134803
+ 290401 words of memory out of 5000000
+ 16854 multiletter control sequences out of 15000+600000
  70022 words of font info for 84 fonts, out of 8000000 for 9000
- 430 hyphenation exceptions out of 8191
- 48i,16n,43p,941b,526s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/opt/local/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</opt/local/share
-/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></opt/local/share/texm
-f-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></opt/local/share/texmf-tex
-live/fonts/type1/public/amsfonts/cm/cmmi7.pfb></opt/local/share/texmf-texlive/f
-onts/type1/public/amsfonts/cm/cmmi9.pfb></opt/local/share/texmf-texlive/fonts/t
-ype1/public/amsfonts/cm/cmr10.pfb></opt/local/share/texmf-texlive/fonts/type1/p
-ublic/amsfonts/cm/cmr7.pfb></opt/local/share/texmf-texlive/fonts/type1/public/a
-msfonts/cm/cmsy10.pfb></opt/local/share/texmf-texlive/fonts/type1/public/amsfon
-ts/cm/cmsy7.pfb></opt/local/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
-cmsy9.pfb></opt/local/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></
-opt/local/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></opt/local/s
-hare/texmf-texlive/fonts/type1/urw/helvetic/uhvb8ac.pfb></opt/local/share/texmf
--texlive/fonts/type1/urw/helvetic/uhvbo8ac.pfb></opt/local/share/texmf-texlive/
-fonts/type1/urw/helvetic/uhvr8a.pfb></opt/local/share/texmf-texlive/fonts/type1
-/urw/helvetic/uhvro8a.pfb>
-Output written on refman.pdf (98 pages, 657442 bytes).
+ 1141 hyphenation exceptions out of 8191
+ 48i,16n,43p,1659b,526s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{namespacecooling__chi_acdcfaea636dd68b666577d8daf
+434d35} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/tex
+live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive
+/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/201
+5/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2015/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2015/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2015/texmf-
+dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2015/texmf-dist/fon
+ts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type
+1/urw/helvetic/uhvb8ac.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/
+helvetic/uhvbo8ac.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/helve
+tic/uhvr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/helvetic/uhv
+ro8a.pfb>
+Output written on refman.pdf (92 pages, 564581 bytes).
 PDF statistics:
- 3404 PDF objects out of 3580 (max. 8388607)
- 3137 compressed objects within 32 object streams
- 680 named destinations out of 1000 (max. 500000)
- 2081 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 3002 PDF objects out of 3580 (max. 8388607)
+ 2775 compressed objects within 28 object streams
+ 608 named destinations out of 1000 (max. 500000)
+ 1991 words of extra memory for PDF output out of 10000 (max. 10000000)
 

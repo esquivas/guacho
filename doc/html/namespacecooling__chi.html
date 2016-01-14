@@ -101,9 +101,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a20c87eb43e4f324fa7d83fe9174fd767"><td class="memItemLeft" align="right" valign="top">real(kind=8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767">coolchi</a> (T)</td></tr>
 <tr class="memdesc:a20c87eb43e4f324fa7d83fe9174fd767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cooling coefficient interpolating the table.  <a href="#a20c87eb43e4f324fa7d83fe9174fd767">More...</a><br /></td></tr>
 <tr class="separator:a20c87eb43e4f324fa7d83fe9174fd767"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16ac452561e4a332a960a3ea7304f103"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__chi.html#a16ac452561e4a332a960a3ea7304f103">coolingchi</a> (dt)</td></tr>
-<tr class="memdesc:a16ac452561e4a332a960a3ea7304f103"><td class="mdescLeft">&#160;</td><td class="mdescRight">High level wrapper to apply cooling with CHIANTI tables.  <a href="#a16ac452561e4a332a960a3ea7304f103">More...</a><br /></td></tr>
-<tr class="separator:a16ac452561e4a332a960a3ea7304f103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a666df501be07ce1e3612d3c3796cf2a3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__chi.html#a666df501be07ce1e3612d3c3796cf2a3">coolingchi</a> ()</td></tr>
+<tr class="memdesc:a666df501be07ce1e3612d3c3796cf2a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">High level wrapper to apply cooling with CHIANTI tables.  <a href="#a666df501be07ce1e3612d3c3796cf2a3">More...</a><br /></td></tr>
+<tr class="separator:a666df501be07ce1e3612d3c3796cf2a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -139,35 +139,29 @@ real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom
 
 </div>
 </div>
-<a class="anchor" id="a16ac452561e4a332a960a3ea7304f103"></a>
+<a class="anchor" id="a666df501be07ce1e3612d3c3796cf2a3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine cooling_chi::coolingchi </td>
           <td>(</td>
-          <td class="paramtype">real, intent(in)&#160;</td>
-          <td class="paramname"><em>dt</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>High level wrapper to apply cooling with CHIANTI tables <br />
- cooling is applied in the entire domain and updates both the conserved and primitive variables </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">real</td><td>[in] dt : timestep (in seconds) </td></tr>
-  </table>
-  </dd>
-</dl>
+ cooling is applied in the entire domain and updates both the conserved and primitive variables </p>
 
-<p>Definition at line <a class="el" href="cooling__chi_8f90_source.html#l00103">103</a> of file <a class="el" href="cooling__chi_8f90_source.html">cooling_chi.f90</a>.</p>
+<p>Definition at line <a class="el" href="cooling__chi_8f90_source.html#l00102">102</a> of file <a class="el" href="cooling__chi_8f90_source.html">cooling_chi.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph.png" border="0" usemap="#namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph" alt=""/></div>
-<map name="namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph" id="namespacecooling__chi_a16ac452561e4a332a960a3ea7304f103_cgraph">
-<area shape="rect" id="node2" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="209,5,347,32"/><area shape="rect" id="node3" href="namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767" title="Returns the cooling coefficient interpolating the table. " alt="" coords="209,56,347,83"/></map>
+<div class="center"><img src="namespacecooling__chi_a666df501be07ce1e3612d3c3796cf2a3_cgraph.png" border="0" usemap="#namespacecooling__chi_a666df501be07ce1e3612d3c3796cf2a3_cgraph" alt=""/></div>
+<map name="namespacecooling__chi_a666df501be07ce1e3612d3c3796cf2a3_cgraph" id="namespacecooling__chi_a666df501be07ce1e3612d3c3796cf2a3_cgraph">
+</map>
 </div>
 </p>
 
@@ -194,7 +188,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

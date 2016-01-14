@@ -103,9 +103,9 @@ subroutine hllfluxes(choice)
 
   case(1)        ! 1st half timestep
  
-     do i=0,nx
+     do k=0,nz
         do j=0,ny
-           do k=0,nz
+           do i=0,nx
 
               !------- x direction -------------------------------------
               priml(:)=primit(:,i  ,j ,k )
@@ -138,9 +138,9 @@ subroutine hllfluxes(choice)
 
   case (2)   !  2nd half timestep
 
-     do i=0,nx
+     do k=0,nz
         do j=0,ny
-           do k=0,nz
+           do i=0,nx
   
               !------- x direction ------------------------------------
               priml (:)=primit(:,i,  j,k )

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exoplanet',['exoplanet',['../namespaceexoplanet.html',1,'']]]
+  ['globals',['globals',['../namespaceglobals.html',1,'']]]
 ];

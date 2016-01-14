@@ -90,7 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>Adds (isotropuic) thermal conducion.  
+<p>Adds thermal conducion.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -98,18 +98,27 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:ac611766519a4602033c83e3ed5ae3c00"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#ac611766519a4602033c83e3ed5ae3c00">init_thermal_cond</a> ()</td></tr>
 <tr class="memdesc:ac611766519a4602033c83e3ed5ae3c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Intializes Temperature array.  <a href="#ac611766519a4602033c83e3ed5ae3c00">More...</a><br /></td></tr>
 <tr class="separator:ac611766519a4602033c83e3ed5ae3c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e4afd71cbe737fe5189bc6ecbb3a61f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a9e4afd71cbe737fe5189bc6ecbb3a61f">dt_cond</a> (dt)</td></tr>
-<tr class="memdesc:a9e4afd71cbe737fe5189bc6ecbb3a61f"><td class="mdescLeft">&#160;</td><td class="mdescRight">computes conduction timescale  <a href="#a9e4afd71cbe737fe5189bc6ecbb3a61f">More...</a><br /></td></tr>
-<tr class="separator:a9e4afd71cbe737fe5189bc6ecbb3a61f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a074d4829b3477fa8003983819e77523d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a074d4829b3477fa8003983819e77523d">get_dt_cond</a> (dt)</td></tr>
+<tr class="memdesc:a074d4829b3477fa8003983819e77523d"><td class="mdescLeft">&#160;</td><td class="mdescRight">computes conduction timescale  <a href="#a074d4829b3477fa8003983819e77523d">More...</a><br /></td></tr>
+<tr class="separator:a074d4829b3477fa8003983819e77523d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5283f7a2b8b4a4226ce624fb49445f43"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a5283f7a2b8b4a4226ce624fb49445f43">progress</a> (j, tot)</td></tr>
 <tr class="memdesc:a5283f7a2b8b4a4226ce624fb49445f43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Progress bar.  <a href="#a5283f7a2b8b4a4226ce624fb49445f43">More...</a><br /></td></tr>
 <tr class="separator:a5283f7a2b8b4a4226ce624fb49445f43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3978fb62e485cf71d7c83e779e92615"><td class="memItemLeft" align="right" valign="top">real function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615">ksp</a> (T)</td></tr>
 <tr class="memdesc:ab3978fb62e485cf71d7c83e779e92615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spitzer conductivity.  <a href="#ab3978fb62e485cf71d7c83e779e92615">More...</a><br /></td></tr>
 <tr class="separator:ab3978fb62e485cf71d7c83e779e92615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8205274631d6cb4d36ffc0937aa88a74"><td class="memItemLeft" align="right" valign="top">real function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a8205274631d6cb4d36ffc0937aa88a74">ksp_parl</a> (xtemp)</td></tr>
+<tr class="memdesc:a8205274631d6cb4d36ffc0937aa88a74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spitzer parallel conductivity.  <a href="#a8205274631d6cb4d36ffc0937aa88a74">More...</a><br /></td></tr>
+<tr class="separator:a8205274631d6cb4d36ffc0937aa88a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfd8867a0fc7fe02a35a41000e36f9bf"><td class="memItemLeft" align="right" valign="top">real function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#adfd8867a0fc7fe02a35a41000e36f9bf">ksp_perp</a> (xtemp, xdens, B2)</td></tr>
+<tr class="memdesc:adfd8867a0fc7fe02a35a41000e36f9bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spitzer perpendicular conductivity.  <a href="#adfd8867a0fc7fe02a35a41000e36f9bf">More...</a><br /></td></tr>
+<tr class="separator:adfd8867a0fc7fe02a35a41000e36f9bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc5c4fc622aea2f85fc5a0c2fee333bc"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#abc5c4fc622aea2f85fc5a0c2fee333bc">heatfluxes</a> ()</td></tr>
 <tr class="memdesc:abc5c4fc622aea2f85fc5a0c2fee333bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns Heat Fluxes.  <a href="#abc5c4fc622aea2f85fc5a0c2fee333bc">More...</a><br /></td></tr>
 <tr class="separator:abc5c4fc622aea2f85fc5a0c2fee333bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab43551b6a0d4b5894c07b510e4571d7"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#aab43551b6a0d4b5894c07b510e4571d7">mhd_heatfluxes</a> ()</td></tr>
+<tr class="memdesc:aab43551b6a0d4b5894c07b510e4571d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns Heat Fluxes with anisotropic thermal conduction.  <a href="#aab43551b6a0d4b5894c07b510e4571d7">More...</a><br /></td></tr>
+<tr class="separator:aab43551b6a0d4b5894c07b510e4571d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55e65df0c700580f8af0a090063d2e32"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a55e65df0c700580f8af0a090063d2e32">thermal_bounds</a> ()</td></tr>
 <tr class="memdesc:a55e65df0c700580f8af0a090063d2e32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exchanges ghost cells for energy only.  <a href="#a55e65df0c700580f8af0a090063d2e32">More...</a><br /></td></tr>
 <tr class="separator:a55e65df0c700580f8af0a090063d2e32"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,9 +131,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a4c74dc0fd6a165d0fea419b560943701"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a4c74dc0fd6a165d0fea419b560943701">st_steps</a> (fs, Ns, fstep)</td></tr>
 <tr class="memdesc:a4c74dc0fd6a165d0fea419b560943701"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of Supersteps.  <a href="#a4c74dc0fd6a165d0fea419b560943701">More...</a><br /></td></tr>
 <tr class="separator:a4c74dc0fd6a165d0fea419b560943701"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a685d70692ba68e1ebc0b5d6d8ee8e646"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a685d70692ba68e1ebc0b5d6d8ee8e646">thermal_conduction</a> (dt)</td></tr>
-<tr class="memdesc:a685d70692ba68e1ebc0b5d6d8ee8e646"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upper level wrapper for thermal conduction.  <a href="#a685d70692ba68e1ebc0b5d6d8ee8e646">More...</a><br /></td></tr>
-<tr class="separator:a685d70692ba68e1ebc0b5d6d8ee8e646"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b579df47b3bf4622a3ab51f57aa436b"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a4b579df47b3bf4622a3ab51f57aa436b">thermal_conduction</a> ()</td></tr>
+<tr class="memdesc:a4b579df47b3bf4622a3ab51f57aa436b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upper level wrapper for thermal conduction.  <a href="#a4b579df47b3bf4622a3ab51f57aa436b">More...</a><br /></td></tr>
+<tr class="separator:a4b579df47b3bf4622a3ab51f57aa436b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -133,31 +142,39 @@ real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 <tr class="memdesc:a37c3e000231baaaa4668f7c05f021ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter for the sturated regime in McKee. <br /></td></tr>
 <tr class="separator:a37c3e000231baaaa4668f7c05f021ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38896e6bbd3b053ca066e407e4b3817f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38896e6bbd3b053ca066e407e4b3817f"></a>
-real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a38896e6bbd3b053ca066e407e4b3817f">nu</a> =0.005</td></tr>
-<tr class="memdesc:a38896e6bbd3b053ca066e407e4b3817f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Super-stepping damping factor. <br /></td></tr>
+real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a38896e6bbd3b053ca066e407e4b3817f">nu</a> =0.01</td></tr>
+<tr class="memdesc:a38896e6bbd3b053ca066e407e4b3817f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Super-stepping daMPI_NBg factor. <br /></td></tr>
 <tr class="separator:a38896e6bbd3b053ca066e407e4b3817f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53b14d15ce11990f6453a335c81d1728"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a53b14d15ce11990f6453a335c81d1728"></a>
 real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a53b14d15ce11990f6453a335c81d1728">snu</a> =sqrt(<a class="el" href="namespacethermal__cond.html#a38896e6bbd3b053ca066e407e4b3817f">nu</a>)</td></tr>
 <tr class="memdesc:a53b14d15ce11990f6453a335c81d1728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sqrt of damping factor. <br /></td></tr>
 <tr class="separator:a53b14d15ce11990f6453a335c81d1728"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35e92d8dd3107b43d3326f014577fa9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35e92d8dd3107b43d3326f014577fa9e"></a>
-real, dimension(:,:,:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a35e92d8dd3107b43d3326f014577fa9e">temp</a></td></tr>
-<tr class="memdesc:a35e92d8dd3107b43d3326f014577fa9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Temperature array [K]. <br /></td></tr>
-<tr class="separator:a35e92d8dd3107b43d3326f014577fa9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59c290133a4485e731bfc0185d006091"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a59c290133a4485e731bfc0185d006091"></a>
-real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a59c290133a4485e731bfc0185d006091">dtcond</a></td></tr>
-<tr class="memdesc:a59c290133a4485e731bfc0185d006091"><td class="mdescLeft">&#160;</td><td class="mdescRight">conduction timestep <br /></td></tr>
-<tr class="separator:a59c290133a4485e731bfc0185d006091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5420f28be46174eb6852f14281ec7ace"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5420f28be46174eb6852f14281ec7ace"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a5420f28be46174eb6852f14281ec7ace">max_iter</a> = 100</td></tr>
+<tr class="memdesc:a5420f28be46174eb6852f14281ec7ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of iterations. <br /></td></tr>
+<tr class="separator:a5420f28be46174eb6852f14281ec7ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae13a8d994e65b9e57ebb80e892c72aac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae13a8d994e65b9e57ebb80e892c72aac"></a>
+real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#ae13a8d994e65b9e57ebb80e892c72aac">tstep_red_factor</a> =0.25</td></tr>
+<tr class="memdesc:ae13a8d994e65b9e57ebb80e892c72aac"><td class="mdescLeft">&#160;</td><td class="mdescRight">timestep reduction factor for the conduction <br /></td></tr>
+<tr class="separator:ae13a8d994e65b9e57ebb80e892c72aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d692500ab9d6becafcf89d733d3f76f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d692500ab9d6becafcf89d733d3f76f"></a>
+real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a0d692500ab9d6becafcf89d733d3f76f">dt_cond</a></td></tr>
+<tr class="memdesc:a0d692500ab9d6becafcf89d733d3f76f"><td class="mdescLeft">&#160;</td><td class="mdescRight">conduction timestep <br /></td></tr>
+<tr class="separator:a0d692500ab9d6becafcf89d733d3f76f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03140c73c7461f1882cd286b3e378abc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a03140c73c7461f1882cd286b3e378abc"></a>
+integer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacethermal__cond.html#a03140c73c7461f1882cd286b3e378abc">tc_log</a></td></tr>
+<tr class="memdesc:a03140c73c7461f1882cd286b3e378abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">loical unit to write TC log <br /></td></tr>
+<tr class="separator:a03140c73c7461f1882cd286b3e378abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Adds thermal conduction term, affects both the primitive and conserved variables </p>
+<div class="textblock"><p>Adds a thermal conduction term, affects both the primitive and conserved variables </p>
 </div><h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a class="anchor" id="a9e4afd71cbe737fe5189bc6ecbb3a61f"></a>
+<a class="anchor" id="a074d4829b3477fa8003983819e77523d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">subroutine thermal_cond::dt_cond </td>
+          <td class="memname">subroutine thermal_cond::get_dt_cond </td>
           <td>(</td>
           <td class="paramtype">real, intent(out)&#160;</td>
           <td class="paramname"><em>dt</em></td><td>)</td>
@@ -165,21 +182,21 @@ real&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="name
         </tr>
       </table>
 </div><div class="memdoc">
-<p>computes conduction timescale </p><dl class="params"><dt>Parameters</dt><dd>
+<p>computes conduction timescale (in seconds) </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">real</td><td>[out] dt :: conduction timescale </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00062">62</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00083">83</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph.png" border="0" usemap="#namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph" alt=""/></div>
-<map name="namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph" id="namespacethermal__cond_a9e4afd71cbe737fe5189bc6ecbb3a61f_cgraph">
-<area shape="rect" id="node2" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="211,5,341,32"/></map>
+<div class="center"><img src="namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph.png" border="0" usemap="#namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph" alt=""/></div>
+<map name="namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph" id="namespacethermal__cond_a074d4829b3477fa8003983819e77523d_cgraph">
+<area shape="rect" id="node2" href="namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="224,5,355,32"/><area shape="rect" id="node3" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="228,56,351,83"/></map>
 </div>
 </p>
 
@@ -197,17 +214,17 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Heat flux, takes minimum of spitzer and saturated value <br />
+<p>Heat flux, if saturation enabled it takes minimum of the Spitzer and the saturated value <br />
  The result is stored in the 5th component of global the F,G,H fluxes (in cgs, conversion is done in dt product) </p>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00143">143</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00194">194</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph.png" border="0" usemap="#namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph" alt=""/></div>
 <map name="namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph" id="namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc_cgraph">
-<area shape="rect" id="node2" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="224,5,355,32"/></map>
+<area shape="rect" id="node2" href="namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="213,5,344,32"/><area shape="rect" id="node3" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="217,56,340,83"/></map>
 </div>
 </p>
 
@@ -225,9 +242,9 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Intializes Temperature array </p>
+<p>Intializes Temperature array (to resolve dependencies it was moved to the globals module) </p>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00049">49</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00055">55</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 </div>
 </div>
@@ -251,7 +268,98 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00127">127</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00147">147</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8205274631d6cb4d36ffc0937aa88a74"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">real function thermal_cond::ksp_parl </td>
+          <td>(</td>
+          <td class="paramtype">real, intent(in)&#160;</td>
+          <td class="paramname"><em>xtemp</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Computes the Spitzer conductivity parallel to B </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">real</td><td>[in] T : temperature [K] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00162">162</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adfd8867a0fc7fe02a35a41000e36f9bf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">real function thermal_cond::ksp_perp </td>
+          <td>(</td>
+          <td class="paramtype">real, intent(in)&#160;</td>
+          <td class="paramname"><em>xtemp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, intent(in)&#160;</td>
+          <td class="paramname"><em>xdens</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, intent(in)&#160;</td>
+          <td class="paramname"><em>B2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Computes the Spitzer conductivity perpendicular to B </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">real</td><td>[in] T : temperature [K] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00177">177</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aab43551b6a0d4b5894c07b510e4571d7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine thermal_cond::mhd_heatfluxes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Heat flux, if sturation enabled takes minimum of the Spitzer and the saturated value <br />
+ The result is stored in the 5th component of global the F,G,H fluxes (in cgs, conversion is done in dt product) </p>
+
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00285">285</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacethermal__cond_aab43551b6a0d4b5894c07b510e4571d7_cgraph.png" border="0" usemap="#namespacethermal__cond_aab43551b6a0d4b5894c07b510e4571d7_cgraph" alt=""/></div>
+<!-- MAP 0 -->
+</div>
+</p>
 
 </div>
 </div>
@@ -278,7 +386,7 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Progress bar (only tested with Fortran conmpiler) takes a number between 1 and tot </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Progress bar (only tested with intel Fortran conmpiler) takes a number between 1 and tot </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integer</td><td>[in] j : current iteration </td></tr>
     <tr><td class="paramname">integer</td><td>[in] tot : total number of iterartions </td></tr>
@@ -286,7 +394,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00105">105</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00125">125</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 </div>
 </div>
@@ -328,14 +436,14 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00382">382</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00674">674</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph.png" border="0" usemap="#namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph" alt=""/></div>
 <map name="namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph" id="namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701_cgraph">
-<area shape="rect" id="node2" href="namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06" title="Length of superstep. " alt="" coords="213,5,383,32"/></map>
+<area shape="rect" id="node2" href="namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06" title="Length of superstep. " alt="" coords="204,5,363,32"/></map>
 </div>
 </p>
 
@@ -374,12 +482,12 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramname">integer</td><td>[in] j : index of current step </td></tr>
     <tr><td class="paramname">integer</td><td>[in] N : Total number of substeps </td></tr>
-    <tr><td class="paramname">real</td><td>[in] nu : damping factor </td></tr>
+    <tr><td class="paramname">real</td><td>[in] nu : daMPI_NBg factor </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00364">364</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00656">656</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 </div>
 </div>
@@ -409,12 +517,12 @@ Here is the call graph for this function:</div>
 <p>Returns the length of the superstep with N inner substeps </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">integer</td><td>[in] N : Nunber of inner substeps </td></tr>
-    <tr><td class="paramname">real</td><td>[in] snu : sqrt of damping factor </td></tr>
+    <tr><td class="paramname">real</td><td>[in] snu : sqrt of daMPI_NBg factor </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00343">343</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00635">635</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 </div>
 </div>
@@ -432,38 +540,31 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Exchanges one layer of boundaries, only the equation that corresponds to the energy </p>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00216">216</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00508">508</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a685d70692ba68e1ebc0b5d6d8ee8e646"></a>
+<a class="anchor" id="a4b579df47b3bf4622a3ab51f57aa436b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine thermal_cond::thermal_conduction </td>
           <td>(</td>
-          <td class="paramtype">real, intent(in)&#160;</td>
-          <td class="paramname"><em>dt</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>This routine adds the heat conduction, receives the hydro timestep in seconds, and assumes the primitives and Temp(i,j,k) arrays are updated </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">real</td><td>[in] dt : Hysdrodynamical timestep (in seconds) </td></tr>
-  </table>
-  </dd>
-</dl>
+<p>This routine adds the heat conduction, receives the hydro timestep in seconds, and assumes the primitives and Temp(i,j,k) arrays are updated </p>
 
-<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00408">408</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
+<p>Definition at line <a class="el" href="thermal__cond_8f90_source.html#l00700">700</a> of file <a class="el" href="thermal__cond_8f90_source.html">thermal_cond.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph.png" border="0" usemap="#namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph" alt=""/></div>
-<map name="namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph" id="namespacethermal__cond_a685d70692ba68e1ebc0b5d6d8ee8e646_cgraph">
-<area shape="rect" id="node2" href="namespacethermal__cond.html#a9e4afd71cbe737fe5189bc6ecbb3a61f" title="computes conduction timescale " alt="" coords="215,5,372,32"/><area shape="rect" id="node4" href="namespacethermal__cond.html#abc5c4fc622aea2f85fc5a0c2fee333bc" title="Returns Heat Fluxes. " alt="" coords="208,56,379,83"/><area shape="rect" id="node5" href="namespacethermal__cond.html#a55e65df0c700580f8af0a090063d2e32" title="Exchanges ghost cells for energy only. " alt="" coords="216,107,371,149"/><area shape="rect" id="node3" href="namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="427,31,557,57"/></map>
+<div class="center"><img src="namespacethermal__cond_a4b579df47b3bf4622a3ab51f57aa436b_cgraph.png" border="0" usemap="#namespacethermal__cond_a4b579df47b3bf4622a3ab51f57aa436b_cgraph" alt=""/></div>
+<!-- MAP 1 -->
 </div>
 </p>
 
@@ -472,7 +573,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2015 12:50:14 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

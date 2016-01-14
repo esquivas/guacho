@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel
 !> @date 2/Nov/2014
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2015 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
 !
 ! This file is part of Guacho-3D.
 !
@@ -34,11 +34,10 @@ contains
 !> @details This subsroutine initializes all the variables in the globals
 !! module, MPI, cooling and user_mod routines;
 !! and outputs to screen the main parameters used in the run
-!> @param real [out] time   : time (code units)
 !> @param real [out] tprint : time of next output
 !> @param integer [out] itprint : number of next output
 
-subroutine initmain(time, tprint, itprint)
+subroutine initmain(tprint, itprint)
 
   use constants, only : yr
   use parameters
@@ -58,7 +57,6 @@ subroutine initmain(time, tprint, itprint)
   use user_mod
 
   implicit none
-  real,    intent(out) :: time
   real,    intent(out) ::tprint
   integer, intent(out) :: itprint
 
@@ -88,9 +86,9 @@ subroutine initmain(time, tprint, itprint)
   period(0)=perx
   period(1)=pery
   period(2)=perz
-  dims(0)  =mpicol
-  dims(1)  =mpirow
-  dims(2)  =mpirowz
+  dims(0)  =MPI_NBX
+  dims(1)  =MPI_NBY
+  dims(2)  =MPI_NBZ
   !
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
@@ -141,6 +139,7 @@ subroutine initmain(time, tprint, itprint)
   dz=zmax/nztot
   
   !   initialize time integration
+   currentIteration = 1
   if (.not.iwarm) then
      if(rank.eq.master) then
         print'(a)', 'Starting cold'
@@ -148,12 +147,12 @@ subroutine initmain(time, tprint, itprint)
      endif
      itprint=0
      time=0.
-     tprint=0.
+     tprint=dtprint
   else
      itprint=itprint0
      time=real(itprint)*dtprint
      if(rank.eq.master) then
-        print'(a,i,a,es12.3,a)', 'Warm start , from output ',itprint,' at a tim!e ',time*tsc/yr,' yr'
+        print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,' at a time ',time*tsc/yr,' yr'
         print'(a)',' ' 
      end if
      tprint=time+dtprint
@@ -197,6 +196,22 @@ subroutine initmain(time, tprint, itprint)
   call init_rand()
 #endif
 
+  !  create directories to write the outputs
+if (rank == master) then
+#ifdef OUTBIN
+call system('if [ ! -e '//trim(outputpath)//'BIN ]; then mkdir -p '&
+                        //trim(outputpath)//'BIN ; fi')
+#endif
+#ifdef OUTVTK
+call system('if [ ! -e '//trim(outputpath)//'VTK ]; then mkdir -p '&
+                           //trim(outputpath)//'VTK ; fi')
+#endif
+#ifdef OUTSILO
+call system('if [ ! -e '//trim(outputpath)//'SILO/BLOCKS ]; then mkdir -p '&
+                        //trim(outputpath)//'SILO/BLOCKS ; fi')
+#endif
+end if
+
   !  User input initialization, it is called always, 
   !  it has to be there, even empty
   call init_user_mod()
@@ -239,7 +254,7 @@ subroutine initmain(time, tprint, itprint)
      print'(a)', ''
 #endif
 #ifdef HLLE
-     print'(a)', 'The Riemann solver is HLLE)'
+     print'(a)', 'The Riemann solver is HLLE'
      print'(a)', ''
 #endif
 #ifdef HLLD
@@ -289,7 +304,7 @@ subroutine initmain(time, tprint, itprint)
      print'(a)', 'path: '//trim(outputpath)
      print'(a)', 'in the following format(s):'
 #ifdef OUTBIN
-     print'(a)', '*.bin (raw unformatted)'
+     print'(a)', '*.bin (binary, with a small header)'
 #endif
 #ifdef OUTDAT
      print'(a)', '*.dat (formatted, beware of big files)'
@@ -367,8 +382,11 @@ subroutine initmain(time, tprint, itprint)
 #ifdef RADDIFF
      print'(a)', 'Diffuse radiation (local+MPI) enabled'
 #endif
-#ifdef THERMAL_COND
-     print'(a)', 'Thermal conduction included (isotropic)'
+#ifdef TC_ISOTROPIC
+     print'(a)', 'Thermal conduction enabled (isotropic)'
+#endif
+#ifdef TC_ANISOTROPIC
+     print'(a)', 'Thermal conduction enabled (Anisotropic)'
 #endif
 #ifdef OTHERB
      print'(a)', 'Other boundaries enabled (otherbounds.f90)'
@@ -415,7 +433,7 @@ end subroutine initmain
 
 subroutine initflow(itprint)
 
-  use parameters, only : outputpath, iwarm, itprint
+  use parameters, only : outputpath, iwarm, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
   implicit none
@@ -426,36 +444,55 @@ subroutine initflow(itprint)
 
   integer , intent(inout) :: itprint
   integer ::  unitin,err
-  character (len=128) file1
+  character (len=128) :: file1
+  character           :: byte_read
+  character, parameter  :: lf = char(10) 
+  integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
+  real :: dxp, dyp, dzp, scal(3), cvp
 
   if (.not.iwarm) then
 
-    call initial_conditions(u,0.)
+    call initial_conditions(u)
 
   else
 
      !   read from previous (.bin) output
 #ifdef MPIP
-     write(file1,'(a,i3.3,a,i3.3,a)')  &
+    write(file1,'(a,i3.3,a,i3.3,a)')  &
           trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
-     unitin=rank+10
+    unitin=rank+10
 #else
-     write(file1,'(a,i3.3,a)')         &
+    write(file1,'(a,i3.3,a)')         &
           trim(outputpath)//'BIN/points',itprint,'.bin'
-     unitin=10
+    unitin=10
 #endif
-     open(unit=unitin,file=file1,status='unknown',form='unformatted', &
+    open(unit=unitin,file=file1,status='old', access='stream', &
           convert='LITTLE_ENDIAN')
-     
-     read(unitin) u(:,:,:,:)
-     close(unitin)
-     
-     print'(i3,a,a)',rank,'read',trim(file1)
-     itprint=itprint+1
-     
-     
+ 
+    !   discard the ascii header
+    do while (byte_read /= achar(255) )
+      read(unitin) byte_read
+      !print*, byte_read
+    end do
+    !  read bin header, sanity check to do
+    read(unitin) byte_read
+    read(unitin) byte_read
+    read(unitin) nxp, nyp, nzp
+    read(unitin) dxp, dyp, dzp
+    read(unitin) x0p, y0p, z0p
+    read(unitin) mpi_xp, mpi_yp, mpi_zp
+    read(unitin) neqp, neqdynp
+    read(unitin) nghostp
+    read(unitin) scal(1:3)
+    read(unitin) cvp
+    read(unitin) u(:,:,:,:)
+    close(unitin)
+
+    print'(i3,a,a)',rank,' read: ',trim(file1)
+    itprint=itprint+1
+        
 #ifdef MPIP
-     call mpi_barrier(mpi_comm_world,err)
+    call mpi_barrier(mpi_comm_world,err)
 #endif
 
   end if

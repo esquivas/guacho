@@ -67,12 +67,12 @@ subroutine init_rand()
   !  2nd index 3xposition + 3xdirection + 1for the F
   !  3rd index a large number can be changed if the code exits
   !  on error
-  allocate (photL(2,7,nrays/3))
-  allocate (photR(2,7,nrays/3))
-  allocate (photB(2,7,nrays/3))
-  allocate (photT(2,7,nrays/3))
-  allocate (photO(2,7,nrays/3))
-  allocate (photI(2,7,nrays/3))
+  allocate (photL(2,7,nrays/5))
+  allocate (photR(2,7,nrays/5))
+  allocate (photB(2,7,nrays/5))
+  allocate (photT(2,7,nrays/5))
+  allocate (photO(2,7,nrays/5))
+  allocate (photI(2,7,nrays/5))
 
   call random_seed(size=rand_size)
   allocate(rand_seed(1:rand_size))
@@ -108,9 +108,9 @@ subroutine emdiff(emax)
   !   clear  variables
   emaxp=0.
 
-  do i=1,nx
+  do k=1,nz
      do j=1,ny
-        do k=1,nz       
+        do i=1,nx
            call u2prim(u(:,i,j,k), prim, T)
            !  electron density
            de=max(u(1,i,j,k)-u(neqdyn+1,i,j,k),0.)
@@ -461,7 +461,7 @@ subroutine radbounds()
 
   !   loop over MPI blocks to ensure the rays are followed to the 
   !   entire domain
-  do ip=1,int( sqrt(float(mpicol)**2+float(mpirow)**2+float(mpirowz)**2) )
+  do ip=1,int( sqrt(float(MPI_NBX)**2+float(MPI_NBY)**2+float(MPI_NBZ)**2) )
 
     !print'(a,2i3, 6i7)','**',rank,np,buffersize
     call mpi_allgather(buffersize(:)   , 6, mpi_integer, &
@@ -564,6 +564,9 @@ subroutine radbounds()
     end if
 
     !  Continue with photon tracing
+    !  Reset the out buffers of individual MPI blocks
+    buffersize(:)=0
+
     !  left face
     if(left /= -1) then
       do niter=1,Allbuffersize(6*left+2)
@@ -612,8 +615,7 @@ subroutine radbounds()
     end do
     end if
   
-    !  reset the out buffers
-    !buffersize(:)=0
+    !  reset the remaining out buffers
     allBuffersize(:)=0
 
   end do

@@ -1,9 +1,9 @@
 <map id="hllc::hllcfluxes" name="hllc::hllcfluxes">
-<area shape="rect" id="node2" href="$namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d" title="Swaps the x and y components in a cell. " alt="" coords="157,5,291,32"/>
-<area shape="rect" id="node3" href="$namespacehydro__core.html#ae4216bc7908e7665f0565aa8c885c821" title="Swaps the x and z components in a cell. " alt="" coords="157,56,291,83"/>
-<area shape="rect" id="node4" href="$namespacehydro__core.html#ada63ca89d1a40cfd1a62db0ddfdbda80" title="Performs a linear reconstruction of the primitive variables. " alt="" coords="158,107,290,133"/>
-<area shape="rect" id="node5" href="$namespacehllc.html#a25f1f218ed55fbda8b6311baa3ff6f80" title="Solves the Riemann problem at the interface PL,PR using the HLLC solver. " alt="" coords="171,157,277,184"/>
-<area shape="rect" id="node6" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="339,107,477,133"/>
-<area shape="rect" id="node7" href="$namespacehydro__core.html#a725c2c598f080ea420f4043dbda3f996" title="Computes the Euler Fluxes in one cell. " alt="" coords="341,157,475,184"/>
-<area shape="rect" id="node8" href="$namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3" title="Computes the conserved conserved variables from the primitives in a single cell. " alt="" coords="339,208,477,235"/>
+<area shape="rect" id="node2" href="$namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d" title="Swaps the x and y components in a cell. " alt="" coords="148,5,279,32"/>
+<area shape="rect" id="node3" href="$namespacehydro__core.html#ae4216bc7908e7665f0565aa8c885c821" title="Swaps the x and z components in a cell. " alt="" coords="148,56,279,83"/>
+<area shape="rect" id="node4" href="$namespacehydro__core.html#ada63ca89d1a40cfd1a62db0ddfdbda80" title="Performs a linear reconstruction of the primitive variables. " alt="" coords="154,107,273,133"/>
+<area shape="rect" id="node5" href="$namespacehllc.html#a25f1f218ed55fbda8b6311baa3ff6f80" title="Solves the Riemann problem at the interface PL,PR using the HLLC solver. " alt="" coords="166,157,261,184"/>
+<area shape="rect" id="node6" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="327,107,457,133"/>
+<area shape="rect" id="node7" href="$namespacehydro__core.html#a725c2c598f080ea420f4043dbda3f996" title="Computes the Euler Fluxes in one cell. " alt="" coords="331,157,453,184"/>
+<area shape="rect" id="node8" href="$namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3" title="Computes the conserved conserved variables from the primitives in a single cell. " alt="" coords="329,208,455,235"/>
 </map>

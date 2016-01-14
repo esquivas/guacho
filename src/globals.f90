@@ -52,7 +52,18 @@ module globals
 
   integer :: rank     !< MPI rank
   integer :: comm3d   !< Cartessian MPI comunicator
-  !
+
+  !> Current time
+  real :: time
+  !> Current CFL $\Delta t$
+  real :: dt_CFL
+  !> Current iteration
+  integer :: currentIteration
+
+#ifdef THERMAL_COND
+  real, allocatable :: Temp(:,:,:)   !< Temperature array [K]
+#endif
+
 end module globals
 
 !=======================================================================

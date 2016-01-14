@@ -37,29 +37,30 @@ contains
 !> @details High level wrapper to apply cooling
 !! @n  parametrized cooling curve, uses the ionization state of 
 !! hydrogen and ties the O I and II to it
-!> @param real [in] dt : timestep in seconds
 
-subroutine coolingh(dt)
+subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz
-  use globals, only : u, coords
+  use parameters, only : neq, nx, ny, nz, tsc
+  use globals, only : u, coords, dt_CFL
 
 #ifdef RADDIFF
   use difrad, only : ph
 #endif
 
   implicit none
-  real, intent(in)     :: dt
+  real    :: dt_seconds
   integer :: i,j,k
 
-  do i=1,nx
+  dt_seconds = dt_CFL*tsc
+
+  do k=1,nz
      do j=1,ny
-        do k=1,nz
+        do i=1,nx
 
 #ifdef RADDIFF
-           call atomic(dt,u(:,i,j,k),1.,ph(i,j,k) )
+           call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
 #else
-           call atomic(dt,u(:,i,j,k),1.,1.)
+           call atomic(dt_seconds,u(:,i,j,k),1.,1.)
 #endif
 
 
@@ -179,17 +180,20 @@ FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
   real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
   real (kind=8) :: BETAF, HIICOOL!, BETAH
 
-  Te=MAX(Te0,1000.)
+  Te=MAX(Te0,10.)
   DH=DEN
   DHP=(1.-X1)*DH
   DE=DHP+1.E-4*DH
   DOI=XO*DH0
   DOII=XO*DHP
 
-  SHP=-DH*(X1-X2)/DT  !  ?
+  SHP=-DH*(X1-X2)/DT  !  ?```
+  if(TE <= 1e4 ) then
+    ALOSS = 0.
+    return
+  end if
 
   !   Collisionally excited Lyman alpha
-
   IF(TE.LE.55000.) OMEGA=C0+TE*(C1+TE*(C2+TE*C3))
   IF(TE.GE.72000.) OMEGA=D0+TE*(D1+TE*(D2+TE*D3))
   IF(TE.GT.55000..AND.TE.LT.72000.) THEN
@@ -296,12 +300,12 @@ subroutine atomic(dt,uu,tau,radphi)
   !   solve for the ionization fraction and the internal energy
 
   call u2prim(uu,prim,T)            !# temperature
-  col=colf(dble(t))                 !# collisional ionization rate 
-  rec=alpha(dble(t))                !# rad. recombination rate
-  y0=dble( uu(neqdyn+1)/uu(1) )     !# neutral H fraction  
-  dh=dble( uu(1) )                  !# H density
+  col=colf(real(t,8))                 !# collisional ionization rate 
+  rec=alpha(real(t,8))                !# rad. recombination rate
+  y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction  
+  dh=real( uu(1), 8 )                  !# H density
 #ifdef RADDIFF
-  fpn=dble(radphi)/dh               !# ionizing flux per nucleus
+  fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus
 #endif
   !print*,fpn
   !fpn=0.
@@ -318,7 +322,7 @@ subroutine atomic(dt,uu,tau,radphi)
   c=(1.+xi)*rec
   d=sqrt(b**2-4.*a*c)
   g0=(2.*a*y0+b+d)/(2.*a*y0+b-d)
-  e=exp( -d*dh*dble(dt) )
+  e=exp( -d*dh*real(dt,8) )
 
   y1=(-b-d*(1.+g0*e)/(1.-g0*e))/(2.*a) !# the new neutral fraction
   y1=min(y1,0.9999)
@@ -328,36 +332,36 @@ subroutine atomic(dt,uu,tau,radphi)
   !    and assuming that the cooling goes approximately linear with 
   !    temperature
 
-  dh0=dble( uu(neqdyn+1) )
-  al=ALOSS(y0,y1,dt,dh,dh0,dble(t))/dh**2
+  dh0=real( uu(neqdyn+1), 8 )
+  al=ALOSS(y0,y1,dt,dh,dh0,real(t,8))/dh**2
 
   !if(al.lt.0.) write(*,*) 'que paso !'
   !if(al.lt.0.) al=0.
   !  al=al*(1.-(0.5e4/max(1.e4,t))**4)
-  !if(t.le.1.e4) al=al*dble((t/1.e4)**4)
+  !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
 
 #ifdef RADDIFF
-  gain=dble(radphi)*dh0*boltzm*1.E4 !3.14d5
-  tprime=max( gain*dble(T)/(dh**2*al),1000.)
+  gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
+  tprime=max( gain*real(T,8)/(dh**2*al),1000.)
 #else
   tprime=10.
 #endif
   !tprime=1000.
 
-  ce=(2.*dh*al)/(3.*boltzm*dble(T))
+  ce=(2.*dh*al)/(3.*boltzm*real(T,8))
   t1=tprime+(t-tprime)*exp(-ce*dt) !# new temperature
 
-  t1=max(t1,0.1*dble(t) )
-  t1=min(t1,10.*dble(t) )
+  t1=max(t1,0.1*real(t,8) )
+  t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
 #if TWOTEMP
   t1=1.E4-9990.*y1
 #endif
     !   update the uu array
-  uu(neqdyn+1)=sngl(y1)*uu(1)
+  uu(neqdyn+1)=real(y1)*uu(1)
 
-  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*sngl(t1)/Tempsc        &
+  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
        +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    
 
 end subroutine atomic

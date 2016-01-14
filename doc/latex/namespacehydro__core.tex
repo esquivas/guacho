@@ -26,7 +26,7 @@ subroutine \hyperlink{namespacehydro__core_ab2655b81626d4d95cb003112248e928a}{cf
 \begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speeds in the 3 coordinates. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacehydro__core_abd089f71325e32997703c1420db62aa8}{cfastx} (prim, cf\+X)
 \begin{DoxyCompactList}\small\item\em Computes the fast magnetosonic speed in the x direction. \end{DoxyCompactList}\item 
-subroutine \hyperlink{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}{get\+\_\+timestep} (dt)
+subroutine \hyperlink{namespacehydro__core_a89c51c2e68906bd5c2a1487283e10181}{get\+\_\+timestep} (current\+\_\+iter, n\+\_\+iter, current\+\_\+time, tprint, dt, dump\+\_\+flag)
 \begin{DoxyCompactList}\small\item\em Otains the timestep allowed by the C\+F\+L condition in the entire. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}{limiter} (P\+L\+L, P\+L, P\+R, P\+R\+R, neq)
 \begin{DoxyCompactList}\small\item\em Performs a linear reconstruction of the primitive variables. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -53,7 +53,7 @@ Updated the primitives, using the conserved variables in the entire domain
 \end{DoxyParams}
 
 
-Definition at line 116 of file hydro\+\_\+core.\+f90.
+Definition at line 119 of file hydro\+\_\+core.\+f90.
 
 
 
@@ -61,7 +61,7 @@ Here is the call graph for this function\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=328pt]{namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph}
+\includegraphics[width=312pt]{namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph}
 \end{center}
 \end{figure}
 
@@ -101,7 +101,7 @@ Computes the fast magnetosonic speeds in the 3 coordinates
 \end{DoxyParams}
 
 
-Definition at line 325 of file hydro\+\_\+core.\+f90.
+Definition at line 327 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_abd089f71325e32997703c1420db62aa8}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!cfastx@{cfastx}}
 \index{cfastx@{cfastx}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -118,7 +118,7 @@ Computes the fast magnetosonic speed in the x direction
 \end{DoxyParams}
 
 
-Definition at line 350 of file hydro\+\_\+core.\+f90.
+Definition at line 352 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_a27cb7ddb40cc0226e0139bd9eba42dfa}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!csound@{csound}}
 \index{csound@{csound}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -140,33 +140,43 @@ Computes the sound speed
 \end{DoxyParams}
 
 
-Definition at line 299 of file hydro\+\_\+core.\+f90.
+Definition at line 301 of file hydro\+\_\+core.\+f90.
 
-\hypertarget{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!get\+\_\+timestep@{get\+\_\+timestep}}
+\hypertarget{namespacehydro__core_a89c51c2e68906bd5c2a1487283e10181}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!get\+\_\+timestep@{get\+\_\+timestep}}
 \index{get\+\_\+timestep@{get\+\_\+timestep}!hydro\+\_\+core@{hydro\+\_\+core}}
 \subsubsection[{get\+\_\+timestep}]{\setlength{\rightskip}{0pt plus 5cm}subroutine hydro\+\_\+core\+::get\+\_\+timestep (
 \begin{DoxyParamCaption}
-\item[{real, intent(out)}]{dt}
+\item[{integer, intent(in)}]{current\+\_\+iter, }
+\item[{integer, intent(in)}]{n\+\_\+iter, }
+\item[{real, intent(in)}]{current\+\_\+time, }
+\item[{real, intent(in)}]{tprint, }
+\item[{real, intent(out)}]{dt, }
+\item[{logical, intent(out)}]{dump\+\_\+flag}
 \end{DoxyParamCaption}
-)}\label{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53}
-Otains the timestep allowed by the C\+F\+L condition in the entire domain using the global primitives 
+)}\label{namespacehydro__core_a89c51c2e68906bd5c2a1487283e10181}
+Otains the timestep allowed by the C\+F\+L condition in the entire domain using the global primitives, and sets logical variable to dump output 
 \begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} current\+\_\+iter \+: Current iteration, it starts with a small but increasing C\+F\+L in the first N\+\_\+trans iterarions \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} n\+\_\+iter \+: Number of iterations to go from a small C\+F\+L to the final C\+F\+L (in parameters.\+f90) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} current\+\_\+time \+: Current (global) simulation time \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} tprint \+: time for the next programed disk dump \\
+\hline
 {\em real} & \mbox{[}out\mbox{]} \+: $ \Delta t$ allowed by the C\+F\+L condition \\
+\hline
+{\em logical} & \mbox{[}out\mbox{]} dump\+\_\+flag \+: Flag to write to disk \\
 \hline
 \end{DoxyParams}
 
 
-Definition at line 373 of file hydro\+\_\+core.\+f90.
+Definition at line 384 of file hydro\+\_\+core.\+f90.
 
 
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=349pt]{namespacehydro__core_a0b0402ba5c94d738eb020f79783f8d53_cgraph}
-\end{center}
-\end{figure}
+Here is the call graph for this function\+:
+% FIG 0
 
 
 \hypertarget{namespacehydro__core_ada63ca89d1a40cfd1a62db0ddfdbda80}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!limiter@{limiter}}
@@ -196,7 +206,7 @@ returns a linear reconstruction of the variables at the interface beteen the pri
 \end{DoxyParams}
 
 
-Definition at line 437 of file hydro\+\_\+core.\+f90.
+Definition at line 462 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_a725c2c598f080ea420f4043dbda3f996}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!prim2f@{prim2f}}
 \index{prim2f@{prim2f}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -216,7 +226,7 @@ Computes the Euler Fluxes in one cell, using the primitices ~\newline
 \end{DoxyParams}
 
 
-Definition at line 196 of file hydro\+\_\+core.\+f90.
+Definition at line 199 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_a98cafc8f97d7a1b3f8050b8e442194c3}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!prim2u@{prim2u}}
 \index{prim2u@{prim2u}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -235,7 +245,7 @@ Computes the conserved conserved variables from the primitives in a single cell
 \end{DoxyParams}
 
 
-Definition at line 155 of file hydro\+\_\+core.\+f90.
+Definition at line 158 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_a64856096f7a7b7f65be1154d31916c2d}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!swapy@{swapy}}
 \index{swapy@{swapy}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -254,7 +264,7 @@ Swaps the x and y components in a cell.
 \end{DoxyParams}
 
 
-Definition at line 247 of file hydro\+\_\+core.\+f90.
+Definition at line 249 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_ae4216bc7908e7665f0565aa8c885c821}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!swapz@{swapz}}
 \index{swapz@{swapz}!hydro\+\_\+core@{hydro\+\_\+core}}
@@ -273,7 +283,7 @@ Swaps the x and z components in a cell.
 \end{DoxyParams}
 
 
-Definition at line 273 of file hydro\+\_\+core.\+f90.
+Definition at line 275 of file hydro\+\_\+core.\+f90.
 
 \hypertarget{namespacehydro__core_a360e3d64343b30d94d270cfebc5b4eb3}{}\index{hydro\+\_\+core@{hydro\+\_\+core}!u2prim@{u2prim}}
 \index{u2prim@{u2prim}!hydro\+\_\+core@{hydro\+\_\+core}}

@@ -12,7 +12,7 @@ subroutine \hyperlink{namespacecooling__dmc_a7874b4f8a76399e87e0a22aecd088cf8}{r
 \begin{DoxyCompactList}\small\item\em Reads the cooling curve table. \end{DoxyCompactList}\item 
 real(kind=8) function \hyperlink{namespacecooling__dmc_af987bbf144f596d57b154427bbb82ae5}{cooldmc} (T)
 \begin{DoxyCompactList}\small\item\em Returns the cooling coefficient interpolating the table. \end{DoxyCompactList}\item 
-subroutine \hyperlink{namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce}{coolingdmc} (dt)
+subroutine \hyperlink{namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6}{coolingdmc} ()
 \begin{DoxyCompactList}\small\item\em High level wrapper to apply cooling with D\+M\+C table. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
@@ -43,32 +43,22 @@ Cooling module with Dalgarno Mc\+Cray coronal cooling curve ~\newline
 
 Definition at line 77 of file cooling\+\_\+dmc.\+f90.
 
-\hypertarget{namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce}{}\index{cooling\+\_\+dmc@{cooling\+\_\+dmc}!coolingdmc@{coolingdmc}}
+\hypertarget{namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6}{}\index{cooling\+\_\+dmc@{cooling\+\_\+dmc}!coolingdmc@{coolingdmc}}
 \index{coolingdmc@{coolingdmc}!cooling\+\_\+dmc@{cooling\+\_\+dmc}}
 \subsubsection[{coolingdmc}]{\setlength{\rightskip}{0pt plus 5cm}subroutine cooling\+\_\+dmc\+::coolingdmc (
 \begin{DoxyParamCaption}
-\item[{real, intent(in)}]{dt}
+{}
 \end{DoxyParamCaption}
-)}\label{namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce}
+)}\label{namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6}
 High level wrapper to apply cooling with D\+M\+C table ~\newline
  cooling is applied in the entire domain and updates both the conserved and primitive variables 
-\begin{DoxyParams}{Parameters}
-{\em real} & \mbox{[}in\mbox{]} dt \+: timestep (in seconds) \\
-\hline
-\end{DoxyParams}
 
-
-Definition at line 104 of file cooling\+\_\+dmc.\+f90.
+Definition at line 103 of file cooling\+\_\+dmc.\+f90.
 
 
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{namespacecooling__dmc_ad51341dd3b898a1fe0f7c298cf7e49ce_cgraph}
-\end{center}
-\end{figure}
+Here is the call graph for this function\+:
+% FIG 0
 
 
 \hypertarget{namespacecooling__dmc_a7874b4f8a76399e87e0a22aecd088cf8}{}\index{cooling\+\_\+dmc@{cooling\+\_\+dmc}!read\+\_\+table@{read\+\_\+table}}

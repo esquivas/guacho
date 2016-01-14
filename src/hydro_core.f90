@@ -47,8 +47,11 @@ subroutine u2prim(uu, prim, T)
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
-  real :: r, dentot
-  
+  real :: r
+#if defined(EOS_H_RATE) || defined(EOS_MULTI_SPECIES)
+  real :: dentot
+#endif
+
   r=max(uu(1),1e-15)
   prim(1)=r
   prim(2)=uu(2)/r 
@@ -81,7 +84,7 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
 #ifdef EOS_SINGLE_SPECIE
   ! assumes it is fully ionized
   r=max(r,1e-15)
-  T=max(1.,(prim(5)/r))*Tempsc
+  T=max(1.,(prim(5)/r)*Tempsc)
   prim(5)=r*T/Tempsc
 #endif
 
@@ -116,7 +119,7 @@ subroutine calcprim(u,primit)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
 #ifdef THERMAL_COND
-  use thermal_cond, only : Temp
+  use globals, only : Temp
 #endif
   implicit none
   real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
@@ -126,16 +129,16 @@ subroutine calcprim(u,primit)
 #endif
   integer :: i,j,k
   !
-  do i=nxmin,nxmax
+  do k=nzmin,nzmax
      do j=nymin,nymax
-        do k=nzmin,nzmax
-           !
+        do i=nxmin,nxmax
+           
 #ifdef THERMAL_COND
            call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
 #else
            call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
 #endif
-           !
+           
         end do
      end do
   end do
@@ -366,21 +369,30 @@ subroutine cfastX(prim,cfX)
 
 !> @brief Otains the timestep allowed by the CFL condition in the entire
 !> @details Otains the timestep allowed by the CFL condition in the entire
-!! domain using the global primitives
+!> domain using the global primitives, and sets logical variable to dump 
+!> output
+!> @param integer [in] current_iter : Current iteration, it starts with a small
+!! but increasing CFL in the first N_trans iterarions
+!> @param integer [in] n_iter : Number of iterations to go from a small CFL to
+!! the final CFL (in parameters.f90)
+!> @param real [in] current_time : Current (global) simulation time
+!> @param real [in] tprint : time for the next programed disk dump
 !> @param real [out] : @f$ \Delta t@f$ allowed by the CFL condition
-subroutine get_timestep(dt)
+!> @param logical [out] dump_flag : Flag to write to disk
+
+subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
 
   use parameters, only : nx, ny, nz, cfl, mpi_real_kind
   use globals, only : primit, dx, dy, dz
   implicit none
-
 #ifdef MPIP
   include "mpif.h"
 #endif
-
-  real, intent(out) ::dt
-
-  real              :: dtp  
+  integer, intent(in)  :: current_iter, n_iter
+  real,    intent(in)  :: current_time, tprint
+  real,    intent(out) :: dt
+  logical, intent(out) :: dump_flag
+  real              :: dtp
 #ifdef MHD
   real              :: cx, cy, cz
 #else
@@ -389,10 +401,11 @@ subroutine get_timestep(dt)
   integer :: i, j, k, err
   
   dtp=1.e30
-  do i=1,nx
+  
+  do k=1,nz
     do j=1,ny
-      do k=1,nz
-      !
+      do i=1,nx
+      
 #ifdef MHD
         call cfast(primit(5,i,j,k),primit(1,i,j,k),&
             primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
@@ -410,12 +423,25 @@ subroutine get_timestep(dt)
     end do
   end do
 
-  dtp=cfl*dtp
+  if (current_iter <= n_iter ) then
+    !   boots up simulation with small CFL
+    dtp = cfl*(2.**(-real(n_iter+1-current_iter)))*dtp
+  else
+    dtp=cfl*dtp
+  end if
+
 #ifdef MPIP
   call mpi_allreduce(dtp, dt, 1, mpi_real_kind, mpi_min, mpi_comm_world,err)
 #else
   dt=dtp
 #endif
+
+  !  Adjust dt so t+dt doesnt overshoot tprint
+  if(( current_time + dt )>=tprint) then
+    dt= tprint-current_time
+    dump_flag=.true.
+  endif
+
 
 end subroutine get_timestep
 
