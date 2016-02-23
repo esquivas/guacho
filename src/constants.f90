@@ -29,7 +29,6 @@ module constants
 
   real, parameter :: pi=acos(-1.)      !< @f$ \pi @f$
   real, parameter :: amh=1.66e-24      !< hydrogen mass
-  real, parameter :: mu=0.5            !< mean atomic mass
   real, parameter :: Kb=1.38e-16       !< Boltzmann constant (cgs)  
   real, parameter :: Rg=8.3145e7       !< Gas constant (cgs)
   real, parameter :: Ggrav=6.67259e-8  !< Gravitational constant (cgs)
