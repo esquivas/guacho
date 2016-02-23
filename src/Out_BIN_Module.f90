@@ -1,3 +1,4 @@
+
 !=======================================================================
 !> @file Out_BIN_Module.f90
 !> @brief Output in BIN Format
@@ -70,7 +71,7 @@ subroutine write_header(unit, neq_out, nghost_out)
   write(unit) trim(cbuffer), lf
  
   write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
-    rsc, sqrt(vsc2), rhosc
+    rsc, vsc, rhosc
   write(unit) trim(cbuffer), lf
 
    write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
@@ -95,7 +96,7 @@ subroutine write_header(unit, neq_out, nghost_out)
   write(unit) MPI_NBX, MPI_NBY, MPI_NBZ
   write(unit) neq_out, neqdyn
   write(unit) nghost_out
-  write(unit) rsc, sqrt(vsc2), rhosc
+  write(unit) rsc, vsc, rhosc
   write(unit) cv
 
 end subroutine write_header
