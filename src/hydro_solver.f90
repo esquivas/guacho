@@ -39,7 +39,9 @@ module hydro_solver
 #ifdef HLLD
   use hlld
 #endif
-
+#ifdef EOS_CHEM
+  use chemistry
+#endif
   implicit none
 
 contains
@@ -192,14 +194,24 @@ subroutine tstep()
 #endif
 
   !  upwind timestep
-   call step(dt_CFL)
+  call step(dt_CFL)
 
   !  add viscosity
   call viscosity()
   
   !  copy the up's on the u's
   u=up
- 
+
+  ! update the chemistry network
+#ifdef EOS_CHEM
+  call chemstep()
+#endif
+
+  !  apply cooling if the network is enabled
+#ifdef COOLINGCHEM
+  call cooling_chem()
+#endif
+
  !  Do the Radiaiton transfer (Monte Carlo type)
 #ifdef RADDIFF
   call diffuse_rad()
