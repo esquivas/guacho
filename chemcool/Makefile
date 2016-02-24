@@ -79,7 +79,7 @@ EOS = CHEM
 #   BBC : Cooling function of Benjamin, Benson and Cox (2003)
 #   DMC : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
 #   CHI : From table(s) generated with Chianti
-#   CHEM : enables cooling from the full chemical network
+#   CHEM : enables cooling from a full chemical network
 COOLING = CHEM
 
 #   boundary conditions (OUTFLOW, CLOSED, PERIODIC)
