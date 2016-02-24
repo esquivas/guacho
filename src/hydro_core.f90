@@ -24,11 +24,15 @@
 
 !> @brief Basic hydro (and MHD) subroutines utilities
 !> @details This module contains subroutines and utilities that are the
-!! core of the hydro (and MHD) that are common to most implementations 
-!! and will be used for the different specific solvers
+!> core of the hydro (and MHD) that are common to most implementations 
+!> and will be used for the different specific solvers
 
 module hydro_core
-	implicit none
+
+#ifdef EOS_CHEM
+  use network,  only : n_spec 
+#endif
+  implicit none
 
 contains
 
@@ -48,7 +52,7 @@ subroutine u2prim(uu, prim, T)
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
   real :: r
-#if defined(EOS_H_RATE) || defined(EOS_MULTI_SPECIES)
+#if defined(EOS_H_RATE) || defined(EOS_CHEM)
   real :: dentot
 #endif
 
@@ -72,7 +76,7 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
 #endif 
 
 #ifdef PASSIVES
-  prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
+  prim(neqdyn+1:neq) = max( uu(neqdyn+1:neq), 0.)
 #endif
   
   !   Temperature calculation
@@ -95,11 +99,11 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
   prim(5)=dentot*T/Tempsc
 #endif
 
-#ifdef EOS_MULTI_SPECIES
-  dentot= prim(neqdyn+1) + prim(neqdyn+2) + &
-          prim(neqdyn+3) + prim(neqdyn+4) + &
-          prim(neqdyn+5) + prim(neqdyn+6)
-  T = (prim(5)/dentot/Rg)*vsc2
+#ifdef EOS_CHEM
+  !  Assumes that rho scaling is mu*mh
+  dentot= sum(prim( neqdyn+1 : neqdyn+n_spec ) )
+  T=max(1.,(prim(5)/dentot)*Tempsc)
+  prim(5) = dentot * T /Tempsc
 #endif
 
 end subroutine u2prim  
@@ -548,7 +552,6 @@ contains
 end subroutine limiter
 
 !=======================================================================
-
 
 end module hydro_core
 
