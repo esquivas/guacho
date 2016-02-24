@@ -126,10 +126,14 @@ contains
                 u(4,i,j,k) = denj*vjet*cosa
                 !   energy
                 u(5,i,j,k)=0.5*denj*vjet**2+cv*denj*1.1*Tempj/Tempsc
-                !  density of neutrals (10% ionized)
-                u(6,i,j,k)= 0.9*denj
-                !   passive scalar
-                u(7,i,j,k)= denj
+                
+                !  passive scalars needed for the chemistry network
+                u( 6,i,j,k) = 0.0001 * u(1,i,j,k)
+                u( 7,i,j,k) = 0.1/2. * u(1,i,j,k)
+                u( 8,i,j,k) = 0.8999 * u(1,i,j,k)
+                u( 9,i,j,k) = 0.0001 * u(1,i,j,k)
+                u(10,i,j,k) = + u(1,i,j,k)
+
              endif
              
           end do
