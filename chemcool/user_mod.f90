@@ -71,13 +71,19 @@ subroutine initial_conditions(u)
     do i=nxmin,nxmax
       do j=nymin,nymax
 
+        !  dynamical equations
         u(1,i,j,k) = 1.e3
         u(2,i,j,k) = 0.
         u(3,i,j,k) = 0.
         u(4,i,j,k) = 0.
         u(5,i,j,k) = cv*u(1,i,j,k)*1.001*T_ism/Tempsc
-        u(6,i,j,k) = .999*u(1,i,j,k)
-        u(7,i,j,k) = -    u(1,i,j,k)
+
+        !  passive scalars needed for the chemistry network
+        u( 6,i,j,k) = 0.0001    *  u(1,i,j,k)
+        u( 7,i,j,k) = 0.9989/2. *  u(1,i,j,k)
+        u( 8,i,j,k) = 0.001     *  u(1,i,j,k)
+        u( 9,i,j,k) = 0.0001    *  u(1,i,j,k)
+        u(10,i,j,k) = - u(1,i,j,k)
 
       end do
     end do
