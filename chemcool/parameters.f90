@@ -27,13 +27,13 @@
 !! can be moved later to a runtime input file
 
 module parameters
-  use constants, only : Rg, amh, mu, au, yr
+  use constants, only : Rg, amh, au, yr
   implicit none
 #ifdef MPIP
   include "mpif.h"
 #endif
   !> Path used to write the output
- character (len=128),parameter ::  outputpath='/datos/esquivel/Guacho-1.2/AHC-M1AD/'
+ character (len=128),parameter ::  outputpath='/datos/esquivel/Guacho-1.2/chemcol/'
  !> working directory
  character (len=128),parameter ::  workdir='./'
   
@@ -75,6 +75,7 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
+  real, parameter :: mu = 1.           !< mean atomic mass
   
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=10.                 !<  reference temperature (to set cs)
