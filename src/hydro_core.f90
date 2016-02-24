@@ -1,6 +1,6 @@
 !=======================================================================
-!> @file hydro_solver.f90
-!> @brief Hydrodynamical and Magnetohidrodynamocal solver module
+!> @file hydro_core.f90
+!> @brief Hydrodynamical and Magnetohidrodynamocal bacic module
 !> @author Alejandro Esquivel
 !> @date 2/Nov/2014
 
@@ -22,243 +22,537 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief Advances the simulation one timestep
-!> @details Advances the solution from @f$ t @f$ to @f$ t + \Delta t @f$
+!> @brief Basic hydro (and MHD) subroutines utilities
+!> @details This module contains subroutines and utilities that are the
+!> core of the hydro (and MHD) that are common to most implementations 
+!> and will be used for the different specific solvers
 
-module hydro_solver
+module hydro_core
 
-#ifdef HLL
- use hll
-#endif
-#ifdef HLLC
-  use hllc
-#endif
-#ifdef HLLE
-  use hllE
-#endif
-#ifdef HLLD
-  use hlld
-#endif
 #ifdef EOS_CHEM
-  use chemistry
+  use network,  only : n_spec 
 #endif
   implicit none
 
 contains
 
-!> @brief Adds artificial viscosity to the conserved variables
-!> @details Adds artificial viscosity to the conserved variables
-!! @n Takes the variables from the globals module and it assumes
-!! that the up are the stepped variables, while u are unstepped
-subroutine viscosity()
+!> @brief Computes the primitive variables and temperature from conserved
+!!  variables on a single cell
+!> @details Computes the primitive variables and temperature from conserved
+!!  variables on a single cell
+!> @param real [in] uu(neq) : conserved variables in one cell
+!> @param real [out] prim(neq) : primitives in one cell
+!> @param real [out] T : Temperature [K]
 
-  use parameters, only : nx, ny, nz, eta
-  use globals, only: u, up
+subroutine u2prim(uu, prim, T)
+
+  use parameters, only : neq, neqdyn, Tempsc, vsc2, cv
   implicit none
-  integer :: i, j, k
+  real,    intent(in),  dimension(neq)  :: uu
+  real,    intent(out), dimension(neq)  :: prim
+  real,    intent(out)                  :: T
+  real :: r
+#if defined(EOS_H_RATE) || defined(EOS_CHEM)
+  real :: dentot
+#endif
+
+  r=max(uu(1),1e-15)
+  prim(1)=r
+  prim(2)=uu(2)/r 
+  prim(3)=uu(3)/r
+  prim(4)=uu(4)/r
   
-  do k=1,nz
-     do j=1,ny
-        do i=1,nx
-           up(:,i,j,k)=up(:,i,j,k)+eta*( u(:,i+1,j,k)+u(:,i-1,j,k)       &
-                                        +u(:,i,j+1,k)+u(:,i,j-1,k)       &
-                                        +u(:,i,j,k+1)+u(:,i,j,k-1)       &
-                                     -6.*u(:,i,j,k) )
-        end do
-     end do
-  end do
+#ifdef MHD
+prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
+               -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv  
+#else
+  prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
+#endif
   
-end subroutine viscosity
+  prim(5)=max(prim(5),1e-16)
+  
+#if defined(PMHD) || defined(MHD) 
+  prim(6:8) = uu(6:8)
+#endif 
+
+#ifdef PASSIVES
+  prim(neqdyn+1:neq) = max( uu(neqdyn+1:neq), 0.)
+#endif
+  
+  !   Temperature calculation
+
+#ifdef EOS_ADIABATIC
+  T=(prim(5)/r)*Tempsc
+#endif
+
+#ifdef EOS_SINGLE_SPECIE
+  ! assumes it is fully ionized
+  r=max(r,1e-15)
+  T=max(1.,(prim(5)/r)*Tempsc)
+  prim(5)=r*T/Tempsc
+#endif
+
+#ifdef EOS_H_RATE
+  dentot=(2.*r-prim(neqdyn+1))
+  dentot=max(dentot,1e-15)
+  T=max(1.,(prim(5)/dentot)*Tempsc)
+  prim(5)=dentot*T/Tempsc
+#endif
+
+#ifdef EOS_CHEM
+  !  Assumes that rho scaling is mu*mh
+  dentot= sum(prim( neqdyn+1 : neqdyn+n_spec ) )
+  T=max(1.,(prim(5)/dentot)*Tempsc)
+  prim(5) = dentot * T /Tempsc
+#endif
+
+end subroutine u2prim  
 
 !=======================================================================
 
-!> @brief Upwind timestep
-!> @details Performs the upwind timestep according to
-!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} 
-!!\left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] @f]
-!! (in 3D), it takes @f$ U^{n+1} @f$=up from the global variables
-!! and @f$ U^{n} @f$=u
-!> @param real [in] dt : timestep
+!> @brief Updated the primitives, using the conserved variables in the
+!! entire domain
+!> @details Updated the primitives, using the conserved variables in the
+!! entire domain
+!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!! conserved variables
+!> @param real [out] prim(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+!! primitive variables
 
-subroutine step(dt)
-  use parameters, only : nx, ny, nz
-  use globals, only : up, u, primit, f, g, h, dx, dy, dz
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-  use sources
+subroutine calcprim(u,primit)
+
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+#ifdef THERMAL_COND
+  use globals, only : Temp
 #endif
   implicit none
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-  real :: s(neq)
+  real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
+  real,intent(out),dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: primit
+#ifndef THERMAL_COND
+  real                 :: T
 #endif
-  real, intent(in) :: dt
-  integer :: i, j, k
-  real :: dtdx, dtdy, dtdz
-
-  dtdx=dt/dx
-  dtdy=dt/dy
-  dtdz=dt/dz
-
-  do k=1,nz
-     do j=1,ny
-        do i=1,nx
+  integer :: i,j,k
+  !
+  do k=nzmin,nzmax
+     do j=nymin,nymax
+        do i=nxmin,nxmax
            
-           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
-                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
-                                 -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
-
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-           call source(i,j,k,primit(:,i,j,k),s)
-           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
+#ifdef THERMAL_COND
+           call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+#else
+           call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
 #endif
-
+           
         end do
      end do
   end do
 
-end subroutine step
+end subroutine calcprim
 
+!=======================================================================
 
-!> @brief High level wrapper to advancce the simulation
-!> @details High level wrapper to advancce the simulation
-!! @n The variables are taken from the globals module.
+!> @brief Computes the conserved conserved variables from the
+!! primitives in a single cell
+!> @details Computes the conserved conserved variables from the
+!! primitives in a single cell
+!> @param real [in] prim(neq) : primitives in one cell
+!> @param real [out] uu(neq) : conserved varibles in one cell
 
-subroutine tstep()
+subroutine prim2u(prim,uu)
 
-  use parameters, only : tsc
-  use globals
-  use hydro_core, only : calcprim
-  use boundaries
-#ifdef C2ray
-  use C2Ray_RT, only: C2Ray_radiative_transfer
-#endif
-#ifdef COOLINGH
-  use cooling_H
-#endif
-#ifdef COOLINGDMC
-  use cooling_DMC
-#endif
-#ifdef COOLINGCHI
-  use cooling_CHI
-#endif
-#ifdef RADDIFF
-  use difrad
-#endif
-
-#ifdef THERMAL_COND
-  use thermal_cond
-#endif
+  use parameters
   implicit none
-  real :: dtm
-   
-  !  1st half timestep ========================   
-  dtm=dt_CFL/2.
-  !   calculate the fluxes using the primitives
-  !   (piecewise constant)
-#ifdef HLL
-  call hllfluxes(1)
-#endif
-#ifdef HLLC
-  call hllcfluxes(1)
-#endif
-#ifdef HLLE
-  call hllEfluxes(1)
-#endif
-#ifdef HLLD
-  call hlldfluxes(1)
+  real, dimension(neq), intent(in)  :: prim
+  real, dimension(neq), intent(out) :: uu
+  !
+  uu(1) = prim(1)
+  uu(2) = prim(1)*prim(2)
+  uu(3) = prim(1)*prim(3)
+  uu(4) = prim(1)*prim(4)
+
+#ifdef MHD
+  !   kinetic+thermal+magnetic energies
+  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+                 +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+#else
+  !   kinetic+thermal energies
+  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
 #endif
 
-  !   upwind timestep
-  call step(dtm)
+#if defined(PMHD) || defined(MHD)
+  uu(6:8)=prim(6:8)
+#endif
+
+#ifdef PASSIVES
+  uu(neqdyn+1:neq) = prim(neqdyn+1:neq)
+#endif
+
+end subroutine prim2u
+
+!=======================================================================
+
+!> @brief Computes the Euler Fluxes in one cell
+!> @details Computes the Euler Fluxes in one cell, using the primitices
+!! @n It returns the flux in the x direction (i.e. F), the y and z fluxes
+!! can be obtained swaping the respective entries (see swapy and swapz 
+!!	subroutines)
+!> @param real [in] prim(neq) : primitives in one cell
+!> @param real [out] ff(neq) : Euler Fluxes (x direction)
+
+subroutine prim2f(prim,ff)
+  use parameters, only : neq, neqdyn, cv
+  implicit none
+  real,    dimension(neq), intent(in)  :: prim
+  real,    dimension(neq), intent(out) :: ff
+  real :: etot
+
+  !  If MHD (active) not defined
+#ifdef MHD
+  ! MHD
+  etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
+                     + prim(6)**2+prim(7)**2+prim(8)**2  )  &
+                     + cv*prim(5)
   
-  !   add viscosity
-  !call viscosity()
+  ff(1) = prim(1)*prim(2)
+  ff(2) = prim(1)*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2)
+  ff(3) = prim(1)*prim(2)*prim(3)-prim(6)*prim(7)
+  ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
+  ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
+         -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
+#else
+  ! HD or PMHD
+  etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
   
-  !  2nd half timestep ========================
-  !  boundaries in up and  primitives up ---> primit
-  call boundaryII()
-  call calcprim(up,primit)
-
-  !   calculate the fluxes using the primitives
-  !   with linear reconstruction (piecewise linear)
-#ifdef HLL
-  call hllfluxes(2)
+  ff(1) = prim(1)*prim(2)
+  ff(2) = prim(1)*prim(2)*prim(2)+prim(5)
+  ff(3) = prim(1)*prim(2)*prim(3)
+  ff(4) = prim(1)*prim(2)*prim(4)
+  ff(5) = prim(2)*(etot+prim(5))
 #endif
-#ifdef HLLC
-  call hllcfluxes(2)
-#endif
-#ifdef HLLE
-  call hllEfluxes(2)
-#endif
-#ifdef HLLD
-  call hlldfluxes(2)
-#endif
-
-  !  upwind timestep
-  call step(dt_CFL)
-
-  !  add viscosity
-  call viscosity()
   
-  !  copy the up's on the u's
-  u=up
-
-  ! update the chemistry network
-#ifdef EOS_CHEM
-  call chemstep()
+#if defined(PMHD) || defined(MHD)
+  ff(6)=0.0
+  ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
+  ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
 #endif
 
-  !  apply cooling if the network is enabled
-#ifdef COOLINGCHEM
-  call cooling_chem()
+#ifdef PASSIVES
+  ff(neqdyn+1:neq) = prim(neqdyn+1:neq)*prim(2)
 #endif
 
- !  Do the Radiaiton transfer (Monte Carlo type)
-#ifdef RADDIFF
-  call diffuse_rad()
-#endif
+end subroutine prim2f
 
-#ifdef CEXCHANGE
- !****************************************************
-  !   apply charge exchange TO BE ADDED IN COLLING?
-  !   not fully implemented
-  !****************************************************
-  call cxchange(dt*tsc)
-#endif
+!=======================================================================
 
-  !   apply cooling/heating
-#ifdef COOLINGH
-  !   add cooling to the conserved variables
-  call coolingh()
-#endif
-#ifdef COOLINGDMC
-  !   the primitives are updated in the cooling routine
-  call coolingdmc()
-#endif
-#ifdef COOLINGCHI
-  !   the primitives are updated in the cooling routine
-  call coolingchi()
-#endif
-  !   BBC cooling not implemented yet
+!> @brief Swaps the x and y components in a cell.
+!> @details Swaps the x and y components in a cell.
+!> @param real [inout] var(neq) : variable to be swapped
+!> @param real [in] neq : number of equations in the code
 
-  !  update the primitives with u
-  call calcprim(u, primit)
+subroutine swapy(var,neq)
+
+  implicit none
+  real, intent(inout), dimension(neq) :: var
+  integer, intent(in) :: neq
+  real :: aux
   
+  aux=var(2)
+  var(2)=var(3)
+  var(3)=aux
+  
+#if defined(PMHD) || defined(MHD)
+  aux=var(6)
+  var(6)=var(7)
+  var(7)=aux
+#endif 
 
-#ifdef C2ray
-  !  Apply Rad transfer, and heating & Cooling w/C2-Ray
-  call C2ray_radiative_transfer(dt_CFL*tsc)
+end subroutine swapy
+
+!=======================================================================
+
+!> @brief Swaps the x and z components in a cell.
+!> @details Swaps the x and z components in a cell.
+!> @param real [inout] var(neq) : variable to be swapped
+!> @param real [in] neq : number of equations in the code
+
+subroutine swapz(var,neq)
+  implicit none
+  real, intent(inout), dimension(neq) :: var
+  integer, intent(in) :: neq
+  real :: aux
+  
+  aux=var(2)
+  var(2)=var(4)
+  var(4)=aux
+  
+#if defined(PMHD) || defined(MHD)
+  aux=var(6)
+  var(6)=var(8)
+  var(8)=aux
 #endif
 
-  !   boundary contiditions on u
-  call boundaryI()
+end subroutine swapz
 
-#ifdef THERMAL_COND
-  !  Thermal conduction
-  call thermal_conduction()
+!=======================================================================
+
+!> @brief Computes the sound speed
+!> @details Computes the sound speed
+!> @param real [in] p : value of pressure
+!> @param real [in] d : value of density
+!> @param real [out] cs : sound speed
+
+subroutine csound(p,d,cs)
+
+  use parameters, only : gamma
+  implicit none
+  real, intent(in) :: p, d
+  real, intent(out) ::cs
+  
+  cs=sqrt(gamma*p/d)
+
+end subroutine csound
+
+!=======================================================================
+
+#if defined(PMHD) || defined(MHD) 
+
+!> @brief Computes the fast magnetosonic speeds  in the 3 coordinates
+!> @details Computes the fast magnetosonic speeds  in the 3 coordinates
+!> @param real [in] p  : value of pressure
+!> @param real [in] d  : value of density
+!> @param real [in] Bx : value of the x component of the magnetic field
+!> @param real [in] By : value of the y component of the magnetic field
+!> @param real [in] Bz : value of the z component of the magnetic field
+!> @param real [out] csx : fast magnetisonic speed in x
+!> @param real [out] csy : fast magnetisonic speed in y
+!> @param real [out] csz : fast magnetisonic speed in z
+
+subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
+
+  use parameters, only : gamma
+  implicit none
+  real, intent(in) :: p, d, bx, by, bz
+  real, intent(out) ::cfx,cfy,cfz
+  real :: b2
+  
+	b2=bx*bx+by*by+bz*bz
+  cfx=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*bx*bx/d**2))
+  cfy=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*by*by/d**2))
+  cfz=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*bz*bz/d**2))                
+  
+end subroutine cfast
+
 #endif
 
-end subroutine tstep
+!=======================================================================
 
-end module hydro_solver
+#if defined(PMHD) || defined(MHD) 
+
+!> @brief Computes the fast magnetosonic speed in the x direction
+!> @details Computes the fast magnetosonic speed in the x direction
+!> @param real [in] prim(neq) : vector with the primitives in one cell
+
+subroutine cfastX(prim,cfX)
+  
+  use parameters, only : neq, gamma
+  implicit none
+  real, intent(in) :: prim(neq)
+  real, intent(out) ::cfX
+  real :: b2, cs2va2
+  
+  b2=prim(6)**2+prim(7)**2+prim(8)**2
+  cs2va2 = (gamma*prim(5)+b2)/prim(1)   ! cs^2 + ca^2
+
+  cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
+ 
+  end subroutine cfastX
+
+#endif
+
+!=======================================================================
+
+!> @brief Otains the timestep allowed by the CFL condition in the entire
+!> @details Otains the timestep allowed by the CFL condition in the entire
+!> domain using the global primitives, and sets logical variable to dump 
+!> output
+!> @param integer [in] current_iter : Current iteration, it starts with a small
+!! but increasing CFL in the first N_trans iterarions
+!> @param integer [in] n_iter : Number of iterations to go from a small CFL to
+!! the final CFL (in parameters.f90)
+!> @param real [in] current_time : Current (global) simulation time
+!> @param real [in] tprint : time for the next programed disk dump
+!> @param real [out] : @f$ \Delta t@f$ allowed by the CFL condition
+!> @param logical [out] dump_flag : Flag to write to disk
+
+subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
+
+  use parameters, only : nx, ny, nz, cfl, mpi_real_kind
+  use globals, only : primit, dx, dy, dz
+  implicit none
+#ifdef MPIP
+  include "mpif.h"
+#endif
+  integer, intent(in)  :: current_iter, n_iter
+  real,    intent(in)  :: current_time, tprint
+  real,    intent(out) :: dt
+  logical, intent(out) :: dump_flag
+  real              :: dtp
+#ifdef MHD
+  real              :: cx, cy, cz
+#else
+  real              :: c
+#endif
+  integer :: i, j, k, err
+  
+  dtp=1.e30
+  
+  do k=1,nz
+    do j=1,ny
+      do i=1,nx
+      
+#ifdef MHD
+        call cfast(primit(5,i,j,k),primit(1,i,j,k),&
+            primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
+            cx,cy,cz)
+        dtp=min(dtp,dx/(abs(primit(2,i,j,k))+cx))  
+        dtp=min(dtp,dy/(abs(primit(3,i,j,k))+cy))
+        dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
+#else
+        call csound(primit(5,i,j,k),primit(1,i,j,k),c)
+        dtp=min(dtp,dx/(abs(primit(2,i,j,k))+c))  
+        dtp=min(dtp,dy/(abs(primit(3,i,j,k))+c))
+        dtp=min(dtp,dz/(abs(primit(4,i,j,k))+c))
+#endif
+      end do
+    end do
+  end do
+
+  if (current_iter <= n_iter ) then
+    !   boots up simulation with small CFL
+    dtp = cfl*(2.**(-real(n_iter+1-current_iter)))*dtp
+  else
+    dtp=cfl*dtp
+  end if
+
+#ifdef MPIP
+  call mpi_allreduce(dtp, dt, 1, mpi_real_kind, mpi_min, mpi_comm_world,err)
+#else
+  dt=dtp
+#endif
+
+  !  Adjust dt so t+dt doesnt overshoot tprint
+  if(( current_time + dt )>=tprint) then
+    dt= tprint-current_time
+    dump_flag=.true.
+  endif
+
+
+end subroutine get_timestep
+
+!=======================================================================
+
+!> @brief Performs a linear reconstruction of the primitive variables
+!> @details returns a linear reconstruction of the variables at the
+!> interface beteen the primitives PLL, PL, PR, PRR
+!! @n The reconstruction is made with a slope limiter chosen at
+!! compilation time (i.e. set on the Makefile)
+!> @param real [in]    : primitives at the left of the left state
+!> @param real [inout] : primitives at the left state
+!> @param real [inout] : primitives at the right state
+!> @param real [in]    : primitives at the right of the right state
+!> @param real [in]    : number of equations
+
+subroutine limiter(PLL,PL,PR,PRR,neq)
+
+  implicit none
+  real, dimension(neq), intent(inout) :: pl,  pr
+  real, dimension(neq), intent(in)    :: pll, prr
+  integer, intent (in)  :: neq
+  real :: dl, dm, dr, al, ar
+  integer :: ieq
+  
+  do ieq=1,neq
+     dl=pl(ieq)-pll(ieq)
+     dm=pr(ieq)-pl(ieq)
+     dr=prr(ieq)-pr(ieq)
+     al=average(dl,dm)
+     ar=average(dm,dr)
+     pl(ieq)=pl(ieq)+al*0.5
+     pr(ieq)=pr(ieq)-ar*0.5
+  end do
+  
+contains
+
+  real function average(a,b)
+    implicit none
+    real, intent(in)    :: a, b
+
+#if LIMITER==-1
+
+    !   no average (reduces to 1st order)
+    average=0.
+#endif
+
+#if LIMITER==0
+    !   no limiter
+    average=0.5*(a+b)
+#endif
+
+#if LIMITER==1
+    !   Minmod - most diffusive
+    real :: s
+    s=sign(1.,a)
+    average=s*max(0.,min(abs(a),s*b))
+#endif
+
+#if LIMITER==2
+    !   Falle Limiter (Van Leer)
+    if(a*b.le.0.) then
+       average=0.
+    else
+       average=a*b*(a+b)/(a**2+b**2)
+    end if
+#endif
+
+#if LIMITER==3
+    !   Van Albada
+    real, parameter :: delta=1.e-7
+    average=(a*(b*b+delta)+b*(a*a+delta))/(a*a+b*b+delta)
+#endif
+
+#if LIMITER==4
+    !   UMIST Limiter - less diffusive
+    real :: s, c, d
+    s=sign(1.,a)
+    c=0.25*a+0.75*b
+    d=0.75*a+0.25*b
+    average=min(2.*abS(a),2.*s*b,s*c,s*d)
+    average=s*max(0.,average)
+#endif
+
+#if LIMITER==5
+    !    Woodward Limiter (o MC-limiter; monotonized central difference)
+    real :: s, c
+    s=sign(1.,a)
+    c=0.5*(a+b)
+    average=min(2.*abs(a),2.*s*b,s*c)
+    average=s*max(0.,average)
+#endif
+#if LIMITER==6
+    !   superbee Limiter (tends to flatten circular waves)
+    real :: s, av1, av2
+    s=sign(1.,b)
+    av1=min(2.*abs(b),s*a)
+    av2=min(abs(b),2.*s*a)
+    average=s*max(0.,av1,av2)
+#endif
+
+  end function average
+
+end subroutine limiter
+
+!=======================================================================
+
+end module hydro_core
 
 !=======================================================================
