@@ -115,7 +115,7 @@
   jacobian(iH2,ie  )=  -  rate(iR3)*y(iH2)
 
   !  HI
-  jacobian(iHI,iHII)= 1.d0      
+  jacobian(iHI,iHII)= 1.d0
   jacobian(iHI,iH2 )= 2.d0
   jacobian(iHI,iHI )= 1.d0
   jacobian(iHI,ie  )= 0.d0
