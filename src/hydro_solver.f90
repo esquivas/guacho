@@ -203,13 +203,10 @@ subroutine tstep()
   u=up
 
   ! update the chemistry network
+  ! at this point is in cgs
 #ifdef EOS_CHEM
-  call chemstep()
-#endif
-
-  !  apply cooling if the network is enabled
-#ifdef COOLINGCHEM
-  call cooling_chem()
+  !  the primitives in the physical celles are upated
+  call update_chem()
 #endif
 
  !  Do the Radiaiton transfer (Monte Carlo type)
@@ -229,6 +226,8 @@ subroutine tstep()
 #ifdef COOLINGH
   !   add cooling to the conserved variables
   call coolingh()
+   !  update the primitives with u
+  call calcprim(u, primit)
 #endif
 #ifdef COOLINGDMC
   !   the primitives are updated in the cooling routine
@@ -238,11 +237,10 @@ subroutine tstep()
   !   the primitives are updated in the cooling routine
   call coolingchi()
 #endif
-  !   BBC cooling not implemented yet
-
-  !  update the primitives with u
-  call calcprim(u, primit)
-  
+#ifdef COOLINGCHEM
+  !the primitives are already updated in update_chem
+  call cooling_chem()
+#endif
 
 #ifdef C2ray
   !  Apply Rad transfer, and heating & Cooling w/C2-Ray
@@ -251,6 +249,10 @@ subroutine tstep()
 
   !   boundary contiditions on u
   call boundaryI()
+
+  !  update primitives on the boundaries
+  call calcprim(u,primit,only_ghost=.true.)
+
 
 #ifdef THERMAL_COND
   !  Thermal conduction
