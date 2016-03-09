@@ -22,7 +22,7 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief Column densirt projection
+!> @brief Column density projection
 !> @details Utilities to compute a column density map
 
 module coldens_utilities
@@ -92,7 +92,7 @@ implicit none
   if(rank.eq.master) then
      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
      print '(a)' ,'*******************************************'
-     print '(a)', 'Calculating Lyman Alpha Tau'
+     print '(a)', 'Calculating Column Density'
   end if
   call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
        , comm3d, err)
@@ -109,7 +109,7 @@ implicit none
   print '(a)' ,'*******************************************'
   print '(a)' ,'*     running on a single processor       *'
   print '(a)' ,'*******************************************'
-  print '(a)', 'Calculating Lyman Alpha Tau'
+  print '(a)', 'Calculating Column Density'
 #endif
 
 !   grid spacing
@@ -142,32 +142,53 @@ subroutine read_data(u,itprint,filepath)
   character (len=128), intent(in) :: filepath
   integer :: unitin, ip, err
   character (len=128) file1
+  character           :: byte_read
+  character, parameter  :: lf = char(10) 
+  integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
+  real :: dxp, dyp, dzp, scal(3), cvp
   
   take_turns : do ip=0,np-1
     if (rank == ip) then
 
-#ifdef MPIP
-        write(file1,'(a,i3.3,a,i3.3,a)')  &
-             trim(filepath)//'BIN/points',rank,'.',itprint,'.bin'
-        unitin=rank+10
-#else
-  
-  print'(i3,a,a)',rank,' wants to read file:',trim(file1)
 
-         write(file1,'(a,i3.3,a)')         &
-              trim(filepath)//'BIN/points',itprint,'.bin'
-         unitin=10
+#ifdef MPIP
+      write(file1,'(a,i3.3,a,i3.3,a)')  &
+            trim(filepath)//'/BIN/points',rank,'.',itprint,'.bin'
+      unitin=rank+10
+#else
+      write(file1,'(a,i3.3,a)')         &
+            trim(filepath)//'/BIN/points',itprint,'.bin'
+      unitin=10
 #endif
-         open(unit=unitin,file=file1,status='unknown',acess='stream', &
-              convert='LITTLE_ENDIAN')
-         !
-         read(unitin) u(:,:,:,:)
-         close(unitin)
-         !
-         print'(i3,a,a)',rank,' read file:',trim(file1)
+      open(unit=unitin,file=file1,status='old', access='stream', &
+            convert='LITTLE_ENDIAN')
+   
+      !   discard the ascii header
+      do while (byte_read /= achar(255) )
+        read(unitin) byte_read
+        !print*, byte_read
+      end do
+      !  read bin header, sanity check to do
+      read(unitin) byte_read
+      read(unitin) byte_read
+      read(unitin) nxp, nyp, nzp
+      read(unitin) dxp, dyp, dzp
+      read(unitin) x0p, y0p, z0p
+      read(unitin) mpi_xp, mpi_yp, mpi_zp
+      read(unitin) neqp, neqdynp
+      read(unitin) nghostp
+      read(unitin) scal(1:3)
+      read(unitin) cvp
+      read(unitin) u(:,:,:,:)
+      close(unitin)
+
+      print'(i3,a,a)',rank,' read: ',trim(file1)
+        
+#ifdef MPIP
+      call mpi_barrier(comm3d,err)
+#endif
 
     end if
-    call mpi_barrier(comm3d,err)
   end do take_turns
 
 end subroutine read_data
@@ -285,7 +306,7 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
 
    use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn
+                         neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn, rhosc
   use globals, only : dz
   use hydro_core, only : u2prim
 
@@ -317,14 +338,86 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
           !  make sure the result lies in the map bounds
           if( (iobs >=1    ).and.(jobs >=1    ).and. &
               (iobs <=nxmap).and.(jobs <=nymap) ) then
-            map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*dz*rsc
-          end if
 
+            if (u(7,i,j,k) <= 0. ) then
+              map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
+            end if
+          
+          end if
       end do
     end do
   end do
 
 end subroutine fill_map
+
+!=======================================================================
+!> @brief Writes header 
+!> @details Writes header for binary input 
+!> @param integer [in] unit : number of logical unit
+
+subroutine write_header(unit, nx, ny)
+  use globals, only : dx, dy, dz
+  use parameters,  only : rsc, vsc, rhosc, cv
+  implicit none
+  integer, intent(in) :: unit, nx, ny
+  character, parameter  :: lf = char(10) 
+  character (len=128) :: cbuffer
+
+  !  Write ASCII header
+  write(unit) "**************** Output for Guacho v1.1****************",lf
+
+  write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, 1
+  write(unit) trim(cbuffer), lf
+  
+  write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
+  write(unit) trim(cbuffer), lf
+
+  write(cbuffer,'("Block Origin, cells    : ", i0,x,i0,x,i0)') 0, 0, 0
+  write(unit) trim(cbuffer), lf
+
+  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,x,i0,x,i0)') 1, 1, 1
+  write(unit) trim(cbuffer), lf
+
+  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') 1, 1
+  write(unit) trim(cbuffer), lf
+
+  write(cbuffer,'("Number of Ghost Cells  ", i0)') 0
+  write(unit) trim(cbuffer), lf
+
+  write(cbuffer,'("Scalings ", a )')
+  write(unit) trim(cbuffer), lf
+ 
+  write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
+    rsc, vsc, rhosc
+  write(unit) trim(cbuffer), lf
+
+   write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
+  write(unit) trim(cbuffer), lf
+
+#ifdef DOUBLEP
+  write(unit) "Double precision 8 byte floats",lf
+#else
+  write(unit) "Double precision 4 byte floats",lf
+#endif
+ 
+  write(unit) "*******************************************************",lf
+  write(unit) achar(255),lf
+#ifdef DOUBLEP
+  write(unit) 'd'
+#else
+  write(unit) 'f'
+#endif
+  write(unit) nx, ny, 1
+  write(unit) dx, dy, dz
+  write(unit) 0, 0, 0
+  write(unit) 1, 1, 1
+  write(unit) 1, 1
+  write(unit) 0
+  write(unit) rsc, vsc, rhosc
+  write(unit) cv
+
+end subroutine write_header
+
 
 !=======================================================================
 
@@ -347,6 +440,8 @@ subroutine  write_map(fileout,nxmap,nymap,map)
   unitout = 11
   open(unit=unitout,file=trim(fileout),status='unknown',access='stream', &
        convert='LITTLE_ENDIAN')
+
+  call write_header(unitout,nxmap, nymap)
 
   write (unitout) map(:,:)
   close(unitout)
@@ -371,8 +466,8 @@ program coldens
 
   use constants, only : pi
   use parameters, only : xmax,master, mpi_real_kind
-  use globals, only : u, dx, dy, rank, comm3d
-  use h_alpha_utilities
+  use globals, only : u, rank, comm3d
+  use coldens_utilities
   implicit none
 #ifdef MPIP
   include "mpif.h"
@@ -381,7 +476,7 @@ program coldens
   integer :: err
   integer :: itprint
   real    :: theta_x, theta_y, theta_z
-  integer, parameter :: nxmap=256, nymap=550
+  integer, parameter :: nxmap=192, nymap=512
   real :: dxT, dyT
   real :: map(nxmap, nymap), map1(nxmap,nymap)
 
@@ -390,7 +485,7 @@ program coldens
   dyT= dxT
 
   ! initializes program (uses the parameters.f90 form the rest of the code)
-  call init_HA()
+  call init_coldens()
 
   if (rank == master) then
 

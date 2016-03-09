@@ -120,7 +120,6 @@ program guacho
     call tstep()
 
     time = time + dt_CFL
-    
       !   output at intervals tprint
     if(dump_out) then
       !call diffuse_rad()

@@ -126,6 +126,8 @@ subroutine prim2fhllc(priml,primr,ff)
   endif
 
   print*, 'Error in hllc'
+  print*, 'primL: ',priml(:)
+  print*, 'primR: ',primr(:)
   stop
 
 end subroutine prim2fhllc

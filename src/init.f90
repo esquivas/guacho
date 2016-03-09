@@ -273,8 +273,8 @@ end if
      print'(a)', 'The EOS considers a rate equation for H'
      print'(a)', ''
 #endif
-#ifdef EOS_MULTI_SPECIES
-     print'(a)', 'The EOS considers multiple species'
+#ifdef EOS_CHEM
+     print'(a)', 'The EOS considers multiple species (chemical network)'
      print'(a)', ''
 #endif
 #ifdef NO_COOL

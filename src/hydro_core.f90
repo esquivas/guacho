@@ -24,11 +24,12 @@
 
 !> @brief Basic hydro (and MHD) subroutines utilities
 !> @details This module contains subroutines and utilities that are the
-!! core of the hydro (and MHD) that are common to most implementations 
-!! and will be used for the different specific solvers
+!> core of the hydro (and MHD) that are common to most implementations 
+!> and will be used for the different specific solvers
 
 module hydro_core
-	implicit none
+
+  implicit none
 
 contains
 
@@ -43,12 +44,17 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv
+#ifdef EOS_CHEM
+  use constants, only : Kb
+   use network,  only : n_spec 
+#endif
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
   real :: r
-#if defined(EOS_H_RATE) || defined(EOS_MULTI_SPECIES)
+#if defined(EOS_H_RATE) || defined(EOS_CHEM)
+  integer :: i
   real :: dentot
 #endif
 
@@ -72,7 +78,7 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
 #endif 
 
 #ifdef PASSIVES
-  prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
+    prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
 #endif
   
   !   Temperature calculation
@@ -95,12 +101,19 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
   prim(5)=dentot*T/Tempsc
 #endif
 
-#ifdef EOS_MULTI_SPECIES
-  dentot= prim(neqdyn+1) + prim(neqdyn+2) + &
-          prim(neqdyn+3) + prim(neqdyn+4) + &
-          prim(neqdyn+5) + prim(neqdyn+6)
-  T = (prim(5)/dentot/Rg)*vsc2
+#ifdef EOS_CHEM
+  !  Assumes that rho scaling is mu*mh
+  dentot = 0.
+  do i = neqdyn+1, neqdyn+n_spec
+    dentot = prim(i) + dentot
+  end do
+  dentot = max(dentot, 1e-15)
+  T=max(1.,(prim(5)/dentot)*Tempsc )
+
+  !T=(prim(5)/r)*Tempsc
+  prim(5) = dentot * T /Tempsc
 #endif
+
 
 end subroutine u2prim  
 
@@ -114,34 +127,92 @@ end subroutine u2prim
 !! conserved variables
 !> @param real [out] prim(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! primitive variables
+!> @param logical [in] only_ghost : if set to true then updates the primitives
+!! only on the ghost cells, it defaults to false (the entire domain is updated)
 
-subroutine calcprim(u,primit)
+subroutine calcprim(u,primit, only_ghost)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, nx, ny, nz
 #ifdef THERMAL_COND
   use globals, only : Temp
 #endif
+  use globals, only : time
   implicit none
   real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
   real,intent(out),dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: primit
+  logical, optional, intent(in) :: only_ghost
 #ifndef THERMAL_COND
   real                 :: T
 #endif
   integer :: i,j,k
   !
-  do k=nzmin,nzmax
-     do j=nymin,nymax
-        do i=nxmin,nxmax
-           
+  if (present(only_ghost) .and. only_ghost==.true.) then
+    !-----------------------
+    !   k = 0, and, nz
+    do j=0,ny+1
+      do i=0,nx+1
+
 #ifdef THERMAL_COND
-           call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+        call u2prim(u(:,i,j,0   ),primit(:,i,j,0 ),Temp(i,j,0   ) )
+        call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz),Temp(i,j,nz+1) )
 #else
-           call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
+        call u2prim(u(:,i,j,0   ),primit(:,i,j,0   ),T)
+        call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz+1),T)
 #endif
-           
+      end do
+    end do
+
+   !   j = 0, and, ny
+    do k=0,nz+1
+      do i=0,nx+1
+
+#ifdef THERMAL_COND
+        call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
+        call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
+#else
+        call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),T)
+        call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),T)
+#endif
+      end do
+    end do 
+
+   !   i = 0, and, nx
+    do k=0,nz+1
+      do j=0,ny+1
+
+#ifdef THERMAL_COND
+        call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
+        call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
+#else
+        call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),T)
+        call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),T)
+#endif
+      end do
+    end do
+    !-----------------------
+  else
+  !   entire domain
+    do k=nzmin,nzmax
+      do j=nymin,nymax
+        do i=nxmin,nxmax
+
+#ifdef THERMAL_COND
+          call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+#else
+          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
+#endif
+
+!if (u(1,i,j,k) == 0 ) then 
+  !print*,'uu:', u(:,i,j,k)
+  !print*,'pp:', primit(:,i,j,k)
+!  print*,'T :',T, time, i, j,k
+!end if
+
         end do
-     end do
-  end do
+      end do
+    end do
+
+  end if
 
 end subroutine calcprim
 
@@ -548,7 +619,6 @@ contains
 end subroutine limiter
 
 !=======================================================================
-
 
 end module hydro_core
 
