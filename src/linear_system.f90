@@ -2,9 +2,9 @@
 !> @file linear_system.f90
 !> @brief linear system inversion  module
 !> @author A. Castellanos, A. Rodriguez, A. Raga and A. Esquivel
-!> @date 24/Nov/2014
+!> @date 24/Nov/2015
 
-! Copyright (c) 2014 A. Esquivel et al.
+! Copyright (c) 2015 A. Esquivel et al.
 !
 ! This file is part of Guacho-3D.
 !
@@ -33,12 +33,22 @@ module linear_system
 
 !======================================================================  
 
+!> @brief LU decomposition
+!> @details LU decomposition of a row-wise permutation
+!> @param real [inout] a(n,n) : matrix to be decomposed result is done in place
+!> @param integer [in] n : size of the matrix
+!> @param real [out] index(n) : vector that contains the row permutation
+!> affected by the partial pivoting
+!> @param integer [inout] d : +/- 1 depending if the row intergarches is
+!> even or odd
+
 subroutine ludcmp(a, n, indx,d)
 
   implicit none
   integer, intent(in) :: n
   real (kind=8), intent(inout) :: a(n,n), d
   integer, intent(out) :: indx(n)
+
   real (kind=8) :: vv(n*n), aamax, dum, sum
   real (kind=8), parameter  :: tiny=1.0e-25
   integer :: i, imax, j, k
@@ -105,6 +115,16 @@ end subroutine ludcmp
 
 !=======================================================================
 
+!> @brief Solves a set of linear equations
+!> @details Solves a linear set of equations of the form @f$A cdot X = B$
+!> with a LU decomposition method
+!> @param real [inout] a(n,n) : LU decomposition of the matrix A
+!> @param integer [in] n : size of the matrix
+!> @param real [out] index(n) : vector that contains the row permutation
+!> affected by the partial pivoting (from ludcmp)
+!> @param real [inout] b : right hand side vector, the result is returned
+!> in this same vector
+
 subroutine lubksb(a,n,indx,b)
   
   implicit none
@@ -144,6 +164,15 @@ subroutine lubksb(a,n,indx,b)
 end subroutine lubksb
 
 !=======================================================================
+
+!> @brief Driver to solves a set of linear equations
+!> @details Solves a linear set of equations   @f$A cdot X = B$
+!> with an LU decomposition 
+!> mehtod
+!> @param real [inout] a(n,n) : the matrix A
+!> @param real [inout] b : right hand side vector, the result is returned
+!> in this same vector
+!> @param integer [in] n : size of the system
 
 subroutine linsys(a,b,n)
   implicit none
