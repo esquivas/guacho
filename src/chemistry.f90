@@ -2,9 +2,9 @@
 !> @file chemistry.f90
 !> @brief chemistry  module
 !> @author A. Castellanos, A. Rodriguez, A. Raga  and A. Esquivel
-!> @date 24/Nov/2014
+!> @date 24/Nov/2015
 
-! Copyright (c) 2014 A. Esquivel et al.
+! Copyright (c) 2015 A. Esquivel et al.
 !
 ! This file is part of Guacho-3D.
 !
@@ -33,6 +33,12 @@ module chemistry
 contains
 
 !=======================================================================
+
+
+!> @brief Advances the chemistry network
+!> @details Advances the chemistry network on the entire domain
+!> (except ghost cells), updates primitives and conserved variables
+!> in globals
 
 subroutine update_chem()
 
@@ -72,6 +78,15 @@ end subroutine update_chem
 
 
 !=======================================================================
+
+!> @brief Advances the chemistry network in one cell
+!> @details Advances the chemistry network on the in one cell
+!> @param real [inout] y(n_spec) : number densities of the species 
+!> to be updated by the chemistry
+!> @param real [in] y[n_elem] : total number density of each of the
+!> elements involved in the reactions
+!> @param real [in] T : Temperature [K] 
+!> @param real [in] deltt : time interval (from the hydro, in seconds)
 
 subroutine chemstep(y,y0,T, deltt)
   use linear_system
@@ -125,7 +140,6 @@ subroutine chemstep(y,y0,T, deltt)
     n=n+1
 
   end do
-
   
   !if (n >= niter) then 
   !  print*, "failed to converge after ", niter, " iterations"
