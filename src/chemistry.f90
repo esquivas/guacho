@@ -21,7 +21,7 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief chenistry module
+!> @brief chemistry module
 !> @details module to solve the chemical/ionic network, and estimate
 !> the cooling assiciated with it.
 
