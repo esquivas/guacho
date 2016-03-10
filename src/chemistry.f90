@@ -22,8 +22,7 @@
 !=======================================================================
 
 !> @brief chemistry module
-!> @details module to solve the chemical/ionic network, and estimate
-!> the cooling assiciated with it.
+!> @details module to solve the chemical/ionic network.
 
 module chemistry
 
