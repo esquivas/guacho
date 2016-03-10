@@ -1,0 +1,9 @@
+<map id="hlle::hllefluxes" name="hlle::hllefluxes">
+<area shape="rect" id="node2" href="$namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d" title="Swaps the x and y components in a cell. " alt="" coords="151,5,281,32"/>
+<area shape="rect" id="node3" href="$namespacehydro__core.html#ae4216bc7908e7665f0565aa8c885c821" title="Swaps the x and z components in a cell. " alt="" coords="151,56,281,83"/>
+<area shape="rect" id="node4" href="$namespacehydro__core.html#ada63ca89d1a40cfd1a62db0ddfdbda80" title="Performs a linear reconstruction of the primitive variables. " alt="" coords="157,107,275,133"/>
+<area shape="rect" id="node5" href="$namespacehlle.html#a5646b0259c574b5e8dd3754a493d358d" title="Solves the Riemann problem at the interface PL,PR using the HLLE solver. " alt="" coords="167,157,265,184"/>
+<area shape="rect" id="node6" href="$namespacehydro__core.html#abd089f71325e32997703c1420db62aa8" title="Computes the fast magnetosonic speed in the x direction. " alt="" coords="331,107,454,133"/>
+<area shape="rect" id="node7" href="$namespacehydro__core.html#a725c2c598f080ea420f4043dbda3f996" title="Computes the Euler Fluxes in one cell. " alt="" coords="331,157,454,184"/>
+<area shape="rect" id="node8" href="$namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3" title="Computes the conserved conserved variables from the primitives in a single cell. " alt="" coords="329,208,456,235"/>
+</map>

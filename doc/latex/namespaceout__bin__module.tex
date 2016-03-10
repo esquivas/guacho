@@ -1,0 +1,60 @@
+\hypertarget{namespaceout__bin__module}{}\section{out\+\_\+bin\+\_\+module Module Reference}
+\label{namespaceout__bin__module}\index{out\+\_\+bin\+\_\+module@{out\+\_\+bin\+\_\+module}}
+
+
+Output in B\+I\+N format.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespaceout__bin__module_a6e5fb4bb1cc6f0a15ce591a3b1014d8d}{write\+\_\+header} (unit, neq\+\_\+out, nghost\+\_\+out)
+\begin{DoxyCompactList}\small\item\em Writes header. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59}{write\+\_\+bin} (itprint)
+\begin{DoxyCompactList}\small\item\em Writes Data, one file per processor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This module writes the ouput in B\+I\+N format 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59}{}\index{out\+\_\+bin\+\_\+module@{out\+\_\+bin\+\_\+module}!write\+\_\+bin@{write\+\_\+bin}}
+\index{write\+\_\+bin@{write\+\_\+bin}!out\+\_\+bin\+\_\+module@{out\+\_\+bin\+\_\+module}}
+\subsubsection[{write\+\_\+bin}]{\setlength{\rightskip}{0pt plus 5cm}subroutine out\+\_\+bin\+\_\+module\+::write\+\_\+bin (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{itprint}
+\end{DoxyParamCaption}
+)}\label{namespaceout__bin__module_ac5772f05ffdd0227d2fc17e27beb0f59}
+Writes Data in B\+I\+N format one file per processor 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} itprint \+: number of output \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 112 of file Out\+\_\+\+B\+I\+N\+\_\+\+Module.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 0
+
+
+\hypertarget{namespaceout__bin__module_a6e5fb4bb1cc6f0a15ce591a3b1014d8d}{}\index{out\+\_\+bin\+\_\+module@{out\+\_\+bin\+\_\+module}!write\+\_\+header@{write\+\_\+header}}
+\index{write\+\_\+header@{write\+\_\+header}!out\+\_\+bin\+\_\+module@{out\+\_\+bin\+\_\+module}}
+\subsubsection[{write\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}subroutine out\+\_\+bin\+\_\+module\+::write\+\_\+header (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{unit, }
+\item[{integer, intent(in)}]{neq\+\_\+out, }
+\item[{integer, intent(in)}]{nghost\+\_\+out}
+\end{DoxyParamCaption}
+)}\label{namespaceout__bin__module_a6e5fb4bb1cc6f0a15ce591a3b1014d8d}
+Writes header for binary input 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} unit \+: number of logical unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 44 of file Out\+\_\+\+B\+I\+N\+\_\+\+Module.\+f90.
+

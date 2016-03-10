@@ -1,0 +1,224 @@
+\hypertarget{namespacesources}{}\section{sources Module Reference}
+\label{namespacesources}\index{sources@{sources}}
+
+
+Adds source terms.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacesources_a378a8116ae16db2efa853343f88156d3}{getpos} (i, j, k, x, y, z, r)
+\begin{DoxyCompactList}\small\item\em Gets position in the grid. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_aef9f6ca4bc770f0e768dbbba91b67415}{grav\+\_\+source} (xc, yc, zc, pp, s)
+\begin{DoxyCompactList}\small\item\em Gravity due to point sources. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a36b548c9c578b74c5f439ffaec7d3a9a}{radpress\+\_\+source} (i, j, k, xc, yc, zc, rc, pp, s)
+\begin{DoxyCompactList}\small\item\em Radiation pressure force. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a0478795277b4f25ec62d8e3e1f06611e}{divergence\+\_\+b} (i, j, k, d)
+\begin{DoxyCompactList}\small\item\em Computes div(\+B) \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91}{divbcorr\+\_\+source} (i, j, k, pp, s)
+\begin{DoxyCompactList}\small\item\em 8 Wave source terms for div(\+B) correction \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a6a66dd1f8baf424ff64a30112f39c632}{source} (i, j, k, prim, s)
+\begin{DoxyCompactList}\small\item\em Upper level wrapper for sources. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This module adds the source terms from gravity, radiation pressure (not fully tested), and div(\+B) cleaning if the 8 wave scheme is used 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91}{}\index{sources@{sources}!divbcorr\+\_\+source@{divbcorr\+\_\+source}}
+\index{divbcorr\+\_\+source@{divbcorr\+\_\+source}!sources@{sources}}
+\subsubsection[{divbcorr\+\_\+source}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::divbcorr\+\_\+source (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, dimension(neq), intent(in)}]{pp, }
+\item[{real, dimension(neq), intent(inout)}]{s}
+\end{DoxyParamCaption}
+)}\label{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91}
+Adds terms proportional to div B in Faraday\textquotesingle{}s Law, momentum equationand energy equation as propoes in Powell et al. 1999 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the X direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the Y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the Z direction \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} pp(neq) \+: vector of primitive variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} s(neq) \+: vector with source terms \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 201 of file sources.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 0
+
+
+\hypertarget{namespacesources_a0478795277b4f25ec62d8e3e1f06611e}{}\index{sources@{sources}!divergence\+\_\+b@{divergence\+\_\+b}}
+\index{divergence\+\_\+b@{divergence\+\_\+b}!sources@{sources}}
+\subsubsection[{divergence\+\_\+b}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::divergence\+\_\+b (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, intent(out)}]{d}
+\end{DoxyParamCaption}
+)}\label{namespacesources_a0478795277b4f25ec62d8e3e1f06611e}
+Computes div(\+B) 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the X direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the Y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the Z direction \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} d \+:\+: div(\+B) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 178 of file sources.\+f90.
+
+\hypertarget{namespacesources_a378a8116ae16db2efa853343f88156d3}{}\index{sources@{sources}!getpos@{getpos}}
+\index{getpos@{getpos}!sources@{sources}}
+\subsubsection[{getpos}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::getpos (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, intent(out)}]{x, }
+\item[{real, intent(out)}]{y, }
+\item[{real, intent(out)}]{z, }
+\item[{real, intent(out)}]{r}
+\end{DoxyParamCaption}
+)}\label{namespacesources_a378a8116ae16db2efa853343f88156d3}
+Gets the position and spherical radius calculated with respect to the center of the grid 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: index in the X direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: index in the Y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: index in the Z direction \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} x \+: X position form the center of the grid (code units) \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} y \+: Y position form the center of the grid (code units) \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} z \+: Z position form the center of the grid (code units) \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} r \+: Spherical radius form the center of the grid (code units) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 55 of file sources.\+f90.
+
+\hypertarget{namespacesources_aef9f6ca4bc770f0e768dbbba91b67415}{}\index{sources@{sources}!grav\+\_\+source@{grav\+\_\+source}}
+\index{grav\+\_\+source@{grav\+\_\+source}!sources@{sources}}
+\subsubsection[{grav\+\_\+source}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::grav\+\_\+source (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{xc, }
+\item[{real, intent(in)}]{yc, }
+\item[{real, intent(in)}]{zc, }
+\item[{real, dimension(neq), intent(in)}]{pp, }
+\item[{real, dimension(neq), intent(inout)}]{s}
+\end{DoxyParamCaption}
+)}\label{namespacesources_aef9f6ca4bc770f0e768dbbba91b67415}
+Adds the gravitational force due to point particles, at this moment is fixed to two point sources (exoplanet) 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]} xc \+: X position of the cell \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} yc \+: Y position of the cell \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} zc \+: Z position of the cell \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} pp(neq) \+: vector of primitive variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} s(neq) \+: vector with source terms \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 82 of file sources.\+f90.
+
+\hypertarget{namespacesources_a36b548c9c578b74c5f439ffaec7d3a9a}{}\index{sources@{sources}!radpress\+\_\+source@{radpress\+\_\+source}}
+\index{radpress\+\_\+source@{radpress\+\_\+source}!sources@{sources}}
+\subsubsection[{radpress\+\_\+source}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::radpress\+\_\+source (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, intent(in)}]{xc, }
+\item[{real, intent(in)}]{yc, }
+\item[{real, intent(in)}]{zc, }
+\item[{real, intent(in)}]{rc, }
+\item[{real, dimension(neq), intent(in)}]{pp, }
+\item[{real, dimension(neq), intent(inout)}]{s}
+\end{DoxyParamCaption}
+)}\label{namespacesources_a36b548c9c578b74c5f439ffaec7d3a9a}
+Adds the radiaiton pressure force due to photo-\/ionization 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the X direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the Y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the Z direction \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} xc \+: X position of the cell \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} yc \+: Y position of the cell \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} zc \+: Z position of the cell \\
+\hline
+{\em reak} & \mbox{[}in\mbox{]} rc \+: $ \sqrt{x^2+y^2+z^2} $ \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} pp(neq) \+: vector of primitive variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} s(neq) \+: vector with source terms \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 140 of file sources.\+f90.
+
+\hypertarget{namespacesources_a6a66dd1f8baf424ff64a30112f39c632}{}\index{sources@{sources}!source@{source}}
+\index{source@{source}!sources@{sources}}
+\subsubsection[{source}]{\setlength{\rightskip}{0pt plus 5cm}subroutine sources\+::source (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, dimension(neq), intent(in)}]{prim, }
+\item[{real, dimension(neq), intent(out)}]{s}
+\end{DoxyParamCaption}
+)}\label{namespacesources_a6a66dd1f8baf424ff64a30112f39c632}
+Upper level wrapper for sources ~\newline
+ Main driver, this is called from the upwind stepping 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the X direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the Y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the Z direction \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} prim(neq) \+: vector of primitive variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} s(neq) \+: vector with source terms\textquotesingle{} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 240 of file sources.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+

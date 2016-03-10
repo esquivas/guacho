@@ -1,0 +1,38 @@
+digraph "thermal_cond::thermal_conduction"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="thermal_cond::thermal\l_conduction",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="hydro_core::calcprim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870",tooltip="Updated the primitives, using the conserved variables in the entire domain. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="hydro_core::u2prim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3",tooltip="Computes the primitive variables and temperature from conserved variables on a single cell..."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="thermal_cond::get_dt_cond",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a074d4829b3477fa8003983819e77523d",tooltip="computes conduction timescale "];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="hydro_core::csound",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa",tooltip="Computes the sound speed. "];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="thermal_cond::ksp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615",tooltip="Spitzer conductivity. "];
+  Node1 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="thermal_cond::st_steps",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a4c74dc0fd6a165d0fea419b560943701",tooltip="Returns the number of Supersteps. "];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="thermal_cond::superstep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06",tooltip="Length of superstep. "];
+  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="thermal_cond::substep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294",tooltip="Size of substep j. "];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="thermal_cond::progress",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a5283f7a2b8b4a4226ce624fb49445f43",tooltip="Progress bar. "];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="thermal_cond::mhd_heatfluxes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#aab43551b6a0d4b5894c07b510e4571d7",tooltip="Returns Heat Fluxes with anisotropic thermal conduction. "];
+  Node11 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="thermal_cond::ksp_parl",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a8205274631d6cb4d36ffc0937aa88a74",tooltip="Spitzer parallel conductivity. "];
+  Node11 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="thermal_cond::ksp_perp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#adfd8867a0fc7fe02a35a41000e36f9bf",tooltip="Spitzer perpendicular conductivity. "];
+  Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="thermal_cond::heatfluxes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#abc5c4fc622aea2f85fc5a0c2fee333bc",tooltip="Returns Heat Fluxes. "];
+  Node14 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="thermal_cond::thermal\l_bounds",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacethermal__cond.html#a55e65df0c700580f8af0a090063d2e32",tooltip="Exchanges ghost cells for energy only. "];
+}

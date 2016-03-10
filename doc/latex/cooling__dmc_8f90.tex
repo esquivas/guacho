@@ -1,0 +1,36 @@
+\hypertarget{cooling__dmc_8f90}{}\section{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+dmc.f90 File Reference}
+\label{cooling__dmc_8f90}\index{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+dmc.\+f90@{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+dmc.\+f90}}
+
+
+Cooling module with Dlgarno Mac Cray coronal cooling curve.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacecooling__dmc}{cooling\+\_\+dmc}
+\begin{DoxyCompactList}\small\item\em Cooling module with Dalgarno Mc\+Cray coronal cooling curve. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacecooling__dmc_a7874b4f8a76399e87e0a22aecd088cf8}{cooling\+\_\+dmc\+::read\+\_\+table} ()
+\begin{DoxyCompactList}\small\item\em Reads the cooling curve table. \end{DoxyCompactList}\item 
+real(kind=8) function \hyperlink{namespacecooling__dmc_af987bbf144f596d57b154427bbb82ae5}{cooling\+\_\+dmc\+::cooldmc} (T)
+\begin{DoxyCompactList}\small\item\em Returns the cooling coefficient interpolating the table. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecooling__dmc_a7af28062f0cd20c4bb0d86c895f4a8d6}{cooling\+\_\+dmc\+::coolingdmc} ()
+\begin{DoxyCompactList}\small\item\em High level wrapper to apply cooling with D\+M\+C table. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacecooling__dmc_aa692bc7125c6e889f3cf993f9f48f9d3}{}real(kind=8), dimension(2, 41) {\bfseries cooling\+\_\+dmc\+::cooltab}\label{namespacecooling__dmc_aa692bc7125c6e889f3cf993f9f48f9d3}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}

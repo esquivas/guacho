@@ -1,0 +1,4 @@
+<map id="thermal_cond::heatfluxes" name="thermal_cond::heatfluxes">
+<area shape="rect" id="node2" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="213,5,344,32"/>
+<area shape="rect" id="node3" href="$namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="217,56,340,83"/>
+</map>

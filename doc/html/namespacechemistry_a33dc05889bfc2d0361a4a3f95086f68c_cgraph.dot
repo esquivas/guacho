@@ -1,0 +1,17 @@
+digraph "chemistry::update_chem"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="chemistry::update_chem",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="hydro_core::u2prim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3",tooltip="Computes the primitive variables and temperature from conserved variables on a single cell..."];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="chemistry::chemstep",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e",tooltip="Advances the chemistry network in one cell. "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="linear_system::linsys",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacelinear__system.html#a51e9428c30e00182fa86755204de7762",tooltip="Driver to solves a set of linear equations. "];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="linear_system::ludcmp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacelinear__system.html#ad77fb788295266bcc818f72d6677bf9d",tooltip="LU decomposition. "];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="linear_system::lubksb",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacelinear__system.html#acdd63cedefa6077e4100904703d6b82d",tooltip="Solves a set of linear equations. "];
+}

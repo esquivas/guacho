@@ -1,0 +1,36 @@
+\hypertarget{sources_8f90}{}\section{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/sources.f90 File Reference}
+\label{sources_8f90}\index{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/sources.\+f90@{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/sources.\+f90}}
+
+
+Adds source terms.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacesources}{sources}
+\begin{DoxyCompactList}\small\item\em Adds source terms. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacesources_a378a8116ae16db2efa853343f88156d3}{sources\+::getpos} (i, j, k, x, y, z, r)
+\begin{DoxyCompactList}\small\item\em Gets position in the grid. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_aef9f6ca4bc770f0e768dbbba91b67415}{sources\+::grav\+\_\+source} (xc, yc, zc, pp, s)
+\begin{DoxyCompactList}\small\item\em Gravity due to point sources. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a36b548c9c578b74c5f439ffaec7d3a9a}{sources\+::radpress\+\_\+source} (i, j, k, xc, yc, zc, rc, pp, s)
+\begin{DoxyCompactList}\small\item\em Radiation pressure force. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a0478795277b4f25ec62d8e3e1f06611e}{sources\+::divergence\+\_\+b} (i, j, k, d)
+\begin{DoxyCompactList}\small\item\em Computes div(\+B) \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a9c2d37de3b878eff7693a25d3dc3fe91}{sources\+::divbcorr\+\_\+source} (i, j, k, pp, s)
+\begin{DoxyCompactList}\small\item\em 8 Wave source terms for div(\+B) correction \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacesources_a6a66dd1f8baf424ff64a30112f39c632}{sources\+::source} (i, j, k, prim, s)
+\begin{DoxyCompactList}\small\item\em Upper level wrapper for sources. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}

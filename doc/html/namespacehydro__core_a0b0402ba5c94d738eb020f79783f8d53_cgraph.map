@@ -1,0 +1,4 @@
+<map id="hydro_core::get_timestep" name="hydro_core::get_timestep">
+<area shape="rect" id="node2" href="$namespacehydro__core.html#ab2655b81626d4d95cb003112248e928a" title="Computes the fast magnetosonic speeds in the 3 coordinates. " alt="" coords="221,5,337,32"/>
+<area shape="rect" id="node3" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="213,56,344,83"/>
+</map>

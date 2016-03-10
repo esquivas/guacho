@@ -1,0 +1,19 @@
+digraph "cooling_h::coolingh"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="cooling_h::coolingh",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="cooling_h::atomic",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecooling__h.html#aef95dbca5e7aef78d66a225cc217c982",tooltip="Updates the ionization fraction and applpies cooling. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="hydro_core::u2prim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3",tooltip="Computes the primitive variables and temperature from conserved variables on a single cell..."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="cooling_h::colf",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecooling__h.html#ad5f1352f8925ccb1b352d6e749465a92",tooltip="calculates the collisional ionization rate "];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="cooling_h::alpha",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecooling__h.html#a09de30645cebf531a647b5f53ae143b2",tooltip="calculates the recombination rate (case B) "];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="cooling_h::aloss",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecooling__h.html#a92cfd14c9b02e853eb33d22857fabeed",tooltip="Non equilibrium cooling. "];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="cooling_h::betah",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecooling__h.html#a2a2de25572bd515eae9441391e0ed0f8",tooltip="betaH(T) "];
+}

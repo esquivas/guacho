@@ -1,0 +1,90 @@
+\hypertarget{globals_8f90}{}\section{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/globals.f90 File Reference}
+\label{globals_8f90}\index{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/globals.\+f90@{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/globals.\+f90}}
+
+
+Global variables.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespaceglobals}{globals}
+\begin{DoxyCompactList}\small\item\em Module containing global variables. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespaceglobals_ae6519b751f8ef608c2074e27024335b7}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_ae6519b751f8ef608c2074e27024335b7}{globals\+::u}\label{namespaceglobals_ae6519b751f8ef608c2074e27024335b7}
+
+\begin{DoxyCompactList}\small\item\em conserved varibles \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a127abb71c460a346ae47d10d86c22cc9}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_a127abb71c460a346ae47d10d86c22cc9}{globals\+::up}\label{namespaceglobals_a127abb71c460a346ae47d10d86c22cc9}
+
+\begin{DoxyCompactList}\small\item\em conserved varibles after 1/2 timestep \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a149bece4e7407071629f69a8c7deb03a}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_a149bece4e7407071629f69a8c7deb03a}{globals\+::primit}\label{namespaceglobals_a149bece4e7407071629f69a8c7deb03a}
+
+\begin{DoxyCompactList}\small\item\em primitive varibles \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a5fb85172ca54e822fdb8c522da890717}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_a5fb85172ca54e822fdb8c522da890717}{globals\+::f}\label{namespaceglobals_a5fb85172ca54e822fdb8c522da890717}
+
+\begin{DoxyCompactList}\small\item\em X fluxes. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a0124c44fda4a3092edd2789f79dec648}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_a0124c44fda4a3092edd2789f79dec648}{globals\+::g}\label{namespaceglobals_a0124c44fda4a3092edd2789f79dec648}
+
+\begin{DoxyCompactList}\small\item\em Y fluxes. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_af6262d058b86075848725c846e7cc9cc}{}real, dimension(\+:,\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_af6262d058b86075848725c846e7cc9cc}{globals\+::h}\label{namespaceglobals_af6262d058b86075848725c846e7cc9cc}
+
+\begin{DoxyCompactList}\small\item\em Z fluxes. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_aafee650389fdf595e41e37cb340155ae}{}real \hyperlink{namespaceglobals_aafee650389fdf595e41e37cb340155ae}{globals\+::dx}\label{namespaceglobals_aafee650389fdf595e41e37cb340155ae}
+
+\begin{DoxyCompactList}\small\item\em grid spacing in X \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a9b12323045a0672fe06f9b7091cd3e7a}{}real \hyperlink{namespaceglobals_a9b12323045a0672fe06f9b7091cd3e7a}{globals\+::dy}\label{namespaceglobals_a9b12323045a0672fe06f9b7091cd3e7a}
+
+\begin{DoxyCompactList}\small\item\em grid spacing in Y \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a81293f145f1af171eb88b6feced78c95}{}real \hyperlink{namespaceglobals_a81293f145f1af171eb88b6feced78c95}{globals\+::dz}\label{namespaceglobals_a81293f145f1af171eb88b6feced78c95}
+
+\begin{DoxyCompactList}\small\item\em grid spacing in Z \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a8d38eca539ad2b24a66616e42b79ac4c}{}integer, dimension(0\+:2) \hyperlink{namespaceglobals_a8d38eca539ad2b24a66616e42b79ac4c}{globals\+::coords}\label{namespaceglobals_a8d38eca539ad2b24a66616e42b79ac4c}
+
+\begin{DoxyCompactList}\small\item\em position of neighboring M\+P\+I blocks \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_aba9a16c1b0ed3e52dce83157476d099c}{}integer \hyperlink{namespaceglobals_aba9a16c1b0ed3e52dce83157476d099c}{globals\+::left}\label{namespaceglobals_aba9a16c1b0ed3e52dce83157476d099c}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the -\/x direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a0b27e5c90473860434fc5dd58a255111}{}integer \hyperlink{namespaceglobals_a0b27e5c90473860434fc5dd58a255111}{globals\+::right}\label{namespaceglobals_a0b27e5c90473860434fc5dd58a255111}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the +x direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_add36bccef8d272ff40330a62d0307580}{}integer \hyperlink{namespaceglobals_add36bccef8d272ff40330a62d0307580}{globals\+::top}\label{namespaceglobals_add36bccef8d272ff40330a62d0307580}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the -\/y direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a3188a89193263f9f063099801321d525}{}integer \hyperlink{namespaceglobals_a3188a89193263f9f063099801321d525}{globals\+::bottom}\label{namespaceglobals_a3188a89193263f9f063099801321d525}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the +y direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_ac3375149d8b96b3b5470274034850ecc}{}integer \hyperlink{namespaceglobals_ac3375149d8b96b3b5470274034850ecc}{globals\+::out}\label{namespaceglobals_ac3375149d8b96b3b5470274034850ecc}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the -\/z direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a6a2cc973507c2f9ea75f44a9f976d659}{}integer \hyperlink{namespaceglobals_a6a2cc973507c2f9ea75f44a9f976d659}{globals\+::in}\label{namespaceglobals_a6a2cc973507c2f9ea75f44a9f976d659}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I neighbor in the +z direction. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a93f283242b146b3ef8b53fd1b1ad7bac}{}integer \hyperlink{namespaceglobals_a93f283242b146b3ef8b53fd1b1ad7bac}{globals\+::rank}\label{namespaceglobals_a93f283242b146b3ef8b53fd1b1ad7bac}
+
+\begin{DoxyCompactList}\small\item\em M\+P\+I rank. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a4bc8f1b5670efd802d57dce2c385b6d9}{}integer \hyperlink{namespaceglobals_a4bc8f1b5670efd802d57dce2c385b6d9}{globals\+::comm3d}\label{namespaceglobals_a4bc8f1b5670efd802d57dce2c385b6d9}
+
+\begin{DoxyCompactList}\small\item\em Cartessian M\+P\+I comunicator. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_acc5c9a03b08561f9eeb530eb65221dbb}{}real \hyperlink{namespaceglobals_acc5c9a03b08561f9eeb530eb65221dbb}{globals\+::time}\label{namespaceglobals_acc5c9a03b08561f9eeb530eb65221dbb}
+
+\begin{DoxyCompactList}\small\item\em Current time. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a1599fd11dcd5dfa9104003de3a2d03e5}{}real \hyperlink{namespaceglobals_a1599fd11dcd5dfa9104003de3a2d03e5}{globals\+::dt\+\_\+cfl}\label{namespaceglobals_a1599fd11dcd5dfa9104003de3a2d03e5}
+
+\begin{DoxyCompactList}\small\item\em Current C\+F\+L \$ t\$. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a6966cf52ad4f442a7fe69efa6d5c0bee}{}integer \hyperlink{namespaceglobals_a6966cf52ad4f442a7fe69efa6d5c0bee}{globals\+::currentiteration}\label{namespaceglobals_a6966cf52ad4f442a7fe69efa6d5c0bee}
+
+\begin{DoxyCompactList}\small\item\em Current iteration. \end{DoxyCompactList}\item 
+\hypertarget{namespaceglobals_a6942102ba8bd15a3350901de0b99bafa}{}real, dimension(\+:,\+:,\+:), allocatable \hyperlink{namespaceglobals_a6942102ba8bd15a3350901de0b99bafa}{globals\+::temp}\label{namespaceglobals_a6942102ba8bd15a3350901de0b99bafa}
+
+\begin{DoxyCompactList}\small\item\em Temperature array \mbox{[}K\mbox{]}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2/\+Nov/2014 
+\end{DoxyDate}

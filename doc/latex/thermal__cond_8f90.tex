@@ -1,0 +1,74 @@
+\hypertarget{thermal__cond_8f90}{}\section{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/thermal\+\_\+cond.f90 File Reference}
+\label{thermal__cond_8f90}\index{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/thermal\+\_\+cond.\+f90@{/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/thermal\+\_\+cond.\+f90}}
+
+
+Thermal conduction module.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+module \hyperlink{namespacethermal__cond}{thermal\+\_\+cond}
+\begin{DoxyCompactList}\small\item\em Adds thermal conducion. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacethermal__cond_ac611766519a4602033c83e3ed5ae3c00}{thermal\+\_\+cond\+::init\+\_\+thermal\+\_\+cond} ()
+\begin{DoxyCompactList}\small\item\em Intializes Temperature array. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a074d4829b3477fa8003983819e77523d}{thermal\+\_\+cond\+::get\+\_\+dt\+\_\+cond} (dt)
+\begin{DoxyCompactList}\small\item\em computes conduction timescale \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a5283f7a2b8b4a4226ce624fb49445f43}{thermal\+\_\+cond\+::progress} (j, tot)
+\begin{DoxyCompactList}\small\item\em Progress bar. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_ab3978fb62e485cf71d7c83e779e92615}{thermal\+\_\+cond\+::ksp} (T)
+\begin{DoxyCompactList}\small\item\em Spitzer conductivity. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_a8205274631d6cb4d36ffc0937aa88a74}{thermal\+\_\+cond\+::ksp\+\_\+parl} (xtemp)
+\begin{DoxyCompactList}\small\item\em Spitzer parallel conductivity. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_adfd8867a0fc7fe02a35a41000e36f9bf}{thermal\+\_\+cond\+::ksp\+\_\+perp} (xtemp, xdens, B2)
+\begin{DoxyCompactList}\small\item\em Spitzer perpendicular conductivity. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_abc5c4fc622aea2f85fc5a0c2fee333bc}{thermal\+\_\+cond\+::heatfluxes} ()
+\begin{DoxyCompactList}\small\item\em Returns Heat Fluxes. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_aab43551b6a0d4b5894c07b510e4571d7}{thermal\+\_\+cond\+::mhd\+\_\+heatfluxes} ()
+\begin{DoxyCompactList}\small\item\em Returns Heat Fluxes with anisotropic thermal conduction. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a55e65df0c700580f8af0a090063d2e32}{thermal\+\_\+cond\+::thermal\+\_\+bounds} ()
+\begin{DoxyCompactList}\small\item\em Exchanges ghost cells for energy only. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_a535cc1746914d413d4978aeda7b8fc06}{thermal\+\_\+cond\+::superstep} (N, snu)
+\begin{DoxyCompactList}\small\item\em Length of superstep. \end{DoxyCompactList}\item 
+real function \hyperlink{namespacethermal__cond_a782aaba01217281f2aa57dcc955fd294}{thermal\+\_\+cond\+::substep} (j, N, nu)
+\begin{DoxyCompactList}\small\item\em Size of substep j. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a4c74dc0fd6a165d0fea419b560943701}{thermal\+\_\+cond\+::st\+\_\+steps} (fs, Ns, fstep)
+\begin{DoxyCompactList}\small\item\em Returns the number of Supersteps. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacethermal__cond_a4b579df47b3bf4622a3ab51f57aa436b}{thermal\+\_\+cond\+::thermal\+\_\+conduction} ()
+\begin{DoxyCompactList}\small\item\em Upper level wrapper for thermal conduction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}{}real, parameter \hyperlink{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}{thermal\+\_\+cond\+::ph} =0.\+4\label{namespacethermal__cond_a37c3e000231baaaa4668f7c05f021ce0}
+
+\begin{DoxyCompactList}\small\item\em Parameter for the sturated regime in Mc\+Kee. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}{}real, parameter \hyperlink{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}{thermal\+\_\+cond\+::nu} =0.\+01\label{namespacethermal__cond_a38896e6bbd3b053ca066e407e4b3817f}
+
+\begin{DoxyCompactList}\small\item\em Super-\/stepping da\+M\+P\+I\+\_\+\+N\+Bg factor. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}{}real, parameter \hyperlink{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}{thermal\+\_\+cond\+::snu} =sqrt(nu)\label{namespacethermal__cond_a53b14d15ce11990f6453a335c81d1728}
+
+\begin{DoxyCompactList}\small\item\em Sqrt of damping factor. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a5420f28be46174eb6852f14281ec7ace}{}integer, parameter \hyperlink{namespacethermal__cond_a5420f28be46174eb6852f14281ec7ace}{thermal\+\_\+cond\+::max\+\_\+iter} = 100\label{namespacethermal__cond_a5420f28be46174eb6852f14281ec7ace}
+
+\begin{DoxyCompactList}\small\item\em Maximum number of iterations. \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_ae13a8d994e65b9e57ebb80e892c72aac}{}real, parameter \hyperlink{namespacethermal__cond_ae13a8d994e65b9e57ebb80e892c72aac}{thermal\+\_\+cond\+::tstep\+\_\+red\+\_\+factor} =0.\+25\label{namespacethermal__cond_ae13a8d994e65b9e57ebb80e892c72aac}
+
+\begin{DoxyCompactList}\small\item\em timestep reduction factor for the conduction \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a0d692500ab9d6becafcf89d733d3f76f}{}real \hyperlink{namespacethermal__cond_a0d692500ab9d6becafcf89d733d3f76f}{thermal\+\_\+cond\+::dt\+\_\+cond}\label{namespacethermal__cond_a0d692500ab9d6becafcf89d733d3f76f}
+
+\begin{DoxyCompactList}\small\item\em conduction timestep \end{DoxyCompactList}\item 
+\hypertarget{namespacethermal__cond_a03140c73c7461f1882cd286b3e378abc}{}integer \hyperlink{namespacethermal__cond_a03140c73c7461f1882cd286b3e378abc}{thermal\+\_\+cond\+::tc\+\_\+log}\label{namespacethermal__cond_a03140c73c7461f1882cd286b3e378abc}
+
+\begin{DoxyCompactList}\small\item\em loical unit to write T\+C log \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Alejandro Esquivel \& Ernesto Zurbiggen 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+07/\+Sep/2015 
+\end{DoxyDate}

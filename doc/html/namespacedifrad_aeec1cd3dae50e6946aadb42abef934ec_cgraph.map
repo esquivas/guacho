@@ -1,0 +1,5 @@
+<map id="difrad::diffuse_rad" name="difrad::diffuse_rad">
+<area shape="rect" id="node2" href="$namespacedifrad.html#a180fbbe2c9b0639cc33dd6ef57a61ec4" title="Place photon packets at a &quot;star&quot; surface. " alt="" coords="173,5,289,32"/>
+<area shape="rect" id="node3" href="$namespacedifrad.html#a39291c8aa2927c69ef6ca60f78c9b103" title="Photon trajectories. " alt="" coords="339,81,443,108"/>
+<area shape="rect" id="node4" href="$namespacedifrad.html#afe6e9d2182e755ae483aeaa2c91f2710" title="follows the rays across MPI boundaries " alt="" coords="172,107,291,133"/>
+</map>

@@ -1,0 +1,297 @@
+\hypertarget{namespacecoldens__utilities}{}\section{coldens\+\_\+utilities Module Reference}
+\label{namespacecoldens__utilities}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+
+
+Column density projection.  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacecoldens__utilities_a9fa20a511c2b17a33fdb8fc1b3bf55a2}{init\+\_\+coldens} ()
+\begin{DoxyCompactList}\small\item\em Initializes data. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_a2dafe54f1edb888f313949f4f801e2d6}{read\+\_\+data} (u, itprint, filepath)
+\begin{DoxyCompactList}\small\item\em reads data from file \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_a7df7ce1cf8187ca5393dc35effa22020}{getxyz} (i, j, k, x, y, z)
+\begin{DoxyCompactList}\small\item\em gets position of a cell \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_af7f94bfb5ffee491708d3f221915abcf}{rotation\+\_\+x} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the X axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_a989fb82adc69b6b1c00a2d2400c9854a}{rotation\+\_\+y} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Y axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491687}{rotation\+\_\+z} (theta, x, y, z, xn, yn, zn)
+\begin{DoxyCompactList}\small\item\em Rotation around the Z axis. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab}{fill\+\_\+map} (nxmap, nymap, u, map, dx\+T, dy\+T, theta\+\_\+x, theta\+\_\+y, theta\+\_\+z)
+\begin{DoxyCompactList}\small\item\em Fill target map. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}{write\+\_\+header} (unit, nx, ny)
+\begin{DoxyCompactList}\small\item\em Writes header. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}{write\+\_\+map} (fileout, nxmap, nymap, map)
+\begin{DoxyCompactList}\small\item\em Writes projection to file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Utilities to compute a column density map 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!fill\+\_\+map@{fill\+\_\+map}}
+\index{fill\+\_\+map@{fill\+\_\+map}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{fill\+\_\+map}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::fill\+\_\+map (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{nxmap, }
+\item[{integer, intent(in)}]{nymap, }
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax, nzmin\+:nzmax), intent(in)}]{u, }
+\item[{real, dimension(nxmap,nymap), intent(out)}]{map, }
+\item[{real, intent(in)}]{dx\+T, }
+\item[{real, intent(in)}]{dy\+T, }
+\item[{real, intent(in)}]{theta\+\_\+x, }
+\item[{real, intent(in)}]{theta\+\_\+y, }
+\item[{real, intent(in)}]{theta\+\_\+z}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab}
+Fills the target map of one M\+P\+I block 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} nxmap \+: Number of X cells in target \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nymap \+: Number of Y cells in target \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax, nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em real} & \mbox{[}out\mbox{]} map(nxmap,mymap) \+: Target map \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} dx\+T \+: target pixel width \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} dy\+T \+: target pixel height \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetax \+: Rotation around X \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetay \+: Rotation around Y \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} thetaz \+: Rotation around Z \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 307 of file coldens.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 0
+
+
+\hypertarget{namespacecoldens__utilities_a7df7ce1cf8187ca5393dc35effa22020}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!getxyz@{getxyz}}
+\index{getxyz@{getxyz}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{getxyz}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::getxyz (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{i, }
+\item[{integer, intent(in)}]{j, }
+\item[{integer, intent(in)}]{k, }
+\item[{real, intent(out)}]{x, }
+\item[{real, intent(out)}]{y, }
+\item[{real, intent(out)}]{z}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a7df7ce1cf8187ca5393dc35effa22020}
+Returns the position and spherical radius calculated with respect to the center of the grid 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} i \+: cell index in the x direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} j \+: cell index in the y direction \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} k \+: cell index in the z direction \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} x \+: x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} y \+: y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} z \+: z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 209 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_a9fa20a511c2b17a33fdb8fc1b3bf55a2}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!init\+\_\+coldens@{init\+\_\+coldens}}
+\index{init\+\_\+coldens@{init\+\_\+coldens}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{init\+\_\+coldens}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::init\+\_\+coldens (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a9fa20a511c2b17a33fdb8fc1b3bf55a2}
+Initializes data, M\+P\+I and other stuff 
+
+Definition at line 36 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_a2dafe54f1edb888f313949f4f801e2d6}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!read\+\_\+data@{read\+\_\+data}}
+\index{read\+\_\+data@{read\+\_\+data}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{read\+\_\+data}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::read\+\_\+data (
+\begin{DoxyParamCaption}
+\item[{real, dimension(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax), intent(out)}]{u, }
+\item[{integer, intent(in)}]{itprint, }
+\item[{character (len=128), intent(in)}]{filepath}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a2dafe54f1edb888f313949f4f801e2d6}
+reads data from file 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}out\mbox{]} u(neq,nxmin\+:nxmax,nymin\+:nymax,nzmin\+:nzmax) \+: conserved variables \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} itprint \+: number of output \\
+\hline
+{\em string} & \mbox{[}in\mbox{]} filepath \+: path where the output is \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 135 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_af7f94bfb5ffee491708d3f221915abcf}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!rotation\+\_\+x@{rotation\+\_\+x}}
+\index{rotation\+\_\+x@{rotation\+\_\+x}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+x}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::rotation\+\_\+x (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_af7f94bfb5ffee491708d3f221915abcf}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 235 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_a989fb82adc69b6b1c00a2d2400c9854a}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!rotation\+\_\+y@{rotation\+\_\+y}}
+\index{rotation\+\_\+y@{rotation\+\_\+y}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+y}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::rotation\+\_\+y (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a989fb82adc69b6b1c00a2d2400c9854a}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 259 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491687}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!rotation\+\_\+z@{rotation\+\_\+z}}
+\index{rotation\+\_\+z@{rotation\+\_\+z}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{rotation\+\_\+z}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::rotation\+\_\+z (
+\begin{DoxyParamCaption}
+\item[{real, intent(in)}]{theta, }
+\item[{real, intent(in)}]{x, }
+\item[{real, intent(in)}]{y, }
+\item[{real, intent(in)}]{z, }
+\item[{real, intent(out)}]{xn, }
+\item[{real, intent(out)}]{yn, }
+\item[{real, intent(out)}]{zn}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491687}
+Does a rotation around the x axis 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}in\mbox{]}, theta \+: Angle of rotation (in radians) \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original x position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, y \+: original y position in the grid \\
+\hline
+{\em real} & \mbox{[}in\mbox{]}, x \+: original z position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final x position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, y \+: final y position in the grid \\
+\hline
+{\em real} & \mbox{[}out\mbox{]}, x \+: final z position in the grid \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 281 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!write\+\_\+header@{write\+\_\+header}}
+\index{write\+\_\+header@{write\+\_\+header}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{write\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::write\+\_\+header (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{unit, }
+\item[{integer, intent(in)}]{nx, }
+\item[{integer, intent(in)}]{ny}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}
+Writes header for binary input 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} unit \+: number of logical unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 359 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!write\+\_\+map@{write\+\_\+map}}
+\index{write\+\_\+map@{write\+\_\+map}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{write\+\_\+map}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::write\+\_\+map (
+\begin{DoxyParamCaption}
+\item[{character (len=128), intent(in)}]{fileout, }
+\item[{integer, intent(in)}]{nxmap, }
+\item[{integer, intent(in)}]{nymap, }
+\item[{real, dimension(nxmap,nymap), intent(in)}]{map}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}
+Writes projection to file 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} itprint \+: number of output \\
+\hline
+{\em string} & \mbox{[}in\mbox{]} fileout \+: file where to write \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nxmap \+: Number of X cells in target \\
+\hline
+{\em integer} & \mbox{[}in\mbox{]} nymap \+: Number of Y cells in target \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} map(nxmap,mymap) \+: Target map \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 433 of file coldens.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+

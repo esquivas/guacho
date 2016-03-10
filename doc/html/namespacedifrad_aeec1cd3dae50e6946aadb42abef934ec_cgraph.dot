@@ -1,0 +1,14 @@
+digraph "difrad::diffuse_rad"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="difrad::diffuse_rad",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="difrad::starsource",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacedifrad.html#a180fbbe2c9b0639cc33dd6ef57a61ec4",tooltip="Place photon packets at a \"star\" surface. "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="difrad::photons",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacedifrad.html#a39291c8aa2927c69ef6ca60f78c9b103",tooltip="Photon trajectories. "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="difrad::radbounds",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacedifrad.html#afe6e9d2182e755ae483aeaa2c91f2710",tooltip="follows the rays across MPI boundaries "];
+  Node4 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

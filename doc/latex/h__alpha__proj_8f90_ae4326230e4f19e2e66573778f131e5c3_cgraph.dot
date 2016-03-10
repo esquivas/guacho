@@ -1,0 +1,27 @@
+digraph "h_alpha_proj"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="h_alpha_proj",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="h_alpha_utilities::\linit_ha",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#a8bb4ef22ad133f8d3f75cf1a26e14035",tooltip="Initializes data. "];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="h_alpha_utilities::\lread_data",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#a5549bf9fd812d02d9189d27f380c01c0",tooltip="reads data from file "];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="h_alpha_utilities::\lfill_map",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#aafc5cae88b562d0bd2d039cae21ed35a",tooltip="Fill target map. "];
+  Node4 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="hydro_core::u2prim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3",tooltip="Computes the primitive variables and temperature from conserved variables on a single cell..."];
+  Node4 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="h_alpha_utilities::\lgetxyz",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#af48cd3c223c292170bc1f90da256f537",tooltip="gets position of a cell "];
+  Node4 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="h_alpha_utilities::\lrotation_x",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#a65ad5d15c1265e31f4d191ebf771e669",tooltip="Rotation around the X axis. "];
+  Node4 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="h_alpha_utilities::\lrotation_y",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#ab643f1bac838912c58b25923b5de40ca",tooltip="Rotation around the Y axis. "];
+  Node4 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="h_alpha_utilities::\lrotation_z",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#acaf25f2c0ad80c5d7e2f451f58522a49",tooltip="Rotation around the Z axis. "];
+  Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="h_alpha_utilities::\lwrite_ha",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#aa2b2b3783ef4b30d178412ea44671047",tooltip="Writes projection to file. "];
+  Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="h_alpha_utilities::\lwrite_rg",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceh__alpha__utilities.html#a1cf6b2b4be1a68c792b3cb07b5629af6",tooltip="Writes projection to file in rg format. "];
+}
