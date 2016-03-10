@@ -2,7 +2,7 @@
 \label{namespacecoldens__utilities}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}}
 
 
-Column densirt projection.  
+Column density projection.  
 
 
 \subsection*{Functions/\+Subroutines}
@@ -22,6 +22,8 @@ subroutine \hyperlink{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491
 \begin{DoxyCompactList}\small\item\em Rotation around the Z axis. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab}{fill\+\_\+map} (nxmap, nymap, u, map, dx\+T, dy\+T, theta\+\_\+x, theta\+\_\+y, theta\+\_\+z)
 \begin{DoxyCompactList}\small\item\em Fill target map. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}{write\+\_\+header} (unit, nx, ny)
+\begin{DoxyCompactList}\small\item\em Writes header. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}{write\+\_\+map} (fileout, nxmap, nymap, map)
 \begin{DoxyCompactList}\small\item\em Writes projection to file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -68,17 +70,12 @@ Fills the target map of one M\+P\+I block
 \end{DoxyParams}
 
 
-Definition at line 286 of file coldens.\+f90.
+Definition at line 307 of file coldens.\+f90.
 
 
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=296pt]{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab_cgraph}
-\end{center}
-\end{figure}
+Here is the call graph for this function\+:
+% FIG 0
 
 
 \hypertarget{namespacecoldens__utilities_a7df7ce1cf8187ca5393dc35effa22020}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!getxyz@{getxyz}}
@@ -110,7 +107,7 @@ Returns the position and spherical radius calculated with respect to the center 
 \end{DoxyParams}
 
 
-Definition at line 188 of file coldens.\+f90.
+Definition at line 209 of file coldens.\+f90.
 
 \hypertarget{namespacecoldens__utilities_a9fa20a511c2b17a33fdb8fc1b3bf55a2}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!init\+\_\+coldens@{init\+\_\+coldens}}
 \index{init\+\_\+coldens@{init\+\_\+coldens}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
@@ -177,7 +174,7 @@ Does a rotation around the x axis
 \end{DoxyParams}
 
 
-Definition at line 214 of file coldens.\+f90.
+Definition at line 235 of file coldens.\+f90.
 
 \hypertarget{namespacecoldens__utilities_a989fb82adc69b6b1c00a2d2400c9854a}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!rotation\+\_\+y@{rotation\+\_\+y}}
 \index{rotation\+\_\+y@{rotation\+\_\+y}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
@@ -211,7 +208,7 @@ Does a rotation around the x axis
 \end{DoxyParams}
 
 
-Definition at line 238 of file coldens.\+f90.
+Definition at line 259 of file coldens.\+f90.
 
 \hypertarget{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491687}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!rotation\+\_\+z@{rotation\+\_\+z}}
 \index{rotation\+\_\+z@{rotation\+\_\+z}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
@@ -245,7 +242,25 @@ Does a rotation around the x axis
 \end{DoxyParams}
 
 
-Definition at line 260 of file coldens.\+f90.
+Definition at line 281 of file coldens.\+f90.
+
+\hypertarget{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!write\+\_\+header@{write\+\_\+header}}
+\index{write\+\_\+header@{write\+\_\+header}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
+\subsubsection[{write\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}subroutine coldens\+\_\+utilities\+::write\+\_\+header (
+\begin{DoxyParamCaption}
+\item[{integer, intent(in)}]{unit, }
+\item[{integer, intent(in)}]{nx, }
+\item[{integer, intent(in)}]{ny}
+\end{DoxyParamCaption}
+)}\label{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}
+Writes header for binary input 
+\begin{DoxyParams}{Parameters}
+{\em integer} & \mbox{[}in\mbox{]} unit \+: number of logical unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 359 of file coldens.\+f90.
 
 \hypertarget{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}{}\index{coldens\+\_\+utilities@{coldens\+\_\+utilities}!write\+\_\+map@{write\+\_\+map}}
 \index{write\+\_\+map@{write\+\_\+map}!coldens\+\_\+utilities@{coldens\+\_\+utilities}}
@@ -272,5 +287,11 @@ Writes projection to file
 \end{DoxyParams}
 
 
-Definition at line 340 of file coldens.\+f90.
+Definition at line 433 of file coldens.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
 

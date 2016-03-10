@@ -5,7 +5,7 @@ digraph "thermal_cond::thermal_conduction"
   rankdir="LR";
   Node1 [label="thermal_cond::thermal\l_conduction",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
   Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node2 [label="hydro_core::calcprim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a991a14316cc93864150071b30fd9c772",tooltip="Updated the primitives, using the conserved variables in the entire domain. "];
+  Node2 [label="hydro_core::calcprim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870",tooltip="Updated the primitives, using the conserved variables in the entire domain. "];
   Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node3 [label="hydro_core::u2prim",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3",tooltip="Computes the primitive variables and temperature from conserved variables on a single cell..."];
   Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];

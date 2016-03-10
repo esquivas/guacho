@@ -1,71 +1,75 @@
 \begin{theindex}
 
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/doc/mainpage.\+h}, 
-		\hyperpage{55}
+		\hyperpage{49}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/\+Out\+\_\+\+B\+I\+N\+\_\+\+Module.\+f90}, 
-		\hyperpage{71}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/\+Out\+\_\+\+Silo\+\_\+\+Module.\+f90}, 
-		\hyperpage{71}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/\+Out\+\_\+\+V\+T\+K\+\_\+\+Module.\+f90}, 
-		\hyperpage{72}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/boundaries.\+f90}, 
-		\hyperpage{55}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/coldens.\+f90}, 
-		\hyperpage{55}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/constants.\+f90}, 
-		\hyperpage{57}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+chi.\+f90}, 
-		\hyperpage{58}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+dmc.\+f90}, 
-		\hyperpage{59}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+h.\+f90}, 
-		\hyperpage{59}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/difrad.\+f90}, 
-		\hyperpage{60}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/globals.\+f90}, 
-		\hyperpage{61}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/h\+\_\+alpha\+\_\+proj.\+f90}, 
-		\hyperpage{63}
-  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hll.\+f90}, 
 		\hyperpage{64}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/\+Out\+\_\+\+Silo\+\_\+\+Module.\+f90}, 
+		\hyperpage{65}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/\+Out\+\_\+\+V\+T\+K\+\_\+\+Module.\+f90}, 
+		\hyperpage{65}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/boundaries.\+f90}, 
+		\hyperpage{49}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/chemistry.\+f90}, 
+		\hyperpage{49}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/coldens.\+f90}, 
+		\hyperpage{50}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/constants.\+f90}, 
+		\hyperpage{51}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+chi.\+f90}, 
+		\hyperpage{52}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+dmc.\+f90}, 
+		\hyperpage{53}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/cooling\+\_\+h.\+f90}, 
+		\hyperpage{53}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/difrad.\+f90}, 
+		\hyperpage{54}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/globals.\+f90}, 
+		\hyperpage{55}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/h\+\_\+alpha\+\_\+proj.\+f90}, 
+		\hyperpage{57}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hll.\+f90}, 
+		\hyperpage{58}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hllc.\+f90}, 
-		\hyperpage{65}
+		\hyperpage{58}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hlld.\+f90}, 
-		\hyperpage{65}
+		\hyperpage{59}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hlle.\+f90}, 
-		\hyperpage{66}
+		\hyperpage{59}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hydro\+\_\+core.\+f90}, 
-		\hyperpage{66}
+		\hyperpage{60}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/hydro\+\_\+solver.\+f90}, 
-		\hyperpage{67}
+		\hyperpage{61}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/init.\+f90}, 
-		\hyperpage{68}
+		\hyperpage{61}
+  \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/linear\+\_\+system.\+f90}, 
+		\hyperpage{62}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/lyman\+\_\+alpha\+\_\+tau.\+f90}, 
-		\hyperpage{68}
+		\hyperpage{62}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/main.\+f90}, 
-		\hyperpage{70}
+		\hyperpage{63}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/output.\+f90}, 
-		\hyperpage{72}
+		\hyperpage{66}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/sources.\+f90}, 
-		\hyperpage{73}
+		\hyperpage{66}
   \item {/\+Users/esquivel/\+Desktop/\+Guacho-\/\+Working/src/thermal\+\_\+cond.\+f90}, 
-		\hyperpage{74}
+		\hyperpage{67}
 
   \indexspace
 
   \item {aloss}
     \subitem {cooling\+\_\+h}, \hyperpage{14}
   \item {alpha}
-    \subitem {cooling\+\_\+h}, \hyperpage{14}
+    \subitem {cooling\+\_\+h}, \hyperpage{15}
   \item {alpha1}
-    \subitem {cooling\+\_\+h}, \hyperpage{16}
+    \subitem {cooling\+\_\+h}, \hyperpage{15}
   \item {atomic}
-    \subitem {cooling\+\_\+h}, \hyperpage{16}
+    \subitem {cooling\+\_\+h}, \hyperpage{15}
 
   \indexspace
 
   \item {betah}
-    \subitem {cooling\+\_\+h}, \hyperpage{16}
+    \subitem {cooling\+\_\+h}, \hyperpage{15}
   \item {boundaries}, \hyperpage{7}
     \subitem {boundaryi}, \hyperpage{7}
     \subitem {boundaryii}, \hyperpage{7}
@@ -77,23 +81,29 @@
   \indexspace
 
   \item {calcprim}
-    \subitem {hydro\+\_\+core}, \hyperpage{33}
+    \subitem {hydro\+\_\+core}, \hyperpage{29}
   \item {cfast}
-    \subitem {hydro\+\_\+core}, \hyperpage{33}
+    \subitem {hydro\+\_\+core}, \hyperpage{29}
   \item {cfastx}
-    \subitem {hydro\+\_\+core}, \hyperpage{34}
+    \subitem {hydro\+\_\+core}, \hyperpage{29}
+  \item {chemistry}, \hyperpage{7}
+    \subitem {chemstep}, \hyperpage{8}
+    \subitem {update\+\_\+chem}, \hyperpage{8}
+  \item {chemstep}
+    \subitem {chemistry}, \hyperpage{8}
   \item {coldens}
-    \subitem {coldens.\+f90}, \hyperpage{56}
+    \subitem {coldens.\+f90}, \hyperpage{51}
   \item {coldens.\+f90}
-    \subitem {coldens}, \hyperpage{56}
-  \item {coldens\+\_\+utilities}, \hyperpage{7}
-    \subitem {fill\+\_\+map}, \hyperpage{8}
+    \subitem {coldens}, \hyperpage{51}
+  \item {coldens\+\_\+utilities}, \hyperpage{8}
+    \subitem {fill\+\_\+map}, \hyperpage{9}
     \subitem {getxyz}, \hyperpage{9}
     \subitem {init\+\_\+coldens}, \hyperpage{9}
-    \subitem {read\+\_\+data}, \hyperpage{9}
+    \subitem {read\+\_\+data}, \hyperpage{10}
     \subitem {rotation\+\_\+x}, \hyperpage{10}
     \subitem {rotation\+\_\+y}, \hyperpage{10}
     \subitem {rotation\+\_\+z}, \hyperpage{10}
+    \subitem {write\+\_\+header}, \hyperpage{11}
     \subitem {write\+\_\+map}, \hyperpage{11}
   \item {colf}
     \subitem {cooling\+\_\+h}, \hyperpage{17}
@@ -104,27 +114,28 @@
     \subitem {cooling\+\_\+dmc}, \hyperpage{13}
   \item {cooling\+\_\+chi}, \hyperpage{12}
     \subitem {coolchi}, \hyperpage{12}
-    \subitem {coolingchi}, \hyperpage{12}
+    \subitem {coolingchi}, \hyperpage{13}
+    \subitem {read\+\_\+table}, \hyperpage{13}
   \item {cooling\+\_\+dmc}, \hyperpage{13}
     \subitem {cooldmc}, \hyperpage{13}
-    \subitem {coolingdmc}, \hyperpage{13}
-    \subitem {read\+\_\+table}, \hyperpage{13}
-  \item {cooling\+\_\+h}, \hyperpage{13}
+    \subitem {coolingdmc}, \hyperpage{14}
+    \subitem {read\+\_\+table}, \hyperpage{14}
+  \item {cooling\+\_\+h}, \hyperpage{14}
     \subitem {aloss}, \hyperpage{14}
-    \subitem {alpha}, \hyperpage{14}
-    \subitem {alpha1}, \hyperpage{16}
-    \subitem {atomic}, \hyperpage{16}
-    \subitem {betah}, \hyperpage{16}
+    \subitem {alpha}, \hyperpage{15}
+    \subitem {alpha1}, \hyperpage{15}
+    \subitem {atomic}, \hyperpage{15}
+    \subitem {betah}, \hyperpage{15}
     \subitem {colf}, \hyperpage{17}
     \subitem {coolingh}, \hyperpage{17}
   \item {coolingchi}
-    \subitem {cooling\+\_\+chi}, \hyperpage{12}
+    \subitem {cooling\+\_\+chi}, \hyperpage{13}
   \item {coolingdmc}
-    \subitem {cooling\+\_\+dmc}, \hyperpage{13}
+    \subitem {cooling\+\_\+dmc}, \hyperpage{14}
   \item {coolingh}
     \subitem {cooling\+\_\+h}, \hyperpage{17}
   \item {csound}
-    \subitem {hydro\+\_\+core}, \hyperpage{34}
+    \subitem {hydro\+\_\+core}, \hyperpage{31}
 
   \indexspace
 
@@ -133,16 +144,16 @@
   \item {difrad}, \hyperpage{17}
     \subitem {diffuse\+\_\+rad}, \hyperpage{18}
     \subitem {emdiff}, \hyperpage{18}
-    \subitem {init\+\_\+rand}, \hyperpage{19}
-    \subitem {photons}, \hyperpage{19}
+    \subitem {init\+\_\+rand}, \hyperpage{18}
+    \subitem {photons}, \hyperpage{18}
     \subitem {progress}, \hyperpage{19}
     \subitem {radbounds}, \hyperpage{19}
-    \subitem {random\+\_\+versor}, \hyperpage{20}
-    \subitem {starsource}, \hyperpage{20}
+    \subitem {random\+\_\+versor}, \hyperpage{19}
+    \subitem {starsource}, \hyperpage{19}
   \item {divbcorr\+\_\+source}
-    \subitem {sources}, \hyperpage{47}
+    \subitem {sources}, \hyperpage{43}
   \item {divergence\+\_\+b}
-    \subitem {sources}, \hyperpage{48}
+    \subitem {sources}, \hyperpage{43}
 
   \indexspace
 
@@ -152,279 +163,293 @@
   \indexspace
 
   \item {fill\+\_\+map}
-    \subitem {coldens\+\_\+utilities}, \hyperpage{8}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{22}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{39}
+    \subitem {coldens\+\_\+utilities}, \hyperpage{9}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{21}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{36}
 
   \indexspace
 
   \item {get\+\_\+dt\+\_\+cond}
-    \subitem {thermal\+\_\+cond}, \hyperpage{51}
+    \subitem {thermal\+\_\+cond}, \hyperpage{46}
   \item {get\+\_\+timestep}
-    \subitem {hydro\+\_\+core}, \hyperpage{34}
+    \subitem {hydro\+\_\+core}, \hyperpage{31}
   \item {getpos}
-    \subitem {sources}, \hyperpage{48}
+    \subitem {sources}, \hyperpage{43}
   \item {getxyz}
     \subitem {coldens\+\_\+utilities}, \hyperpage{9}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{40}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{22}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{36}
   \item {globals}, \hyperpage{20}
   \item {grav\+\_\+source}
-    \subitem {sources}, \hyperpage{48}
+    \subitem {sources}, \hyperpage{44}
 
   \indexspace
 
   \item {h\+\_\+alpha\+\_\+proj}
-    \subitem {h\+\_\+alpha\+\_\+proj.\+f90}, \hyperpage{64}
+    \subitem {h\+\_\+alpha\+\_\+proj.\+f90}, \hyperpage{58}
   \item {h\+\_\+alpha\+\_\+proj.\+f90}
-    \subitem {h\+\_\+alpha\+\_\+proj}, \hyperpage{64}
+    \subitem {h\+\_\+alpha\+\_\+proj}, \hyperpage{58}
   \item {h\+\_\+alpha\+\_\+utilities}, \hyperpage{21}
-    \subitem {fill\+\_\+map}, \hyperpage{22}
-    \subitem {getxyz}, \hyperpage{23}
-    \subitem {init\+\_\+ha}, \hyperpage{23}
-    \subitem {read\+\_\+data}, \hyperpage{23}
-    \subitem {rotation\+\_\+x}, \hyperpage{24}
-    \subitem {rotation\+\_\+y}, \hyperpage{24}
-    \subitem {rotation\+\_\+z}, \hyperpage{24}
-    \subitem {write\+\_\+ha}, \hyperpage{25}
-    \subitem {write\+\_\+rg}, \hyperpage{25}
+    \subitem {fill\+\_\+map}, \hyperpage{21}
+    \subitem {getxyz}, \hyperpage{22}
+    \subitem {init\+\_\+ha}, \hyperpage{22}
+    \subitem {read\+\_\+data}, \hyperpage{22}
+    \subitem {rotation\+\_\+x}, \hyperpage{22}
+    \subitem {rotation\+\_\+y}, \hyperpage{23}
+    \subitem {rotation\+\_\+z}, \hyperpage{23}
+    \subitem {write\+\_\+ha}, \hyperpage{23}
+    \subitem {write\+\_\+rg}, \hyperpage{24}
   \item {heatfluxes}
-    \subitem {thermal\+\_\+cond}, \hyperpage{51}
-  \item {hll}, \hyperpage{25}
-    \subitem {hllfluxes}, \hyperpage{25}
-    \subitem {prim2fhll}, \hyperpage{27}
-  \item {hllc}, \hyperpage{28}
-    \subitem {hllcfluxes}, \hyperpage{28}
-    \subitem {prim2fhllc}, \hyperpage{29}
+    \subitem {thermal\+\_\+cond}, \hyperpage{46}
+  \item {hll}, \hyperpage{24}
+    \subitem {hllfluxes}, \hyperpage{24}
+    \subitem {prim2fhll}, \hyperpage{24}
+  \item {hllc}, \hyperpage{26}
+    \subitem {hllcfluxes}, \hyperpage{26}
+    \subitem {prim2fhllc}, \hyperpage{26}
   \item {hllcfluxes}
-    \subitem {hllc}, \hyperpage{28}
-  \item {hlld}, \hyperpage{29}
-    \subitem {hlldfluxes}, \hyperpage{30}
-    \subitem {prim2fhlld}, \hyperpage{30}
+    \subitem {hllc}, \hyperpage{26}
+  \item {hlld}, \hyperpage{27}
+    \subitem {hlldfluxes}, \hyperpage{27}
+    \subitem {prim2fhlld}, \hyperpage{27}
   \item {hlldfluxes}
-    \subitem {hlld}, \hyperpage{30}
-  \item {hlle}, \hyperpage{31}
-    \subitem {hllefluxes}, \hyperpage{31}
-    \subitem {prim2fhlle}, \hyperpage{32}
+    \subitem {hlld}, \hyperpage{27}
+  \item {hlle}, \hyperpage{27}
+    \subitem {hllefluxes}, \hyperpage{28}
+    \subitem {prim2fhlle}, \hyperpage{28}
   \item {hllefluxes}
-    \subitem {hlle}, \hyperpage{31}
+    \subitem {hlle}, \hyperpage{28}
   \item {hllfluxes}
-    \subitem {hll}, \hyperpage{25}
-  \item {hydro\+\_\+core}, \hyperpage{32}
-    \subitem {calcprim}, \hyperpage{33}
-    \subitem {cfast}, \hyperpage{33}
-    \subitem {cfastx}, \hyperpage{34}
-    \subitem {csound}, \hyperpage{34}
-    \subitem {get\+\_\+timestep}, \hyperpage{34}
-    \subitem {limiter}, \hyperpage{34}
-    \subitem {prim2f}, \hyperpage{36}
-    \subitem {prim2u}, \hyperpage{36}
-    \subitem {swapy}, \hyperpage{36}
-    \subitem {swapz}, \hyperpage{36}
-    \subitem {u2prim}, \hyperpage{36}
-  \item {hydro\+\_\+solver}, \hyperpage{37}
-    \subitem {step}, \hyperpage{37}
-    \subitem {tstep}, \hyperpage{37}
-    \subitem {viscosity}, \hyperpage{38}
+    \subitem {hll}, \hyperpage{24}
+  \item {hydro\+\_\+core}, \hyperpage{28}
+    \subitem {calcprim}, \hyperpage{29}
+    \subitem {cfast}, \hyperpage{29}
+    \subitem {cfastx}, \hyperpage{29}
+    \subitem {csound}, \hyperpage{31}
+    \subitem {get\+\_\+timestep}, \hyperpage{31}
+    \subitem {limiter}, \hyperpage{31}
+    \subitem {prim2f}, \hyperpage{31}
+    \subitem {prim2u}, \hyperpage{32}
+    \subitem {swapy}, \hyperpage{32}
+    \subitem {swapz}, \hyperpage{32}
+    \subitem {u2prim}, \hyperpage{32}
+  \item {hydro\+\_\+solver}, \hyperpage{32}
+    \subitem {step}, \hyperpage{33}
+    \subitem {tstep}, \hyperpage{33}
+    \subitem {viscosity}, \hyperpage{33}
 
   \indexspace
 
-  \item {init}, \hyperpage{38}
-    \subitem {initflow}, \hyperpage{38}
-    \subitem {initmain}, \hyperpage{38}
+  \item {init}, \hyperpage{33}
+    \subitem {initflow}, \hyperpage{34}
+    \subitem {initmain}, \hyperpage{34}
   \item {init\+\_\+coldens}
     \subitem {coldens\+\_\+utilities}, \hyperpage{9}
   \item {init\+\_\+ha}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{22}
   \item {init\+\_\+la}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{40}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{36}
   \item {init\+\_\+rand}
-    \subitem {difrad}, \hyperpage{19}
+    \subitem {difrad}, \hyperpage{18}
   \item {init\+\_\+thermal\+\_\+cond}
-    \subitem {thermal\+\_\+cond}, \hyperpage{52}
+    \subitem {thermal\+\_\+cond}, \hyperpage{46}
   \item {initflow}
-    \subitem {init}, \hyperpage{38}
+    \subitem {init}, \hyperpage{34}
   \item {initmain}
-    \subitem {init}, \hyperpage{38}
+    \subitem {init}, \hyperpage{34}
 
   \indexspace
 
   \item {ksp}
-    \subitem {thermal\+\_\+cond}, \hyperpage{52}
+    \subitem {thermal\+\_\+cond}, \hyperpage{46}
   \item {ksp\+\_\+parl}
-    \subitem {thermal\+\_\+cond}, \hyperpage{52}
+    \subitem {thermal\+\_\+cond}, \hyperpage{46}
   \item {ksp\+\_\+perp}
-    \subitem {thermal\+\_\+cond}, \hyperpage{52}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
 
   \indexspace
 
   \item {limiter}
-    \subitem {hydro\+\_\+core}, \hyperpage{34}
+    \subitem {hydro\+\_\+core}, \hyperpage{31}
+  \item {linear\+\_\+system}, \hyperpage{34}
+    \subitem {linsys}, \hyperpage{35}
+    \subitem {lubksb}, \hyperpage{35}
+    \subitem {ludcmp}, \hyperpage{35}
+  \item {linsys}
+    \subitem {linear\+\_\+system}, \hyperpage{35}
+  \item {lubksb}
+    \subitem {linear\+\_\+system}, \hyperpage{35}
+  \item {ludcmp}
+    \subitem {linear\+\_\+system}, \hyperpage{35}
   \item {lyman\+\_\+alpha\+\_\+tau}
-    \subitem {lyman\+\_\+alpha\+\_\+tau.\+f90}, \hyperpage{70}
+    \subitem {lyman\+\_\+alpha\+\_\+tau.\+f90}, \hyperpage{63}
   \item {lyman\+\_\+alpha\+\_\+tau.\+f90}
-    \subitem {lyman\+\_\+alpha\+\_\+tau}, \hyperpage{70}
-  \item {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{39}
-    \subitem {fill\+\_\+map}, \hyperpage{39}
-    \subitem {getxyz}, \hyperpage{40}
-    \subitem {init\+\_\+la}, \hyperpage{40}
-    \subitem {phigauss}, \hyperpage{40}
-    \subitem {read\+\_\+data}, \hyperpage{41}
-    \subitem {rotation\+\_\+x}, \hyperpage{41}
-    \subitem {rotation\+\_\+y}, \hyperpage{41}
-    \subitem {rotation\+\_\+z}, \hyperpage{41}
-    \subitem {write\+\_\+la}, \hyperpage{42}
+    \subitem {lyman\+\_\+alpha\+\_\+tau}, \hyperpage{63}
+  \item {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{35}
+    \subitem {fill\+\_\+map}, \hyperpage{36}
+    \subitem {getxyz}, \hyperpage{36}
+    \subitem {init\+\_\+la}, \hyperpage{36}
+    \subitem {phigauss}, \hyperpage{36}
+    \subitem {read\+\_\+data}, \hyperpage{36}
+    \subitem {rotation\+\_\+x}, \hyperpage{38}
+    \subitem {rotation\+\_\+y}, \hyperpage{38}
+    \subitem {rotation\+\_\+z}, \hyperpage{38}
+    \subitem {write\+\_\+la}, \hyperpage{38}
 
   \indexspace
 
   \item {mhd\+\_\+heatfluxes}
-    \subitem {thermal\+\_\+cond}, \hyperpage{52}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
 
   \indexspace
 
-  \item {out\+\_\+bin\+\_\+module}, \hyperpage{42}
-    \subitem {write\+\_\+bin}, \hyperpage{42}
-    \subitem {write\+\_\+header}, \hyperpage{43}
-  \item {out\+\_\+silo\+\_\+module}, \hyperpage{43}
-    \subitem {outputsilo}, \hyperpage{43}
-    \subitem {writeblocks}, \hyperpage{44}
-    \subitem {writemaster}, \hyperpage{44}
-  \item {out\+\_\+vtk\+\_\+module}, \hyperpage{44}
-    \subitem {write\+\_\+vtk}, \hyperpage{45}
-  \item {output}, \hyperpage{46}
-    \subitem {write\+\_\+output}, \hyperpage{46}
+  \item {out\+\_\+bin\+\_\+module}, \hyperpage{40}
+    \subitem {write\+\_\+bin}, \hyperpage{40}
+    \subitem {write\+\_\+header}, \hyperpage{40}
+  \item {out\+\_\+silo\+\_\+module}, \hyperpage{40}
+    \subitem {outputsilo}, \hyperpage{41}
+    \subitem {writeblocks}, \hyperpage{41}
+    \subitem {writemaster}, \hyperpage{41}
+  \item {out\+\_\+vtk\+\_\+module}, \hyperpage{41}
+    \subitem {write\+\_\+vtk}, \hyperpage{42}
+  \item {output}, \hyperpage{42}
+    \subitem {write\+\_\+output}, \hyperpage{42}
   \item {outputsilo}
-    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{43}
+    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{41}
 
   \indexspace
 
   \item {phigauss}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{40}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{36}
   \item {photons}
-    \subitem {difrad}, \hyperpage{19}
+    \subitem {difrad}, \hyperpage{18}
   \item {prim2f}
-    \subitem {hydro\+\_\+core}, \hyperpage{36}
+    \subitem {hydro\+\_\+core}, \hyperpage{31}
   \item {prim2fhll}
-    \subitem {hll}, \hyperpage{27}
+    \subitem {hll}, \hyperpage{24}
   \item {prim2fhllc}
-    \subitem {hllc}, \hyperpage{29}
+    \subitem {hllc}, \hyperpage{26}
   \item {prim2fhlld}
-    \subitem {hlld}, \hyperpage{30}
+    \subitem {hlld}, \hyperpage{27}
   \item {prim2fhlle}
-    \subitem {hlle}, \hyperpage{32}
+    \subitem {hlle}, \hyperpage{28}
   \item {prim2u}
-    \subitem {hydro\+\_\+core}, \hyperpage{36}
+    \subitem {hydro\+\_\+core}, \hyperpage{32}
   \item {progress}
     \subitem {difrad}, \hyperpage{19}
-    \subitem {thermal\+\_\+cond}, \hyperpage{53}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
 
   \indexspace
 
   \item {radbounds}
     \subitem {difrad}, \hyperpage{19}
   \item {radpress\+\_\+source}
-    \subitem {sources}, \hyperpage{49}
+    \subitem {sources}, \hyperpage{44}
   \item {random\+\_\+versor}
-    \subitem {difrad}, \hyperpage{20}
+    \subitem {difrad}, \hyperpage{19}
   \item {read\+\_\+data}
-    \subitem {coldens\+\_\+utilities}, \hyperpage{9}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{41}
+    \subitem {coldens\+\_\+utilities}, \hyperpage{10}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{22}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{36}
   \item {read\+\_\+table}
-    \subitem {cooling\+\_\+dmc}, \hyperpage{13}
+    \subitem {cooling\+\_\+chi}, \hyperpage{13}
+    \subitem {cooling\+\_\+dmc}, \hyperpage{14}
   \item {rotation\+\_\+x}
     \subitem {coldens\+\_\+utilities}, \hyperpage{10}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{24}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{41}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{22}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{38}
   \item {rotation\+\_\+y}
     \subitem {coldens\+\_\+utilities}, \hyperpage{10}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{24}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{41}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{38}
   \item {rotation\+\_\+z}
     \subitem {coldens\+\_\+utilities}, \hyperpage{10}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{24}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{41}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{38}
 
   \indexspace
 
   \item {source}
-    \subitem {sources}, \hyperpage{49}
-  \item {sources}, \hyperpage{47}
-    \subitem {divbcorr\+\_\+source}, \hyperpage{47}
-    \subitem {divergence\+\_\+b}, \hyperpage{48}
-    \subitem {getpos}, \hyperpage{48}
-    \subitem {grav\+\_\+source}, \hyperpage{48}
-    \subitem {radpress\+\_\+source}, \hyperpage{49}
-    \subitem {source}, \hyperpage{49}
+    \subitem {sources}, \hyperpage{44}
+  \item {sources}, \hyperpage{42}
+    \subitem {divbcorr\+\_\+source}, \hyperpage{43}
+    \subitem {divergence\+\_\+b}, \hyperpage{43}
+    \subitem {getpos}, \hyperpage{43}
+    \subitem {grav\+\_\+source}, \hyperpage{44}
+    \subitem {radpress\+\_\+source}, \hyperpage{44}
+    \subitem {source}, \hyperpage{44}
   \item {st\+\_\+steps}
-    \subitem {thermal\+\_\+cond}, \hyperpage{53}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
   \item {starsource}
-    \subitem {difrad}, \hyperpage{20}
+    \subitem {difrad}, \hyperpage{19}
   \item {step}
-    \subitem {hydro\+\_\+solver}, \hyperpage{37}
+    \subitem {hydro\+\_\+solver}, \hyperpage{33}
   \item {substep}
-    \subitem {thermal\+\_\+cond}, \hyperpage{53}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
   \item {superstep}
-    \subitem {thermal\+\_\+cond}, \hyperpage{53}
+    \subitem {thermal\+\_\+cond}, \hyperpage{47}
   \item {swapy}
-    \subitem {hydro\+\_\+core}, \hyperpage{36}
+    \subitem {hydro\+\_\+core}, \hyperpage{32}
   \item {swapz}
-    \subitem {hydro\+\_\+core}, \hyperpage{36}
+    \subitem {hydro\+\_\+core}, \hyperpage{32}
 
   \indexspace
 
   \item {thermal\+\_\+bounds}
-    \subitem {thermal\+\_\+cond}, \hyperpage{54}
-  \item {thermal\+\_\+cond}, \hyperpage{50}
-    \subitem {get\+\_\+dt\+\_\+cond}, \hyperpage{51}
-    \subitem {heatfluxes}, \hyperpage{51}
-    \subitem {init\+\_\+thermal\+\_\+cond}, \hyperpage{52}
-    \subitem {ksp}, \hyperpage{52}
-    \subitem {ksp\+\_\+parl}, \hyperpage{52}
-    \subitem {ksp\+\_\+perp}, \hyperpage{52}
-    \subitem {mhd\+\_\+heatfluxes}, \hyperpage{52}
-    \subitem {progress}, \hyperpage{53}
-    \subitem {st\+\_\+steps}, \hyperpage{53}
-    \subitem {substep}, \hyperpage{53}
-    \subitem {superstep}, \hyperpage{53}
-    \subitem {thermal\+\_\+bounds}, \hyperpage{54}
-    \subitem {thermal\+\_\+conduction}, \hyperpage{54}
+    \subitem {thermal\+\_\+cond}, \hyperpage{48}
+  \item {thermal\+\_\+cond}, \hyperpage{45}
+    \subitem {get\+\_\+dt\+\_\+cond}, \hyperpage{46}
+    \subitem {heatfluxes}, \hyperpage{46}
+    \subitem {init\+\_\+thermal\+\_\+cond}, \hyperpage{46}
+    \subitem {ksp}, \hyperpage{46}
+    \subitem {ksp\+\_\+parl}, \hyperpage{46}
+    \subitem {ksp\+\_\+perp}, \hyperpage{47}
+    \subitem {mhd\+\_\+heatfluxes}, \hyperpage{47}
+    \subitem {progress}, \hyperpage{47}
+    \subitem {st\+\_\+steps}, \hyperpage{47}
+    \subitem {substep}, \hyperpage{47}
+    \subitem {superstep}, \hyperpage{47}
+    \subitem {thermal\+\_\+bounds}, \hyperpage{48}
+    \subitem {thermal\+\_\+conduction}, \hyperpage{48}
   \item {thermal\+\_\+conduction}
-    \subitem {thermal\+\_\+cond}, \hyperpage{54}
+    \subitem {thermal\+\_\+cond}, \hyperpage{48}
   \item {tstep}
-    \subitem {hydro\+\_\+solver}, \hyperpage{37}
+    \subitem {hydro\+\_\+solver}, \hyperpage{33}
 
   \indexspace
 
   \item {u2prim}
-    \subitem {hydro\+\_\+core}, \hyperpage{36}
+    \subitem {hydro\+\_\+core}, \hyperpage{32}
+  \item {update\+\_\+chem}
+    \subitem {chemistry}, \hyperpage{8}
 
   \indexspace
 
   \item {viscosity}
-    \subitem {hydro\+\_\+solver}, \hyperpage{38}
+    \subitem {hydro\+\_\+solver}, \hyperpage{33}
 
   \indexspace
 
   \item {write\+\_\+bin}
-    \subitem {out\+\_\+bin\+\_\+module}, \hyperpage{42}
+    \subitem {out\+\_\+bin\+\_\+module}, \hyperpage{40}
   \item {write\+\_\+ha}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{25}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{23}
   \item {write\+\_\+header}
-    \subitem {out\+\_\+bin\+\_\+module}, \hyperpage{43}
+    \subitem {coldens\+\_\+utilities}, \hyperpage{11}
+    \subitem {out\+\_\+bin\+\_\+module}, \hyperpage{40}
   \item {write\+\_\+la}
-    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{42}
+    \subitem {lyman\+\_\+alpha\+\_\+utilities}, \hyperpage{38}
   \item {write\+\_\+map}
     \subitem {coldens\+\_\+utilities}, \hyperpage{11}
   \item {write\+\_\+output}
-    \subitem {output}, \hyperpage{46}
+    \subitem {output}, \hyperpage{42}
   \item {write\+\_\+rg}
-    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{25}
+    \subitem {h\+\_\+alpha\+\_\+utilities}, \hyperpage{24}
   \item {write\+\_\+vtk}
-    \subitem {out\+\_\+vtk\+\_\+module}, \hyperpage{45}
+    \subitem {out\+\_\+vtk\+\_\+module}, \hyperpage{42}
   \item {writeblocks}
-    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{44}
+    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{41}
   \item {writemaster}
-    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{44}
+    \subitem {out\+\_\+silo\+\_\+module}, \hyperpage{41}
 
 \end{theindex}

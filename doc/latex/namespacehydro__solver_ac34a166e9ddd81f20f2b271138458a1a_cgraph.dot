@@ -1,0 +1,19 @@
+digraph "hydro_solver::step"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="hydro_solver::step",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="sources::source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#a6a66dd1f8baf424ff64a30112f39c632",tooltip="Upper level wrapper for sources. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="sources::getpos",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#a378a8116ae16db2efa853343f88156d3",tooltip="Gets position in the grid. "];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="sources::grav_source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#aef9f6ca4bc770f0e768dbbba91b67415",tooltip="Gravity due to point sources. "];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="sources::radpress_source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#a36b548c9c578b74c5f439ffaec7d3a9a",tooltip="Radiation pressure force. "];
+  Node2 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="sources::divbcorr_source",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#a9c2d37de3b878eff7693a25d3dc3fe91",tooltip="8 Wave source terms for div(B) correction "];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="sources::divergence_b",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacesources.html#a0478795277b4f25ec62d8e3e1f06611e",tooltip="Computes div(B) "];
+}

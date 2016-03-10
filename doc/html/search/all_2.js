@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['calcprim',['calcprim',['../namespacehydro__core.html#a991a14316cc93864150071b30fd9c772',1,'hydro_core']]],
+  ['calcprim',['calcprim',['../namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870',1,'hydro_core']]],
   ['cfast',['cfast',['../namespacehydro__core.html#ab2655b81626d4d95cb003112248e928a',1,'hydro_core']]],
   ['cfastx',['cfastx',['../namespacehydro__core.html#abd089f71325e32997703c1420db62aa8',1,'hydro_core']]],
+  ['chemistry',['chemistry',['../namespacechemistry.html',1,'']]],
+  ['chemistry_2ef90',['chemistry.f90',['../chemistry_8f90.html',1,'']]],
+  ['chemstep',['chemstep',['../namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e',1,'chemistry']]],
   ['clight',['clight',['../namespaceconstants.html#ac15de49d1114e2e8d78a3e77e2c0ebd0',1,'constants']]],
   ['coldens',['coldens',['../coldens_8f90.html#afefbded5281bf1a352bcda7a729b23a6',1,'coldens.f90']]],
   ['coldens_2ef90',['coldens.f90',['../coldens_8f90.html',1,'']]],

@@ -9,7 +9,7 @@ Column density projection.
 \begin{DoxyCompactItemize}
 \item 
 module \hyperlink{namespacecoldens__utilities}{coldens\+\_\+utilities}
-\begin{DoxyCompactList}\small\item\em Column densirt projection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Column density projection. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,6 +27,8 @@ subroutine \hyperlink{namespacecoldens__utilities_a062761acebb4d5a76b3706256a491
 \begin{DoxyCompactList}\small\item\em Rotation around the Z axis. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacecoldens__utilities_af035b829538114f8b62f54365269bdab}{coldens\+\_\+utilities\+::fill\+\_\+map} (nxmap, nymap, u, map, dx\+T, dy\+T, theta\+\_\+x, theta\+\_\+y, theta\+\_\+z)
 \begin{DoxyCompactList}\small\item\em Fill target map. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacecoldens__utilities_ab85f0688ddbdcef34c8ed7f53c3071c5}{coldens\+\_\+utilities\+::write\+\_\+header} (unit, nx, ny)
+\begin{DoxyCompactList}\small\item\em Writes header. \end{DoxyCompactList}\item 
 subroutine \hyperlink{namespacecoldens__utilities_a78891c0c5736f8d50bf07d19757e7237}{coldens\+\_\+utilities\+::write\+\_\+map} (fileout, nxmap, nymap, map)
 \begin{DoxyCompactList}\small\item\em Writes projection to file. \end{DoxyCompactList}\item 
 program \hyperlink{coldens_8f90_afefbded5281bf1a352bcda7a729b23a6}{coldens}
@@ -53,16 +55,8 @@ Alejandro Esquivel
 Computes the H-\/alpha apbsorption ~\newline
  It rotates the data along each of the coordinates axis by an amount $ \theta_x, \theta_y, \theta_z $, and projectcs the map along the the L\+O\+S, which is taken to be the Z axis 
 
-Definition at line 370 of file coldens.\+f90.
+Definition at line 465 of file coldens.\+f90.
 
 
 
-Here is the call graph for this function\+:\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph}
-\end{center}
-\end{figure}
-
-
+Here is the call graph for this function\+:

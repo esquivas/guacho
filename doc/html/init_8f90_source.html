@@ -352,8 +352,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="preprocessor"></span>     print<span class="stringliteral">&#39;(a)&#39;</span>, <span class="stringliteral">&#39;The EOS considers a rate equation for H&#39;</span></div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;     print<span class="stringliteral">&#39;(a)&#39;</span>, <span class="stringliteral">&#39;&#39;</span></div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef EOS_MULTI_SPECIES</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="preprocessor"></span>     print<span class="stringliteral">&#39;(a)&#39;</span>, <span class="stringliteral">&#39;The EOS considers multiple species&#39;</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef EOS_CHEM</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="preprocessor"></span>     print<span class="stringliteral">&#39;(a)&#39;</span>, <span class="stringliteral">&#39;The EOS considers multiple species (chemical network)&#39;</span></div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;     print<span class="stringliteral">&#39;(a)&#39;</span>, <span class="stringliteral">&#39;&#39;</span></div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef NO_COOL</span></div>
@@ -587,7 +587,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;</div>
 <div class="ttc" id="namespaceglobals_html_a5fb85172ca54e822fdb8c522da890717"><div class="ttname"><a href="namespaceglobals.html#a5fb85172ca54e822fdb8c522da890717">globals::f</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable f</div><div class="ttdoc">X fluxes. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00035">globals.f90:35</a></div></div>
 <div class="ttc" id="namespaceglobals_html_aba9a16c1b0ed3e52dce83157476d099c"><div class="ttname"><a href="namespaceglobals.html#aba9a16c1b0ed3e52dce83157476d099c">globals::left</a></div><div class="ttdeci">integer left</div><div class="ttdoc">MPI neighbor in the -x direction. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00046">globals.f90:46</a></div></div>
-<div class="ttc" id="namespaceconstants_html_a1fd58880de7afc0479eb60d136bac8b2"><div class="ttname"><a href="namespaceconstants.html#a1fd58880de7afc0479eb60d136bac8b2">constants::yr</a></div><div class="ttdeci">real, parameter yr</div><div class="ttdoc">1yr in seconds </div><div class="ttdef"><b>Definition:</b> <a href="constants_8f90_source.html#l00048">constants.f90:48</a></div></div>
+<div class="ttc" id="namespaceconstants_html_a1fd58880de7afc0479eb60d136bac8b2"><div class="ttname"><a href="namespaceconstants.html#a1fd58880de7afc0479eb60d136bac8b2">constants::yr</a></div><div class="ttdeci">real, parameter yr</div><div class="ttdoc">1yr in seconds </div><div class="ttdef"><b>Definition:</b> <a href="constants_8f90_source.html#l00047">constants.f90:47</a></div></div>
 <div class="ttc" id="namespacethermal__cond_html"><div class="ttname"><a href="namespacethermal__cond.html">thermal_cond</a></div><div class="ttdoc">Adds thermal conducion. </div><div class="ttdef"><b>Definition:</b> <a href="thermal__cond_8f90_source.html#l00031">thermal_cond.f90:31</a></div></div>
 <div class="ttc" id="namespaceinit_html_a60b4d8ee577d59490c7d351b73253a99"><div class="ttname"><a href="namespaceinit.html#a60b4d8ee577d59490c7d351b73253a99">init::initmain</a></div><div class="ttdeci">subroutine initmain(tprint, itprint)</div><div class="ttdoc">Main initialization routine. </div><div class="ttdef"><b>Definition:</b> <a href="init_8f90_source.html#l00041">init.f90:41</a></div></div>
 <div class="ttc" id="namespaceglobals_html_aafee650389fdf595e41e37cb340155ae"><div class="ttname"><a href="namespaceglobals.html#aafee650389fdf595e41e37cb340155ae">globals::dx</a></div><div class="ttdeci">real dx</div><div class="ttdoc">grid spacing in X </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00039">globals.f90:39</a></div></div>
@@ -622,7 +622,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 10 2016 11:32:56 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

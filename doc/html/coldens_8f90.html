@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Modules</h2></td></tr>
 <tr class="memitem:namespacecoldens__utilities"><td class="memItemLeft" align="right" valign="top">module &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecoldens__utilities.html">coldens_utilities</a></td></tr>
-<tr class="memdesc:namespacecoldens__utilities"><td class="mdescLeft">&#160;</td><td class="mdescRight">Column densirt projection. <br /></td></tr>
+<tr class="memdesc:namespacecoldens__utilities"><td class="mdescLeft">&#160;</td><td class="mdescRight">Column density projection. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -128,6 +128,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:af035b829538114f8b62f54365269bdab"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecoldens__utilities.html#af035b829538114f8b62f54365269bdab">coldens_utilities::fill_map</a> (nxmap, nymap, u, map, dxT, dyT, theta_x, theta_y, theta_z)</td></tr>
 <tr class="memdesc:af035b829538114f8b62f54365269bdab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill target map.  <a href="#af035b829538114f8b62f54365269bdab">More...</a><br /></td></tr>
 <tr class="separator:af035b829538114f8b62f54365269bdab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab85f0688ddbdcef34c8ed7f53c3071c5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecoldens__utilities.html#ab85f0688ddbdcef34c8ed7f53c3071c5">coldens_utilities::write_header</a> (unit, nx, ny)</td></tr>
+<tr class="memdesc:ab85f0688ddbdcef34c8ed7f53c3071c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes header.  <a href="#ab85f0688ddbdcef34c8ed7f53c3071c5">More...</a><br /></td></tr>
+<tr class="separator:ab85f0688ddbdcef34c8ed7f53c3071c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78891c0c5736f8d50bf07d19757e7237"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecoldens__utilities.html#a78891c0c5736f8d50bf07d19757e7237">coldens_utilities::write_map</a> (fileout, nxmap, nymap, map)</td></tr>
 <tr class="memdesc:a78891c0c5736f8d50bf07d19757e7237"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes projection to file.  <a href="#a78891c0c5736f8d50bf07d19757e7237">More...</a><br /></td></tr>
 <tr class="separator:a78891c0c5736f8d50bf07d19757e7237"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,14 +159,14 @@ Functions/Subroutines</h2></td></tr>
 <p>Computes the H-alpha apbsorption <br />
  It rotates the data along each of the coordinates axis by an amount <img class="formulaInl" alt="$ \theta_x, \theta_y, \theta_z $" src="form_0.png"/>, and projectcs the map along the the LOS, which is taken to be the Z axis </p>
 
-<p>Definition at line <a class="el" href="coldens_8f90_source.html#l00370">370</a> of file <a class="el" href="coldens_8f90_source.html">coldens.f90</a>.</p>
+<p>Definition at line <a class="el" href="coldens_8f90_source.html#l00465">465</a> of file <a class="el" href="coldens_8f90_source.html">coldens.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph.png" border="0" usemap="#coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph" alt=""/></div>
 <map name="coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph" id="coldens_8f90_afefbded5281bf1a352bcda7a729b23a6_cgraph">
-<area shape="rect" id="node2" href="namespaceh__alpha__utilities.html#a8bb4ef22ad133f8d3f75cf1a26e14035" title="Initializes data. " alt="" coords="119,5,236,47"/><area shape="rect" id="node3" href="namespaceh__alpha__utilities.html#a5549bf9fd812d02d9189d27f380c01c0" title="reads data from file " alt="" coords="119,71,236,112"/><area shape="rect" id="node4" href="namespaceh__alpha__utilities.html#aafc5cae88b562d0bd2d039cae21ed35a" title="Fill target map. " alt="" coords="119,136,236,177"/><area shape="rect" id="node5" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="284,19,411,46"/><area shape="rect" id="node6" href="namespaceh__alpha__utilities.html#af48cd3c223c292170bc1f90da256f537" title="gets position of a cell " alt="" coords="289,71,406,112"/><area shape="rect" id="node7" href="namespaceh__alpha__utilities.html#a65ad5d15c1265e31f4d191ebf771e669" title="Rotation around the X axis. " alt="" coords="289,136,406,177"/><area shape="rect" id="node8" href="namespaceh__alpha__utilities.html#ab643f1bac838912c58b25923b5de40ca" title="Rotation around the Y axis. " alt="" coords="289,201,406,243"/><area shape="rect" id="node9" href="namespaceh__alpha__utilities.html#acaf25f2c0ad80c5d7e2f451f58522a49" title="Rotation around the Z axis. " alt="" coords="289,267,406,308"/></map>
+</map>
 </div>
 </p>
 
@@ -172,7 +175,7 @@ Here is the call graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 10 2016 11:32:56 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -97,9 +97,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a> (uu, prim, T)</td></tr>
 <tr class="memdesc:a360e3d64343b30d94d270cfebc5b4eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the primitive variables and temperature from conserved variables on a single cell.  <a href="#a360e3d64343b30d94d270cfebc5b4eb3">More...</a><br /></td></tr>
 <tr class="separator:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a991a14316cc93864150071b30fd9c772"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a991a14316cc93864150071b30fd9c772">calcprim</a> (u, primit)</td></tr>
-<tr class="memdesc:a991a14316cc93864150071b30fd9c772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updated the primitives, using the conserved variables in the entire domain.  <a href="#a991a14316cc93864150071b30fd9c772">More...</a><br /></td></tr>
-<tr class="separator:a991a14316cc93864150071b30fd9c772"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870">calcprim</a> (u, primit, only_ghost)</td></tr>
+<tr class="memdesc:a7966ebe81c520c9d275c4fd72fcb0870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updated the primitives, using the conserved variables in the entire domain.  <a href="#a7966ebe81c520c9d275c4fd72fcb0870">More...</a><br /></td></tr>
+<tr class="separator:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3">prim2u</a> (prim, uu)</td></tr>
 <tr class="memdesc:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the conserved conserved variables from the primitives in a single cell.  <a href="#a98cafc8f97d7a1b3f8050b8e442194c3">More...</a><br /></td></tr>
 <tr class="separator:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,7 +131,7 @@ Functions/Subroutines</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This module contains subroutines and utilities that are the core of the hydro (and MHD) that are common to most implementations and will be used for the different specific solvers </p>
 </div><h2 class="groupheader">Function/Subroutine Documentation</h2>
-<a class="anchor" id="a991a14316cc93864150071b30fd9c772"></a>
+<a class="anchor" id="a7966ebe81c520c9d275c4fd72fcb0870"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -145,7 +145,13 @@ Functions/Subroutines</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">real, dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax), intent(out)&#160;</td>
-          <td class="paramname"><em>primit</em>&#160;</td>
+          <td class="paramname"><em>primit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">logical, intent(in), optional&#160;</td>
+          <td class="paramname"><em>only_ghost</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -158,18 +164,18 @@ Functions/Subroutines</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">real</td><td>[in] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : conserved variables </td></tr>
     <tr><td class="paramname">real</td><td>[out] prim(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : primitive variables </td></tr>
+    <tr><td class="paramname">logical</td><td>[in] only_ghost : if set to true then updates the primitives only on the ghost cells, it defaults to false (the entire domain is updated) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00119">119</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00134">134</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph.png" border="0" usemap="#namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph" alt=""/></div>
-<map name="namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph" id="namespacehydro__core_a991a14316cc93864150071b30fd9c772_cgraph">
-<area shape="rect" id="node2" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="188,5,315,32"/></map>
+<div class="center"><img src="namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph.png" border="0" usemap="#namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph" alt=""/></div>
+<!-- MAP 0 -->
 </div>
 </p>
 
@@ -248,7 +254,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00327">327</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00398">398</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -282,7 +288,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00352">352</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00423">423</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -324,7 +330,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00301">301</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00372">372</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -387,13 +393,13 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00384">384</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00455">455</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacehydro__core_a89c51c2e68906bd5c2a1487283e10181_cgraph.png" border="0" usemap="#namespacehydro__core_a89c51c2e68906bd5c2a1487283e10181_cgraph" alt=""/></div>
-<!-- MAP 0 -->
+<!-- MAP 1 -->
 </div>
 </p>
 
@@ -452,7 +458,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00462">462</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00533">533</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -488,7 +494,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00199">199</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00270">270</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -523,7 +529,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00158">158</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00229">229</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -558,7 +564,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00249">249</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00320">320</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -593,7 +599,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00275">275</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00346">346</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -635,14 +641,14 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00044">44</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00045">45</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jan 14 2016 12:56:29 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Mar 10 2016 11:32:56 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

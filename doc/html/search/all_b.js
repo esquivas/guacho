@@ -6,6 +6,5 @@ var searchData=
   ['mhd_5fheatfluxes',['mhd_heatfluxes',['../namespacethermal__cond.html#aab43551b6a0d4b5894c07b510e4571d7',1,'thermal_cond']]],
   ['mjup',['mjup',['../namespaceconstants.html#a399e5e2bceae23d80dfe33489603dfa5',1,'constants']]],
   ['msun',['msun',['../namespaceconstants.html#a47dcdcdf147127ab93252565436ce046',1,'constants']]],
-  ['mu',['mu',['../namespaceconstants.html#a02d6877af0064a592565cca791e6dfa2',1,'constants']]],
   ['myr',['myr',['../namespaceconstants.html#af554c9cfbc1f3c74a8176265ea5370dd',1,'constants']]]
 ];

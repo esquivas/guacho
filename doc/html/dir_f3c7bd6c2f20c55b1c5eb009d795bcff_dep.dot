@@ -1,0 +1,9 @@
+digraph "/Users/esquivel/Desktop/Guacho-Working/doc" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_7233d820f2f98e85094bac7eeee63ccb {
+    graph [ bgcolor="#ddddee", pencolor="black", label="Guacho-Working" fontname="Helvetica", fontsize="10", URL="dir_7233d820f2f98e85094bac7eeee63ccb.html"]
+  dir_f3c7bd6c2f20c55b1c5eb009d795bcff [shape=box, label="doc", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_f3c7bd6c2f20c55b1c5eb009d795bcff.html"];
+  }
+}

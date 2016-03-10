@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['chemistry',['chemistry',['../namespacechemistry.html',1,'']]],
   ['coldens_5futilities',['coldens_utilities',['../namespacecoldens__utilities.html',1,'']]],
   ['constants',['constants',['../namespaceconstants.html',1,'']]],
   ['cooling_5fchi',['cooling_chi',['../namespacecooling__chi.html',1,'']]],

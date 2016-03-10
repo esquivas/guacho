@@ -1,0 +1,68 @@
+\hypertarget{namespacechemistry}{}\section{chemistry Module Reference}
+\label{namespacechemistry}\index{chemistry@{chemistry}}
+
+
+chenistry module  
+
+
+\subsection*{Functions/\+Subroutines}
+\begin{DoxyCompactItemize}
+\item 
+subroutine \hyperlink{namespacechemistry_a33dc05889bfc2d0361a4a3f95086f68c}{update\+\_\+chem} ()
+\begin{DoxyCompactList}\small\item\em Advances the chemistry network. \end{DoxyCompactList}\item 
+subroutine \hyperlink{namespacechemistry_ab808252fa02b3bfb1ac29ed7b2f5122e}{chemstep} (y, y0, T, deltt)
+\begin{DoxyCompactList}\small\item\em Advances the chemistry network in one cell. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+module to solve the chemical/ionic network, and estimate the cooling assiciated with it. 
+
+\subsection{Function/\+Subroutine Documentation}
+\hypertarget{namespacechemistry_ab808252fa02b3bfb1ac29ed7b2f5122e}{}\index{chemistry@{chemistry}!chemstep@{chemstep}}
+\index{chemstep@{chemstep}!chemistry@{chemistry}}
+\subsubsection[{chemstep}]{\setlength{\rightskip}{0pt plus 5cm}subroutine chemistry\+::chemstep (
+\begin{DoxyParamCaption}
+\item[{real (kind=8), dimension(n\+\_\+spec), intent(inout)}]{y, }
+\item[{real (kind=8), dimension(n\+\_\+elem), intent(in)}]{y0, }
+\item[{real (kind=8), intent(in)}]{T, }
+\item[{real (kind=8), intent(in)}]{deltt}
+\end{DoxyParamCaption}
+)}\label{namespacechemistry_ab808252fa02b3bfb1ac29ed7b2f5122e}
+Advances the chemistry network on the in one cell 
+\begin{DoxyParams}{Parameters}
+{\em real} & \mbox{[}inout\mbox{]} y(n\+\_\+spec) \+: number densities of the species to be updated by the chemistry \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} y\mbox{[}n\+\_\+elem\mbox{]} \+: total number density of each of the elements involved in the reactions \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} T \+: Temperature \mbox{[}K\mbox{]} \\
+\hline
+{\em real} & \mbox{[}in\mbox{]} deltt \+: time interval (from the hydro, in seconds) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 92 of file chemistry.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 0
+
+
+\hypertarget{namespacechemistry_a33dc05889bfc2d0361a4a3f95086f68c}{}\index{chemistry@{chemistry}!update\+\_\+chem@{update\+\_\+chem}}
+\index{update\+\_\+chem@{update\+\_\+chem}!chemistry@{chemistry}}
+\subsubsection[{update\+\_\+chem}]{\setlength{\rightskip}{0pt plus 5cm}subroutine chemistry\+::update\+\_\+chem (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{namespacechemistry_a33dc05889bfc2d0361a4a3f95086f68c}
+Advances the chemistry network on the entire domain (except ghost cells), updates primitives and conserved variables in globals 
+
+Definition at line 44 of file chemistry.\+f90.
+
+
+
+Here is the call graph for this function\+:
+% FIG 1
+
+

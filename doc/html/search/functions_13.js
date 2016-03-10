@@ -2,7 +2,7 @@ var searchData=
 [
   ['write_5fbin',['write_bin',['../namespaceout__bin__module.html#ac5772f05ffdd0227d2fc17e27beb0f59',1,'out_bin_module']]],
   ['write_5fha',['write_ha',['../namespaceh__alpha__utilities.html#aa2b2b3783ef4b30d178412ea44671047',1,'h_alpha_utilities']]],
-  ['write_5fheader',['write_header',['../namespaceout__bin__module.html#a6e5fb4bb1cc6f0a15ce591a3b1014d8d',1,'out_bin_module']]],
+  ['write_5fheader',['write_header',['../namespacecoldens__utilities.html#ab85f0688ddbdcef34c8ed7f53c3071c5',1,'coldens_utilities::write_header()'],['../namespaceout__bin__module.html#a6e5fb4bb1cc6f0a15ce591a3b1014d8d',1,'out_bin_module::write_header()']]],
   ['write_5fla',['write_la',['../namespacelyman__alpha__utilities.html#afdab7ea06bb95956c43102154651cfd1',1,'lyman_alpha_utilities']]],
   ['write_5fmap',['write_map',['../namespacecoldens__utilities.html#a78891c0c5736f8d50bf07d19757e7237',1,'coldens_utilities']]],
   ['write_5foutput',['write_output',['../namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f',1,'output']]],
