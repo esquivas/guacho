@@ -1,9 +1,0 @@
-digraph "coldens_utilities::write_map"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node1 [label="coldens_utilities::\lwrite_map",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
-  Node2 [label="coldens_utilities::\lwrite_header",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespacecoldens__utilities.html#ab85f0688ddbdcef34c8ed7f53c3071c5",tooltip="Writes header. "];
-}
