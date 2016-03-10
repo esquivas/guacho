@@ -1,0 +1,16 @@
+<map id="thermal_cond::thermal_conduction" name="thermal_cond::thermal_conduction">
+<area shape="rect" id="node2" href="$namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870" title="Updated the primitives, using the conserved variables in the entire domain. " alt="" coords="237,31,383,57"/>
+<area shape="rect" id="node4" href="$namespacethermal__cond.html#a074d4829b3477fa8003983819e77523d" title="computes conduction timescale " alt="" coords="218,157,402,184"/>
+<area shape="rect" id="node7" href="$namespacethermal__cond.html#a4c74dc0fd6a165d0fea419b560943701" title="Returns the number of Supersteps. " alt="" coords="230,259,390,285"/>
+<area shape="rect" id="node9" href="$namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294" title="Size of substep j. " alt="" coords="231,309,389,336"/>
+<area shape="rect" id="node10" href="$namespacethermal__cond.html#a5283f7a2b8b4a4226ce624fb49445f43" title="Progress bar. " alt="" coords="229,360,391,387"/>
+<area shape="rect" id="node11" href="$namespacethermal__cond.html#aab43551b6a0d4b5894c07b510e4571d7" title="Returns Heat Fluxes with anisotropic thermal conduction. " alt="" coords="208,107,412,133"/>
+<area shape="rect" id="node14" href="$namespacethermal__cond.html#abc5c4fc622aea2f85fc5a0c2fee333bc" title="Returns Heat Fluxes. " alt="" coords="225,208,395,235"/>
+<area shape="rect" id="node15" href="$namespacethermal__cond.html#a55e65df0c700580f8af0a090063d2e32" title="Exchanges ghost cells for energy only. " alt="" coords="233,411,387,453"/>
+<area shape="rect" id="node3" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="476,5,613,32"/>
+<area shape="rect" id="node5" href="$namespacehydro__core.html#a27cb7ddb40cc0226e0139bd9eba42dfa" title="Computes the sound speed. " alt="" coords="475,157,614,184"/>
+<area shape="rect" id="node6" href="$namespacethermal__cond.html#ab3978fb62e485cf71d7c83e779e92615" title="Spitzer conductivity. " alt="" coords="479,208,610,235"/>
+<area shape="rect" id="node8" href="$namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06" title="Length of superstep. " alt="" coords="460,259,629,285"/>
+<area shape="rect" id="node12" href="$namespacethermal__cond.html#a8205274631d6cb4d36ffc0937aa88a74" title="Spitzer parallel conductivity. " alt="" coords="465,56,625,83"/>
+<area shape="rect" id="node13" href="$namespacethermal__cond.html#adfd8867a0fc7fe02a35a41000e36f9bf" title="Spitzer perpendicular conductivity. " alt="" coords="462,107,627,133"/>
+</map>
