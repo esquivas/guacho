@@ -1,4 +1,0 @@
-<map id="cooling_chi::coolingchi" name="cooling_chi::coolingchi">
-<area shape="rect" id="node2" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="195,5,321,32"/>
-<area shape="rect" id="node3" href="$namespacecooling__chi.html#a20c87eb43e4f324fa7d83fe9174fd767" title="Returns the cooling coefficient interpolating the table. " alt="" coords="195,56,321,83"/>
-</map>
