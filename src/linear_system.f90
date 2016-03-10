@@ -2,9 +2,9 @@
 !> @file linear_system.f90
 !> @brief linear system inversion  module
 !> @author A. Castellanos, A. Rodriguez, A. Raga and A. Esquivel
-!> @date 24/Nov/2015
+!> @date 10/Mar/2016
 
-! Copyright (c) 2015 A. Esquivel et al.
+! Copyright (c) 2016 A. Esquivel et al.
 !
 ! This file is part of Guacho-3D.
 !
