@@ -80,7 +80,7 @@ def readbin3d_all(nout,neq,path='',base='points',verbose=False):
   return map3d.T
 
 '''
-  Returns a tupple with the axis of the simulation box
+  Returns the axis of the simulation box
 '''
 def get_axis(nout,path='',base='points',verbose=False):
   
@@ -97,6 +97,27 @@ def get_axis(nout,path='',base='points',verbose=False):
   y_axis = np.linspace(0.5, ny*mpi_y-0.5 , ny*mpi_y)*dy
   z_axis = np.linspace(0.5, nz*mpi_z-0.5 , nz*mpi_z)*dz
   return (x_axis, y_axis, z_axis)
+
+'''
+  Returns the box size
+'''
+def get_boxsize(nout,path='',base='points',verbose=False):
+  
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  nx, ny, nz          = head_info[2]
+  return (nx, ny, nz)
+
+'''
+  Returns the basic scalings
+'''
+def get_scalings(nout,path='',base='points',verbose=False):
+  
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  rsc, vsc, rhosc = head_info[9]
+  return (rsc, vsc, rhosc)
+
 
 '''
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
