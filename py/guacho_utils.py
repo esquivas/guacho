@@ -99,6 +99,25 @@ def get_axis(nout,path='',base='points',verbose=False):
   return (x_axis, y_axis, z_axis)
 
 '''
+  Returns the extent of the computational box
+'''
+def get_extent(nout,path='',base='points',verbose=False):
+  
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  f                   = head_info[0]
+  f_kind              = head_info[1]
+  nx, ny, nz          = head_info[2]
+  dx, dy, dz          = head_info[3]
+  x0, y0, z0          = head_info[4]
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  f.close()
+  x_extent = np.asarray( [ 0.5, nx*mpi_x-0.5 ] )*dx
+  y_extent = np.asarray( [ 0.5, ny*mpi_y-0.5 ] )*dy
+  z_extent = np.asarray( [ 0.5, nz*mpi_z-0.5 ] )*dz
+  return ( x_extent, y_extent, z_extent)
+
+'''
   Returns the box size
 '''
 def get_boxsize(nout,path='',base='points',verbose=False):
