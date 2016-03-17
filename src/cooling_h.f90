@@ -361,8 +361,14 @@ subroutine atomic(dt,uu,tau,radphi)
     !   update the uu array
   uu(neqdyn+1)=real(y1)*uu(1)
 
+#ifdef MHD
   uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    
+       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
+       +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+#else
+  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
+       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+#endif
 
 end subroutine atomic
 
