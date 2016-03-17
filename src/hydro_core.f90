@@ -390,9 +390,9 @@ end subroutine csound
 !> @param real [in] Bx : value of the x component of the magnetic field
 !> @param real [in] By : value of the y component of the magnetic field
 !> @param real [in] Bz : value of the z component of the magnetic field
-!> @param real [out] csx : fast magnetisonic speed in x
-!> @param real [out] csy : fast magnetisonic speed in y
-!> @param real [out] csz : fast magnetisonic speed in z
+!> @param real [out] csx : fast magnetosonic speed in x
+!> @param real [out] csy : fast magnetosonic speed in y
+!> @param real [out] csz : fast magnetosonic speed in z
 
 subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
 
@@ -402,11 +402,11 @@ subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
   real, intent(out) ::cfx,cfy,cfz
   real :: b2
   
-	b2=bx*bx+by*by+bz*bz
-  cfx=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*bx*bx/d**2))
-  cfy=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*by*by/d**2))
-  cfz=sqrt(0.5*((gamma*p+b2)/d+sqrt((gamma*p+b2)/d)**2-4.*gamma*p*bz*bz/d**2))                
-  
+  b2=bx*bx+by*by+bz*bz
+  cfx=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*bx*bx))/d)
+  cfy=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*by*by))/d)
+  cfz=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*bz*bz))/d)                
+
 end subroutine cfast
 
 #endif
