@@ -27,7 +27,7 @@
 !! can be moved later to a runtime input file
 
 module parameters
-  use constants,only: Rg,amh,mu,pi
+  use constants, only: Rg, amh, pi
 
   implicit none
 
@@ -78,6 +78,7 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
+  real, parameter :: mu=1.0            !< mean atomic mass (amus)
   
   !**  scaling factors to physical (cgs) units **
     ! reference temperature (to set cs)

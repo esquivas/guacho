@@ -54,8 +54,8 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters,only: neq,neqdyn,nxmin,nxmax,nymin,nymax,nzmin,nzmax,nx,ny,nz, & 
-                       nxtot,nytot,nztot,gamma,rhosc,tempsc,vsc,Psc,Esc, Bsc
-  use constants,only: amh,mu,Rg
+                       nxtot,nytot,nztot,gamma,mu,rhosc,tempsc,vsc,Psc,Esc,Bsc
+  use constants,only: amh,Rg
   use globals,only: coords,dx,dy,dz,rank, time
 
   implicit none
