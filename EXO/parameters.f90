@@ -82,7 +82,7 @@ module parameters
   real, parameter :: rhosc=amh*mu    !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
   real, parameter :: vsc2 = gamma*Rg*T0/mu  !<  Velocity scaling
-  eal, parameter :: vsc = sqrt(vsc2)
+  real, parameter :: vsc = sqrt(vsc2)
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
 #ifdef PMHD
