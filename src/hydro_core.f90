@@ -146,7 +146,7 @@ subroutine calcprim(u,primit, only_ghost)
 #endif
   integer :: i,j,k
   !
-  if (present(only_ghost) .and. only_ghost==.true.) then
+  if (present(only_ghost) .and. only_ghost) then
     !-----------------------
     !   k = 0, and, nz
     do j=0,ny+1

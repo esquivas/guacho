@@ -60,7 +60,7 @@ subroutine write_VTK(itprint)
      write(file2,'(a)') trim(outputpath)//'VTK/master.visit'
      if (itprint.eq.0) then
         open(unit=7,file=file2,status='replace',form='formatted')
-        write(7,'(a,i)') '!NBLOCKS ',np
+        write(7,'(a,i0)') '!NBLOCKS ',np
         do i=0,np-1
            write(7,'(a,i3.3,a,i3.3,a)')  'out-',i,'.',itprint,'.vtk'
         end do
@@ -118,7 +118,7 @@ subroutine write_VTK(itprint)
   !   DENSITY
   write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i,1x,i,a)') 'Density',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Density',1,nCells,'float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
@@ -133,7 +133,7 @@ subroutine write_VTK(itprint)
  !   GAS PRESSURE
  write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i,1x,i,a)') 'Thermal_Pressure',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Thermal_Pressure',1,nCells,'float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
@@ -148,7 +148,7 @@ subroutine write_VTK(itprint)
   !   TEMP
   write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i,1x,i,a)') 'Temperature',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Temperature',1,nCells,'float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
