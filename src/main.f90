@@ -91,7 +91,7 @@ program guacho
 #endif
 
   !  writes the initial conditions
-  if (iwarm) then
+  if (.not.iwarm) then
     call write_output(itprint)
     itprint = itprint +1
   end if
