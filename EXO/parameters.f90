@@ -27,7 +27,7 @@
 !! can be moved later to a runtime input file
 
 module parameters
-  use constants, only : Rg, amh, mu, AU, day
+  use constants, only : Rg, amh, AU, day
   implicit none
 #ifdef MPIP
   include "mpif.h"
@@ -75,14 +75,15 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
-  
+  real, parameter :: mu=1.0            !< Mean atomic mass (amus) 
+ 
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=1.e4         !<  reference temperature (to set cs)
   real, parameter :: rsc=xphys/xmax  !<  distance scaling
   real, parameter :: rhosc=amh*mu    !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
   real, parameter :: vsc2 = gamma*Rg*T0/mu  !<  Velocity scaling
-  eal, parameter :: vsc = sqrt(vsc2)
+  real, parameter :: vsc = sqrt(vsc2)
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
 #ifdef PMHD

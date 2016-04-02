@@ -116,7 +116,7 @@ end subroutine get_dt_cond
 !=======================================================================
 
 !> @brief Progress bar
-!> @details Progress bar (only tested with intel Fortran conmpiler)
+!> @details Progress bar
 !! takes a number between 1 and tot
 !> @param integer [in] j   : current iteration
 !> @param integer [in] tot : total number of iterartions
@@ -126,14 +126,14 @@ subroutine progress(j,tot)
   integer(kind=4)::j,k
   integer(kind=4), intent(in) :: tot
   character(len=57)::bar="???% |                                                  |"
-  open (unit=6, carriagecontrol='fortran')
+  open (unit=6)
   write(unit=bar(1:3),fmt="(i3)") 100*j/tot
   bar(7:56)="."
   do k=1, 50*j/tot
      bar(6+k:6+k)="="
   enddo
   ! print the progress bar.
-  write(unit=6,fmt="(a1,a1,a57)") '+',char(13), bar
+  write(unit=6,fmt="(a1,a1,a57)",advance="no") '+',char(13), bar
   return
 end subroutine progress
 
@@ -594,7 +594,7 @@ end subroutine MHD_heatfluxes
     endif
 #endif
 
-#endif   !MPIP
+#endif /* !MPIP */
     !   reflecting and outflow BCs
 
     !   left
@@ -731,7 +731,7 @@ subroutine thermal_conduction()
 
   if (rank == master) then
     print*, 'Calculating thermal conduction'
-    write(tc_log,'(i,a,es15.7,a,es15.7,a,i4)') currentIteration,' |',dt_hydro,' |', dt_cond,' |', Nsteps 
+    write(tc_log,'(i0,a,es15.7,a,es15.7,a,i4)') currentIteration,' |',dt_hydro,' |', dt_cond,' |', Nsteps 
   end if
 
   steps : do n=1,Nsteps
@@ -780,7 +780,7 @@ end subroutine thermal_conduction
 
 end module thermal_cond
 
-#endif // thermal cond
+#endif /* THERMAL_COND */
 
 !=======================================================================
 

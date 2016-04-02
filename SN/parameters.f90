@@ -27,7 +27,7 @@
 !! can be moved later to a runtime input file
 
 module parameters
-  use constants, only : Rg, amh, mu, pc, yr
+  use constants, only : Rg, amh, pc, yr
   implicit none
 #ifdef MPIP
   include "mpif.h"
@@ -75,6 +75,7 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
+  real, parameter :: mu=1.0            !< Mean atomic mass (amus)
   
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=1.e4         !<  reference temperature (to set cs)

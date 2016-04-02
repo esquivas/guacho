@@ -91,7 +91,7 @@ program guacho
 #endif
 
   !  writes the initial conditions
-  if (iwarm == .false. ) then
+  if (iwarm) then
     call write_output(itprint)
     itprint = itprint +1
   end if
@@ -110,7 +110,7 @@ program guacho
     !   computes the timestep
     call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
 
-    if (rank == 0) print'(a,i,a,es12.3,a,es12.3,a,es12.3,a)',         &
+    if (rank == 0) print'(a,i0,a,es12.3,a,es12.3,a,es12.3,a)',         &
       'Iteration ', currentIteration,                                 &
       ' | time:', time*tsc         ,                                  &
       ' | dt:', dt_CFL*tsc           ,                                &
