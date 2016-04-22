@@ -43,20 +43,17 @@ contains
 
 subroutine u2prim(uu, prim, T)
 
-  use parameters, only : neq, neqdyn, Tempsc, vsc2, cv
-#ifdef EOS_CHEM
-  use constants, only : Kb
-   use network,  only : n_spec 
-#endif
+  use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
+                         pmhd, mhd, eq_of_state
+  use constants
+  use network,  only : n_spec 
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
   real :: r
-#if defined(EOS_H_RATE) || defined(EOS_CHEM)
   integer :: i
   real :: dentot
-#endif
 
   r=max(uu(1),1e-15)
   prim(1)=r
@@ -64,55 +61,55 @@ subroutine u2prim(uu, prim, T)
   prim(3)=uu(3)/r
   prim(4)=uu(4)/r
   
-#ifdef MHD
-prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
-               -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv  
-#else
-  prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
-#endif
+  if (mhd) then
+    prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
+                   -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv  
+  else
+    prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
+  end if
   
   prim(5)=max(prim(5),1e-16)
   
-#if defined(PMHD) || defined(MHD) 
-  prim(6:8) = uu(6:8)
-#endif 
+  if (mhd .or. pmhd) then
+    prim(6:8) = uu(6:8)
+  end if 
 
-#ifdef PASSIVES
+  if (passives) then
     prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
-#endif
-  
+  end if
+
   !   Temperature calculation
 
-#ifdef EOS_ADIABATIC
-  T=(prim(5)/r)*Tempsc
-#endif
+  if (eq_of_state == EOS_ADIABATIC) then
+    T=(prim(5)/r)*Tempsc
+  end if
 
-#ifdef EOS_SINGLE_SPECIE
-  ! assumes it is fully ionized
-  r=max(r,1e-15)
-  T=max(1.,(prim(5)/r)*Tempsc)
-  prim(5)=r*T/Tempsc
-#endif
+  if (eq_of_state == EOS_SINGLE_SPECIE) then
+    ! assumes it is fully ionized
+    r=max(r,1e-15)
+    T=max(1.,(prim(5)/r)*Tempsc)
+    prim(5)=r*T/Tempsc
+  end if
 
-#ifdef EOS_H_RATE
-  dentot=(2.*r-prim(neqdyn+1))
-  dentot=max(dentot,1e-15)
-  T=max(1.,(prim(5)/dentot)*Tempsc)
-  prim(5)=dentot*T/Tempsc
-#endif
+  if (eq_of_state == EOS_H_RATE) then
+    dentot=(2.*r-prim(neqdyn+1))
+    dentot=max(dentot,1e-15)
+    T=max(1.,(prim(5)/dentot)*Tempsc)
+    prim(5)=dentot*T/Tempsc
+  end if
 
-#ifdef EOS_CHEM
-  !  Assumes that rho scaling is mu*mh
-  dentot = 0.
-  do i = neqdyn+1, neqdyn+n_spec
-    dentot = prim(i) + dentot
-  end do
-  dentot = max(dentot, 1e-15)
-  T=max(1.,(prim(5)/dentot)*Tempsc )
+  if (eq_of_state == EOS_CHEM) then
+    !  Assumes that rho scaling is mu*mh
+    dentot = 0.
+    do i = neqdyn+1, neqdyn+n_spec
+      dentot = prim(i) + dentot
+    end do
+    dentot = max(dentot, 1e-15)
+    T=max(1.,(prim(5)/dentot)*Tempsc )
 
-  !T=(prim(5)/r)*Tempsc
-  prim(5) = dentot * T /Tempsc
-#endif
+    !T=(prim(5)/r)*Tempsc
+    prim(5) = dentot * T /Tempsc
+  end if
 
 
 end subroutine u2prim  
@@ -133,32 +130,24 @@ end subroutine u2prim
 subroutine calcprim(u,primit, only_ghost)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, nx, ny, nz
-#ifdef THERMAL_COND
+  use constants
+
   use globals, only : Temp
-#endif
-  use globals, only : time
   implicit none
   real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
   real,intent(out),dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: primit
   logical, optional, intent(in) :: only_ghost
-#ifndef THERMAL_COND
-  real                 :: T
-#endif
   integer :: i,j,k
-  !
+  
   if (present(only_ghost) .and. only_ghost) then
     !-----------------------
     !   k = 0, and, nz
     do j=0,ny+1
       do i=0,nx+1
 
-#ifdef THERMAL_COND
         call u2prim(u(:,i,j,0   ),primit(:,i,j,0 ),Temp(i,j,0   ) )
         call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz),Temp(i,j,nz+1) )
-#else
-        call u2prim(u(:,i,j,0   ),primit(:,i,j,0   ),T)
-        call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz+1),T)
-#endif
+
       end do
     end do
 
@@ -166,13 +155,9 @@ subroutine calcprim(u,primit, only_ghost)
     do k=0,nz+1
       do i=0,nx+1
 
-#ifdef THERMAL_COND
         call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
         call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
-#else
-        call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),T)
-        call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),T)
-#endif
+
       end do
     end do 
 
@@ -180,13 +165,9 @@ subroutine calcprim(u,primit, only_ghost)
     do k=0,nz+1
       do j=0,ny+1
 
-#ifdef THERMAL_COND
         call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
         call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
-#else
-        call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),T)
-        call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),T)
-#endif
+
       end do
     end do
     !-----------------------
@@ -196,11 +177,7 @@ subroutine calcprim(u,primit, only_ghost)
       do j=nymin,nymax
         do i=nxmin,nxmax
 
-#ifdef THERMAL_COND
           call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
-#else
-          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
-#endif
 
 !if (u(1,i,j,k) == 0 ) then 
   !print*,'uu:', u(:,i,j,k)
@@ -228,6 +205,7 @@ end subroutine calcprim
 subroutine prim2u(prim,uu)
 
   use parameters
+
   implicit none
   real, dimension(neq), intent(in)  :: prim
   real, dimension(neq), intent(out) :: uu
@@ -237,22 +215,22 @@ subroutine prim2u(prim,uu)
   uu(3) = prim(1)*prim(3)
   uu(4) = prim(1)*prim(4)
 
-#ifdef MHD
-  !   kinetic+thermal+magnetic energies
-  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-                 +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
-#else
-  !   kinetic+thermal energies
-  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-#endif
+  if (mhd) then 
+    !   kinetic+thermal+magnetic energies
+    uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+                   +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+  else 
+    !   kinetic+thermal energies
+    uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+  end if
 
-#if defined(PMHD) || defined(MHD)
-  uu(6:8)=prim(6:8)
-#endif
+  if (mhd .or. pmhd) then
+    uu(6:8)=prim(6:8)
+  end if
 
-#ifdef PASSIVES
-  uu(neqdyn+1:neq) = prim(neqdyn+1:neq)
-#endif
+  if (passives) then
+    uu(neqdyn+1:neq) = prim(neqdyn+1:neq)
+  end if
 
 end subroutine prim2u
 
@@ -267,45 +245,45 @@ end subroutine prim2u
 !> @param real [out] ff(neq) : Euler Fluxes (x direction)
 
 subroutine prim2f(prim,ff)
-  use parameters, only : neq, neqdyn, cv
+  use parameters, only : neq, neqdyn, cv, pmhd, mhd, passives
   implicit none
   real,    dimension(neq), intent(in)  :: prim
   real,    dimension(neq), intent(out) :: ff
   real :: etot
 
-  !  If MHD (active) not defined
-#ifdef MHD
-  ! MHD
-  etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
-                     + prim(6)**2+prim(7)**2+prim(8)**2  )  &
-                     + cv*prim(5)
-  
-  ff(1) = prim(1)*prim(2)
-  ff(2) = prim(1)*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2)
-  ff(3) = prim(1)*prim(2)*prim(3)-prim(6)*prim(7)
-  ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
-  ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
-         -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
-#else
-  ! HD or PMHD
-  etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-  
-  ff(1) = prim(1)*prim(2)
-  ff(2) = prim(1)*prim(2)*prim(2)+prim(5)
-  ff(3) = prim(1)*prim(2)*prim(3)
-  ff(4) = prim(1)*prim(2)*prim(4)
-  ff(5) = prim(2)*(etot+prim(5))
-#endif
-  
-#if defined(PMHD) || defined(MHD)
-  ff(6)=0.0
-  ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
-  ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
-#endif
 
-#ifdef PASSIVES
-  ff(neqdyn+1:neq) = prim(neqdyn+1:neq)*prim(2)
-#endif
+  if (mhd) then 
+    !  MHD (active)
+    etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
+                       + prim(6)**2+prim(7)**2+prim(8)**2  )  &
+                       + cv*prim(5)
+  
+    ff(1) = prim(1)*prim(2)
+    ff(2) = prim(1)*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2)
+    ff(3) = prim(1)*prim(2)*prim(3)-prim(6)*prim(7)
+    ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
+    ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
+           -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
+  else
+    ! HD or PMHD
+    etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+    
+    ff(1) = prim(1)*prim(2)
+    ff(2) = prim(1)*prim(2)*prim(2)+prim(5)
+    ff(3) = prim(1)*prim(2)*prim(3)
+    ff(4) = prim(1)*prim(2)*prim(4)
+    ff(5) = prim(2)*(etot+prim(5))
+  end if
+    
+  if (mhd .or. pmhd) then 
+    ff(6)=0.0
+    ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
+    ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
+  end if
+
+  if (passives) then
+    ff(neqdyn+1:neq) = prim(neqdyn+1:neq)*prim(2)
+  end if
 
 end subroutine prim2f
 
@@ -318,6 +296,7 @@ end subroutine prim2f
 
 subroutine swapy(var,neq)
 
+  use parameters, only : pmhd, mhd
   implicit none
   real, intent(inout), dimension(neq) :: var
   integer, intent(in) :: neq
@@ -327,11 +306,11 @@ subroutine swapy(var,neq)
   var(2)=var(3)
   var(3)=aux
   
-#if defined(PMHD) || defined(MHD)
-  aux=var(6)
-  var(6)=var(7)
-  var(7)=aux
-#endif 
+  if (mhd .or. pmhd) then 
+    aux=var(6)
+    var(6)=var(7)
+    var(7)=aux
+  end if 
 
 end subroutine swapy
 
@@ -343,6 +322,8 @@ end subroutine swapy
 !> @param real [in] neq : number of equations in the code
 
 subroutine swapz(var,neq)
+
+  use parameters, only : pmhd, mhd
   implicit none
   real, intent(inout), dimension(neq) :: var
   integer, intent(in) :: neq
@@ -352,11 +333,11 @@ subroutine swapz(var,neq)
   var(2)=var(4)
   var(4)=aux
   
-#if defined(PMHD) || defined(MHD)
-  aux=var(6)
-  var(6)=var(8)
-  var(8)=aux
-#endif
+  if (mhd .or. pmhd) then 
+    aux=var(6)
+    var(6)=var(8)
+    var(8)=aux
+  end if
 
 end subroutine swapz
 
@@ -380,8 +361,6 @@ subroutine csound(p,d,cs)
 end subroutine csound
 
 !=======================================================================
-
-#if defined(PMHD) || defined(MHD) 
 
 !> @brief Computes the fast magnetosonic speeds  in the 3 coordinates
 !> @details Computes the fast magnetosonic speeds  in the 3 coordinates
@@ -409,11 +388,7 @@ subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
 
 end subroutine cfast
 
-#endif
-
 !=======================================================================
-
-#if defined(PMHD) || defined(MHD) 
 
 !> @brief Computes the fast magnetosonic speed in the x direction
 !> @details Computes the fast magnetosonic speed in the x direction
@@ -434,8 +409,6 @@ subroutine cfastX(prim,cfX)
  
   end subroutine cfastX
 
-#endif
-
 !=======================================================================
 
 !> @brief Otains the timestep allowed by the CFL condition in the entire
@@ -453,7 +426,7 @@ subroutine cfastX(prim,cfX)
 
 subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
 
-  use parameters, only : nx, ny, nz, cfl, mpi_real_kind
+  use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd
   use globals, only : primit, dx, dy, dz
   implicit none
 #ifdef MPIP
@@ -464,11 +437,7 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
   real,    intent(out) :: dt
   logical, intent(out) :: dump_flag
   real              :: dtp
-#ifdef MHD
-  real              :: cx, cy, cz
-#else
-  real              :: c
-#endif
+  real              :: c, cx, cy, cz
   integer :: i, j, k, err
   
   dtp=1.e30
@@ -476,20 +445,21 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
   do k=1,nz
     do j=1,ny
       do i=1,nx
-      
-#ifdef MHD
-        call cfast(primit(5,i,j,k),primit(1,i,j,k),&
-            primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
-            cx,cy,cz)
-        dtp=min(dtp,dx/(abs(primit(2,i,j,k))+cx))  
-        dtp=min(dtp,dy/(abs(primit(3,i,j,k))+cy))
-        dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
-#else
-        call csound(primit(5,i,j,k),primit(1,i,j,k),c)
-        dtp=min(dtp,dx/(abs(primit(2,i,j,k))+c))  
-        dtp=min(dtp,dy/(abs(primit(3,i,j,k))+c))
-        dtp=min(dtp,dz/(abs(primit(4,i,j,k))+c))
-#endif
+    
+        if (mhd) then
+                call cfast(primit(5,i,j,k),primit(1,i,j,k),&
+                    primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
+                    cx,cy,cz)
+                dtp=min(dtp,dx/(abs(primit(2,i,j,k))+cx))  
+                dtp=min(dtp,dy/(abs(primit(3,i,j,k))+cy))
+                dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
+        else
+                call csound(primit(5,i,j,k),primit(1,i,j,k),c)
+                dtp=min(dtp,dx/(abs(primit(2,i,j,k))+c))  
+                dtp=min(dtp,dy/(abs(primit(3,i,j,k))+c))
+                dtp=min(dtp,dz/(abs(primit(4,i,j,k))+c))
+        end if
+
       end do
     end do
   end do
@@ -530,13 +500,15 @@ end subroutine get_timestep
 !> @param real [in]    : number of equations
 
 subroutine limiter(PLL,PL,PR,PRR,neq)
-
+  
   implicit none
   real, dimension(neq), intent(inout) :: pl,  pr
   real, dimension(neq), intent(in)    :: pll, prr
   integer, intent (in)  :: neq
   real :: dl, dm, dr, al, ar
   integer :: ieq
+  real :: s, c, d, av1, av2
+  real, parameter :: delta=1.e-7
   
   do ieq=1,neq
      dl=pl(ieq)-pll(ieq)
@@ -551,68 +523,65 @@ subroutine limiter(PLL,PL,PR,PRR,neq)
 contains
 
   real function average(a,b)
+    use constants
+    use parameters, only : slope_limiter
     implicit none
     real, intent(in)    :: a, b
 
-#if LIMITER==-1
+  If (slope_limiter == LIMITER_NO_AVERAGE) then
+      !   no average (reduces to 1st order)
+      average=0.
+  end if
 
-    !   no average (reduces to 1st order)
-    average=0.
-#endif
+  if (slope_limiter == LIMITER_NO_LIMIT) then
+      !   no limiter
+      average=0.5*(a+b)
+  end if
 
-#if LIMITER==0
-    !   no limiter
-    average=0.5*(a+b)
-#endif
+  if (slope_limiter == LIMITER_MINMOD) then
+      !   Minmod - most diffusive
+      s=sign(1.,a)
+      average=s*max(0.,min(abs(a),s*b))
+  end if
 
-#if LIMITER==1
-    !   Minmod - most diffusive
-    real :: s
-    s=sign(1.,a)
-    average=s*max(0.,min(abs(a),s*b))
-#endif
+  if (slope_limiter == LIMITER_VAN_LEER) then
+      !   Falle Limiter (Van Leer)
+      if(a*b.le.0.) then
+         average=0.
+      else
+         average=a*b*(a+b)/(a**2+b**2)
+      end if
+  end if
 
-#if LIMITER==2
-    !   Falle Limiter (Van Leer)
-    if(a*b.le.0.) then
-       average=0.
-    else
-       average=a*b*(a+b)/(a**2+b**2)
-    end if
-#endif
+  if (slope_limiter == LIMITER_VAN_ALBADA) then
+      !   Van Albada
+      average=(a*(b*b+delta)+b*(a*a+delta))/(a*a+b*b+delta)
+  end if
 
-#if LIMITER==3
-    !   Van Albada
-    real, parameter :: delta=1.e-7
-    average=(a*(b*b+delta)+b*(a*a+delta))/(a*a+b*b+delta)
-#endif
+  if (slope_limiter == LIMITER_UMIST) then
+      !   UMIST Limiter - less diffusive
+      s=sign(1.,a)
+      c=0.25*a+0.75*b
+      d=0.75*a+0.25*b
+      average=min(2.*abS(a),2.*s*b,s*c,s*d)
+      average=s*max(0.,average)
+  end if
 
-#if LIMITER==4
-    !   UMIST Limiter - less diffusive
-    real :: s, c, d
-    s=sign(1.,a)
-    c=0.25*a+0.75*b
-    d=0.75*a+0.25*b
-    average=min(2.*abS(a),2.*s*b,s*c,s*d)
-    average=s*max(0.,average)
-#endif
+  if (slope_limiter == LIMITER_WOODWARD) then
+      !    Woodward Limiter (o MC-limiter; monotonized central difference)
+      s=sign(1.,a)
+      c=0.5*(a+b)
+      average=min(2.*abs(a),2.*s*b,s*c)
+      average=s*max(0.,average)
+  end if
 
-#if LIMITER==5
-    !    Woodward Limiter (o MC-limiter; monotonized central difference)
-    real :: s, c
-    s=sign(1.,a)
-    c=0.5*(a+b)
-    average=min(2.*abs(a),2.*s*b,s*c)
-    average=s*max(0.,average)
-#endif
-#if LIMITER==6
-    !   superbee Limiter (tends to flatten circular waves)
-    real :: s, av1, av2
-    s=sign(1.,b)
-    av1=min(2.*abs(b),s*a)
-    av2=min(abs(b),2.*s*a)
-    average=s*max(0.,av1,av2)
-#endif
+  if (slope_limiter == LIMITER_SUPERBEE) then
+      !   superbee Limiter (tends to flatten circular waves)
+      s=sign(1.,b)
+      av1=min(2.*abs(b),s*a)
+      av2=min(abs(b),2.*s*a)
+      average=s*max(0.,av1,av2)
+  end if
 
   end function average
 
