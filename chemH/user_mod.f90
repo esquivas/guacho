@@ -102,21 +102,18 @@ end subroutine initial_conditions
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
-#ifdef OTHERB
 subroutine impose_user_bc(u)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, bc_other
   use globals   , only : time 
   implicit none
   real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
-  call impose_jet(u, time )
+  if (bc_other) call impose_jet(u, time )
  
 end subroutine impose_user_bc
 
 !=======================================================================
-
-#endif
 
 end module user_mod
 
