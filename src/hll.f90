@@ -29,8 +29,6 @@
 
 module hll
 
-#ifdef HLL
-
 contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
@@ -189,8 +187,6 @@ subroutine hllfluxes(choice)
   end select
 
 end subroutine hllfluxes
-
-#endif
 
 end module hll
 
