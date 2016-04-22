@@ -27,8 +27,6 @@
 
 module cooling_H
 
-#ifdef COOLINGH
-
   implicit none
  
 contains
@@ -40,12 +38,9 @@ contains
 
 subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz, tsc
+  use parameters, only : neq, nx, ny, nz, tsc, dif_rad
   use globals, only : u, coords, dt_CFL
-
-#ifdef RADDIFF
   use difrad, only : ph
-#endif
 
   implicit none
   real    :: dt_seconds
@@ -57,12 +52,11 @@ subroutine coolingh()
      do j=1,ny
         do i=1,nx
 
-#ifdef RADDIFF
-           call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
-#else
-           call atomic(dt_seconds,u(:,i,j,k),1.,1.)
-#endif
-
+          if (dif_rad) then
+            call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
+          else
+            call atomic(dt_seconds,u(:,i,j,k),1.,1.)
+          endif
 
         end do
      end do
@@ -314,11 +308,13 @@ subroutine atomic(dt,uu,tau,radphi)
   !    solution (see notes)
 
   a=rec+col
-#ifdef RADDIFF
-  b=-((2.+xi)*rec+(1.+xi)*col+fpn)
-#else
-  b=-((2.+xi)*rec+(1.+xi)*col    )
-#endif
+
+  if (dif_rad) then
+    b=-((2.+xi)*rec+(1.+xi)*col+fpn)
+  else
+    b=-((2.+xi)*rec+(1.+xi)*col    )
+  end if
+
   c=(1.+xi)*rec
   d=sqrt(b**2-4.*a*c)
   g0=(2.*a*y0+b+d)/(2.*a*y0+b-d)
@@ -340,12 +336,12 @@ subroutine atomic(dt,uu,tau,radphi)
   !  al=al*(1.-(0.5e4/max(1.e4,t))**4)
   !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
 
-#ifdef RADDIFF
-  gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
-  tprime=max( gain*real(T,8)/(dh**2*al),1000.)
-#else
-  tprime=10.
-#endif
+  if (dif_rad) then
+    gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
+    tprime=max( gain*real(T,8)/(dh**2*al),1000.)
+  else
+    tprime=10.
+  end if
   !tprime=1000.
 
   ce=(2.*dh*al)/(3.*boltzm*real(T,8))
@@ -355,24 +351,22 @@ subroutine atomic(dt,uu,tau,radphi)
   t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
-#if TWOTEMP
-  t1=1.E4-9990.*y1
-#endif
+!#if TWOTEMP
+!  t1=1.E4-9990.*y1
+!#endif
     !   update the uu array
   uu(neqdyn+1)=real(y1)*uu(1)
 
-#ifdef MHD
-  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
-       +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
-#else
-  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
-#endif
+  if (mhd) then
+    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
+         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
+         +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
+  else
+    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
+         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+  end if
 
 end subroutine atomic
-
-#endif
 
 end module cooling_H
 
