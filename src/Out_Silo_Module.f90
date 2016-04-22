@@ -27,7 +27,8 @@
 
 module  Out_Silo_Module
 
-#ifdef OUTSILO
+#ifdef OUT_SILO
+
   use parameters
   use globals
   include "silof90.inc"
@@ -343,7 +344,7 @@ end subroutine writemaster
 !> @details Upper level wrapper for the SILO output
 !> @param integer [in] itprint : number of output
 
-  subroutine outputsilo(itprint)
+  subroutine write_utsilo(itprint)
   implicit none
   integer, intent(in) :: itprint
   integer :: ip, err
@@ -361,7 +362,7 @@ end subroutine writemaster
   if (master.eq.rank) call writemaster(itprint)
 #endif
 
-  end subroutine outputsilo
+  end subroutine write_silo
 
 !=======================================================================
 
