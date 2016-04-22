@@ -29,8 +29,6 @@
 
 module hlle
 
-#ifdef HLLE
-
 contains
 
 !=======================================================================
@@ -192,8 +190,6 @@ subroutine hllEfluxes(choice)
   end select
 
 end subroutine hllEfluxes
-
-#endif
 
 end module hlle
 
