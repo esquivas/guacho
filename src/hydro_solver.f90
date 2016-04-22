@@ -27,21 +27,11 @@
 
 module hydro_solver
 
-#ifdef HLL
- use hll
-#endif
-#ifdef HLLC
+  use hll
   use hllc
-#endif
-#ifdef HLLE
   use hllE
-#endif
-#ifdef HLLD
   use hlld
-#endif
-#ifdef EOS_CHEM
   use chemistry
-#endif
   implicit none
 
 contains
@@ -50,7 +40,8 @@ contains
 !> @details Adds artificial viscosity to the conserved variables
 !! @n Takes the variables from the globals module and it assumes
 !! that the up are the stepped variables, while u are unstepped
-subroutine viscosity()
+
+  subroutine viscosity()
 
   use parameters, only : nx, ny, nz, eta
   use globals, only: u, up
@@ -81,15 +72,12 @@ end subroutine viscosity
 !> @param real [in] dt : timestep
 
 subroutine step(dt)
-  use parameters, only : nx, ny, nz
+  use parameters, only : nx, ny, nz, &
+                         point_grav, radiation_pressure, eight_wave
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   use sources
-#endif
   implicit none
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   real :: s(neq)
-#endif
   real, intent(in) :: dt
   integer :: i, j, k
   real :: dtdx, dtdy, dtdz
@@ -99,17 +87,18 @@ subroutine step(dt)
   dtdz=dt/dz
 
   do k=1,nz
-     do j=1,ny
-        do i=1,nx
-           
-           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
-                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
-                                 -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
+    do j=1,ny
+      do i=1,nx
+          
+        up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
+                              -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
+                              -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
 
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-           call source(i,j,k,primit(:,i,j,k),s)
-           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
-#endif
+        if (point_grav .or. radiation_pressure .or. eight_wave) then
+
+          up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
+        
+        end if
 
         end do
      end do
@@ -124,29 +113,18 @@ end subroutine step
 
 subroutine tstep()
 
-  use parameters, only : tsc
+  use parameters, only : tsc, riemann_solver, eq_of_state, &
+                         dif_rad, charge_exchange, cooling, &
+                         th_cond
+  use constants
   use globals
   use hydro_core, only : calcprim
   use boundaries
-#ifdef C2ray
-  use C2Ray_RT, only: C2Ray_radiative_transfer
-#endif
-#ifdef COOLINGH
   use cooling_H
-#endif
-#ifdef COOLINGDMC
   use cooling_DMC
-#endif
-#ifdef COOLINGCHI
   use cooling_CHI
-#endif
-#ifdef RADDIFF
   use difrad
-#endif
-
-#ifdef THERMAL_COND
   use thermal_cond
-#endif
   implicit none
   real :: dtm
    
@@ -154,18 +132,10 @@ subroutine tstep()
   dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
-#ifdef HLL
-  call hllfluxes(1)
-#endif
-#ifdef HLLC
-  call hllcfluxes(1)
-#endif
-#ifdef HLLE
-  call hllEfluxes(1)
-#endif
-#ifdef HLLD
-  call hlldfluxes(1)
-#endif
+  if (riemann_solver == SOLVER_HLL ) call hllfluxes(1)
+  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
 
   !   upwind timestep
   call step(dtm)
@@ -180,18 +150,10 @@ subroutine tstep()
 
   !   calculate the fluxes using the primitives
   !   with linear reconstruction (piecewise linear)
-#ifdef HLL
-  call hllfluxes(2)
-#endif
-#ifdef HLLC
-  call hllcfluxes(2)
-#endif
-#ifdef HLLE
-  call hllEfluxes(2)
-#endif
-#ifdef HLLD
-  call hlldfluxes(2)
-#endif
+  if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
+  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
 
   !  upwind timestep
   call step(dt_CFL)
@@ -204,48 +166,35 @@ subroutine tstep()
 
   ! update the chemistry network
   ! at this point is in cgs
-#ifdef EOS_CHEM
-  !  the primitives in the physical celles are upated
-  call update_chem()
-#endif
+  !  the primitives in the physical cell are upated
+  if (eq_of_state == EOS_CHEM) call update_chem()
 
  !  Do the Radiaiton transfer (Monte Carlo type)
-#ifdef RADDIFF
-  call diffuse_rad()
-#endif
+ if (dif_rad) call diffuse_rad()
 
-#ifdef CEXCHANGE
  !****************************************************
   !   apply charge exchange TO BE ADDED IN COLLING?
   !   not fully implemented
   !****************************************************
-  call cxchange(dt*tsc)
-#endif
+  !if (charge_exchange) call cxchange(dt*tsc)
 
   !   apply cooling/heating
-#ifdef COOLINGH
-  !   add cooling to the conserved variables
-  call coolingh()
-   !  update the primitives with u
-  call calcprim(u, primit)
-#endif
-#ifdef COOLINGDMC
-  !   the primitives are updated in the cooling routine
-  call coolingdmc()
-#endif
-#ifdef COOLINGCHI
-  !   the primitives are updated in the cooling routine
-  call coolingchi()
-#endif
-#ifdef COOLINGCHEM
-  !the primitives are already updated in update_chem
-  call cooling_chem()
-#endif
 
-#ifdef C2ray
-  !  Apply Rad transfer, and heating & Cooling w/C2-Ray
-  call C2ray_radiative_transfer(dt_CFL*tsc)
-#endif
+  !   add cooling (H rat e)to the conserved variables
+  if (cooling == COOL_H) then 
+    call coolingh()
+    !  update the primitives with u
+    call calcprim(u, primit)
+  end if
+
+  ! DMC cooling (the primitives are updated in the cooling routine)
+  if (cooling == COOL_DMC) call coolingdmc()
+  
+  ! Chianti cooling (the primitives are updated in the cooling routine)
+  if (cooling == COOL_CHI) call coolingchi()
+
+  ! Chemistry network cooling (the primitives are already updated in update_chem)
+  if (cooling == COOL_CHEM) call cooling_chem()
 
   !   boundary contiditions on u
   call boundaryI()
@@ -253,11 +202,8 @@ subroutine tstep()
   !  update primitives on the boundaries
   call calcprim(u,primit,only_ghost=.true.)
 
-
-#ifdef THERMAL_COND
   !  Thermal conduction
-  call thermal_conduction()
-#endif
+  if (th_cond) call thermal_conduction()
 
 end subroutine tstep
 
