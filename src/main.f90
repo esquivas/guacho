@@ -57,16 +57,8 @@ program guacho
   use output
   use hydro_solver
   use boundaries
-
-#ifdef RADDIFF
   use difrad
-#endif
-#ifdef C2ray
-  use C2Ray_init
-#endif
-#ifdef THERMAL_COND
   use thermal_cond, only : tc_log
-#endif
 
   implicit none
   integer :: err
@@ -86,19 +78,13 @@ program guacho
   !   update primitives with u
   call calcprim(u,primit)
 
-#ifdef RADDIFF
-  call diffuse_rad()
-#endif
+  if (dif_rad) call diffuse_rad()
 
   !  writes the initial conditions
   if (.not.iwarm) then
     call write_output(itprint)
     itprint = itprint +1
   end if
-
-#ifdef C2ray
-  call C2ray_initialization()
-#endif
 
 #ifdef MPIP
   call mpi_barrier(mpi_comm_world, err)
@@ -141,9 +127,7 @@ program guacho
   !   finishes
   if (rank.eq.0) print'(a)',"--- My work here is done, have a nice day ---"
 
-#ifdef THERMAL_COND
-  if (rank == master) close(tc_log)
-#endif
+  if (th_cond .and. (rank == master) ) close(tc_log)
 
 #ifdef MPIP
   call mpi_finalize(err)
