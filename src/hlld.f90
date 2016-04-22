@@ -29,8 +29,6 @@
 
 module hlld
 
-#ifdef HLLD
-
 contains
 
 !=======================================================================
@@ -47,25 +45,20 @@ contains
 
 subroutine prim2fhlld(priml,primr,ff)
 
-  use parameters, only : neq, cv
+  use parameters, only : neq, cv, passives, neqdyn
   use hydro_core, only : cfastX, prim2f
   implicit none
   real, dimension(neq),intent(in   ) :: priml, primr   
   real, dimension(neq),intent(inout) :: ff
-  real, dimension(neq)               :: pp
-  real, dimension(neq)               ::fL, fR, uL, uR
-  real, dimension(neq)               :: uu, ust
   real :: csl, csr, sl, sr, slmul, srmur, rholul, rhorur, sM
   real :: pTL, pTR, Bx, signBx
   real :: slmsM, srmsM, rhostl, rhostr, sstl, sstr
   real :: pst, el, er, denl, denr, sMmul, sMmur
   real :: vstl, wstl, bystl, bzstl, estl, vdotbl, vstdotbstl
   real :: vstr, wstr, bystr, bzstr, estr, vdotbr, vstdotbstr
-  real :: sMmsstl, sMmsstr
   real :: dd, vstst, wstst, bystst, bzstst
   real ::  vststdotbstst, eststl, eststr
-  integer :: err
-
+  
   call cfastX(priml,csl)
   call cfastX(primr,csr)
 
@@ -149,9 +142,9 @@ subroutine prim2fhlld(priml,primr,ff)
       ff(7) = bystl*sM-bx*vstl
       ff(8) = bzstl*sM-bx*wstl
 
-#ifdef PASSIVES
-      ff(neqdyn+1:neq)=sM*priml(neqdyn+1:neq)*slmul/slmsM
-#endif
+      if (passives) then
+        ff(neqdyn+1:neq)=sM*priml(neqdyn+1:neq)*slmul/slmsM
+      end if
 
     endif
 
@@ -195,9 +188,9 @@ subroutine prim2fhlld(priml,primr,ff)
       ff(7) = bystr*sM-bx*vstr
       ff(8) = bzstr*sM-bx*wstr
 
-#ifdef PASSIVES
-      ff(neqdyn+1:neq)=sM*primr(neqdyn+1:neq)*srmur/srmsM
-#endif
+      if (passives) then
+        ff(neqdyn+1:neq)=sM*primr(neqdyn+1:neq)*srmur/srmsM
+      end if
   endif
 
   return
@@ -273,9 +266,9 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystst*sM-bx*vstst
     ff(8) = bzstst*sM-bx*wstst
 
-#ifdef PASSIVES
-    ff(neqdyn+1:neq) = sM*priml(neqdyn+1:neq)*slmul/slmsM
-#endif
+    if (passives) then
+      ff(neqdyn+1:neq) = sM*priml(neqdyn+1:neq)*slmul/slmsM
+    end if
 
   return
   endif
@@ -302,9 +295,9 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystst*sM-bx*vstst
     ff(8) = bzstst*sM-bx*wstst
 
-#ifdef PASSIVES
-    ff(neqdyn+1:neq) = sM*primr(neqdyn+1:neq)*srmur/srmsM
-#endif
+    if (passives) then
+      ff(neqdyn+1:neq) = sM*primr(neqdyn+1:neq)*srmur/srmsM
+    end if
 
   return
   endif
@@ -332,7 +325,7 @@ subroutine hlldfluxes(choice)
   implicit none
   integer, intent(in) :: choice
   integer :: i, j, k
-  real, dimension(neq) :: priml, primr, primll, primrr, ff, uu
+  real, dimension(neq) :: priml, primr, primll, primrr, ff
 
   select case(choice)
 
@@ -428,8 +421,6 @@ subroutine hlldfluxes(choice)
 end subroutine hlldfluxes
 
 !=======================================================================
-
-#endif
 
 end module hlld
 
