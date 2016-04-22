@@ -27,7 +27,6 @@
 
 module  Out_VTK_Module
 
-#ifdef OUTVTK
   use parameters
   use globals
 
@@ -175,23 +174,21 @@ subroutine write_VTK(itprint)
    end do
    write(unitout) lf  
 
-#if defined(PMHD) || defined(MHD)
+  if (pmhd .or. mhd) then
   !   MAGNETIC FIELD
-  write(cbuffer,'(a)') 'VECTORS BField float'
-  write(unitout) trim(cbuffer),lf
-   do k=1,nz
-      do j=1,ny
-         do i=1,nx
-            write(unitout)  real(primit(6,i,j,k)*bsc,4),           &
-                            real(primit(7,i,j,k)*bsc,4),           &
-                            real(primit(8,i,j,k)*bsc,4)
-         end do
-      end do
-   end do
-   write(unitout) lf  
-
-#endif 
-
+    write(cbuffer,'(a)') 'VECTORS BField float'
+    write(unitout) trim(cbuffer),lf
+     do k=1,nz
+        do j=1,ny
+           do i=1,nx
+              write(unitout)  real(primit(6,i,j,k)*bsc,4),           &
+                              real(primit(7,i,j,k)*bsc,4),           &
+                              real(primit(8,i,j,k)*bsc,4)
+           end do
+        end do
+     end do
+     write(unitout) lf  
+  end if 
 
   close(unitout)
 
@@ -200,8 +197,6 @@ subroutine write_VTK(itprint)
 end subroutine write_VTK
 
 !=======================================================================
-
-#endif
 
 end module Out_VTK_Module
 
