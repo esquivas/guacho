@@ -29,12 +29,13 @@
 module globals
   implicit none
 
-  real, dimension(:,:,:,:), allocatable :: u      !< conserved varibles
-  real, dimension(:,:,:,:), allocatable :: up     !< conserved varibles after 1/2 timestep
-  real, dimension(:,:,:,:), allocatable :: primit !< primitive varibles
-  real, dimension(:,:,:,:), allocatable :: f      !< X fluxes
-  real, dimension(:,:,:,:), allocatable :: g      !< Y fluxes
-  real, dimension(:,:,:,:), allocatable :: h      !< Z fluxes
+  real, allocatable ::      u(:,:,:,:) !< conserved varibles
+  real, allocatable ::     up(:,:,:,:) !< conserved varibles after 1/2 timestep
+  real, allocatable :: primit(:,:,:,:) !< primitive varibles
+  real, allocatable ::      f(:,:,:,:) !< X fluxes
+  real, allocatable ::      g(:,:,:,:) !< Y fluxes
+  real, allocatable ::      h(:,:,:,:) !< Z fluxes
+  real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y
@@ -59,10 +60,6 @@ module globals
   real :: dt_CFL
   !> Current iteration
   integer :: currentIteration
-
-#ifdef THERMAL_COND
-  real, allocatable :: Temp(:,:,:)   !< Temperature array [K]
-#endif
 
 end module globals
 
