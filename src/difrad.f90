@@ -25,8 +25,6 @@
 !> @brief Ray tracing Radiative Trasnport
 !> @details Ray tracing Radiative Trasnport
 
-#ifdef RADDIFF
-
 module difrad
 
   use parameters
@@ -43,7 +41,7 @@ module difrad
   real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI 
   real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI 
   real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI 
-  integer            :: buffersize(6)  !< Auxiliary buffer for MPI 
+  integer            :: buffersize(6) !< Auxiliary buffer for MPI 
 
 contains
 
@@ -738,5 +736,3 @@ end subroutine diffuse_rad
 end module difrad
 
 !=======================================================================
-
-#endif
