@@ -69,9 +69,47 @@ subroutine viscosity()
   end do
   
 end subroutine viscosity
-
 !=======================================================================
+#ifdef CT
+subroutine current()
 
+  use parameters, only : nx, ny, nz
+  use globals, only :  f, g, h, e
+  use boundaries, only: boundaryI_ct
+
+  implicit none
+
+  integer :: i, j, k
+
+  do k=1,nz!+1
+     do j=1,ny!+1
+        do i=1,nx!+1
+           !
+! Determination of electric field (E= v x B) 
+!         i=max(i,0)            
+!         j=max(j,0)            
+!         k=max(k,0)            
+!         i=min(i,nx+1)
+!         j=min(j,ny+1)
+!         k=min(k,nz+1)
+
+
+           e(1,i,j,k)=0.25*(-g(8,i,j-1,k)-g(8,i,j,k) &
+                              +h(7,i,j,k-1)+h(7,i,j,k))
+           e(2,i,j,k)=0.25*(+f(8,i-1,j,k)+f(8,i,j,k) &
+                              -h(6,i,j,k-1)-h(6,i,j,k))
+           e(3,i,j,k)=0.25*(-f(7,i-1,j,k)-f(7,i,j,k) &
+                              +g(6,i,j-1,k)+g(6,i,j,k)) 
+
+        end do
+     end do
+  end do
+
+  call boundaryI_ct()  
+
+end subroutine current
+#endif
+!=======================================================================
 !> @brief Upwind timestep
 !> @details Performs the upwind timestep according to
 !! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} 
@@ -81,8 +119,13 @@ end subroutine viscosity
 !> @param real [in] dt : timestep
 
 subroutine step(dt)
-  use parameters, only : nx, ny, nz
+
+  use parameters, only : nx, ny, nz, neqdyn
+#ifdef CT
+  use globals, only:  up, u, primit, f, g, h, dx, dy, dz, e
+#else
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
+#endif 
 #if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   use sources
 #endif
@@ -101,11 +144,33 @@ subroutine step(dt)
   do k=1,nz
      do j=1,ny
         do i=1,nx
-           
-           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
-                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
-                                 -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
 
+           up(:5,i,j,k)=u(:5,i,j,k)-dtdx*(f(:5,i,j,k)-f(:5,i-1,j,k))    &
+                                 -dtdy*(g(:5,i,j,k)-g(:5,i,j-1,k))    &
+                                 -dtdz*(h(:5,i,j,k)-h(:5,i,j,k-1))
+#ifdef MHD
+#ifdef CT                                  
+           up(6,i,j,k)=u(6,i,j,k)-0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))    &
+                +0.5*dtdz*(e(2,i,j,k+1)-e(2,i,j,k-1))
+           
+           up(7,i,j,k)=u(7,i,j,k)+0.5*dtdx*(e(3,i+1,j,k)-e(3,i-1,j,k))    &
+                -0.5*dtdz*(e(1,i,j,k+1)-e(1,i,j,k-1))
+           
+           up(8,i,j,k)=u(8,i,j,k)-0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))    &
+                              +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
+
+#else
+           up(6:8,i,j,k)=u(6:8,i,j,k)-dtdx*(f(6:8,i,j,k)-f(6:8,i-1,j,k))    &
+                                 -dtdy*(g(6:8,i,j,k)-g(6:8,i,j-1,k))    &
+                                 -dtdz*(h(6:8,i,j,k)-h(6:8,i,j,k-1))
+#endif
+#endif
+
+#ifdef PASSIVES
+           up(neqdyn+1:,i,j,k)=u(neqdyn+1:,i,j,k)-dtdx*(f(neqdyn+1:,i,j,k)-f(neqdyn+1:,i-1,j,k))    &
+                                 -dtdy*(g(neqdyn+1:,i,j,k)-g(neqdyn+1:,i,j-1,k))    &
+                                 -dtdz*(h(neqdyn+1:,i,j,k)-h(neqdyn+1:,i,j,k-1))
+#endif
 #if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
            call source(i,j,k,primit(:,i,j,k),s)
            up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
@@ -167,6 +232,10 @@ subroutine tstep()
   call hlldfluxes(1)
 #endif
 
+  !calculates the electric current for CT
+#ifdef CT
+  call current()
+#endif  
   !   upwind timestep
   call step(dtm)
   
@@ -193,6 +262,10 @@ subroutine tstep()
   call hlldfluxes(2)
 #endif
 
+  !calculates the electric current for CT
+#ifdef CT
+  call current()
+#endif
   !  upwind timestep
   call step(dt_CFL)
 

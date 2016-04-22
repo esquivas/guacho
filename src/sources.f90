@@ -135,7 +135,6 @@ end subroutine grav_source
 !> @param real [out] s(neq) : vector with source terms
 
 #ifdef RADPRES
-
   subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 #ifdef RADDIFF
   use difrad
@@ -182,7 +181,7 @@ real, intent(out)   :: d
   
 d=  (primit(6,i+1,j,k)-primit(6,i-1,j,k))/(2.*dx)  &
   + (primit(7,i,j+1,k)-primit(7,i,j-1,k))/(2.*dy)  &
-  + (primit(8,i,j,k+1)-primit(8,i,j,k-1))/(2.*dz)  
+  + (primit(8,i,j,k+1)-primit(8,i,j,k-1))/(2.*dz)
 
 end subroutine divergence_B
 
@@ -190,7 +189,7 @@ end subroutine divergence_B
 
 !> @brief 8 Wave source terms for div(B) correction
 !> @details  Adds terms proportional to div B in Faraday's Law,
-!! momentum equationand energy equation as propoes in Powell et al. 1999
+!! momentum equation and energy equation as propoes in Powell et al. 1999
 !> @param integer [in] i : cell index in the X direction
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
@@ -214,7 +213,7 @@ subroutine divbcorr_source(i,j,k,pp,s)
     s(4)= s(4)-divB*pp(8) 
 
     ! energy
-    s(5)= s(5)-divB*(pp(2)*pp(6)+pp(3)+pp(7)+pp(4)*pp(8))      
+    s(5)= s(5)-divB*(pp(2)*pp(6)+pp(3)*pp(7)+pp(4)*pp(8))      
 
     ! Faraday law
     s(6)=s(6)-divB*pp(2)
@@ -260,7 +259,6 @@ subroutine source(i,j,k,prim,s)
   call radpress_source(i,j,k,x,y,z,r,prim,s)
 #endif
 #ifdef EIGHT_WAVE
- 
   !  divergence correction Powell et al. 1999
   call divbcorr_source(i,j,k,prim,s)
 #endif

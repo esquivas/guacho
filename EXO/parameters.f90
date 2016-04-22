@@ -27,7 +27,7 @@
 !! can be moved later to a runtime input file
 
 module parameters
-  use constants, only : Rg, amh, AU, day
+  use constants, only : Rg, amh, AU, day, pi
   implicit none
 #ifdef MPIP
   include "mpif.h"

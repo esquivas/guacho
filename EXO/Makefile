@@ -4,12 +4,12 @@
 #   Name of the executable
 PROGRAM=Guacho
 
-#  Seaerh Path, object files are searched in the order below
-VPATH = .:../src
+#  Search Path, object files are searched in the order below
+VPATH = . : ../src
 
-#   Choice of compiler: ifort and gfortran are tested
+#   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
-#   of the mpi build (see 'mpif90 --version')
+#   of the mpi build (e.g. 'mpif90 --version')
 #COMPILER= gfortran
 COMPILER= ifort
 
@@ -43,15 +43,15 @@ PMHD = N
 
 #   Enable MHD (Y/N)
 #   This is compatible with MHD solvers (HLLE, HLLD, under construction)
-MHD = N
+MHD = Y
 
 #   Solver: 
 #   HD  Solvers: HLL  (too difussive), or HLLC
 #   MHD Solvers: HLLE (too difussive), or HLLD (under construction)
-SOLVER = HLLC
+SOLVER = HLLD
 
 #   Type of output
-OUTBIN = N
+OUTBIN = Y
 OUTVTK = N
 OUTSILO= N
 
@@ -61,15 +61,15 @@ OUTSILO= N
 #LINKFLAGS = -L/usr/local/szip/lib -L/usr/local/hdf5/lib/ -L/usr/local/silo/lib/
 #LINKFLAGS += -lsiloh5  -lhdf5_fortran -lsz -lz -lstdc++ 
 
-#   additional equations (i.e. passive scalars)?
+#   additional equations (i.e. passive scalars) Y/N?
 PASSIVES = Y
 
 #   Equation of state used to compute T and P
 #   ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
 #   SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
 #   H_RATE        : Using n_HI and n_HII
-#   MULTI_SPECIES : not implemented yet
-EOS = H_RATE
+#   CHEM          : Enables a full chemical network
+EOS = CHEM
 
 #   Type of cooling (choose only one)
 #   NONE: Turns off the cooling
@@ -77,6 +77,7 @@ EOS = H_RATE
 #   BBC : Cooling function of Benjamin, Benson and Cox (2003)
 #   DMC : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
 #   CHI : From table(s) generated with Chianti
+#   CHEM : enables cooling from a full chemical network
 COOLING = H
 
 #   boundary conditions (OUTFLOW, CLOSED, PERIODIC)
@@ -102,10 +103,11 @@ LIMITER = 1
 #   ISO : Isotropic thermal conduction
 #   ANISOTROPIC : Anisotropic thermal conduction (requires B field)
 THERMAL_COND = N
+
 #   Enable Saturaation in the thermal conduction (Y/N)
 TC_SATURATION = N
 
-#   Enable diffuse radiation (Y/N) 
+#   Enable 'diffuse' radiation (Y/N) 
 RADDIFF = Y
 
 # Implementing C2ray
@@ -114,17 +116,23 @@ C2ray = N
 #   Include gravity (Y/N) (from point sources)   
 GRAV = Y
 
-#   Include radiative pressure (y/N)
+#   Include radiative pressure (Y/N)
 RADPRES = N
 
-#   Include terms proportional to DIV B (powell et al. 1999) (y/N)
+#   Include terms proportional to DIV B (powell et al. 1999) (Y/N)
 EIGHT_WAVE = N
+
+#   Flux Interpolated Central Diff. scheme (Toth 2000) (Y/N)
+CT = Y
+
 #
 CEXCHANGE = N
 
+# Activate the write of the DivB in the output
+DIVB = Y
+
 #   Enable the N-Body module (Y/N) not implemented yet!
 #   NBODY = N
-
 #####################################################
 # There should be no need to modify below this line #
 #####################################################
@@ -135,7 +143,10 @@ parameters.o \
 globals.o	\
 exoplanet.o \
 user_mod.o \
+network.o \
 hydro_core.o \
+linear_system.o \
+chemistry.o \
 difrad.o \
 cooling_h.o	\
 cooling_dmc.o	\
@@ -172,6 +183,7 @@ OBJECTSLYAT = \
 constants.o \
 parameters.o 	\
 globals.o	\
+exoplanet.o \
 hydro_core.o \
 lyman_alpha_tau.o\
 
@@ -219,8 +231,8 @@ endif
 ifeq ($(EOS),H_RATE)
 FLAGS += -DEOS_H_RATE
 endif
-ifeq ($(EOS),MULTI_SPECIES)
-FLAGS += -DEOS_MULTI_SPECIES
+ifeq ($(EOS),CHEM)
+FLAGS += -DEOS_CHEM
 endif
 ifeq ($(COOLING),NONE)
 FLAGS += -DNO_COOL
@@ -236,6 +248,9 @@ FLAGS += -DCOOLINGCHI
 endif
 ifeq ($(COOLING),BBC)
 FLAGS += -DCOOLINGBBC
+endif
+ifeq ($(COOLING),CHEM)
+FLAGS += -DCOOLINGCHEM
 endif
 ifeq ($(LEFTX),PERIODIC)
 FLAGS += -DPERIODX
@@ -325,8 +340,14 @@ endif
 ifeq ($(EIGHT_WAVE),Y)
 FLAGS += -DEIGHT_WAVE
 endif
+ifeq ($(CT),Y)
+FLAGS += -DCT
+endif
 ifeq ($(CEXCHANGE),Y)
 FLAGS += -DCEXCHANGE
+endif
+ifeq ($(DIVB),Y)
+FLAGS += -DDIVB
 endif
 ifeq ($(C2ray),Y)
 FLAGS += -DC2ray
@@ -335,6 +356,7 @@ endif
 # Compilation rules
 $(PROGRAM)  : prebuild ${OBJECTS}
 	@echo Linking object files ...
+	@echo Linking flags used: $(LINKFLAGS)
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS)  $(OBJECTS) -o $@
 	@echo Cleaning up ...
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
@@ -362,6 +384,7 @@ lyman_alpha_tau : prebuild ${OBJECTSLYAT}
 
 prebuild :
 	@echo "Guacho build started `date`"
+	@echo Compiling flags used: $(FLAGS) 
 %.o:%.f95
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
