@@ -22,7 +22,8 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief Module containing physical and asronomical constants
+!> @brief Module containing physical, asronomical constants, and other
+!> named constants
 
 module constants
   implicit none
@@ -46,6 +47,49 @@ module constants
   real, parameter :: day=86400.        !< 1day in seconds
   real, parameter :: yr=3.1536E7       !< 1yr in seconds
   real, parameter :: Myr=3.1536E13     !< 1Myr in seconds
+
+  !  Named constants
+
+  !  Approximate Riemann solvers
+  integer, parameter :: SOLVER_HLL  = 1
+  integer, parameter :: SOLVER_HLLC = 2
+  integer, parameter :: SOLVER_HLLD = 3
+  integer, parameter :: SOLVER_HLLE = 4
+
+  !  Equations of state
+  integer, parameter :: EOS_ADIABATIC     = 1
+  integer, parameter :: EOS_SINGLE_SPECIE = 2
+  integer, parameter :: EOS_H_RATE        = 3 
+  integer, parameter :: EOS_CHEM          = 4
+
+  !  Cooling Schemes
+  integer, parameter :: COOL_NONE = 0
+  integer, parameter :: COOL_H    = 1
+  integer, parameter :: COOL_BBC  = 2
+  integer, parameter :: COOL_DMC  = 3
+  integer, parameter :: COOL_CHI  = 4
+  integer, parameter :: COOL_CHEM = 5
+
+  !  Coundary conditions
+  integer, parameter :: BC_OUTFLOW  = 1
+  integer, parameter :: BC_CLOSED   = 2
+  integer, parameter :: BC_PERIODIC = 3
+  integer, parameter :: BC_INFLOW   = 4
+
+  !  Slope limiters
+  integer, parameter :: LIMITER_NO_AVERAGE = -1
+  integer, parameter :: LIMITER_NO_LIMIT   =  0
+  integer, parameter :: LIMITER_MINMOD     =  1
+  integer, parameter :: LIMITER_VAN_LEER   =  2
+  integer, parameter :: LIMITER_VAN_ALBADA =  3
+  integer, parameter :: LIMITER_UMIST      =  4
+  integer, parameter :: LIMITER_WOODWARD   =  5
+  integer, parameter :: LIMITER_SUPERBEE   =  6
+
+  !  Thermal conduction
+  integer, parameter :: TC_OFF         = 0
+  integer, parameter :: TC_ISOTROPIC   = 1
+  integer, parameter :: TC_ANISOTROPIC = 2
 
 end module constants
 
