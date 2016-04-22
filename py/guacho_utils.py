@@ -85,7 +85,7 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False):
 '''
   Returns the 3D array for equation neq in all the domain
 '''
-def readbin3d_all(nout,neq,path='',base='points',verbose=False):
+def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=false):
   
   print 'Retrieving 3D map for eqn',neq
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
