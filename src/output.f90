@@ -30,7 +30,6 @@ module output
 
 contains
 
-
 !=======================================================================
 !> @brief Writes output
 !> @details Writes output, the format is chosen in makefile
@@ -39,28 +38,17 @@ contains
 !> @param integer [in] itprint : number of output
 
 subroutine write_output(itprint)
-
-#ifdef OUTBIN
+  
+  use parameters !, only :: out_bin, out_vtk, out_silo
   use Out_BIN_Module
-#endif
-#ifdef OUTSILO
   use Out_Silo_Module
-#endif
-#ifdef OUTVTK
   use Out_VTK_Module
-#endif
-implicit none 
-integer, intent(in) :: itprint
+  implicit none 
+  integer, intent(in) :: itprint
 
-#ifdef OUTBIN
-  call write_BIN(itprint)
-#endif
-#ifdef OUTVTK
-  call write_VTK(itprint)
-#endif
-#ifdef OUTSILO     					      
-  call outputsilo(itprint)
-#endif							      
+  if (out_bin ) call write_BIN(itprint)
+  if (out_vtk ) call write_VTK(itprint)
+  if (out_silo) call write_silo(itprint)
 
 end subroutine write_output
 
