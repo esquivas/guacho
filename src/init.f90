@@ -165,7 +165,9 @@ subroutine initmain(tprint, itprint)
   allocate (     f(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-  
+#ifdef CT  
+  allocate (     e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+#endif  
   !   DMC cooling
 #ifdef COOLINGDMC
   call read_table()

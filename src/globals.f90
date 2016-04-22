@@ -35,6 +35,9 @@ module globals
   real, dimension(:,:,:,:), allocatable :: f      !< X fluxes
   real, dimension(:,:,:,:), allocatable :: g      !< Y fluxes
   real, dimension(:,:,:,:), allocatable :: h      !< Z fluxes
+#ifdef CT  
+  real, dimension(:,:,:,:), allocatable :: e      !< electric current
+#endif
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y

@@ -47,24 +47,19 @@ contains
 
 subroutine prim2fhlld(priml,primr,ff)
 
-  use parameters, only : neq, cv
+  use parameters, only : neq, cv, neqdyn
   use hydro_core, only : cfastX, prim2f
   implicit none
   real, dimension(neq),intent(in   ) :: priml, primr   
   real, dimension(neq),intent(inout) :: ff
-  real, dimension(neq)               :: pp
-  real, dimension(neq)               ::fL, fR, uL, uR
-  real, dimension(neq)               :: uu, ust
   real :: csl, csr, sl, sr, slmul, srmur, rholul, rhorur, sM
   real :: pTL, pTR, Bx, signBx
   real :: slmsM, srmsM, rhostl, rhostr, sstl, sstr
   real :: pst, el, er, denl, denr, sMmul, sMmur
   real :: vstl, wstl, bystl, bzstl, estl, vdotbl, vstdotbstl
   real :: vstr, wstr, bystr, bzstr, estr, vdotbr, vstdotbstr
-  real :: sMmsstl, sMmsstr
   real :: dd, vstst, wstst, bystst, bzstst
   real ::  vststdotbstst, eststl, eststr
-  integer :: err
 
   call cfastX(priml,csl)
   call cfastX(primr,csr)
@@ -332,7 +327,7 @@ subroutine hlldfluxes(choice)
   implicit none
   integer, intent(in) :: choice
   integer :: i, j, k
-  real, dimension(neq) :: priml, primr, primll, primrr, ff, uu
+  real, dimension(neq) :: priml, primr, primll, primrr, ff
 
   select case(choice)
 

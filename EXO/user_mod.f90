@@ -57,12 +57,13 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals, only : coords, dx, dy, dz, rank, time
+  use globals,    only: coords, dx ,dy ,dz
+
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
   integer :: i,j,k
-  real :: x,y,z, rads, velx, vely, velz, dens
+  real :: x,y,z, rads, velx, vely, velz, dens,cpi
   !  the star wind does not cover the entire domain, we fill here 
   !  as if the exoplanet is absent
   do i=nxmin,nxmax
@@ -86,13 +87,29 @@ subroutine initial_conditions(u)
         u(2,i,j,k) = dens*velx
         u(3,i,j,k) = dens*vely
         u(4,i,j,k) = dens*velz
-        ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                    + cv*dens*1.9999*Tsw
-        
-        u(neqdyn+1,i,j,k)= 0.0001*dens !  density of neutrals
-        u(neqdyn+2,i,j,k)= dens        ! passive scalar
+#if defined(PMHD) || defined(MHD)
+        cpi = bsw*(RSW/rads)**3/(2.*rads**2)
+        u(6,i,j,k) = 3.*y*x*cpi
+        u(7,i,j,k) = (3.*y**2-rads**2)*cpi
+        u(8,i,j,k) = 3.*y*z*cpi
 
+#endif
+#ifdef MHD
+        ! total energy
+        u(5,i,j,k)=0.5*dens*vsw**2         &
+             + cv*dens*Tsw       & 
+             + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+#else
+              ! total energy
+        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+             + cv*dens*1.9999*Tsw
+#endif
+#ifdef PASSIVES
+        !  density of neutrals
+        u(neqdyn+1,i,j,k)= 0.0001*dens
+        !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+        u(neqdyn+2,i,j,k)= dens   ! passive scalar
+#endif
       end do
     end do
   end do
@@ -111,12 +128,13 @@ end subroutine initial_conditions
 #ifdef OTHERB
 subroutine impose_user_bc(u)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals   , only : time 
+  use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use globals,    only: time
+
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
-  call impose_exo(u, time)
+  call impose_exo(u,time)
  
 end subroutine impose_user_bc
 

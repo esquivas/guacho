@@ -122,7 +122,7 @@ subroutine write_BIN(itprint)
 #endif
   integer :: unitout
   integer :: ip
-#if DIVBCORR
+#if DIVB
   integer ::  i, j, k
   real :: divB(nx,ny,nz)
 #endif
@@ -189,7 +189,7 @@ subroutine write_BIN(itprint)
 #endif
 
 
-#ifdef DIVBCORR
+#ifdef DIVB
   !   This is a hack to write div(B) to plot it easily
   !  compute div(B)
   do k=1,nz
@@ -208,7 +208,7 @@ subroutine write_BIN(itprint)
       write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
       unitout=10+rank
 
-      open(unit=unitout,file=file1,status='replace',acess='stream', &
+      open(unit=unitout,file=file1,status='replace',access='stream', &
            convert='LITTLE_ENDIAN')
 
       call write_header(unitout,1,0)
@@ -216,7 +216,9 @@ subroutine write_BIN(itprint)
       close(unitout)
       
     end if
+#ifdef MPIP
    call mpi_barrier(mpi_comm_world, err)
+#endif
   end do
 
 #endif
