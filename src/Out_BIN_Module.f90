@@ -28,7 +28,6 @@
 
 module  Out_BIN_Module
 
-#ifdef OUTBIN
   use parameters
   use globals
 
@@ -110,9 +109,7 @@ end subroutine write_header
 
 subroutine write_BIN(itprint)
 
-#ifdef RADDIFF
   use difrad
-#endif
   implicit none
   integer, intent(in) :: itprint
   character (len=128) :: file1
@@ -122,10 +119,8 @@ subroutine write_BIN(itprint)
 #endif
   integer :: unitout
   integer :: ip
-#if DIVBCORR
   integer ::  i, j, k
   real :: divB(nx,ny,nz)
-#endif
 
 #ifdef MPIP
   write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
@@ -156,77 +151,76 @@ subroutine write_BIN(itprint)
 
      !   write the emissvity and photoionizing rate
      !   if diffuse radiation enabled
-#ifdef RADDIFF
+  if (dif_rad) then
 
-     ! take turns
-  do ip=0, np-1
-    if(rank == ip) then
+       ! take turns
+    do ip=0, np-1
+      if(rank == ip) then
 
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
-      unitout=10+rank
-      open(unit=unitout,file=file1,status='replace', access='stream', &
-           convert='LITTLE_ENDIAN')
-      call write_header(unitout,1,0)
-      write (unitout) em(:,:,:)
-      close(unitout)
-      print'(i3,a,a)',rank," wrote file:",trim(file1)
+        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
+        unitout=10+rank
+        open(unit=unitout,file=file1,status='replace', access='stream', &
+             convert='LITTLE_ENDIAN')
+        call write_header(unitout,1,0)
+        write (unitout) em(:,:,:)
+        close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
 
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
-      unitout=10+rank
-      open(unit=unitout,file=file1,status='replace',access='stream', &
-                          convert='LITTLE_ENDIAN')
-      call write_header(unitout,1,0)
-      write (unitout) ph(:,:,:)
-      close(unitout)
-      print'(i3,a,a)',rank," wrote file:",trim(file1)
-      
-    end if
+        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
+        unitout=10+rank
+        open(unit=unitout,file=file1,status='replace',access='stream', &
+                            convert='LITTLE_ENDIAN')
+        call write_header(unitout,1,0)
+        write (unitout) ph(:,:,:)
+        close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
+        
+      end if
 #ifdef MPIP   
-   call mpi_barrier(mpi_comm_world, err)
+        call mpi_barrier(mpi_comm_world, err)
 #endif
-  end do
+    end do
              
-#endif
+  end if
 
 
-#ifdef DIVBCORR
-  !   This is a hack to write div(B) to plot it easily
-  !  compute div(B)
-  do k=1,nz
-    do j=1,ny
-      do i=1,nx
-        divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) + &
-                      (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) + &
-                      (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
+  if (dump_divb) then
+    !   This is a hack to write div(B) to plot it easily
+    !  compute div(B)
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
+          divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) + &
+                        (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) + &
+                        (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
+        end do
       end do
     end do
-  end do
 
-  ! take turns to write to disk
-  do ip=0, np-1
-    if(rank == ip) then
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
-      unitout=10+rank
+    ! take turns to write to disk
+    do ip=0, np-1
+      if(rank == ip) then
+        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
+        unitout=10+rank
 
-      open(unit=unitout,file=file1,status='replace',acess='stream', &
-           convert='LITTLE_ENDIAN')
+        open(unit=unitout,file=file1,status='replace',access='stream', &
+             convert='LITTLE_ENDIAN')
 
-      call write_header(unitout,1,0)
-      write (unitout) divB(:,:,:)
-      close(unitout)
-      
-    end if
-   call mpi_barrier(mpi_comm_world, err)
-  end do
-
+        call write_header(unitout,1,0)
+        write (unitout) divB(:,:,:)
+        close(unitout)
+        
+      end if
+#ifdef MPIP   
+        call mpi_barrier(mpi_comm_world, err)
 #endif
+    end do
 
+  end if
 
 end subroutine write_BIN
 
 !=======================================================================
-
-#endif
 
 end module Out_BIN_Module
 
