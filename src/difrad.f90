@@ -634,14 +634,14 @@ subroutine progress(j,tot)
   integer(kind=4)::j,k
   integer(kind=4), intent(in) :: tot
   character(len=57)::bar="???% |                                                  |"
-  open (unit=6, carriagecontrol='fortran')
+  open (unit=6)
   write(unit=bar(1:3),fmt="(i3)") 100*j/tot
   bar(7:56)="."
   do k=1, 50*j/tot
     bar(6+k:6+k)="="
   enddo
   ! print the progress bar.
-  write(unit=6,fmt="(a1,a1,a57)") '+',char(13), bar
+  write(unit=6,fmt="(a1,a1,a57)",advance-"no") '+',char(13), bar
 
 end subroutine progress
 
