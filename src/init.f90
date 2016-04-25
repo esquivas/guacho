@@ -134,7 +134,7 @@ subroutine initmain(tprint, itprint)
   else
      itprint=itprint0
      time=real(itprint)*dtprint
-     if(rank.eq.master) then
+     if(rank == master) then
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,' at a time ',time*tsc/yr,' yr'
         print'(a)',' ' 
      end if
@@ -149,6 +149,8 @@ subroutine initmain(tprint, itprint)
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+  if (constrained_transport) &
+  allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
   !   DMC cooling
   if (cooling == COOL_DMC) call init_cooling_dmc()
