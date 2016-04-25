@@ -111,7 +111,6 @@ subroutine u2prim(uu, prim, T)
     prim(5) = dentot * T /Tempsc
   end if
 
-
 end subroutine u2prim  
 
 !=======================================================================
