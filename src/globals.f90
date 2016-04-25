@@ -35,6 +35,7 @@ module globals
   real, allocatable ::      f(:,:,:,:) !< X fluxes
   real, allocatable ::      g(:,:,:,:) !< Y fluxes
   real, allocatable ::      h(:,:,:,:) !< Z fluxes
+  real, allocatable ::      e(:,:,:,:) !< electric current (for CT)
   real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
 
   real :: dx  !< grid spacing in X
