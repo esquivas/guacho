@@ -22,7 +22,6 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-
 !> @brief Boundary conditions
 !> @details Sets boundary conditions, the type of boundaries is
 !! set in the Makefile
