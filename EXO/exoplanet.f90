@@ -32,9 +32,7 @@ module exoplanet
   real :: TSW     !< Stellar wind temperature
   real :: VSW     !< Stellar wind velocity
   real :: dsw     !< Stellar Wind Density
-#if defined(PMHD) || defined(MHD)
   real :: b0                     !< Magnetic Field
-#endif
   real :: RPW     !< Planetary radius
   real :: TPW     !< Planetary wind temperature
   real :: VPW     !< Planetary wind velocity
@@ -63,9 +61,7 @@ subroutine init_exo()
   implicit none
   real :: amdot  ! mdot_star (MSUN/yr)
   real :: ampdot ! mdot_planet (g/s)
-#if defined(PMHD) || defined(MHD)
-  real :: bsw, bsc
-#endif
+  real :: bsw !, bsc
 
   !----------------STAR PARAMETERS ------------------
   MassS = 1.1*msun
@@ -78,9 +74,9 @@ subroutine init_exo()
   vsw   = 372.e5   !*************       ! Stellar wind velocity (cm/s)
   dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
 
-#if defined(PMHD) || defined(MHD)
-  bsw    =1.0e-4                         ! Stellar magnetic field (g)
-#endif
+  if (pmhd .or. mhd) then
+    bsw    =1.0e-4                      ! Stellar magnetic field (g)
+  end if
 
   !----------------PLANET PARAMETERS------------------
   MassP =0.67*mjup
@@ -103,9 +99,9 @@ subroutine init_exo()
   Tsw=Tsw/Tempsc
   Rsw=Rsw/rsc
 
-#if defined(PMHD) || defined(MHD)
-  bsw=bsw/bsc 
-#endif
+  if (pmhd .or. mhd) then
+    bsw=bsw/bsc 
+  end if
 
   dpw=dpw/rhosc
   vpw=vpw/sqrt(vsc2)
@@ -169,9 +165,9 @@ subroutine impose_exo(u,time)
            ypl=y
            zpl=z-zp
 
-#if defined(PMHD) || defined(MHD)
-           cpi=b0*(rsw/(rads+1.e-30))**3/(2.*(rads+1.e-30)**2)
-#endif
+          if (pmhd .or. mhd) then
+             cpi=b0*(rsw/(rads+1.e-30))**3/(2.*(rads+1.e-30)**2)
+           end if
            ! Distance from the centre of the star
            rads=sqrt(x**2+y**2+z**2)
 
@@ -192,35 +188,35 @@ subroutine impose_exo(u,time)
               u(3,i,j,k) = dens*vely
               u(4,i,j,k) = dens*velz
               !   magnetic field
-#if defined(PMHD) || defined(MHD)
-              u(6,i,j,k) =  3.*y*x*cpi
-              u(7,i,j,k) = (3.*y**2-rads**2)*cpi
-              u(8,i,j,k) =  3.*y*z*cpi
-#endif
+              if (pmhd .or. mhd) then
+                u(6,i,j,k) =  3.*y*x*cpi
+                u(7,i,j,k) = (3.*y**2-rads**2)*cpi
+                u(8,i,j,k) =  3.*y*z*cpi
+              end if
 
-#ifdef MHD
-              ! total energy
-              u(5,i,j,k)=0.5*dens*vsw**2         &
-                   + cv*dens*2.*1.9999*Tsw       & 
-                   + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-#else
-              ! total energy
-              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                   + cv*dens*1.9999*Tsw
-#endif
+              if (mhd) then
+                ! total energy
+                u(5,i,j,k)=0.5*dens*vsw**2         &
+                     + cv*dens*2.*1.9999*Tsw       & 
+                     + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+              else
+                ! total energy
+                u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+                     + cv*dens*1.9999*Tsw
+              end if
 
-#ifdef PASSIVES
-              !  density of neutrals
-              u(neqdyn+1,i,j,k)= 0.0001*dens
-              !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-              u(neqdyn+2,i,j,k)= dens   ! passive scalar
+              if (passives) then
+                !  density of neutrals
+                u(neqdyn+1,i,j,k)= 0.0001*dens
+                !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+                u(neqdyn+2,i,j,k)= dens   ! passive scalar
 
 !              u(neqdyn+3,i,j,k)= 0.00001*dens   ! xci*rho
 !              u(neqdyn+4,i,j,k)= 0.00001*dens   ! xhn*rho
 !              u(neqdyn+5,i,j,k)= 0.00001*dens   ! xcn*rho
 
               
-#endif                
+              endif                
               ! IF INSIDE THE PLANET
            else if(radp <= rpw) then
 
@@ -236,31 +232,31 @@ subroutine impose_exo(u,time)
               u(3,i,j,k) = dens*vely
               u(4,i,j,k) = dens*velz
               !  Magnetic fields (IF MHD or PMHD)
-#if defined(PMHD) || defined(MHD)
-              u(6,i,j,k) = 0.0
-              u(7,i,j,k) = 0.0
-              u(8,i,j,k) = 0.0
-#endif
+              if (pmhd .or. mhd) then
+                u(6,i,j,k) = 0.0
+                u(7,i,j,k) = 0.0
+                u(8,i,j,k) = 0.0
+              end if
               !   energy
-#ifdef MHD
-              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                   + cv*dens* 1.0001*Tpw                    & 
-                   + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-#else
-              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                   + cv*dens*1.0001*Tpw
-#endif
+              if (mhd) then
+                u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+                     + cv*dens* 1.0001*Tpw                    & 
+                     + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+              else
+                u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+                     + cv*dens*1.0001*Tpw
+              end if
 
-#ifdef PASSIVES
-              !  density of neutrals
-              u(neqdyn+1,i,j,k)=0.9999*dens                
-              !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-              u(neqdyn+2,i,j,k)= -dens   ! passive scalar
+              if (passives) then
+                !  density of neutrals
+                u(neqdyn+1,i,j,k)=0.9999*dens                
+                !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+                u(neqdyn+2,i,j,k)= -dens   ! passive scalar
 
 !              u(neqdyn+3,i,j,k)= 0.00001*dens   ! xci*rho
 !              u(neqdyn+4,i,j,k)= 0.00001*dens   ! xhn*rho
 !              u(neqdyn+5,i,j,k)= 0.99999*dens   ! xcn*rho
-#endif                
+              end if                
            end if
               
         end do
