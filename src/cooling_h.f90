@@ -260,7 +260,6 @@ subroutine atomic(dt,uu,tau,radphi)
   use hydro_core, only : u2prim
   implicit none
 
-
   real, intent(in)                 :: dt, tau, radphi
   real, intent(out),dimension(neq) :: uu
   real, dimension(neq)             :: prim
