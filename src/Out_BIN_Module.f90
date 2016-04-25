@@ -32,7 +32,6 @@ module  Out_BIN_Module
 
 contains
 
-
 !=======================================================================
 !> @brief Writes header 
 !> @details Writes header for binary input 
@@ -224,7 +223,3 @@ end subroutine write_BIN
 end module Out_BIN_Module
 
 !=======================================================================
-
-
-
-
