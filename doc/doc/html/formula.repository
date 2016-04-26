@@ -1,0 +1,11 @@
+\form#0:$ \theta_x, \theta_y, \theta_z $
+\form#1:$ \pi $
+\form#2:$ \beta_H(T) $
+\form#3:$ F_{i+1/2} $
+\form#4:$ \Delta t$
+\form#5:$ t $
+\form#6:$ t + \Delta t $
+\form#7:\[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} \left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] \]
+\form#8:$ U^{n+1} $
+\form#9:$ U^{n} $
+\form#10:$ \sqrt{x^2+y^2+z^2} $
