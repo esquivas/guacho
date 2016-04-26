@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=M1-chem
+PROGRAM=Guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
@@ -55,6 +55,7 @@ globals.o	\
 jet.o \
 user_mod.o \
 network.o \
+field_cd_module.o \
 hydro_core.o \
 linear_system.o \
 chemistry.o \
