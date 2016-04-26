@@ -114,13 +114,10 @@ module parameters
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
-  !>  Enable Constrained Transport cleaning of div B
-  logical, point_grav :: constrained_transport = .true.
+  !>  Enable field-CD cleaning of div B
+  logical, parameter :: enable_field_cd = .true.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
-
-  !>  Enable charge exchange
-  logical, parameter :: charge_exchange = .false.
 
   !> Path used to write the output
   character (len=128),parameter ::  outputpath='./'
