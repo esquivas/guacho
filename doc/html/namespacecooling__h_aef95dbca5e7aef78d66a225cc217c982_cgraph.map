@@ -1,7 +1,0 @@
-<map id="cooling_h::atomic" name="cooling_h::atomic">
-<area shape="rect" id="node2" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="179,5,316,32"/>
-<area shape="rect" id="node3" href="$namespacecooling__h.html#ad5f1352f8925ccb1b352d6e749465a92" title="calculates the collisional ionization rate " alt="" coords="194,56,301,83"/>
-<area shape="rect" id="node4" href="$namespacecooling__h.html#a09de30645cebf531a647b5f53ae143b2" title="calculates the recombination rate (case B) " alt="" coords="188,107,307,133"/>
-<area shape="rect" id="node5" href="$namespacecooling__h.html#a92cfd14c9b02e853eb33d22857fabeed" title="Non equilibrium cooling. " alt="" coords="189,157,306,184"/>
-<area shape="rect" id="node6" href="$namespacecooling__h.html#a2a2de25572bd515eae9441391e0ed0f8" title="betaH(T) " alt="" coords="364,157,484,184"/>
-</map>
