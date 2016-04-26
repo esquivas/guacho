@@ -114,15 +114,13 @@ module parameters
 
   !>   Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
+  !>  Enable field-CD cleaning of div B
+  logical, parameter :: enable_field_cd = .false.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
 
-  !>  Enable charge exchange
-  logical, parameter :: charge_exchange = .false.
-
-
   !> Path used to write the output
- character (len=128),parameter ::  outputpath='/datos/esquivel/Guacho-1.2/chemcol/'
+ character (len=128),parameter ::  outputpath='./'
  !> working directory
  character (len=128),parameter ::  workdir='./'
   
