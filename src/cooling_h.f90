@@ -268,9 +268,7 @@ subroutine atomic(dt,uu,tau,radphi)
   !real (kind=16) :: gain, tprime, ce, ALOSS
   real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
   real (kind=8) :: tprime, ce  !, ALOSS
-#ifdef RADDIFF
   real(kind=8) :: fpn, gain
-#endif
 
   !    these need to be double precision in order for
   !      the ionization calculation to work
@@ -300,9 +298,7 @@ subroutine atomic(dt,uu,tau,radphi)
   rec=alpha(real(t,8))                !# rad. recombination rate
   y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction  
   dh=real( uu(1), 8 )                  !# H density
-#ifdef RADDIFF
   fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus
-#endif
   !print*,fpn
   !fpn=0.
 
