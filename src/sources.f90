@@ -28,10 +28,14 @@
 !! scheme is used
 
   module sources
+
   use parameters, only : neq, neqdyn, nxtot, nytot, nztot, &
                          rsc, rhosc, vsc2, nx, ny, nz, &
-                         point_grav, radiation_pressure, eight_wave
+                         point_grav, radiation_pressure, &
+                         eight_wave
+
   use globals,    only : dx, dy, dz, coords
+
   implicit none
   
 contains
@@ -223,7 +227,7 @@ end subroutine divbcorr_8w_source
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] prim(neq) : vector of primitive variables
-!> @param real [out] s(neq) : vector with source terms'
+!> @param real [out] s(neq) : vector with source terms
 
 subroutine source(i,j,k,prim,s)
 
@@ -247,7 +251,6 @@ subroutine source(i,j,k,prim,s)
 
   !  divergence correction Powell et al. 1999
   if (eight_wave) call divbcorr_8w_source(i,j,k,prim,s)
-  
   return
 end subroutine source
 
