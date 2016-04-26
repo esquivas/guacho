@@ -1,4 +1,0 @@
-<map id="cooling_dmc::coolingdmc" name="cooling_dmc::coolingdmc">
-<area shape="rect" id="node2" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="233,5,371,32"/>
-<area shape="rect" id="node3" href="$namespacecooling__dmc.html#af987bbf144f596d57b154427bbb82ae5" title="Returns the cooling coefficient interpolating the table. " alt="" coords="225,56,379,83"/>
-</map>
