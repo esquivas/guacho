@@ -46,6 +46,7 @@ subroutine initmain(tprint, itprint)
   use cooling_chi
   use difrad
   use thermal_cond
+  use field_cd_module
   use user_mod
 
   implicit none
@@ -149,7 +150,8 @@ subroutine initmain(tprint, itprint)
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-  if (constrained_transport) &
+
+  if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
   !   DMC cooling
@@ -195,7 +197,7 @@ subroutine initmain(tprint, itprint)
   end if
 
   !  User input initialization, it is called always, 
-  !  it has to be there, even empty
+  !  it has to be there, even if empty
   call init_user_mod()
   
   !   write report of compilation parameters
