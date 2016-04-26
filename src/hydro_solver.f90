@@ -72,9 +72,12 @@ end subroutine viscosity
 !> @param real [in] dt : timestep
 
 subroutine step(dt)
-  use parameters, only : nx, ny, nz, &
-                         point_grav, radiation_pressure, eight_wave
+  use parameters, only : nx, ny, nz, neqdyn, &
+                         point_grav, radiation_pressure, &
+                         eight_wave, enable_field_cd
+
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
+  use field_cd_module
   use sources
   implicit none
   real :: s(neq)
@@ -86,18 +89,27 @@ subroutine step(dt)
   dtdy=dt/dy
   dtdz=dt/dz
 
+  if (enable_field_cd) call get_current()
+
   do k=1,nz
     do j=1,ny
       do i=1,nx
-          
-        up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))    &
-                              -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))    &
-                              -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
+        
+        if (.not.enable_field_cd) then
+          !  upwind step for all variables
+          up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
+                                -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
+                                -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
+        else
+           
+          call field_cd_update(i,j,k,dt)
+
+        endif
 
         if (point_grav .or. radiation_pressure .or. eight_wave) then
-
+          
           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
-        
+
         end if
 
         end do
@@ -114,7 +126,7 @@ end subroutine step
 subroutine tstep()
 
   use parameters, only : tsc, riemann_solver, eq_of_state, &
-                         dif_rad, charge_exchange, cooling, &
+                         dif_rad, cooling, &
                          th_cond
   use constants
   use globals
@@ -169,16 +181,11 @@ subroutine tstep()
   !  the primitives in the physical cell are upated
   if (eq_of_state == EOS_CHEM) call update_chem()
 
- !  Do the Radiaiton transfer (Monte Carlo type)
- if (dif_rad) call diffuse_rad()
+  !  Do the Radiation transfer (Monte Carlo type)
+  if (dif_rad) call diffuse_rad()
 
- !****************************************************
-  !   apply charge exchange TO BE ADDED IN COLLING?
-  !   not fully implemented
-  !****************************************************
-  !if (charge_exchange) call cxchange(dt*tsc)
-
-  !   apply cooling/heating
+  !-------------------------
+  !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
   if (cooling == COOL_H) then 
