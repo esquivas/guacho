@@ -293,45 +293,45 @@ err = dbset2dstrlen(lnames(1))
 err = dbputmvar(unitout, "Pth", 3, np, names, lnames,types, DB_F77NULL, ierr)
 err = dbset2dstrlen(oldlen)
 
-#ifdef PMHD
-!  B components
-!B_x
-do i=0, np-1
-  write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:bx'
-  Lstring=len_trim(buf)
-  names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
-  lnames(i+1)=  Lstring
-  types (i+1) = DB_QUADVAR
-end do
-oldlen = dbget2dstrlen()
-err = dbset2dstrlen(lnames(1))
-err = dbputmvar(unitout, "bx", 2, np, names, lnames,types, DB_F77NULL, ierr)
-err = dbset2dstrlen(oldlen)
-!B_y
-do i=0, np-1
-  write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:by'
-  Lstring=len_trim(buf)
-  names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
-  lnames(i+1)=  Lstring
-  types (i+1) = DB_QUADVAR
-end do
-oldlen = dbget2dstrlen()
-err = dbset2dstrlen(lnames(1))
-err = dbputmvar(unitout, "by", 2, np, names, lnames,types, DB_F77NULL, ierr)
-err = dbset2dstrlen(oldlen)
-!B_z
-do i=0, np-1
-  write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:bz'
-  Lstring=len_trim(buf)
-  names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
-  lnames(i+1)=  Lstring
-  types (i+1) = DB_QUADVAR
-end do
-oldlen = dbget2dstrlen()
-err = dbset2dstrlen(lnames(1))
-err = dbputmvar(unitout, "bz", 2, np, names, lnames,types, DB_F77NULL, ierr)
-err = dbset2dstrlen(oldlen)
-#endif
+if (pmhd .or. mhd) then
+  !  B components
+  !B_x
+  do i=0, np-1
+    write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:bx'
+    Lstring=len_trim(buf)
+    names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
+    lnames(i+1)=  Lstring
+    types (i+1) = DB_QUADVAR
+  end do
+  oldlen = dbget2dstrlen()
+  err = dbset2dstrlen(lnames(1))
+  err = dbputmvar(unitout, "bx", 2, np, names, lnames,types, DB_F77NULL, ierr)
+  err = dbset2dstrlen(oldlen)
+  !B_y
+  do i=0, np-1
+    write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:by'
+    Lstring=len_trim(buf)
+    names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
+    lnames(i+1)=  Lstring
+    types (i+1) = DB_QUADVAR
+  end do
+  oldlen = dbget2dstrlen()
+  err = dbset2dstrlen(lnames(1))
+  err = dbputmvar(unitout, "by", 2, np, names, lnames,types, DB_F77NULL, ierr)
+  err = dbset2dstrlen(oldlen)
+  !B_z
+  do i=0, np-1
+    write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',itprint,'.silo:bz'
+    Lstring=len_trim(buf)
+    names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
+    lnames(i+1)=  Lstring
+    types (i+1) = DB_QUADVAR
+  end do
+  oldlen = dbget2dstrlen()
+  err = dbset2dstrlen(lnames(1))
+  err = dbputmvar(unitout, "bz", 2, np, names, lnames,types, DB_F77NULL, ierr)
+  err = dbset2dstrlen(oldlen)
+endif
 
 !  close master file
 err = dbclose(unitout)
