@@ -641,7 +641,7 @@ subroutine progress(j,tot)
     bar(6+k:6+k)="="
   enddo
   ! print the progress bar.
-  write(unit=6,fmt="(a1,a1,a57)",advance-"no") '+',char(13), bar
+  write(unit=6,fmt="(a1,a1,a57)",advance="no") '+',char(13), bar
 
 end subroutine progress
 
