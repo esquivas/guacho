@@ -266,8 +266,11 @@ subroutine atomic(dt,uu,tau,radphi)
   real                             :: T !, radphi0, psi0
   !real (kind=16) :: etau, psi, dh, y0, fpn, g0, e, y1, t1,dh0, al
   !real (kind=16) :: gain, tprime, ce, ALOSS
-  real (kind=8) :: etau, dh, y0, fpn, g0, e, y1, t1,dh0, al
-  real (kind=8) :: gain, tprime, ce  !, ALOSS
+  real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
+  real (kind=8) :: tprime, ce  !, ALOSS
+#ifdef RADDIFF
+  real(kind=8) :: fpn, gain
+#endif
 
   !    these need to be double precision in order for
   !      the ionization calculation to work

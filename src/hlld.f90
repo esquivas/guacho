@@ -58,7 +58,7 @@ subroutine prim2fhlld(priml,primr,ff)
   real :: vstr, wstr, bystr, bzstr, estr, vdotbr, vstdotbstr
   real :: dd, vstst, wstst, bystst, bzstst
   real ::  vststdotbstst, eststl, eststr
-  
+
   call cfastX(priml,csl)
   call cfastX(primr,csr)
 

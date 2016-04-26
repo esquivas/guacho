@@ -104,9 +104,8 @@ subroutine step(dt)
      end do
   end do
 
-!=======================================================================
-
 end subroutine step
+
 
 !> @brief High level wrapper to advancce the simulation
 !> @details High level wrapper to advancce the simulation

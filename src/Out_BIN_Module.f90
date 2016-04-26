@@ -118,7 +118,7 @@ subroutine write_BIN(itprint)
   integer :: unitout
   integer :: ip
   integer ::  i, j, k
-  real :: divB(nx,ny,nz)
+  real, allocatable :: divB(:,:,:)
 
 #ifdef MPIP
   write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
@@ -185,6 +185,8 @@ subroutine write_BIN(itprint)
   if (dump_divb) then
     !   This is a hack to write div(B) to plot it easily
     !  compute div(B)
+    allocate(divB(nx,ny,nz))
+
     do k=1,nz
       do j=1,ny
         do i=1,nx
@@ -213,6 +215,8 @@ subroutine write_BIN(itprint)
         call mpi_barrier(mpi_comm_world, err)
 #endif
     end do
+
+    deallocate(divB)
 
   end if
 
