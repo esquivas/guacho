@@ -233,17 +233,23 @@ subroutine initmain(tprint, itprint)
      print'(a)', ''
 #endif
 
-  if (riemann_solver == SOLVER_HLLC) then
-    print'(a)', 'The Riemann solver is HLLC'
-    print'(a)', ''
-  else if (riemann_solver == SOLVER_HLL) then
+  if (riemann_solver == SOLVER_HLL) then
     print'(a)', 'The Riemann solver is HLL'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLC) then
+    print'(a)', 'The Riemann solver is HLLC'
     print'(a)', ''
   else if (riemann_solver == SOLVER_HLLE) then
     print'(a)', 'The Riemann solver is HLLE'
     print'(a)', ''
-  else if (riemann_solver == SOLVER_HLLE) then
+  else if (riemann_solver == SOLVER_HLLD) then
     print'(a)', 'The Riemann solver is HLLD'
+    print'(a)', ''
+    else if (riemann_solver == SOLVER_HLLE_SPLIT) then
+    print'(a)', 'The Riemann solver is HLLE with split B field'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLD_SPLIT) then
+    print'(a)', 'The Riemann solver is HLLD with split B field'
     print'(a)', ''
   else
     print'(a)', 'Unrecognized Riemann Solver'
