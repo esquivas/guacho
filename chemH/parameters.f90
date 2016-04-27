@@ -108,8 +108,8 @@ module parameters
   !> Enable 'diffuse' radiation
   logical, parameter :: dif_rad = .false.
 
-  !> Include gravity (Y/N) (from point sources)   
-  logical, parameter :: point_grav = .false.
+  !> Include gravity
+  logical, parameter :: enable_grav = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
