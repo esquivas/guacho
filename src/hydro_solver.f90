@@ -73,7 +73,7 @@ end subroutine viscosity
 
 subroutine step(dt)
   use parameters, only : nx, ny, nz, neqdyn, &
-                         point_grav, radiation_pressure, &
+                         enable_grav, radiation_pressure, &
                          eight_wave, enable_field_cd
 
   use globals, only : up, u, primit, f, g, h, dx, dy, dz
@@ -106,7 +106,7 @@ subroutine step(dt)
 
         endif
 
-        if (point_grav .or. radiation_pressure .or. eight_wave) then
+        if (enable_grav .or. radiation_pressure .or. eight_wave) then
           
           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 
