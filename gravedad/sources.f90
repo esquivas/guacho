@@ -80,7 +80,6 @@ end subroutine getpos
 !> @param real [out] s(neq) : vector with source terms
 
 subroutine grav_source(xc,yc,zc,pp,s)
-  use constants, only : Ggrav, 
   !use exoplanet  ! this module contains the position of the planet
   ! to do: uncouple from exoplanet module, at this moment to make
   ! a dirty fix I'm placing a copy of the exoplanet to the general 
@@ -92,7 +91,7 @@ subroutine grav_source(xc,yc,zc,pp,s)
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
-  real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
+  real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb),g
 
 !   GM = Ggrav*Msun/rsc/vsc2
 !   R  = Rsun/rsc
