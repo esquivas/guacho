@@ -242,7 +242,7 @@ subroutine boundaryI()
   end if
 
   !   other type of boundaries
-  if (bc_other)  call impose_user_bc(u)
+  if (bc_user)  call impose_user_bc(u,1)
 
 end subroutine boundaryI
 
@@ -492,7 +492,7 @@ subroutine boundaryII()
   end if
 
   !   other type of bounadries  <e.g. winds jets outflows>
-  if (bc_other) call impose_user_bc(up)
+  if (bc_user) call impose_user_bc(up,2)
   
   return
   
