@@ -343,7 +343,7 @@ subroutine initmain(tprint, itprint)
   if (bc_in == BC_OUTFLOW    ) print'(a)', 'IN:     OUTFLOW    (OPEN)'
   if (bc_in == BC_CLOSED     ) print'(a)', 'IN:     REFLECTIVE (CLOSED)'
   if (bc_in == BC_OTHER      ) print'(a)', 'IN:     OTHER      (user set)'
-  if (bc_other)  print'(a)', 'Other boundaries enabled (user_mod.f90)'
+  if (bc_user)  print'(a)', 'Other boundaries enabled (user_mod.f90)'
   print'(a)', ''
 
   print'(a)', '----- OTHER STUFF -----------'
