@@ -52,6 +52,7 @@ OBJECTS = \
 constants.o  \
 parameters.o \
 globals.o	\
+exoplanet.o \
 jet.o \
 user_mod.o \
 network.o \
@@ -74,7 +75,6 @@ hll.o 	\
 hllc.o 	\
 hlle.o 	\
 hlld.o 	\
-exoplanet.o \
 sources.o \
 hydro_solver.o \
 main.o \
