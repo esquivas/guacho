@@ -124,16 +124,21 @@ end subroutine initial_conditions
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
+!> @param integer [in] order : order (mum of cells to be filled in case
+!> domain boundaries are being set)
 
-subroutine impose_user_bc(u)
+subroutine impose_user_bc(u,order)
 
   use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
   use globals,    only: time
-
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  integer, intent(in) : order
 
-  call impose_exo(u,time)
+  !  In this case the boundary is the same for 1st and second order)
+  if (order >= 1) then 
+    call impose_exo(u,time)
+  end if
  
 end subroutine impose_user_bc
 
