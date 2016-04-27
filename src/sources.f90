@@ -31,7 +31,7 @@
 
   use parameters, only : neq, neqdyn, nxtot, nytot, nztot, &
                          rsc, rhosc, vsc2, nx, ny, nz, &
-                         point_grav, radiation_pressure, &
+                         enable_grav, radiation_pressure, &
                          eight_wave
 
   use globals,    only : dx, dy, dz, coords
@@ -244,7 +244,7 @@ subroutine source(i,j,k,prim,s)
   call getpos( i, j, k, x, y ,z, r) 
 
   !  point source(s) gravity
-  if (point_grav) call grav_source(x,y,z,prim,s)
+  if (enable_grav) call grav_source(x,y,z,prim,s)
   
   !  photoionization radiation pressure
   if (radiation_pressure) call radpress_source(i,j,k,x,y,z,r,prim,s)
