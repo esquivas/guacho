@@ -210,7 +210,7 @@ subroutine tstep()
   call calcprim(u,primit,only_ghost=.true.)
 
   !  Thermal conduction
-  if (th_cond) call thermal_conduction()
+  if (th_cond /= 0 ) call thermal_conduction()
 
 end subroutine tstep
 
