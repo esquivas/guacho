@@ -110,7 +110,7 @@ subroutine impose_user_bc(u,order)
   use globals   , only : time 
   implicit none
   real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  integer, intent(in) : order
+  integer, intent(in) :: order
 
   !  In this case the boundary is the same for 1st and second order)
   if (order >= 1) then 
