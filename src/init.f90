@@ -309,19 +309,19 @@ subroutine initmain(tprint, itprint)
   print'(a)', '----- BOUNDARY CONDITIONS -----------'
   if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
     print'(a)', 'LEFT & RIGHT: PERIODIC'
-  else if (bc_left == BC_PERIODIC .or. bc_right == BC_PERIODIC) then
+  else if (bc_left == BC_PERIODIC .and. bc_right /= bc_left) then
     print'(a)', 'Invalid periodic BCs'
     stop
   end if
   if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
     print'(a)', 'BOTTOM & TOP: PERIODIC'
-  else if (bc_left == BC_PERIODIC .or. bc_right == BC_PERIODIC) then
+  else if (bc_bottom == BC_PERIODIC .or. bc_top /= bc_bottom) then
     print'(a)', 'Invalid periodic BCs'
     stop
   end if
   if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
     print'(a)', 'IN & OUT: PERIODIC'
-  else if (bc_out == BC_PERIODIC .or. bc_in == BC_PERIODIC) then
+  else if (bc_out == BC_PERIODIC .or. bc_in /= bc_top) then
     print'(a)', 'Invalid periodic BCs'
     stop
   end if
