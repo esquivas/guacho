@@ -54,6 +54,7 @@ parameters.o \
 globals.o	\
 exoplanet.o \
 jet.o \
+corona.o \
 user_mod.o \
 network.o \
 field_cd_module.o \
