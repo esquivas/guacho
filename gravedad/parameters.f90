@@ -64,7 +64,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> CHEM              : Enables a full chemical network
-  logical, parameter :: eq_of_state = EOS_SINGLE_SPECIE
+  integer, parameter :: eq_of_state = EOS_SINGLE_SPECIE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -73,7 +73,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  logical, parameter :: cooling = COOL_NONE
+  integer, parameter :: cooling = COOL_NONE
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
