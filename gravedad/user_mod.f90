@@ -56,7 +56,9 @@ end subroutine init_user_mod
 
 subroutine initial_conditions(u)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, cv, rsc, vsc2, rhosc, Tempsc,ny, gamma
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, &
+                        nzmax, cv, rsc, vsc2, rhosc, Tempsc, ny, &
+                        gamma
 #ifdef MHD_BSPLIT
   use globals, only : coords, dx, dy, dz, rank, time, B0
 #else
@@ -66,7 +68,7 @@ subroutine initial_conditions(u)
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
   real :: g, H 
-  real :: y, rho_y 
+  real :: y, rho_y , P_y, c1, c2
   integer :: i, j
   
   g = Ggrav*Msun/Rsun/Rsun
@@ -96,7 +98,7 @@ subroutine initial_conditions(u)
     u(2,:,j,:) = 0.
     u(3,:,j,:) = 0.
     u(4,:,j,:) = 0.    
-    u(1,:,j,:)= (mu*P_y/Rg/Tempc)/rhosc
+    u(1,:,j,:)= (mu*P_y/Rg/Tempsc)/rhosc
       
   end do
         
