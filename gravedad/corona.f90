@@ -1,7 +1,7 @@
 !=======================================================================
 !> @file corona.f90
 !> @brief corona module
-!> @author A. Esquivel
+!> @author V. Sieyra, M. Schneiter & A. Esquivel
 !> @date 24/Nov/2014
 
 ! Copyright (c) 2014 A. Esquivel et al.
