@@ -49,6 +49,8 @@ module parameters
   !> SOLVER_HLLC : HLLC solver 
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
+  !> SOLVER_HLLE_SPLIT : Split version of HLLE
+  !> SOLVER_HLLD_SPLIT : Split version of HLLD
   integer, parameter :: riemann_solver = SOLVER_HLLD
 
   !  Type of output
