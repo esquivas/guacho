@@ -79,13 +79,16 @@ module parameters
   !> BC_OUTFLOW   :  Outflow boundary conditions (free flow)
   !> BC_CLOSED    :  Closed BCs, (aka reflective)
   !> BC_ PERIODIC : Periodic BCs
+  !> BC_USER      : Left to the user to set boundary (via user_mod)
+  !! Also in user mod the boundaries for sources (e.g. winds/outflows)
+  !! are set
   integer, parameter :: bc_left   = BC_OUTFLOW
   integer, parameter :: bc_right  = BC_OUTFLOW
   integer, parameter :: bc_bottom = BC_OUTFLOW
   integer, parameter :: bc_top    = BC_OUTFLOW
   integer, parameter :: bc_out    = BC_CLOSED
   integer, parameter :: bc_in     = BC_OUTFLOW
-  logical, parameter :: bc_other  = .true. !< user boundaries (e.g. sources)
+  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
