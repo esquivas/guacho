@@ -127,7 +127,7 @@ program guacho
   !   finishes
   if (rank.eq.0) print'(a)',"--- My work here is done, have a nice day ---"
 
-  if (th_cond .and. (rank == master) ) close(tc_log)
+  if ( (th_cond /= 0)  .and. (rank == master) ) close(tc_log)
 
 #ifdef MPIP
   call mpi_finalize(err)
