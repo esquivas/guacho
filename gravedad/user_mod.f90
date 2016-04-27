@@ -122,7 +122,7 @@ subroutine impose_user_bc(u,order)
 
   !  In this case the boundary is the same for 1st and second order)
   if (order >= 1) then 
-    if (bc_other) call driver(u,time)
+    call driver(u,time)
   end if
 
 end subroutine impose_user_bc

@@ -114,7 +114,7 @@ subroutine impose_user_bc(u,order)
 
   !  In this case the boundary is the same for 1st and second order)
   if (order >= 1) then 
-    if (bc_other) call impose_jet(u, time )
+    call impose_jet(u, time )
   end if
 
 end subroutine impose_user_bc

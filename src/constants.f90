@@ -77,7 +77,7 @@ module constants
   integer, parameter :: BC_OUTFLOW  = 1
   integer, parameter :: BC_CLOSED   = 2
   integer, parameter :: BC_PERIODIC = 3
-  integer, parameter :: BC_USER     = 4
+  integer, parameter :: BC_OTHER    = 4
 
   !  Slope limiters
   integer, parameter :: LIMITER_NO_AVERAGE = -1
