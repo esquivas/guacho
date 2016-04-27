@@ -37,6 +37,7 @@ module constants
 
   real, parameter :: Msun=1.99E33      !< solar radius (cgs)
   real, parameter :: Rsun=6.955e10     !< solar mass (cgs)
+  real, parameter :: gsun=274.e2       !< solar gravity (cgs)
   real, parameter :: Mjup=1.898E30     !< Jupiter mass (cgs)
   real, parameter :: Rjup=7.1492E9     !< Jupiter radius (cgs)
      
@@ -55,6 +56,8 @@ module constants
   integer, parameter :: SOLVER_HLLC = 2
   integer, parameter :: SOLVER_HLLD = 3
   integer, parameter :: SOLVER_HLLE = 4
+  integer, parameter :: SOLVER_HLLD_SPLIT = 5
+  integer, parameter :: SOLVER_HLLE_SPLIT = 6
 
   !  Equations of state
   integer, parameter :: EOS_ADIABATIC     = 1
