@@ -251,7 +251,6 @@ subroutine initmain(tprint, itprint)
   else if (riemann_solver == SOLVER_HLLD_SPLIT) then
     print'(a)', 'The Riemann solver is HLLD with split B field'
     print'(a)', ''
-  else
   else if (riemann_solver == SOLVER_HLLE_SPLIT) then
     print'(a)', 'The Riemann solver is HLLE with split in All Variables'
     print'(a)', ''
