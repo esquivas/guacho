@@ -151,8 +151,12 @@ subroutine initmain(tprint, itprint)
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
+  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+
   if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+
 
   !   DMC cooling
   if (cooling == COOL_DMC) call init_cooling_dmc()
