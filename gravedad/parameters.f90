@@ -35,23 +35,25 @@ module parameters
 
   !----------------------------------------
   !  setup parameters
-  !  If logical use true or false
+  !  If logical use .true. or .false.
   !  If integer, choose from list provided
   !----------------------------------------
   logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
   logical, parameter :: doublep  = .true.   !<  enable double precision
-  logical, parameter :: passives = .false.   !<  enable passive scalars
-  logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
-  logical, parameter :: mhd      = .false.   !<  Enable full MHD
+  logical, parameter :: passives = .false.  !<  enable passive scalars
+  logical, parameter :: pmhd     = .false.  !<  enable passive mhd
+  logical, parameter :: mhd      = .false.  !<  Enable full MHD
   
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
   !> SOLVER_HLLC : HLLC solver 
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
-  !> SOLVER_HLLE_SPLIT : Split version of HLLE
-  !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLL
+  !> SOLVER_HLLE_SPLIT_B : Split version of HLLE only B
+  !> SOLVER_HLLD_SPLIT_B : Split version of HLLD only B
+  !> SOLVER_HLLE_SPLIT_ALL : Split version of HLLE all vars
+  !> SOLVER_HLLD_SPLIT_ALL : Split version of HLLD all vars
+  integer, parameter :: riemann_solver = SOLVER_HLLC
 
   !  Type of output
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -88,7 +90,7 @@ module parameters
   integer, parameter :: bc_top    = BC_OUTFLOW
   integer, parameter :: bc_out    = BC_PERIODIC
   integer, parameter :: bc_in     = BC_PERIODIC
-  logical, parameter :: bc_user  = .true. !< user boundaries (e.g. sources)
+  logical, parameter :: bc_user  = .false. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -136,9 +138,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars (set to 0 if not enabled)
   integer, parameter :: nghost=2      !< num. of ghost cells
 
-  integer, parameter :: nxtot=50      !< Total grid size in X
-  integer, parameter :: nytot=50      !< Total grid size in Y
-  integer, parameter :: nztot=2       !< Total grid size in Z
+  integer, parameter :: nxtot=100      !< Total grid size in X
+  integer, parameter :: nytot=100      !< Total grid size in Y
+  integer, parameter :: nztot=2        !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -152,8 +154,8 @@ module parameters
   !  set box size   
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=0.1         !< grid extent in Z (code units)
-  real, parameter :: xphys=1.e9  !< grid extent in X (physical units, cgs)
+  real, parameter :: zmax=0.02        !< grid extent in Z (code units)
+  real, parameter :: xphys=1.e9       !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -171,12 +173,12 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc)  !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 5.*day/tsc
+  real, parameter :: tmax    = .15*hr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.5/tsc
+  real, parameter :: dtprint = 1./tsc
   real, parameter :: cfl=0.1        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
