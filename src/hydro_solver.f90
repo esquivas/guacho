@@ -31,6 +31,7 @@ module hydro_solver
   use hllc
   use hllE
   use hlld
+  use hlleSplitAll
   use chemistry
   implicit none
 
@@ -148,6 +149,11 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
   if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
+
 
   !   upwind timestep
   call step(dtm)
@@ -166,6 +172,10 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
   if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
 
   !  upwind timestep
   call step(dt_CFL)
