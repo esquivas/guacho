@@ -131,7 +131,10 @@ subroutine impose_exo(u,time)
   real, intent (in) :: time
   real :: x, y, z, xpl, ypl, zpl
   real :: velx, vely, velz, rads, dens, radp, phi
-  real :: vxorb, vyorb, vzorb, cpi
+  real :: vxorb, vyorb, vzorb
+#ifdef BFIELD
+  real :: cpi
+#endif
   integer ::  i,j,k
 
   phi=-25.*pi/180.
@@ -180,6 +183,8 @@ subroutine impose_exo(u,time)
       u(4,i,j,k) = dens*velz
       !   magnetic field
 
+#ifdef BFIELD
+
       if (pmhd .or. mhd) then
         cpi = bsw*(RSW/rads)**3/(2.*rads**2)
         u(6,i,j,k) = 3.*y*x*cpi
@@ -187,17 +192,22 @@ subroutine impose_exo(u,time)
         u(8,i,j,k) = 3.*y*z*cpi
       end if
 
+#endif
+
       if (mhd) then
+#ifdef BFIELD
         ! total energy
         u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)        &
         + cv*dens*Tsw       & 
         + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+#endif
       else
         ! total energy
         u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
         + cv*dens*1.9999*Tsw
       endif
 
+#ifdef PASSIVES
       if (passives) then
         !  density of neutrals
         u(neqdyn+1,i,j,k)= 0.0001*dens
@@ -206,7 +216,8 @@ subroutine impose_exo(u,time)
       !              u(neqdyn+3,i,j,k)= 0.00001*dens   ! xci*rho
       !              u(neqdyn+4,i,j,k)= 0.00001*dens   ! xhn*rho
       !              u(neqdyn+5,i,j,k)= 0.00001*dens   ! xcn*rho
-      end if                
+      end if   
+#endif             
       ! IF INSIDE THE PLANET
       !!!           else if(radp <= rpw) then
       !!!

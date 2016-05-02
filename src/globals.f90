@@ -30,13 +30,14 @@ module globals
 
   implicit none
 
-  real, allocatable ::      u(:,:,:,:) !< conserved varibles
-  real, allocatable ::     up(:,:,:,:) !< conserved varibles after 1/2 timestep
-  real, allocatable :: primit(:,:,:,:) !< primitive varibles
-  real, allocatable ::      f(:,:,:,:) !< X fluxes
-  real, allocatable ::      g(:,:,:,:) !< Y fluxes
-  real, allocatable ::      h(:,:,:,:) !< Z fluxes
-  real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
+  real, allocatable ::       u(:,:,:,:) !< conserved varibles
+  real, allocatable ::      up(:,:,:,:) !< conserved varibles after 1/2 timestep
+  real, allocatable ::  primit(:,:,:,:) !< primitive varibles
+  real, allocatable ::       f(:,:,:,:) !< X fluxes
+  real, allocatable ::       g(:,:,:,:) !< Y fluxes
+  real, allocatable ::       h(:,:,:,:) !< Z fluxes
+  real, allocatable ::    Temp  (:,:,:) !< Temperature array [K]
+  real, allocatable :: primit0(:,:,:,:) !< unperturbed primitive (for split solvers)
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y

@@ -73,7 +73,7 @@ contains
   !--------------------------------------------------------------------
  
   subroutine impose_jet(u,time)
-    use globals, only : coords, dx, dy, dz, rank
+    use globals, only : coords, dx, dy, dz
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent (in)   :: time
@@ -96,45 +96,47 @@ contains
        do j=nymin,nymax
           do k=nzmin,nzmax
            
-             !   measured from the corner of the computational mesh
-             x=(float(i+coords(0)*nx) - 0.5)*dx
-             y=(float(j+coords(1)*ny) - 0.5)*dy
-             z=(float(k+coords(2)*nz) - 0.5)*dz
+           !   measured from the corner of the computational mesh
+           x=(float(i+coords(0)*nx) - 0.5)*dx
+           y=(float(j+coords(1)*ny) - 0.5)*dy
+           z=(float(k+coords(2)*nz) - 0.5)*dz
 
-             xp=x-posj(1)
-             yp=y-posj(2)
-             zp=z-posj(3)
+           xp=x-posj(1)
+           yp=y-posj(2)
+           zp=z-posj(3)
 
-             rx= xp*coso      - yp*sino
-             ry= xp*cosa*sino + yp*cosa*coso - zp*sina
-             rz= xp*sina*sino + yp*sina*coso + zp*cosa
-             
-             rad=sqrt(rx**2+ry**2)          
+           rx= xp*coso      - yp*sino
+           ry= xp*cosa*sino + yp*cosa*coso - zp*sina
+           rz= xp*sina*sino + yp*sina*coso + zp*cosa
+           
+           rad=sqrt(rx**2+ry**2)          
 
-             !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
+           !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
 
-             if( (abs(rz) <= Lj).and.(rad <= Rj) ) then
+           if( (abs(rz) <= Lj).and.(rad <= Rj) ) then
 
-                !  inside the jet source
-                vjet= vj0 + dvj*sin(omegat)
-                !vjet=sign(vjet,rz)
-                !
-                !   total density and momenta
-                u(1,i,j,k) = denj
-                u(2,i,j,k) = denj*vjet*sina*coso
-                u(3,i,j,k) = denj*vjet*sina*sino
-                u(4,i,j,k) = denj*vjet*cosa
-                !   energy
-                u(5,i,j,k)=0.5*denj*vjet**2+cv*denj*0.9501*Tempj/Tempsc
-                
-                !  passive scalars needed for the chemistry network
-                u( 6,i,j,k) = 0.9989 * u(1,i,j,k)
-                u( 7,i,j,k) = 0.0001 * u(1,i,j,k)
-                u( 8,i,j,k) = 0.001/2. * u(1,i,j,k)
-                u( 9,i,j,k) = 0.0001 * u(1,i,j,k)
-                u(10,i,j,k) = + u(1,i,j,k)
+              !  inside the jet source
+              vjet= vj0 + dvj*sin(omegat)
+              !vjet=sign(vjet,rz)
+              !
+              !   total density and momenta
+              u(1,i,j,k) = denj
+              u(2,i,j,k) = denj*vjet*sina*coso
+              u(3,i,j,k) = denj*vjet*sina*sino
+              u(4,i,j,k) = denj*vjet*cosa
+              !   energy
+              u(5,i,j,k)=0.5*denj*vjet**2+cv*denj*0.9501*Tempj/Tempsc
 
-             endif
+#ifdef PASSIVES
+              !  passive scalars needed for the chemistry network
+              u( 6,i,j,k) = 0.9989 * u(1,i,j,k)
+              u( 7,i,j,k) = 0.0001 * u(1,i,j,k)
+              u( 8,i,j,k) = 0.001/2. * u(1,i,j,k)
+              u( 9,i,j,k) = 0.0001 * u(1,i,j,k)
+              u(10,i,j,k) = + u(1,i,j,k)
+#endif
+
+           endif
              
           end do
        end do

@@ -46,16 +46,16 @@ subroutine write_header(unit, neq_out, nghost_out)
   !  Write ASCII header
   write(unit) "**************** Output for Guacho v1.1****************",lf
 
-  write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, NZ
+  write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
   write(unit) trim(cbuffer), lf
   
   write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Block Origin, cells    : ", i0,x,i0,x,i0)') coords(0)*nx, coords(1)*ny, coords(2)*nz
+  write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)') coords(0)*nx, coords(1)*ny, coords(2)*nz
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,x,i0,x,i0)') MPI_NBX, MPI_NBY, MPI_NBZ
+  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') MPI_NBX, MPI_NBY, MPI_NBZ
   write(unit) trim(cbuffer), lf
 
   write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') neq_out, neqdyn
@@ -131,9 +131,8 @@ subroutine write_BIN(itprint)
   ! take turns
   do ip=0, np-1
    if(rank == ip) then
-    open(unit=unitout,file=file1,status='replace',access='stream', &
-                   convert='LITTLE_ENDIAN')
-
+    open(unit=unitout,file=file1,status='replace',access='stream')
+    
     ! write header, then data
     call write_header(unitout,neq,nghost)
     write(unitout) u(:,:,:,:)
@@ -157,8 +156,8 @@ subroutine write_BIN(itprint)
 
         write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
         unitout=10+rank
-        open(unit=unitout,file=file1,status='replace', access='stream', &
-             convert='LITTLE_ENDIAN')
+        open(unit=unitout,file=file1,status='replace', access='stream')
+    
         call write_header(unitout,1,0)
         write (unitout) em(:,:,:)
         close(unitout)
@@ -166,8 +165,8 @@ subroutine write_BIN(itprint)
 
         write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
         unitout=10+rank
-        open(unit=unitout,file=file1,status='replace',access='stream', &
-                            convert='LITTLE_ENDIAN')
+        open(unit=unitout,file=file1,status='replace',access='stream') 
+    
         call write_header(unitout,1,0)
         write (unitout) ph(:,:,:)
         close(unitout)
@@ -203,8 +202,7 @@ subroutine write_BIN(itprint)
         write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
         unitout=10+rank
 
-        open(unit=unitout,file=file1,status='replace',access='stream', &
-             convert='LITTLE_ENDIAN')
+        open(unit=unitout,file=file1,status='replace',access='stream')
 
         call write_header(unitout,1,0)
         write (unitout) divB(:,:,:)

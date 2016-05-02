@@ -31,7 +31,7 @@ module hydro_solver
   use hllc
   use hllE
   use hlld
-  use hlleSplitAll
+  !use hlleSplitAll
   use chemistry
   implicit none
 
@@ -77,7 +77,7 @@ subroutine step(dt)
                          enable_grav, radiation_pressure, &
                          eight_wave, enable_field_cd
 
-  use globals, only : up, u, primit, f, g, h, dx, dy, dz
+  use globals, only : up, u, f, g, h, dx, dy, dz
   use field_cd_module
   use sources
   implicit none

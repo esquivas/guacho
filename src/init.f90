@@ -154,9 +154,10 @@ subroutine initmain(tprint, itprint)
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
   allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
 
+#ifdef BFIELD
   if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-
+#endif
 
   !   DMC cooling
   if (cooling == COOL_DMC) call init_cooling_dmc()
@@ -402,7 +403,7 @@ end subroutine initmain
 
 subroutine initflow(itprint)
 
-  use parameters, only : outputpath, iwarm, itprint0
+  use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
   implicit none
@@ -435,8 +436,8 @@ subroutine initflow(itprint)
           trim(outputpath)//'BIN/points',itprint,'.bin'
     unitin=10
 #endif
-    open(unit=unitin,file=file1,status='old', access='stream', &
-          convert='LITTLE_ENDIAN')
+    open(unit=unitin,file=file1,status='old', access='stream' )
+    !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
  
     !   discard the ascii header
     do while (byte_read /= achar(255) )

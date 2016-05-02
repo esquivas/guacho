@@ -136,6 +136,8 @@ end subroutine grav_source
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
 
+#ifdef PASSIVES
+
 subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 
   use difrad
@@ -160,7 +162,11 @@ subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 
 end subroutine radpress_source
 
+#endif
+
 !=======================================================================
+
+#ifdef BFIELD
 
 !> @brief Computes div(B)
 !> @details Computes div(B)
@@ -181,6 +187,8 @@ subroutine divergence_B(i,j,k,d)
 
 end subroutine divergence_B
 
+#endif
+
 !=======================================================================
 
 !> @brief 8 Wave source terms for div(B) correction
@@ -191,6 +199,8 @@ end subroutine divergence_B
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
+
+#ifdef BFIELD
 
 subroutine divbcorr_8w_source(i,j,k,pp,s)
  
@@ -217,6 +227,8 @@ subroutine divbcorr_8w_source(i,j,k,pp,s)
     s(8)=s(8)-divB*pp(4)
 
 end subroutine divbcorr_8w_source
+
+#endif
 
 !=======================================================================
 
@@ -249,8 +261,11 @@ subroutine source(i,j,k,prim,s)
   !  photoionization radiation pressure
   if (radiation_pressure) call radpress_source(i,j,k,x,y,z,r,prim,s)
 
+#ifdef BFIELD
   !  divergence correction Powell et al. 1999
   if (eight_wave) call divbcorr_8w_source(i,j,k,prim,s)
+#endif
+
   return
 end subroutine source
 

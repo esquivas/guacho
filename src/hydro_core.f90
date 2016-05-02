@@ -46,37 +46,45 @@ subroutine u2prim(uu, prim, T)
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
                          pmhd, mhd, eq_of_state
   use constants
-  use network,  only : n_spec 
+  use network,  only : n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
   real :: r
-  integer :: i
+#ifdef PASSIVES
   real :: dentot
+  integer :: i
+#endif
 
   r=max(uu(1),1e-15)
   prim(1)=r
   prim(2)=uu(2)/r 
   prim(3)=uu(3)/r
   prim(4)=uu(4)/r
-  
+
   if (mhd) then
+#ifdef BFIELD
     prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
-                   -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv  
+                   -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
+#endif
   else
     prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
   end if
   
   prim(5)=max(prim(5),1e-16)
   
+#ifdef BFIELD
   if (mhd .or. pmhd) then
     prim(6:8) = uu(6:8)
-  end if 
+  end if
+#endif
 
+#ifdef PASSIVES
   if (passives) then
     prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
   end if
+#endif
 
   !   Temperature calculation
 
@@ -90,6 +98,8 @@ subroutine u2prim(uu, prim, T)
     T=max(1.,(prim(5)/r)*Tempsc)
     prim(5)=r*T/Tempsc
   end if
+
+#ifdef PASSIVES
 
   if (eq_of_state == EOS_H_RATE) then
     dentot=(2.*r-prim(neqdyn+1))
@@ -106,11 +116,11 @@ subroutine u2prim(uu, prim, T)
     end do
     dentot = max(dentot, 1e-15)
     T=max(1.,(prim(5)/dentot)*Tempsc )
-
-    !T=(prim(5)/r)*Tempsc
+  !T=(prim(5)/r)*Tempsc
     prim(5) = dentot * T /Tempsc
   end if
 
+#endif
 
 end subroutine u2prim  
 
@@ -216,21 +226,27 @@ subroutine prim2u(prim,uu)
   uu(4) = prim(1)*prim(4)
 
   if (mhd) then 
+#ifdef BFIELD
     !   kinetic+thermal+magnetic energies
     uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
                    +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+#endif
   else 
     !   kinetic+thermal energies
     uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
   end if
 
+#ifdef BFIELD
   if (mhd .or. pmhd) then
     uu(6:8)=prim(6:8)
   end if
+#endif
 
+#ifdef PASSIVES
   if (passives) then
     uu(neqdyn+1:neq) = prim(neqdyn+1:neq)
   end if
+#endif
 
 end subroutine prim2u
 
@@ -251,8 +267,8 @@ subroutine prim2f(prim,ff)
   real,    dimension(neq), intent(out) :: ff
   real :: etot
 
-
   if (mhd) then 
+#ifdef BFIELD
     !  MHD (active)
     etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
                        + prim(6)**2+prim(7)**2+prim(8)**2  )  &
@@ -264,6 +280,7 @@ subroutine prim2f(prim,ff)
     ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
     ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
            -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
+#endif
   else
     ! HD or PMHD
     etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
@@ -274,16 +291,20 @@ subroutine prim2f(prim,ff)
     ff(4) = prim(1)*prim(2)*prim(4)
     ff(5) = prim(2)*(etot+prim(5))
   end if
-    
+ 
+#ifdef BFIELD   
   if (mhd .or. pmhd) then 
     ff(6)=0.0
     ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
     ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
   end if
+#endif
 
+#ifdef PASSIVES
   if (passives) then
     ff(neqdyn+1:neq) = prim(neqdyn+1:neq)*prim(2)
   end if
+#endif
 
 end subroutine prim2f
 
@@ -298,8 +319,8 @@ subroutine swapy(var,neq)
 
   use parameters, only : pmhd, mhd
   implicit none
-  real, intent(inout), dimension(neq) :: var
   integer, intent(in) :: neq
+  real, intent(inout), dimension(neq) :: var
   real :: aux
   
   aux=var(2)
@@ -325,8 +346,8 @@ subroutine swapz(var,neq)
 
   use parameters, only : pmhd, mhd
   implicit none
-  real, intent(inout), dimension(neq) :: var
   integer, intent(in) :: neq
+  real, intent(inout), dimension(neq) :: var
   real :: aux
   
   aux=var(2)
@@ -373,6 +394,7 @@ end subroutine csound
 !> @param real [out] csy : fast magnetosonic speed in y
 !> @param real [out] csz : fast magnetosonic speed in z
 
+
 subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
 
   use parameters, only : gamma
@@ -394,6 +416,8 @@ end subroutine cfast
 !> @details Computes the fast magnetosonic speed in the x direction
 !> @param real [in] prim(neq) : vector with the primitives in one cell
 
+#ifdef BFIELD
+
 subroutine cfastX(prim,cfX)
   
   use parameters, only : neq, gamma
@@ -408,6 +432,8 @@ subroutine cfastX(prim,cfX)
   cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
  
   end subroutine cfastX
+
+#endif
 
 !=======================================================================
 
@@ -502,9 +528,9 @@ end subroutine get_timestep
 subroutine limiter(PLL,PL,PR,PRR,neq)
   
   implicit none
+  integer, intent (in)  :: neq
   real, dimension(neq), intent(inout) :: pl,  pr
   real, dimension(neq), intent(in)    :: pll, prr
-  integer, intent (in)  :: neq
   real :: dl, dm, dr, al, ar
   integer :: ieq
   real :: s, c, d, av1, av2

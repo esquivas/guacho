@@ -29,6 +29,8 @@
 
 module hlld
 
+#ifdef BFIELD
+
 contains
 
 !=======================================================================
@@ -144,10 +146,11 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystl*sM-bx*vstl
     ff(8) = bzstl*sM-bx*wstl
 
+#ifdef PASSIVES
     if (passives) then
       ff(neqdyn+1:neq)=sM*priml(neqdyn+1:neq)*slmul/slmsM
     end if
-
+#endif
 
   return
   endif
@@ -191,9 +194,11 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystr*sM-bx*vstr
     ff(8) = bzstr*sM-bx*wstr
 
+#ifdef PASSIVES
     if (passives) then
       ff(neqdyn+1:neq)=sM*primr(neqdyn+1:neq)*srmur/srmsM
     end if
+#endif
 
   return
   endif
@@ -268,9 +273,11 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystst*sM-bx*vstst
     ff(8) = bzstst*sM-bx*wstst
 
+#ifdef PASSIVES
     if (passives) then
       ff(neqdyn+1:neq) = sM*priml(neqdyn+1:neq)*slmul/slmsM
     end if
+#endif
 
   return
   endif
@@ -297,9 +304,11 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(7) = bystst*sM-bx*vstst
     ff(8) = bzstst*sM-bx*wstst
 
+#ifdef PASSIVES
     if (passives) then
       ff(neqdyn+1:neq) = sM*primr(neqdyn+1:neq)*srmur/srmsM
     end if
+#endif
 
   return
   endif
@@ -423,6 +432,8 @@ subroutine hlldfluxes(choice)
 end subroutine hlldfluxes
 
 !=======================================================================
+
+#endif
 
 end module hlld
 

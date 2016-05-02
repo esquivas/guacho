@@ -29,6 +29,8 @@
 
 module hlle
 
+#ifdef BFIELD
+
 contains
 
 !=======================================================================
@@ -190,6 +192,8 @@ subroutine hllEfluxes(choice)
   end select
 
 end subroutine hllEfluxes
+
+#endif
 
 end module hlle
 
