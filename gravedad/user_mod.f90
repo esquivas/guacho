@@ -59,11 +59,7 @@ subroutine initial_conditions(u)
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, &
                         nzmax, cv, rsc, vsc2, rhosc, Tempsc, ny, &
                         gamma
-#ifdef MHD_BSPLIT
-  use globals, only : coords, dx, dy, dz, rank, time, B0
-#else
   use globals, only : coords, dx, dy, dz, rank, time
-#endif  
   use constants, only : Ggrav, Msun, Rsun, pi, Rg
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
@@ -72,28 +68,15 @@ subroutine initial_conditions(u)
   integer :: i, j
   
   g = Ggrav*Msun/Rsun/Rsun
-  !H = mu*g/Rg/Tempc
-  
-!   do j = nymin,nymax
-!     y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
-!     rho_y = rhoc*exp(-H*y) 
-!     u(1,:,j,:) = rho_y/rhosc
-!     u(2,:,j,:) = 0.
-!     u(3,:,j,:) = 0.
-!     u(4,:,j,:) = 0.    
-!     u(5,:,j,:)= (cv*rho_y*Rg*Tempc/mu)/Psc     
-!   end do
-  
-!   g = Ggrav*Msun/Rsun/Rsun
-!   cc = mu*g/Rg
-!   
+   
   do j = nymin,nymax
+     
     y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
-	if(y.le.2.E8) then
-          P_y = P_0*exp(-c1*y/Temp1)
-        else	
-          P_y = P_0*exp(-c2*y/Temp1)
-        endif	
+    if (y <= 2.E8) then
+      P_y = P_0*exp(-c1*y/Temp1)
+    else
+      P_y = P_0*exp(-c2*y/Temp1)
+    endif
     u(5,:,j,:) = cv*P_y/Psc 
     u(2,:,j,:) = 0.
     u(3,:,j,:) = 0.
@@ -102,7 +85,6 @@ subroutine initial_conditions(u)
       
   end do
         
-
 end subroutine initial_conditions
   
 !=====================================================================

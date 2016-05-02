@@ -21,11 +21,11 @@ COMPILER= gfortran
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-# DEBUG
-FLAGS = -cpp -O3 
-#FLAGS = -cpp -ggdb -O0 -fdefault-double-8 -pedantic -Wall -Waliasing \
-#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-#        -fbounds-check -fimplicit-none -fstack-protector-all
+#FLAGS = -cpp -O3
+# For DEBUG, suggestion: 
+FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing \
+        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -78,7 +78,7 @@ hlle.o 	\
 hlld.o 	\
 sources.o \
 hydro_solver.o \
-main.o \
+main.o 
 
 #  for projection alog a LOS
 OBJECTSCOLDENS = \
