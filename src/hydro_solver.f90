@@ -31,7 +31,7 @@ module hydro_solver
   use hllc
   use hllE
   use hlld
-  !use hlleSplitAll
+  use hlleSplitAll
   use chemistry
   implicit none
 
@@ -74,7 +74,7 @@ end subroutine viscosity
 
 subroutine step(dt)
   use parameters, only : nx, ny, nz, neqdyn, &
-                         enable_grav, radiation_pressure, &
+                         user_source_terms, radiation_pressure, &
                          eight_wave, enable_field_cd
 
   use globals, only : up, u, f, g, h, dx, dy, dz
@@ -107,7 +107,9 @@ subroutine step(dt)
 
         endif
 
-        if (enable_grav .or. radiation_pressure .or. eight_wave) then
+        if (user_source_terms     .or. &
+            radiation_pressure    .or. &
+            eight_wave) then
           
           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 
@@ -210,7 +212,7 @@ subroutine tstep()
   ! Chianti cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_CHI) call coolingchi()
 
-  ! Chemistry network cooling (the primitives are already updated in update_chem)
+  ! Chemistry network cooling (primitives are already updated in update_chem)
   if (cooling == COOL_CHEM) call cooling_chem()
 
   !   boundary contiditions on u
