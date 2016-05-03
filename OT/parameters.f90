@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./HLLE-8W/'
+  character (len=128),parameter ::  outputpath='./HLLD-CD/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -55,7 +55,14 @@ module parameters
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLLE
+  integer, parameter :: riemann_solver = SOLVER_HLLD
+
+  !>  Include terms proportional to DIV B (powell et al. 1999)
+  logical, parameter :: eight_wave = .false.
+  !>  Enable field-CD cleaning of div B
+  logical, parameter :: enable_field_cd = .true.
+  !>  Enable writting of divB to disk
+  logical, parameter :: dump_divb = .true.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -120,12 +127,6 @@ module parameters
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
-  !>  Include terms proportional to DIV B (powell et al. 1999)
-  logical, parameter :: eight_wave = .true.
-  !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_field_cd = .false.
-  !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .true.
   
 #ifdef PASSIVES
   integer, parameter :: npas=2        !< num. of passive scalars
@@ -172,7 +173,7 @@ module parameters
   real, parameter :: tmax    = 3.1
   !> interval between consecutive outputs
   real, parameter :: dtprint =  .1 /tsc
-  real, parameter :: cfl=0.3        !< Courant-Friedrichs-Lewy number
+  real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.0        !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
