@@ -268,6 +268,16 @@ subroutine initmain(tprint, itprint)
     stop
   end if
 
+  if (enable_field_cd) then
+    print'(a)', 'div(B) constrained with field-CD method'
+    print'(a)', ''
+  end if
+
+  if (eight_wave) then
+    print'(a)', 'div(B) constrained with 8 wave method'
+    print'(a)', ''
+  end if
+
   if (eq_of_state == EOS_ADIABATIC) then
     print'(a)', 'The code uses an AIABATIC EOS'
     print'(a)', ''
