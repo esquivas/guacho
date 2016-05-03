@@ -33,6 +33,8 @@ module hydro_core
 
 contains
 
+!=======================================================================
+
 !> @brief Computes the primitive variables and temperature from conserved
 !!  variables on a single cell
 !> @details Computes the primitive variables and temperature from conserved
@@ -46,38 +48,39 @@ subroutine u2prim(uu, prim, T)
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
                          pmhd, mhd, eq_of_state
   use constants
-  use network,  only : n_spec
+  use network,  only : n_spec 
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
   real,    intent(out)                  :: T
   real :: r
 #ifdef PASSIVES
-  real :: dentot
   integer :: i
+  real :: dentot
 #endif
 
   r=max(uu(1),1e-15)
   prim(1)=r
+  
   prim(2)=uu(2)/r 
   prim(3)=uu(3)/r
   prim(4)=uu(4)/r
-
+  
   if (mhd) then
-#ifdef BFIELD
+#ifdef  BFIELD
     prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
-                   -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
+                   -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv  
 #endif
   else
     prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
   end if
   
   prim(5)=max(prim(5),1e-16)
-  
-#ifdef BFIELD
+
+#ifdef  BFIELD
   if (mhd .or. pmhd) then
     prim(6:8) = uu(6:8)
-  end if
+  end if 
 #endif
 
 #ifdef PASSIVES
@@ -99,6 +102,7 @@ subroutine u2prim(uu, prim, T)
     prim(5)=r*T/Tempsc
   end if
 
+
 #ifdef PASSIVES
 
   if (eq_of_state == EOS_H_RATE) then
@@ -116,13 +120,115 @@ subroutine u2prim(uu, prim, T)
     end do
     dentot = max(dentot, 1e-15)
     T=max(1.,(prim(5)/dentot)*Tempsc )
-  !T=(prim(5)/r)*Tempsc
+
+    !T=(prim(5)/r)*Tempsc
     prim(5) = dentot * T /Tempsc
   end if
 
 #endif
 
-end subroutine u2prim  
+end subroutine u2prim
+
+!=======================================================================
+
+!> @brief Computes the primitive variables and temperature from conserved
+!!  variables on a single cell 
+!> @details Computes the primitive variables and temperature from conserved
+!!  variables on a single cell for the split method in all the variables
+!> @param real [in] uu(neq) : conserved variables in one cell (fluctuations)
+!> @param real [out] prim(neq) : primitives in one cell (fluctuations)
+!> @param real [in] prim0(neq) : primitives in one cell (mean value, 
+!> initial conds)
+!> @param real [out] T : Temperature [K]
+
+subroutine u2primSplitAll(uu, prim, prim0, T)
+
+  use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
+                         pmhd, mhd, eq_of_state
+  use constants
+  use network,  only : n_spec 
+  implicit none
+  real,    intent(in),  dimension(neq)  :: uu, prim0
+  real,    intent(out), dimension(neq)  :: prim
+  real,    intent(out)                  :: T
+  real :: r
+#ifdef PASSIVES
+  integer :: i
+  real :: dentot
+#endif
+
+  prim(1)=uu(1)
+  !  r=max(uu(1),1e-15)  
+  r = prim(1)+prim0(1)
+
+  prim(2)=uu(2)/r
+  prim(3)=uu(3)/r
+  prim(4)=uu(4)/r
+
+#ifdef  BFIELD
+  if (mhd .or. pmhd) then
+    prim(6:8) = uu(6:8)
+  end if 
+#endif
+
+
+  if (mhd) then
+#ifdef BFIELD
+    prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   & 
+                   -0.5*  (uu(6)**2+uu(7)**2+uu(8)**2)   &
+                   -prim0(6)*uu(6)-prim0(7)*uu(7)-prim0(8)*uu(8) ) /cv
+#endif
+  else
+    prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
+  end if
+  
+  !  prim(5)=max(prim(5),1e-16)
+  
+#ifdef PASSIVES
+  if (passives) then
+    prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
+  end if
+#endif
+
+  !   Temperature calculation
+
+  if (eq_of_state == EOS_ADIABATIC) then
+    T=((prim(5)+prim0(5))/r)*Tempsc
+  end if
+
+  if (eq_of_state == EOS_SINGLE_SPECIE) then
+    ! assumes it is fully ionized
+    r=max(r,1e-15)
+    T=max(1.,((prim(5)+prim0(5))/r)*Tempsc)
+    !prim(5)=r*T/Tempsc ! REPENSAR
+  end if
+
+#ifdef PASSIVES
+
+  if (eq_of_state == EOS_H_RATE) then
+    dentot=(2.*r-prim(neqdyn+1)-prim0(neqdyn+1))
+    dentot=max(dentot,1e-15)
+    T=max(1.,((prim(5)+prim0(5))/dentot)*Tempsc)
+    !prim(5)=dentot*T/Tempsc !REVISAR 
+  end if
+
+  if (eq_of_state == EOS_CHEM) then
+    !  Assumes that rho scaling is mu*mh
+    dentot = 0.
+    do i = neqdyn+1, neqdyn+n_spec
+      dentot = prim(i) + prim0(i) + dentot
+    end do
+    dentot = max(dentot, 1e-15)
+    T=max(1.,((prim(5)+prim0(5))/dentot)*Tempsc )
+
+    !T=(prim(5)/r)*Tempsc
+    !prim(5) = dentot * T /Tempsc
+  end if
+
+#endif
+
+end subroutine u2primSplitAll
+  
 
 !=======================================================================
 
@@ -139,10 +245,11 @@ end subroutine u2prim
 
 subroutine calcprim(u,primit, only_ghost)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, nx, ny, nz
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+                         nx, ny, nz, riemann_solver
   use constants
 
-  use globals, only : Temp
+  use globals, only : Temp, primit0
   implicit none
   real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
   real,intent(out),dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: primit
@@ -154,30 +261,42 @@ subroutine calcprim(u,primit, only_ghost)
     !   k = 0, and, nz
     do j=0,ny+1
       do i=0,nx+1
-
-        call u2prim(u(:,i,j,0   ),primit(:,i,j,0 ),Temp(i,j,0   ) )
-        call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz),Temp(i,j,nz+1) )
-
+         if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+             riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+            call u2primSplitAll(u(:,i,j,0   ),primit(:,i,j,0 ),primit0(:,i,j,0 ),Temp(i,j,0   ) )
+            call u2primSplitAll(u(:,i,j,nz+1),primit(:,i,j,nz),primit0(:,i,j,nz),Temp(i,j,nz+1) )
+         else
+            call u2prim(u(:,i,j,0   ),primit(:,i,j,0 ),Temp(i,j,0   ) )
+            call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz),Temp(i,j,nz+1) )
+         end if
       end do
     end do
 
    !   j = 0, and, ny
     do k=0,nz+1
       do i=0,nx+1
-
-        call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
-        call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
-
+         if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+             riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+            call u2primSplitAll(u(:,i,0   ,k),primit(:,i,0   ,k),primit0(:,i,0   ,k),Temp(i,0   ,k) )
+            call u2primSplitAll(u(:,i,ny+1,k),primit(:,i,ny+1,k),primit0(:,i,ny+1   ,k),Temp(i,ny+1,k) )
+        else
+           call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
+           call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
+        end if
       end do
     end do 
 
    !   i = 0, and, nx
     do k=0,nz+1
       do j=0,ny+1
-
-        call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
-        call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
-
+         if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+             riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+            call u2primSplitAll(u(:,0   ,j,k),primit(:,0   ,j,k),primit0(:,0   ,j,k),Temp(i,0   ,k) )
+            call u2primSplitAll(u(:,nx+1,j,k),primit(:,nx+1,j,k),primit0(:,nx+1,j,k),Temp(nx+1,j,k) )
+        else
+           call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
+           call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
+        end if
       end do
     end do
     !-----------------------
@@ -186,14 +305,12 @@ subroutine calcprim(u,primit, only_ghost)
     do k=nzmin,nzmax
       do j=nymin,nymax
         do i=nxmin,nxmax
-
-          call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
-
-!if (u(1,i,j,k) == 0 ) then 
-  !print*,'uu:', u(:,i,j,k)
-  !print*,'pp:', primit(:,i,j,k)
-!  print*,'T :',T, time, i, j,k
-!end if
+         if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+             riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+            call u2primSplitAll(u(:,i,j,k),primit(:,i,j,k),primit0(:,i,j,k),Temp(i,j,k) )
+         else
+            call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+         end if
 
         end do
       end do
@@ -212,28 +329,51 @@ end subroutine calcprim
 !> @param real [in] prim(neq) : primitives in one cell
 !> @param real [out] uu(neq) : conserved varibles in one cell
 
-subroutine prim2u(prim,uu)
+subroutine prim2u(prim,uu, prim0)
 
   use parameters
 
   implicit none
   real, dimension(neq), intent(in)  :: prim
+  real, dimension(neq), intent(in), optional :: prim0
   real, dimension(neq), intent(out) :: uu
   !
-  uu(1) = prim(1)
-  uu(2) = prim(1)*prim(2)
-  uu(3) = prim(1)*prim(3)
-  uu(4) = prim(1)*prim(4)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or.   &
+      riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+     if (present(prim0)) then
+        uu(1) = prim(1)
+        uu(2) = prim(2)*(prim(1)+prim0(1))
+        uu(3) = prim(3)*(prim(1)+prim0(1))
+        uu(4) = prim(4)*(prim(1)+prim0(1))
+     end if
+  else
+     uu(1) = prim(1)
+     uu(2) = prim(1)*prim(2)
+     uu(3) = prim(1)*prim(3)
+     uu(4) = prim(1)*prim(4)
+  end if
 
-  if (mhd) then 
+
+  if (mhd) then
 #ifdef BFIELD
+     if (present(prim0)) then
     !   kinetic+thermal+magnetic energies
-    uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-                   +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
 #endif
+     else
+        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+     end if
+
   else 
-    !   kinetic+thermal energies
-    uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+
+!     if present(prim0) then
+!        !   kinetic+thermal energies
+!        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+!     else
+        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+!     end if
   end if
 
 #ifdef BFIELD
@@ -260,27 +400,52 @@ end subroutine prim2u
 !> @param real [in] prim(neq) : primitives in one cell
 !> @param real [out] ff(neq) : Euler Fluxes (x direction)
 
-subroutine prim2f(prim,ff)
-  use parameters, only : neq, neqdyn, cv, pmhd, mhd, passives
+subroutine prim2f(prim,ff,prim0)
+  use parameters, only : neq, neqdyn, cv, pmhd, mhd, passives, riemann_solver
+  use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
   implicit none
   real,    dimension(neq), intent(in)  :: prim
+  real, dimension(neq), intent(in), optional :: prim0
   real,    dimension(neq), intent(out) :: ff
   real :: etot
 
-  if (mhd) then 
+
+  if (mhd) then
 #ifdef BFIELD
-    !  MHD (active)
-    etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
-                       + prim(6)**2+prim(7)**2+prim(8)**2  )  &
-                       + cv*prim(5)
-  
-    ff(1) = prim(1)*prim(2)
-    ff(2) = prim(1)*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2)
-    ff(3) = prim(1)*prim(2)*prim(3)-prim(6)*prim(7)
-    ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
-    ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
-           -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
-#endif
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+      riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+      if (present(prim0)) then
+        etot = 0.5*( (prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)    &
+        + prim(6)**2+prim(7)**2+prim(8)**2  )  &
+        + cv*prim(5)                           &
+        + prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
+
+        ff(1) = (prim(1)+prim0(1))*prim(2)
+        ff(2) = (prim(1)+prim0(1))*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2) &
+        - prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
+        ff(3) = (prim(1)+prim0(1))*prim(2)*prim(3)-prim(6)*prim(7) & 
+        - prim0(7)*prim(6)-prim0(6)*prim(7)
+        ff(4) = (prim(1)+prim0(1))*prim(2)*prim(4)-prim(6)*prim(8) &
+        - prim0(8)*prim(6)-prim0(6)*prim(8)
+        ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) &
+        +cv*prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
+        -(prim(6)+prim0(6))*(prim(2)*(prim(6)+prim0(6))+ &
+        prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISAR
+      end if
+      else
+        !  MHD (active)
+        etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
+        + prim(6)**2+prim(7)**2+prim(8)**2  )  &
+        + cv*prim(5)
+
+        ff(1) = prim(1)*prim(2)
+        ff(2) = prim(1)*prim(2)*prim(2)+prim(5)+0.5*(prim(7)**2+prim(8)**2-prim(6)**2)
+        ff(3) = prim(1)*prim(2)*prim(3)-prim(6)*prim(7)
+        ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
+        ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
+        -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
+    end if
+#endif   /*  MHD  */
   else
     ! HD or PMHD
     etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
@@ -291,8 +456,8 @@ subroutine prim2f(prim,ff)
     ff(4) = prim(1)*prim(2)*prim(4)
     ff(5) = prim(2)*(etot+prim(5))
   end if
- 
-#ifdef BFIELD   
+
+#ifdef BFIELD    
   if (mhd .or. pmhd) then 
     ff(6)=0.0
     ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
@@ -394,7 +559,6 @@ end subroutine csound
 !> @param real [out] csy : fast magnetosonic speed in y
 !> @param real [out] csz : fast magnetosonic speed in z
 
-
 subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
 
   use parameters, only : gamma
@@ -416,10 +580,10 @@ end subroutine cfast
 !> @details Computes the fast magnetosonic speed in the x direction
 !> @param real [in] prim(neq) : vector with the primitives in one cell
 
+subroutine cfastX(prim,cfX)
+
 #ifdef BFIELD
 
-subroutine cfastX(prim,cfX)
-  
   use parameters, only : neq, gamma
   implicit none
   real, intent(in) :: prim(neq)
@@ -431,9 +595,9 @@ subroutine cfastX(prim,cfX)
 
   cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
  
-  end subroutine cfastX
-
 #endif
+
+end subroutine cfastX
 
 !=======================================================================
 
@@ -451,9 +615,9 @@ subroutine cfastX(prim,cfX)
 !> @param logical [out] dump_flag : Flag to write to disk
 
 subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
-
-  use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd
-  use globals, only : primit, dx, dy, dz
+  use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
+  use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd, riemann_solver
+  use globals, only : primit, dx, dy, dz, primit0
   implicit none
 #ifdef MPIP
   include "mpif.h"
@@ -473,17 +637,28 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
       do i=1,nx
     
         if (mhd) then
-                call cfast(primit(5,i,j,k),primit(1,i,j,k),&
-                    primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
-                    cx,cy,cz)
-                dtp=min(dtp,dx/(abs(primit(2,i,j,k))+cx))  
-                dtp=min(dtp,dy/(abs(primit(3,i,j,k))+cy))
-                dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
+#ifdef BFIELD
+          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+            call cfast(primit(5,i,j,k)+primit0(5,i,j,k),primit(1,i,j,k)+primit0(1,i,j,k),&
+                 primit(6,i,j,k)+primit0(6,i,j,k), primit(7,i,j,k)+primit0(7,i,j,k), primit(8,i,j,k)+primit0(8,i,j,k), &
+                 cx,cy,cz)
+          else
+            call cfast(primit(5,i,j,k),primit(1,i,j,k),&
+                 primit(6,i,j,k), primit(7,i,j,k), primit(8,i,j,k), &
+                 cx,cy,cz)
+          end if
+          
+          dtp=min(dtp,dx/(abs(primit(2,i,j,k))+cx))  
+          dtp=min(dtp,dy/(abs(primit(3,i,j,k))+cy))
+          dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
+#endif
         else
-                call csound(primit(5,i,j,k),primit(1,i,j,k),c)
-                dtp=min(dtp,dx/(abs(primit(2,i,j,k))+c))  
-                dtp=min(dtp,dy/(abs(primit(3,i,j,k))+c))
-                dtp=min(dtp,dz/(abs(primit(4,i,j,k))+c))
+          ! plain old hydro
+          call csound(primit(5,i,j,k),primit(1,i,j,k),c)
+          dtp=min(dtp,dx/(abs(primit(2,i,j,k))+c))  
+          dtp=min(dtp,dy/(abs(primit(3,i,j,k))+c))
+          dtp=min(dtp,dz/(abs(primit(4,i,j,k))+c))
         end if
 
       end do
