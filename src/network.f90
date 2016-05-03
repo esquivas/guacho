@@ -138,11 +138,11 @@ subroutine get_reaction_rates(rate,T)
 
   T300=T/300.
 
-  rate(iR1) = 1.d-8       * T300**0.d0     * exp(-8.41d4 /T)
-  rate(iR2) = 4.67d-7     * T300**(-1.d0)  * exp(-5.5d4  /T)
-  rate(iR3) = 3.22d-9     * T300**(0.35d0) * exp(-1.02d5 /T)
-  rate(iR4) = 1.00978d-9  * T300**(0.5d0)  * exp(-1.578d5/T)
-  rate(iR5) = 4.074746d-12* T300**(-0.79d0)* exp(-0.d0   /T)
+  rate(iR1) = 1.e-8       * T300**0.e0     * exp(-8.41e4 /T)
+  rate(iR2) = 4.67e-7     * T300**(-1.e0)  * exp(-5.5e4  /T)
+  rate(iR3) = 3.22e-9     * T300**(0.35e0) * exp(-1.02e5 /T)
+  rate(iR4) = 1.00978e-9  * T300**(0.5e0)  * exp(-1.578e5/T)
+  rate(iR5) = 4.074746e-12* T300**(-0.79e0)* exp(-0.e0   /T)
   !rate(iR6) = 8.14d-17    * T300**(-0.5d0) * exp(-4.48d0 /T)
   rate(iR6) = 5.98e-18
   rate(iR7) = 1.3e-18
