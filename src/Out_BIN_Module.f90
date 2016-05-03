@@ -29,7 +29,7 @@ module  Out_BIN_Module
 
   use parameters
   use globals
-
+  use constants
 contains
 
 !=======================================================================
@@ -44,7 +44,7 @@ subroutine write_header(unit, neq_out, nghost_out)
   character (len=128) :: cbuffer
 
   !  Write ASCII header
-  write(unit) "**************** Output for Guacho v1.1****************",lf
+  write(unit) "**************** Output for Guacho v1.3****************",lf
 
   write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
   write(unit) trim(cbuffer), lf
@@ -52,13 +52,16 @@ subroutine write_header(unit, neq_out, nghost_out)
   write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)') coords(0)*nx, coords(1)*ny, coords(2)*nz
+  write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)') &
+        coords(0)*nx, coords(1)*ny, coords(2)*nz
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') MPI_NBX, MPI_NBY, MPI_NBZ
+  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') & 
+        MPI_NBX, MPI_NBY, MPI_NBZ
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') neq_out, neqdyn
+  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') &
+        neq_out, neqdyn
   write(unit) trim(cbuffer), lf
 
   write(cbuffer,'("Number of Ghost Cells  ", i0)') nghost_out
@@ -106,7 +109,7 @@ end subroutine write_header
 
 
 subroutine write_BIN(itprint)
-
+  
   use difrad
   implicit none
   integer, intent(in) :: itprint
@@ -121,7 +124,8 @@ subroutine write_BIN(itprint)
   real, allocatable :: divB(:,:,:)
 
 #ifdef MPIP
-  write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
+  write(file1,'(a,i3.3,a,i3.3,a)')  &
+        trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
   unitout=rank+10
 #else
   write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/points',itprint,'.bin'
@@ -132,10 +136,29 @@ subroutine write_BIN(itprint)
   do ip=0, np-1
    if(rank == ip) then
     open(unit=unitout,file=file1,status='replace',access='stream')
-    
+
     ! write header, then data
     call write_header(unitout,neq,nghost)
-    write(unitout) u(:,:,:,:)
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
+       do k =nzmin,nzmax
+          do j = nymin,nymax
+             do i = nxmin, nxmax
+                write(unitout) u(1,i,j,k)+primit0(1,i,j,k)
+                write(unitout) u(2,i,j,k)
+                write(unitout) u(3,i,j,k)
+                write(unitout) u(4,i,j,k)
+                write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+&
+              0.5*(primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2)
+                write(unitout) u(6,i,j,k)+primit0(6,i,j,k)
+                write(unitout) u(7,i,j,k)+primit0(7,i,j,k)
+                write(unitout) u(8,i,j,k)+primit0(8,i,j,k)
+             end do
+          end do
+       end do
+                
+    else
+       write(unitout) u(:,:,:,:)
+    endif
 
     close(unitout)
     print'(i3,a,a)',rank," wrote file:",trim(file1)
@@ -154,19 +177,19 @@ subroutine write_BIN(itprint)
     do ip=0, np-1
       if(rank == ip) then
 
-        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
         unitout=10+rank
         open(unit=unitout,file=file1,status='replace', access='stream')
-    
         call write_header(unitout,1,0)
         write (unitout) em(:,:,:)
         close(unitout)
         print'(i3,a,a)',rank," wrote file:",trim(file1)
 
-        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
         unitout=10+rank
-        open(unit=unitout,file=file1,status='replace',access='stream') 
-    
+        open(unit=unitout,file=file1,status='replace',access='stream')
         call write_header(unitout,1,0)
         write (unitout) ph(:,:,:)
         close(unitout)
@@ -180,7 +203,7 @@ subroutine write_BIN(itprint)
              
   end if
 
-
+#ifdef BFIELD
   if (dump_divb) then
     !   This is a hack to write div(B) to plot it easily
     !  compute div(B)
@@ -199,11 +222,12 @@ subroutine write_BIN(itprint)
     ! take turns to write to disk
     do ip=0, np-1
       if(rank == ip) then
-        write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
         unitout=10+rank
 
         open(unit=unitout,file=file1,status='replace',access='stream')
-
+        
         call write_header(unitout,1,0)
         write (unitout) divB(:,:,:)
         close(unitout)
@@ -217,6 +241,7 @@ subroutine write_BIN(itprint)
     deallocate(divB)
 
   end if
+#endif
 
 end subroutine write_BIN
 
