@@ -77,7 +77,7 @@ subroutine step(dt)
                          user_source_terms, radiation_pressure, &
                          eight_wave, enable_field_cd
 
-  use globals, only : up, u, f, g, h, dx, dy, dz
+  use globals, only : up, u, primit,f, g, h, dx, dy, dz
   use field_cd_module
   use sources
   implicit none
@@ -110,7 +110,7 @@ subroutine step(dt)
         if (user_source_terms     .or. &
             radiation_pressure    .or. &
             eight_wave) then
-          
+          call source(i,j,k,primit(:,i,j,k),s)
           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 
         end if
