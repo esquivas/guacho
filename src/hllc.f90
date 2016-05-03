@@ -87,11 +87,15 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(5)=rhost*( ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)) )
 
   if (pmhd) then
+#ifdef BFIELD
     uuk(6:8)=rhost*priml(6:8)/priml(1)
+#endif 
   end if
+#ifdef PASSIVES
   if (passives) then
     uuk(neqdyn+1:neq)=rhost*priml(neqdyn+1:neq)/priml(1)
   end if
+#endif
 
     call prim2f(priml,ff)
     call prim2u(priml,uu)
@@ -110,12 +114,17 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(5)=rhost*( ek/primr(1)+(sst-primr(2))*(sst+primr(5)/(primr(1)*srmur)) )
 
   if (pmhd) then
+#ifdef BFIELD
       !uuk(5)= 0.
     uuk(6:8)=rhost*primr(6:8)/primr(1)
+#endif
   end if
+  
+#ifdef PASSIVES
   if (passives) then
     uuk(neqdyn+1:neq)=rhost*primr(neqdyn+1:neq)/primr(1)
   end if
+#endif
 
     call prim2f(primr,ff)
     call prim2u(primr,uu)

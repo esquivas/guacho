@@ -23,24 +23,18 @@
 !=======================================================================
 
 !> @brief Module containing global variables
-!> @details This module contains variables that are treated as global
-!> in the code
+!> @details This mudules contains variables that are treated as global
+!! in the code
 
 module globals
-
   implicit none
 
-  real, allocatable ::      u(:,:,:,:) !< conserved varibles
-  real, allocatable ::     up(:,:,:,:) !< conserved varibles after 1/2 timestep
-  real, allocatable :: primit(:,:,:,:) !< primitive varibles
-  real, allocatable ::      f(:,:,:,:) !< X fluxes
-  real, allocatable ::      g(:,:,:,:) !< Y fluxes
-  real, allocatable ::      h(:,:,:,:) !< Z fluxes
-  real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
-
-! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT  
-  real, allocatable ::    primit0(:,:,:,:) !< primit zeros
-
+  real, dimension(:,:,:,:), allocatable :: u      !< conserved varibles
+  real, dimension(:,:,:,:), allocatable :: up     !< conserved varibles after 1/2 timestep
+  real, dimension(:,:,:,:), allocatable :: primit !< primitive varibles
+  real, dimension(:,:,:,:), allocatable :: f      !< X fluxes
+  real, dimension(:,:,:,:), allocatable :: g      !< Y fluxes
+  real, dimension(:,:,:,:), allocatable :: h      !< Z fluxes
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y
@@ -65,6 +59,18 @@ module globals
   real :: dt_CFL
   !> Current iteration
   integer :: currentIteration
+  
+#ifdef CT  
+  real, dimension(:,:,:,:), allocatable :: e      !< electric current
+#endif
+
+#ifdef MHD_BSPLIT
+  real, dimension(:,:,:,:), allocatable :: B0     !< initial magnetic field
+#endif    
+
+#ifdef THERMAL_COND
+  real, allocatable :: Temp(:,:,:)   !< Temperature array [K]
+#endif
 
 end module globals
 

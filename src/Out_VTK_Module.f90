@@ -80,7 +80,7 @@ subroutine write_VTK(itprint)
   unitout=10
 #endif
 
-  open(unit=unitout,file=file1,status='replace',access='stream', convert='BIG_ENDIAN')
+  open(unit=unitout,file=file1,status='replace',access='stream')!, convert='BIG_ENDIAN')
 
   !   write the header
   x0=( float(coords(0)*nx) )*dx

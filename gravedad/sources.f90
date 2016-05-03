@@ -80,23 +80,20 @@ end subroutine getpos
 !> @param real [out] s(neq) : vector with source terms
 
 subroutine grav_source(xc,yc,zc,pp,s)
-  !use exoplanet  ! this module contains the position of the planet
+  use constants, only : Ggrav,Msun,Rsun,gsun
+  use exoplanet  ! this module contains the position of the planet
   ! to do: uncouple from exoplanet module, at this moment to make
   ! a dirty fix I'm placing a copy of the exoplanet to the general 
   ! source tree
-  use constants, only : Ggrav,Msun,Rsun,gsun
-  use parameters, only : nymin, nymax
   implicit none
   real, intent(in)    :: xc, yc, zc
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
-  integer, parameter  :: nb=2   ! 2 particles
-  real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb),g
-
-!   GM = Ggrav*Msun/rsc/vsc2
-!   R  = Rsun/rsc
+  real                :: g
+  
   g = Ggrav*Msun/Rsun/Rsun
   g = g*rsc/vsc2
+
 
   ! momento
   s(2)= s(2)
@@ -120,6 +117,8 @@ end subroutine grav_source
 !> @param reak [in] rc : @f$ \sqrt{x^2+y^2+z^2} @f$
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
+
+#ifdef PASSIVES
 
 subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 
@@ -145,7 +144,11 @@ subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
 
 end subroutine radpress_source
 
+#endif
+
 !=======================================================================
+
+#ifdef BFIELD
 
 !> @brief Computes div(B)
 !> @details Computes div(B)
@@ -166,6 +169,8 @@ subroutine divergence_B(i,j,k,d)
 
 end subroutine divergence_B
 
+#endif
+
 !=======================================================================
 
 !> @brief 8 Wave source terms for div(B) correction
@@ -176,6 +181,8 @@ end subroutine divergence_B
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
+
+#ifdef BFIELD
 
 subroutine divbcorr_8w_source(i,j,k,pp,s)
  
@@ -202,6 +209,8 @@ subroutine divbcorr_8w_source(i,j,k,pp,s)
     s(8)=s(8)-divB*pp(4)
 
 end subroutine divbcorr_8w_source
+
+#endif
 
 !=======================================================================
 
@@ -234,8 +243,11 @@ subroutine source(i,j,k,prim,s)
   !  photoionization radiation pressure
   if (radiation_pressure) call radpress_source(i,j,k,x,y,z,r,prim,s)
 
+#ifdef BFIELD
   !  divergence correction Powell et al. 1999
   if (eight_wave) call divbcorr_8w_source(i,j,k,prim,s)
+#endif
+
   return
 end subroutine source
 

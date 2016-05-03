@@ -29,6 +29,8 @@
 
 module field_cd_module
 
+#ifdef BFIELD
+
   implicit none
   real, allocatable :: e(:,:,:,:) !< electric current
 
@@ -297,12 +299,14 @@ subroutine field_cd_update(i,j,k,dt)
   up(:5,i,j,k)=u(:5,i,j,k)-dtdx*(f(:5,i,j,k)-f(:5,i-1,j,k)) &
                           -dtdy*(g(:5,i,j,k)-g(:5,i,j-1,k)) &
                           -dtdz*(h(:5,i,j,k)-h(:5,i,j,k-1))
+
+#ifdef PASSIVES
   if (passives) &
   up(neqdyn+1:,i,j,k)=u(neqdyn+1:,i,j,k)                    &
             -dtdx*(f(:neqdyn+1,i,j,k)-f(neqdyn+1:,i-1,j,k)) &
             -dtdy*(g(:neqdyn+1,i,j,k)-g(neqdyn+1:,i,j-1,k)) &
             -dtdz*(h(:neqdyn+1,i,j,k)-h(neqdyn+1:,i,j,k-1))
-
+#endif
   ! evolution of B with field-CD
   up(6,i,j,k)=u(6,i,j,k)                                    &
               -0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))         &
@@ -318,5 +322,6 @@ subroutine field_cd_update(i,j,k,dt)
 
 end subroutine field_cd_update
 
+#endif
 
 end module field_cd_module

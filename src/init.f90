@@ -151,8 +151,13 @@ subroutine initmain(tprint, itprint)
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
+  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+
+#ifdef BFIELD
   if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+#endif
 
   !   DMC cooling
   if (cooling == COOL_DMC) call init_cooling_dmc()
@@ -245,11 +250,17 @@ subroutine initmain(tprint, itprint)
   else if (riemann_solver == SOLVER_HLLD) then
     print'(a)', 'The Riemann solver is HLLD'
     print'(a)', ''
-    else if (riemann_solver == SOLVER_HLLE_SPLIT) then
+  else if (riemann_solver == SOLVER_HLLE_SPLIT_B) then
     print'(a)', 'The Riemann solver is HLLE with split B field'
     print'(a)', ''
-  else if (riemann_solver == SOLVER_HLLD_SPLIT) then
+  else if (riemann_solver == SOLVER_HLLD_SPLIT_B) then
     print'(a)', 'The Riemann solver is HLLD with split B field'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
+    print'(a)', 'The Riemann solver is HLLE with split in All Variables'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+    print'(a)', 'The Riemann solver is HLLD with split in All Variables'
     print'(a)', ''
   else
     print'(a)', 'Unrecognized Riemann Solver'
@@ -315,13 +326,13 @@ subroutine initmain(tprint, itprint)
   end if
   if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
     print'(a)', 'BOTTOM & TOP: PERIODIC'
-  else if (bc_bottom == BC_PERIODIC .or. bc_top /= bc_bottom) then
+  else if (bc_bottom == BC_PERIODIC .and. bc_top /= bc_bottom) then
     print'(a)', 'Invalid periodic BCs'
     stop
   end if
   if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
     print'(a)', 'IN & OUT: PERIODIC'
-  else if (bc_out == BC_PERIODIC .or. bc_in /= bc_top) then
+  else if (bc_out == BC_PERIODIC .and. bc_in /= bc_out) then
     print'(a)', 'Invalid periodic BCs'
     stop
   end if
@@ -392,7 +403,7 @@ end subroutine initmain
 
 subroutine initflow(itprint)
 
-  use parameters, only : outputpath, iwarm, itprint0
+  use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
   implicit none
@@ -425,8 +436,8 @@ subroutine initflow(itprint)
           trim(outputpath)//'BIN/points',itprint,'.bin'
     unitin=10
 #endif
-    open(unit=unitin,file=file1,status='old', access='stream', &
-          convert='LITTLE_ENDIAN')
+    open(unit=unitin,file=file1,status='old', access='stream' )
+    !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
  
     !   discard the ascii header
     do while (byte_read /= achar(255) )

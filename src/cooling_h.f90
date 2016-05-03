@@ -27,6 +27,8 @@
 
 module cooling_H
 
+#ifdef PASSIVES
+
   implicit none
  
 contains
@@ -356,15 +358,19 @@ subroutine atomic(dt,uu,tau,radphi)
   uu(neqdyn+1)=real(y1)*uu(1)
 
   if (mhd) then
+#ifdef BFIELD
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
          +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
          +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
+#endif
   else
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
          +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
   end if
 
 end subroutine atomic
+
+#endif
 
 end module cooling_H
 

@@ -31,6 +31,7 @@ module hydro_solver
   use hllc
   use hllE
   use hlld
+  use hlleSplitAll
   use chemistry
   implicit none
 
@@ -73,10 +74,10 @@ end subroutine viscosity
 
 subroutine step(dt)
   use parameters, only : nx, ny, nz, neqdyn, &
-                         enable_grav, radiation_pressure, &
+                         user_source_terms, radiation_pressure, &
                          eight_wave, enable_field_cd
 
-  use globals, only : up, u, primit, f, g, h, dx, dy, dz
+  use globals, only : up, u, primit,f, g, h, dx, dy, dz
   use field_cd_module
   use sources
   implicit none
@@ -106,8 +107,10 @@ subroutine step(dt)
 
         endif
 
-        if (enable_grav .or. radiation_pressure .or. eight_wave) then
-          
+        if (user_source_terms     .or. &
+            radiation_pressure    .or. &
+            eight_wave) then
+          call source(i,j,k,primit(:,i,j,k),s)
           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
 
         end if
@@ -148,6 +151,11 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
   if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
+
 
   !   upwind timestep
   call step(dtm)
@@ -166,6 +174,10 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
   if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
 
   !  upwind timestep
   call step(dt_CFL)
@@ -200,7 +212,7 @@ subroutine tstep()
   ! Chianti cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_CHI) call coolingchi()
 
-  ! Chemistry network cooling (the primitives are already updated in update_chem)
+  ! Chemistry network cooling (primitives are already updated in update_chem)
   if (cooling == COOL_CHEM) call cooling_chem()
 
   !   boundary contiditions on u

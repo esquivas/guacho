@@ -70,8 +70,8 @@ subroutine read_table_dmc()
      open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',status='old')
      do i=1,41
         read(10,*) a, b
-        cooltab_dmc(1,i)=10.d0**(a)
-        cooltab_dmc(2,i)=10.d0**(-b)
+        cooltab_dmc(1,i)=10.e0**(a)
+        cooltab_dmc(2,i)=10.e0**(-b)
      end do
      close(unit=10)
   endif
@@ -93,14 +93,14 @@ function cooldmc(T)
   real (kind=8)     :: cooldmc, T0, T1, C0, C1
 
   if(T.gt.1e8) then
-    cooldmc=0.27D-26*Sqrt(dble(T))
+    cooldmc=0.27e-26*Sqrt(real(T,8))
   else
     if1=int(log10(T)*10)-39
     T0=cooltab_dmc(1,if1)
     c0=cooltab_dmc(2,if1)
     T1=cooltab_dmc(1,if1+1)
     c1=cooltab_dmc(2,if1+1)
-    cooldmc=(c1-c0)*(dble(T)-T0)/(T1-T0)+c0
+    cooldmc=(c1-c0)*(real(T,8)-T0)/(T1-T0)+c0
   end if
 
 end function cooldmc
@@ -139,7 +139,7 @@ subroutine coolingdmc()
 
               Aloss=cooldmc(T)
               dens=primit(1,i,j,k)
-              Ce=(Aloss*dble(dens)**2)/(Eth0*Psc)  ! cgs
+              Ce=(Aloss*real(dens,8)**2)/(Eth0*Psc)  ! cgs
 
               !  apply cooling to primitive and conserved variables
               primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)

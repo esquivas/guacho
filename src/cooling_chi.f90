@@ -92,14 +92,14 @@ function coolchi(T)
   real (kind=8)     :: coolchi, T0, T1, C0, C1
 
   if(T.gt.1e8) then
-    coolchi=0.21D-26*Sqrt(dble(T))
+    coolchi=0.21e-26*Sqrt(real(T,8))
   else
     if1=int(log10(T)*10)-39
     T0=cooltab_chianti(1,if1)
     c0=cooltab_chianti(2,if1)
     T1=cooltab_chianti(1,if1+1)
     c1=cooltab_chianti(2,if1+1)
-    coolchi=(c1-c0)*(dble(T)-T0)/(T1-T0)+c0
+    coolchi=(c1-c0)*(real(T,8)-T0)/(T1-T0)+c0
   end if
 
 end function coolchi
@@ -138,7 +138,7 @@ subroutine coolingchi()
 
               Aloss=coolchi(T)
               dens=primit(1,i,j,k)
-              Ce=(Aloss*dble(dens)**2)/(Eth0*Psc)  ! cgs
+              Ce=(Aloss*real(dens,8)**2)/(Eth0*Psc)  ! cgs
 
               !  apply cooling to primitive and conserved variables
               primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)

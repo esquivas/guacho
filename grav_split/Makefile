@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM= grav
+PROGRAM= guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
@@ -21,11 +21,11 @@ COMPILER= gfortran
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-#FLAGS = -cpp -O3
-# For DEBUG, suggestion: 
-FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing \
-        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-        -fbounds-check -fimplicit-none -fstack-protector-all
+FLAGS = -cpp -O3
+# For DEBUG, suggestions: 
+#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
+#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+#        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -33,6 +33,13 @@ FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing \
 #---------------------------------------------------
 #   MPI paralalelization (Y/N)
 MPIP = Y
+
+#   Include Magnetic field (Y/N) , (either full MHD or passive B)
+BFIELD = Y
+
+#   Include passive scalars (Y/N)
+PASSSIVES = N
+
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
 
@@ -76,6 +83,7 @@ hll.o 	\
 hllc.o 	\
 hlle.o 	\
 hlld.o 	\
+hlle_split_all.o \
 sources.o \
 hydro_solver.o \
 main.o 
@@ -90,7 +98,7 @@ user_mod.o \
 hydro_core.o \
 difrad.o \
 init.o \
-coldens.o
+coldens. #   not updated to Guacho V1.3
 
 #  For the Lyman Alpha Tau calculation
 OBJECTSLYAT = \
@@ -98,7 +106,7 @@ constants.o \
 parameters.o 	\
 globals.o	\
 hydro_core.o \
-lyman_alpha_tau.o\
+lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
 #---------------------------------------------------
 # Set flags
@@ -117,6 +125,14 @@ FLAGS += -DMPIP
 COMPILER = mpif90
 endif
 
+ifeq ($(PASSIVES),Y)
+FLAGS += -DPASSIVES
+endif
+
+ifeq ($(BFIELD),Y)
+FLAGS += -DBFIELD
+endif
+
 ifeq ($(SILO),Y)
 FLAGS += -DOUT_SILO
 endif
@@ -130,7 +146,7 @@ $(PROGRAM)  : prebuild ${OBJECTS}
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
   ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
   ${SRC_PATH}/C2Ray/*.mod
-	@echo "Done! (`date`)"	
+	@echo "Done! (`date`)"
 
 coldens : prebuild ${OBJECTSCOLDENS}
 	@echo Linking object files ...
@@ -139,7 +155,7 @@ coldens : prebuild ${OBJECTSCOLDENS}
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 	${SRC_PATH}/C2Ray/*.mod
-	@echo "Done! (`date`)"	
+	@echo "Done! (`date`)"
 
 lyman_alpha_tau : prebuild ${OBJECTSLYAT}
 	@echo Linking object files ...
@@ -148,7 +164,7 @@ lyman_alpha_tau : prebuild ${OBJECTSLYAT}
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 	${SRC_PATH}/C2Ray/*.mod
-	@echo "Done! (`date`)"	
+	@echo "Done! (`date`)"
 
 prebuild :
 	@echo "Guacho build started `date`"

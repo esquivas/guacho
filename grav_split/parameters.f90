@@ -31,35 +31,35 @@ module parameters
   implicit none
 #ifdef MPIP
   include "mpif.h"
+  logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
 #endif
+
+  !> Path used to write the output
+  character (len=128),parameter ::  outputpath='./'
+  !> working directory
+  character (len=128),parameter ::  workdir='./'
 
   !----------------------------------------
   !  setup parameters
-  !  If logical use .true. or .false.
+  !  If logical use true or false
   !  If integer, choose from list provided
   !----------------------------------------
-  logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
-  logical, parameter :: doublep  = .true.   !<  enable double precision
-  logical, parameter :: passives = .false.  !<  enable passive scalars
-  logical, parameter :: pmhd     = .false.  !<  enable passive mhd
-  logical, parameter :: mhd      = .false.  !<  Enable full MHD
+  
+  logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
+  logical, parameter :: mhd      = .true.   !<  Enable full MHD
   
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
   !> SOLVER_HLLC : HLLC solver 
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
-  !> SOLVER_HLLE_SPLIT_B : Split version of HLLE only B
-  !> SOLVER_HLLD_SPLIT_B : Split version of HLLD only B
-  !> SOLVER_HLLE_SPLIT_ALL : Split version of HLLE all vars
-  !> SOLVER_HLLD_SPLIT_ALL : Split version of HLLD all vars
-  integer, parameter :: riemann_solver = SOLVER_HLLC
+  !> SOLVER_HLLE_SPLIT : Split version of HLLE
+  !> SOLVER_HLLD_SPLIT : Split version of HLLD
+  integer, parameter :: riemann_solver = SOLVER_HLLE_SPLIT_ALL
 
-  !  Type of output
+  !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
   logical, parameter :: out_vtk  = .false.  !< vtk (also binary)
-  logical, parameter :: out_silo = .false.  !< silo (needs hdf and silo libraries)
-  !! Silo also has to be enabled in Makefile
 
   !> Equation of state used to compute T and P
   !> EOS_ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
@@ -70,7 +70,7 @@ module parameters
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
-  !> COOL_H    : Single parametrized cooling function (ionization fraction and T)
+  !> COOL_H    : Single parametrized cooling function (ionization frac and T)
   !> COOL_BBC  : Cooling function of Benjamin, Benson and Cox (2003)
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
@@ -86,11 +86,11 @@ module parameters
   !! are set
   integer, parameter :: bc_left   = BC_PERIODIC
   integer, parameter :: bc_right  = BC_PERIODIC
-  integer, parameter :: bc_bottom = BC_CLOSED
-  integer, parameter :: bc_top    = BC_OUTFLOW
+  integer, parameter :: bc_bottom = BC_OTHER
+  integer, parameter :: bc_top    = BC_OTHER
   integer, parameter :: bc_out    = BC_PERIODIC
   integer, parameter :: bc_in     = BC_PERIODIC
-  logical, parameter :: bc_user  = .false. !< user boundaries (e.g. sources)
+  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -108,13 +108,14 @@ module parameters
   !> TC_ISOTROPIC   : Isotropic thermal conduction
   !> TC_ANISOTROPIC : Anisotropic thermal conduction (requires B field)
   integer, parameter :: th_cond = TC_OFF
-  logical, parameter :: tc_saturation = .false.   !< Enable Saturation in Thermal Conduction
+  !> Enable Saturation in thermal conduction
+  logical, parameter :: tc_saturation = .false.
 
   !> Enable 'diffuse' radiation
   logical, parameter :: dif_rad = .false.
 
-  !> Include gravity
-  logical, parameter :: enable_grav = .true.
+  !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
+  logical, parameter :: user_source_terms = .true.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -125,22 +126,16 @@ module parameters
   logical, parameter :: enable_field_cd = .false.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
-
-  !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./'
-  !> working directory
-  character (len=128),parameter ::  workdir='./'
   
-  !> number of dynamical equations, set to 5 for HD and 8 for MHD 
-  ! passibe MHD (PMHD)
-  integer, parameter :: neqdyn=5      !< num. of eqs  (+scal)
-  integer, parameter :: ndim=3        !< num. of dimensions
-  integer, parameter :: npas=0        !< num. of passive scalars (set to 0 if not enabled)
-  integer, parameter :: nghost=2      !< num. of ghost cells
+#ifdef PASSIVES
+  integer, parameter :: npas=2        !< num. of passive scalars
+#else
+  integer, parameter :: npas=0        !< num. of passive scalars
+#endif
 
-  integer, parameter :: nxtot=100      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=2        !< Total grid size in Z
+  integer, parameter :: nxtot=50      !< Total grid size in X
+  integer, parameter :: nytot=50      !< Total grid size in Y
+  integer, parameter :: nztot=2       !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -154,8 +149,8 @@ module parameters
   !  set box size   
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=0.02        !< grid extent in Z (code units)
-  real, parameter :: xphys=1.e9       !< grid extent in X (physical units, cgs)
+  real, parameter :: zmax=0.1         !< grid extent in Z (code units)
+  real, parameter :: xphys=1.e9  !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -165,7 +160,7 @@ module parameters
   real, parameter :: mu_2 = 0.5              !< mean atomic mass ionized
   
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0=1.e4                !<  reference temperature (to set cs)
+  real, parameter :: T0=1.e4                !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
   real, parameter :: rhosc=amh*mu           !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
@@ -173,12 +168,12 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc)  !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = .15*hr/tsc
+  real, parameter :: tmax    = 100./tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1./tsc
+  real, parameter :: dtprint =  1. /tsc
   real, parameter :: cfl=0.1        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
@@ -186,10 +181,32 @@ module parameters
   logical, parameter :: iwarm=.false.
   integer            :: itprint0=141  !< number of output to do warm start
 
-  !-------------------------------------------------------------------------
+  !*********************************************************************
   !  some derived parameters (no need of user's input below this line)
+  !*********************************************************************
+
+#ifdef PASSIVES
+  logical, parameter :: passives = .true.   !<  enable passive scalars
+#else
+  logical, parameter :: passives = .false.  !<  enable passive scalars
+#endif
+ integer, parameter :: ndim=3         !< num. of dimensions
+  integer, parameter :: nghost=2      !< num. of ghost cells
+
+  !> number of dynamical equations
+#ifdef BFIELD
+  integer, parameter :: neqdyn=8      !< num. of eqs  (+scal)
+#else
+  integer, parameter :: neqdyn=5      !< num. of eqs  (+scal)
+#endif
 
   integer, parameter :: neq=neqdyn + npas  !< number of equations
+
+#ifdef SILO
+  logical, parameter :: out_silo = .true.  !< silo (needs hdf/silo libraries)
+#else
+  logical, parameter :: out_silo = .false.  !< silo (needs hdf/silo libraries)
+#endif
 
 #ifdef MPIP
   !>  number of physical cells in x in each MPI block
@@ -202,13 +219,13 @@ module parameters
   integer, parameter :: nx=nxtot, ny=nytot, nz=nztot
   integer, parameter :: np=1, MPI_NBY=1, MPI_NBX=1, MPI_NBZ=1
 #endif
-
-  integer, parameter :: nxmin = 1  - nghost   !< lower bound of hydro arrays in x
-  integer, parameter :: nxmax = nx + nghost   !< upper bound of hydro arrays in x
-  integer, parameter :: nymin = 1  - nghost   !< lower bound of hydro arrays in y
-  integer, parameter :: nymax = ny + nghost   !< upper bound of hydro arrays in y
-  integer, parameter :: nzmin = 1  - nghost   !< lower bound of hydro arrays in z
-  integer, parameter :: nzmax = nz + nghost   !< upper bound of hydro arrays in z
+!
+  integer, parameter :: nxmin = 1  - nghost  !< lower bound of hydro arrays in x
+  integer, parameter :: nxmax = nx + nghost  !< upper bound of hydro arrays in x
+  integer, parameter :: nymin = 1  - nghost  !< lower bound of hydro arrays in y
+  integer, parameter :: nymax = ny + nghost  !< upper bound of hydro arrays in y
+  integer, parameter :: nzmin = 1  - nghost  !< lower bound of hydro arrays in z
+  integer, parameter :: nzmax = nz + nghost  !< upper bound of hydro arrays in z
   
   !  more mpi stuff
   integer, parameter ::master=0  !<  rank of master of MPI processes
