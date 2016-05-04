@@ -80,41 +80,19 @@ end subroutine getpos
 
 subroutine grav_source(xc,yc,zc,pp,s)
   use constants, only : Ggrav
-  use exoplanet  ! this module contains the position of the planet
   implicit none
   real, intent(in)    :: xc, yc, zc
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
-  integer, parameter  :: nb=2   ! 2 particles
+  integer, parameter  :: nb=1   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
   integer :: i
 
-  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
-  GM(2)=Ggrav*MassP/rsc/vsc2
-
-  !calculate distance from the sources
-  ! star
-  x(1)=xc
-  y(1)=yc
-  z(1)=zc
-  rad2(1) = x(1)**2 +y(1)**2 + z(1)**2
-  ! planet
-  x(2)=xc-xp
-  y(2)=yc
-  z(2)=zc-zp
-  rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
-
-  ! update source terms
-  do i=1, nb
-    ! momenta
-    s(2)= s(2)-pp(1)*GM(i)*x(i)/(rad2(i)**1.5)
-    s(3)= s(3)-pp(1)*GM(i)*y(i)/(rad2(i)**1.5)
-    s(4)= s(4)-pp(1)*GM(i)*z(i)/(rad2(i)**1.5)
+    s(2)= s(2)
+    s(3)= s(3)-pp(1)*0.1
+    s(4)= s(4)
     ! energy
-    s(5)= s(5)-pp(1)*GM(i)*( pp(2)*x(i) +pp(3)*y(i) +pp(4)*z(i) )  &
-           /(rad2(i)**1.5 )
-  end do
-
+    s(5)= s(5)-pp(1)*pp(3)*0.1
 
 end subroutine grav_source
 
@@ -258,6 +236,7 @@ subroutine source(i,j,k,prim,s)
   !  photoionization radiation pressure
   call radpress_source(i,j,k,x,y,z,r,prim,s)
 #endif
+  
 #ifdef EIGHT_WAVE
   !  divergence correction Powell et al. 1999
   call divbcorr_source(i,j,k,prim,s)

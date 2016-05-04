@@ -27,15 +27,17 @@
 !! can be moved later to a runtime input file
 
 module parameters
+!  use mpi
   use constants, only : Rg, amh, AU, day, pi
   implicit none
 #ifdef MPIP
   include "mpif.h"
 #endif
+
   !> Path used to write the output
- character (len=128),parameter ::  outputpath='./'
- !> working directory
- character (len=128),parameter ::  workdir='./'
+  character (len=128),parameter ::  outputpath='./output_10000/'
+  !> working directory
+  character (len=128),parameter ::  workdir='./'
   
 #if defined(MHD) || defined(PMHD)
   integer, parameter :: neqdyn=8        !< num. of eqs  (+scal)
@@ -50,15 +52,15 @@ module parameters
 #endif
   integer, parameter :: nghost=2        !< num. of ghost cells
 
-  integer, parameter :: nxtot=400       !< Total grid size in X
-  integer, parameter :: nytot=100       !< Total grid size in Y
-  integer, parameter :: nztot=400       !< Total grid size in Z
+  integer, parameter :: nxtot=10000       !< Total grid size in X
+  integer, parameter :: nytot=2       !< Total grid size in Y
+  integer, parameter :: nztot=2       !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=4        !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2        !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=2        !< number of MPI blocks in Z   
+  integer, parameter :: MPI_NBY=1        !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ=1        !< number of MPI blocks in Z   
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
@@ -67,20 +69,20 @@ module parameters
   !real, parameter :: nphot=5.10e48, ts=1.e5 !Number of Phot. source temp.
 
   !  set box size   
-  real, parameter :: xmax=1.         !< grid extent in X (code units)
-  real, parameter :: ymax=0.25       !< grid extent in Y (code units)
-  real, parameter :: zmax=1.         !< grid extent in Z (code units)
-  real, parameter :: xphys=0.30*AU   !< grid extent in X (pohysical units, cgs)
+  real, parameter :: xmax=1.              !< grid extent in X (code units)
+  real, parameter :: ymax=1./100.         !< grid extent in Y (code units)
+  real, parameter :: zmax=1./100.         !< grid extent in Z (code units)
+  real, parameter :: xphys=1.0    !< grid extent in X (pohysical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
+  real, parameter :: cv=1.            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu=1.0            !< Mean atomic mass (amus) 
- 
+  
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0=1.e4         !<  reference temperature (to set cs)
-  real, parameter :: rsc=xphys/xmax  !<  distance scaling
-  real, parameter :: rhosc=amh*mu    !<  mass density scaling
+  real, parameter :: T0=1.e4          !<  reference temperature (to set cs)
+  real, parameter :: rsc=xphys/xmax   !<  distance scaling
+  real, parameter :: rhosc=amh*mu     !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
   real, parameter :: vsc2 = gamma*Rg*T0/mu  !<  Velocity scaling
   real, parameter :: vsc = sqrt(vsc2)
@@ -95,11 +97,11 @@ module parameters
    real, parameter :: bsc = sqrt(4.0*pi*Psc)     
 #endif
   !> Maximum integration time
-  real, parameter :: tmax    =  .5*day/tsc !3.8*day/tsc
+  real, parameter :: tmax    =  0.21
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.025*day/tsc
+  real, parameter :: dtprint = 0.01
   real, parameter :: cfl=0.4        !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.01       !< artificial viscosity
+  real, parameter :: eta=0.0       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.

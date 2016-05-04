@@ -78,7 +78,7 @@ prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)   &
 #endif 
 
 #ifdef PASSIVES
-    prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
+  prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
 #endif
   
   !   Temperature calculation
@@ -399,7 +399,7 @@ subroutine cfast(p,d,bx,by,bz,cfx,cfy,cfz)
   use parameters, only : gamma
   implicit none
   real, intent(in) :: p, d, bx, by, bz
-  real, intent(out) ::cfx,cfy,cfz
+  real, intent(out):: cfx,cfy,cfz
   real :: b2
   
   b2=bx*bx+by*by+bz*bz
@@ -425,12 +425,13 @@ subroutine cfastX(prim,cfX)
   implicit none
   real, intent(in) :: prim(neq)
   real, intent(out) ::cfX
-  real :: b2, cs2va2
+  real :: b2, cs2va2, d
   
   b2=prim(6)**2+prim(7)**2+prim(8)**2
-  cs2va2 = (gamma*prim(5)+b2)/prim(1)   ! cs^2 + ca^2
+  d=prim(1)
+  cs2va2 = (gamma*prim(5)+b2)   ! cs^2 + ca^2
 
-  cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
+  cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2))/d ) 
  
   end subroutine cfastX
 
@@ -453,7 +454,10 @@ subroutine cfastX(prim,cfX)
 
 subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
 
-  use parameters, only : nx, ny, nz, cfl, mpi_real_kind
+  use parameters, only : nx, ny, nz, cfl
+#ifdef MPIP  
+  use parameters, only: nx, ny, nz, cfl, mpi_real_kind
+#endif
   use globals, only : primit, dx, dy, dz
   implicit none
 #ifdef MPIP
@@ -469,8 +473,10 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
 #else
   real              :: c
 #endif
-  integer :: i, j, k, err
-  
+  integer :: i, j, k
+#ifdef MPIP
+  integer:: err
+#endif
   dtp=1.e30
   
   do k=1,nz

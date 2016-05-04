@@ -30,7 +30,7 @@
 
 module user_mod
 
-  use exoplanet
+  use BrioWu
   ! load auxiliary modules
   implicit none
  
@@ -43,7 +43,7 @@ subroutine init_user_mod()
 
   implicit none      
   !  initialize modules loaded by user
-  call init_exo()
+  call init_bw()
 
 end subroutine init_user_mod
 
@@ -57,66 +57,15 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals,    only: coords, dx ,dy ,dz
-
+ ! use globals, only : coords, dx, dy, dz, rank
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+!  real, intent(in) :: time
+  
 
-  integer :: i,j,k
-  real :: x,y,z, rads, velx, vely, velz, dens,cpi
-  !  the star wind does not cover the entire domain, we fill here 
-  !  as if the exoplanet is absent
-  do i=nxmin,nxmax
-    do j=nymin,nymax
-      do k=nzmin,nzmax
+  call impose_bw(u)
 
-        ! Position measured from the centre of the grid (star)
-        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
-
-        ! Distance from the centre of the star
-        rads=sqrt(x**2+y**2+z**2)
-
-        VelX=VSW*X/RADS
-        VelY=VSW*Y/RADS
-        VelZ=VSW*Z/RADS
-        DENS=DSW*RSW**2/RADS**2
-        !   total density and momena
-        u(1,i,j,k) = dens
-        u(2,i,j,k) = dens*velx
-        u(3,i,j,k) = dens*vely
-        u(4,i,j,k) = dens*velz
-#if defined(PMHD) || defined(MHD)
-        cpi = bsw*(RSW/rads)**3/(2.*rads**2)
-        u(6,i,j,k) = 3.*y*x*cpi
-        u(7,i,j,k) = (3.*y**2-rads**2)*cpi
-        u(8,i,j,k) = 3.*y*z*cpi
-
-#endif
-#ifdef MHD
-        ! total energy
-        u(5,i,j,k)=0.5*dens*vsw**2         &
-             + cv*dens*Tsw       & 
-             + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-#else
-              ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-             + cv*dens*1.9999*Tsw
-#endif
-#ifdef PASSIVES
-        !  density of neutrals
-        u(neqdyn+1,i,j,k)= 0.0001*dens
-        !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-        u(neqdyn+2,i,j,k)= dens   ! passive scalar
-#endif
-      end do
-    end do
-  end do
-
-  call impose_exo(u,0.)
-
-end subroutine initial_conditions
+ end subroutine initial_conditions
   
 !=====================================================================
 
@@ -126,15 +75,14 @@ end subroutine initial_conditions
 !> @param real [in] time : time in the simulation (code units)
 
 #ifdef OTHERB
-subroutine impose_user_bc(u)
+subroutine impose_user_bc(u,time)
 
   use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals,    only: time
-
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  real, intent(in)  :: time
 
-  call impose_exo(u,time)
+!  call impose_exo(u,time)
  
 end subroutine impose_user_bc
 

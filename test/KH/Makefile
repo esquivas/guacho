@@ -2,30 +2,30 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=Guacho
+PROGRAM=KH
 
-#  Search Path, object files are searched in the order below
-VPATH = . : ../src
+#location of the Guacho base source code, and the usr modules
+VPATH = .:../../src
 
-#   Choice of compiler: ifort and gfortran are the only implemented
+#   Choice of compiler: ifort and gfortran are tested
 #   if MPI enabled, do not use mpif90, but rather the base compiler
-#   of the mpi build (e.g. 'mpif90 --version')
-#COMPILER= gfortran
-COMPILER= ifort
+#   of the mpi build (see 'mpif90 --version')
+COMPILER= gfortran
+#COMPILER= ifort
 
-#   Compiler flags, make sure they are compatible with the previous selection 
+#   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
 #FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
-FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
+#FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
 # DEBUG
 #FLAGS = -cpp -O3 -fdefault-double-8  
-#FLAGS = -cpp -ggdb -O0 -fdefault-double-8 -pedantic -Wall -Waliasing \
-#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-#        -fbounds-check -fimplicit-none -fstack-protector-all
+FLAGS = -cpp -ggdb -O0 -fdefault-double-8 -pedantic -Wall -Waliasing \
+        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -43,12 +43,12 @@ PMHD = N
 
 #   Enable MHD (Y/N)
 #   This is compatible with MHD solvers (HLLE, HLLD, under construction)
-MHD = Y
+MHD = N
 
 #   Solver: 
 #   HD  Solvers: HLL  (too difussive), or HLLC
 #   MHD Solvers: HLLE (too difussive), or HLLD (under construction)
-SOLVER = HLLD
+SOLVER = HLLC
 
 #   Type of output
 OUTBIN = Y
@@ -62,14 +62,14 @@ OUTSILO= N
 #LINKFLAGS += -lsiloh5  -lhdf5_fortran -lsz -lz -lstdc++ 
 
 #   additional equations (i.e. passive scalars) Y/N?
-PASSIVES = Y
+PASSIVES = N
 
 #   Equation of state used to compute T and P
 #   ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
 #   SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
 #   H_RATE        : Using n_HI and n_HII
 #   CHEM          : Enables a full chemical network
-EOS = CHEM
+EOS = ADIABATIC
 
 #   Type of cooling (choose only one)
 #   NONE: Turns off the cooling
@@ -78,18 +78,18 @@ EOS = CHEM
 #   DMC : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
 #   CHI : From table(s) generated with Chianti
 #   CHEM : enables cooling from a full chemical network
-COOLING = H
+COOLING = NONE
 
 #   boundary conditions (OUTFLOW, CLOSED, PERIODIC)
 #   choose only one per boundary
 #   + OTHERB (user defined in user_mod.f90) if needed)
-LEFTX   = OUTFLOW
-RIGHTX  = OUTFLOW
-BOTTOMY = OUTFLOW
-TOPY    = OUTFLOW
-INZ     = OUTFLOW
-OUTZ    = OUTFLOW
-OTHERB  = Y
+LEFTX   = PERIODIC
+RIGHTX  = PERIODIC
+BOTTOMY = PERIODIC
+TOPY    = PERIODIC
+INZ     = PERIODIC
+OUTZ    = PERIODIC
+OTHERB  = N
 
 #   choice of slope limiter, available limiters are:
 #   limiter =-1: no average, 0 : no limiter, 1: Minmod,
@@ -104,17 +104,17 @@ LIMITER = 1
 #   ANISOTROPIC : Anisotropic thermal conduction (requires B field)
 THERMAL_COND = N
 
-#   Enable Saturaation in the thermal conduction (Y/N)
+#   Enable Saturation in the thermal conduction (Y/N)
 TC_SATURATION = N
 
-#   Enable 'diffuse' radiation (Y/N) 
-RADDIFF = Y
+#   Enable diffuse radiation (Y/N) 
+RADDIFF = N
 
 # Implementing C2ray
 C2ray = N
 
 #   Include gravity (Y/N) (from point sources)   
-GRAV = Y
+GRAV = N
 
 #   Include radiative pressure (Y/N)
 RADPRES = N
@@ -123,16 +123,17 @@ RADPRES = N
 EIGHT_WAVE = N
 
 #   Flux Interpolated Central Diff. scheme (Toth 2000) (Y/N)
-CT = Y
+CT = N
 
 #
 CEXCHANGE = N
 
 # Activate the write of the DivB in the output
-DIVB = Y
+DIVB = N
 
 #   Enable the N-Body module (Y/N) not implemented yet!
 #   NBODY = N
+
 #####################################################
 # There should be no need to modify below this line #
 #####################################################
@@ -141,12 +142,9 @@ OBJECTS = \
 constants.o  \
 parameters.o \
 globals.o	\
-exoplanet.o \
+kelvin_helmholtz.o \
 user_mod.o \
-network.o \
 hydro_core.o \
-linear_system.o \
-chemistry.o \
 difrad.o \
 cooling_h.o	\
 cooling_dmc.o	\
@@ -183,7 +181,6 @@ OBJECTSLYAT = \
 constants.o \
 parameters.o 	\
 globals.o	\
-exoplanet.o \
 hydro_core.o \
 lyman_alpha_tau.o\
 
@@ -384,7 +381,7 @@ lyman_alpha_tau : prebuild ${OBJECTSLYAT}
 
 prebuild :
 	@echo "Guacho build started `date`"
-	@echo Compiling flags used: $(FLAGS) 
+	@echo Compiling flags used: $(FLAGS)
 %.o:%.f95
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
