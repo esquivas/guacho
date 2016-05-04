@@ -1,6 +1,0 @@
-<map id="output::write_output" name="output::write_output">
-<area shape="rect" id="node2" href="$namespaceout__bin__module.html#ac5772f05ffdd0227d2fc17e27beb0f59" title="Writes Data, one file per processor. " alt="" coords="192,15,369,42"/>
-<area shape="rect" id="node4" href="$namespaceout__vtk__module.html#ac34f91e1b74dd533461d7ead905bf937" title="Writes Data, one file per processor. " alt="" coords="193,67,369,94"/>
-<area shape="rect" id="node3" href="$namespaceout__bin__module.html#a6e5fb4bb1cc6f0a15ce591a3b1014d8d" title="Writes header. " alt="" coords="417,5,569,47"/>
-<area shape="rect" id="node5" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="425,71,562,98"/>
-</map>

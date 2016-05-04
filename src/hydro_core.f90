@@ -1,10 +1,10 @@
 !=======================================================================
 !> @file hydro_core.f90
 !> @brief Hydrodynamical and Magnetohidrodynamocal bacic module
-!> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @author Alejandro Esquivel, V. Sieyra, M. Shneiter
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -195,6 +195,7 @@ subroutine u2primSplitAll(uu, prim, prim0, T)
   if (eq_of_state == EOS_ADIABATIC) then
     T=((prim(5)+prim0(5))/r)*Tempsc
   end if
+<<<<<<< HEAD
 
   if (eq_of_state == EOS_SINGLE_SPECIE) then
     ! assumes it is fully ionized
@@ -221,6 +222,34 @@ subroutine u2primSplitAll(uu, prim, prim0, T)
     dentot = max(dentot, 1e-15)
     T=max(1.,((prim(5)+prim0(5))/dentot)*Tempsc )
 
+=======
+
+  if (eq_of_state == EOS_SINGLE_SPECIE) then
+    ! assumes it is fully ionized
+    r=max(r,1e-15)
+    T=max(1.,((prim(5)+prim0(5))/r)*Tempsc)
+    !prim(5)=r*T/Tempsc ! REPENSAR
+  end if
+
+#ifdef PASSIVES
+
+  if (eq_of_state == EOS_H_RATE) then
+    dentot=(2.*r-prim(neqdyn+1)-prim0(neqdyn+1))
+    dentot=max(dentot,1e-15)
+    T=max(1.,((prim(5)+prim0(5))/dentot)*Tempsc)
+    !prim(5)=dentot*T/Tempsc !REVISAR 
+  end if
+
+  if (eq_of_state == EOS_CHEM) then
+    !  Assumes that rho scaling is mu*mh
+    dentot = 0.
+    do i = neqdyn+1, neqdyn+n_spec
+      dentot = prim(i) + prim0(i) + dentot
+    end do
+    dentot = max(dentot, 1e-15)
+    T=max(1.,((prim(5)+prim0(5))/dentot)*Tempsc )
+
+>>>>>>> master
     !T=(prim(5)/r)*Tempsc
     !prim(5) = dentot * T /Tempsc
   end if
@@ -365,9 +394,15 @@ subroutine prim2u(prim,uu, prim0)
         uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
              +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
      end if
+<<<<<<< HEAD
 
   else 
 
+=======
+
+  else 
+
+>>>>>>> master
 !     if present(prim0) then
 !        !   kinetic+thermal energies
 !        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
@@ -427,8 +462,15 @@ subroutine prim2f(prim,ff,prim0)
         - prim0(7)*prim(6)-prim0(6)*prim(7)
         ff(4) = (prim(1)+prim0(1))*prim(2)*prim(4)-prim(6)*prim(8) &
         - prim0(8)*prim(6)-prim0(6)*prim(8)
+<<<<<<< HEAD
         ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) &
         +cv*prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
+=======
+
+        ff(5) = prim(2)*(etot+prim(5)+0.5*((prim(6)+prim0(6))**2+(prim(7)&
+        +prim0(7))**2+(prim(8)+prim0(8))**2) &
+        +cv*prim0(5)+prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
+>>>>>>> master
         -(prim(6)+prim0(6))*(prim(2)*(prim(6)+prim0(6))+ &
         prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISAR
       end if
@@ -457,12 +499,28 @@ subroutine prim2f(prim,ff,prim0)
     ff(5) = prim(2)*(etot+prim(5))
   end if
 
+<<<<<<< HEAD
 #ifdef BFIELD    
   if (mhd .or. pmhd) then 
     ff(6)=0.0
     ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
     ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
   end if
+=======
+#ifdef BFIELD
+  if (mhd .or. pmhd) then
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+        riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+      ff(6)=0.
+      ff(7)=prim(2)*(prim0(7)+prim(7))-prim(3)*(prim0(6)+prim(6))
+      ff(8)=prim(2)*(prim0(8)+prim(8))-prim(4)*(prim0(6)+prim(6))
+    else
+      ff(6)=0.0
+      ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
+      ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
+    endif
+  endif
+>>>>>>> master
 #endif
 
 #ifdef PASSIVES

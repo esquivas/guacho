@@ -2,7 +2,11 @@
 !> @file hlleSplitall.f90
 !> @brief HLLE approximate Riemann solver module split All version
 !> @author Valeria Sieyra, Matias Schneiter, Alejandro Esquivel
+<<<<<<< HEAD
 !> @date 03/May/2016
+=======
+!> @date 04/May/2016
+>>>>>>> master
 
 ! Copyright (c) 2016 Guacho Co-Op.
 !

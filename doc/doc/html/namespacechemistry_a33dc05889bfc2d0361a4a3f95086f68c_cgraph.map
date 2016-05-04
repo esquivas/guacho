@@ -1,7 +1,0 @@
-<map id="chemistry::update_chem" name="chemistry::update_chem">
-<area shape="rect" id="node2" href="$namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="223,5,361,32"/>
-<area shape="rect" id="node3" href="$namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e" title="Advances the chemistry network in one cell. " alt="" coords="220,56,364,83"/>
-<area shape="rect" id="node4" href="$namespacelinear__system.html#a51e9428c30e00182fa86755204de7762" title="Driver to solves a set of linear equations. " alt="" coords="412,56,557,83"/>
-<area shape="rect" id="node5" href="$namespacelinear__system.html#ad77fb788295266bcc818f72d6677bf9d" title="LU decomposition. " alt="" coords="605,31,760,57"/>
-<area shape="rect" id="node6" href="$namespacelinear__system.html#acdd63cedefa6077e4100904703d6b82d" title="Solves a set of linear equations. " alt="" coords="607,81,758,108"/>
-</map>

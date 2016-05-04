@@ -2,9 +2,9 @@
 !> @file init.f90
 !> @brief Guacho-3D initialization module
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2015 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -150,10 +150,17 @@ subroutine initmain(tprint, itprint)
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+<<<<<<< HEAD
 
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
   allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
 
+=======
+
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
+  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+
+>>>>>>> master
 #ifdef BFIELD
   if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -268,6 +275,19 @@ subroutine initmain(tprint, itprint)
     stop
   end if
 
+<<<<<<< HEAD
+=======
+  if (enable_field_cd) then
+    print'(a)', 'div(B) constrained with field-CD method'
+    print'(a)', ''
+  end if
+
+  if (eight_wave) then
+    print'(a)', 'div(B) constrained with 8 wave method'
+    print'(a)', ''
+  end if
+
+>>>>>>> master
   if (eq_of_state == EOS_ADIABATIC) then
     print'(a)', 'The code uses an AIABATIC EOS'
     print'(a)', ''

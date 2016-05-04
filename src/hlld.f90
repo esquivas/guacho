@@ -2,9 +2,9 @@
 !> @file hlld.f90
 !> @brief HLLD approximate Riemann solver module
 !> @author  C. Villarreal  D'Angelo, A. Esquivel, M. Schneiter
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !

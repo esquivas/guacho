@@ -1,10 +1,10 @@
 !=======================================================================
 !> @file lyman_alpha_tau.f90
 !> @brief Lyman_alpha_utilities
-!> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @author M. Schneiter, Alejandro Esquivel
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
