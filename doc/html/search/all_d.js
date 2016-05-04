@@ -8,6 +8,5 @@ var searchData=
   ['out_5fvtk_5fmodule',['out_vtk_module',['../namespaceout__vtk__module.html',1,'']]],
   ['out_5fvtk_5fmodule_2ef90',['Out_VTK_Module.f90',['../_out___v_t_k___module_8f90.html',1,'']]],
   ['output',['output',['../namespaceoutput.html',1,'']]],
-  ['output_2ef90',['output.f90',['../output_8f90.html',1,'']]],
-  ['outputsilo',['outputsilo',['../namespaceout__silo__module.html#a65763f848b9b5da2a20d8b55f53f8515',1,'out_silo_module']]]
+  ['output_2ef90',['output.f90',['../output_8f90.html',1,'']]]
 ];

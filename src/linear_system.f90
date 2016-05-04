@@ -2,7 +2,7 @@
 !> @file linear_system.f90
 !> @brief linear system inversion  module
 !> @author A. Castellanos, A. Rodriguez, A. Raga and A. Esquivel
-!> @date 10/Mar/2016
+!> @date 4/May/2016
 
 ! Copyright (c) 2016 A. Esquivel et al.
 !

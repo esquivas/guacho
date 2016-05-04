@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -115,52 +115,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">contains</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">!=======================================================================</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">write_output</a>(itprint)</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">   42</a></span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#ifdef OUTBIN</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span>  <span class="keywordtype">use </span><a class="code" href="namespaceout__bin__module.html">out_bin_module</a></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef OUTSILO</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor"></span>  <span class="keywordtype">use </span><a class="code" href="namespaceout__silo__module.html">out_silo_module</a></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef OUTVTK</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span>  <span class="keywordtype">use </span><a class="code" href="namespaceout__vtk__module.html">out_vtk_module</a></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span><span class="keywordtype">implicit none</span> </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: itprint</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">!=======================================================================</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">write_output</a>(itprint)</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">   41</a></span>&#160;  </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <span class="keywordtype">use </span>parameters <span class="comment">!, only :: out_bin, out_vtk, out_silo</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceout__bin__module.html">out_bin_module</a></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceout__silo__module.html">out_silo_module</a></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceout__vtk__module.html">out_vtk_module</a></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">implicit none</span> </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: itprint</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordflow">if</span> (out_bin ) <span class="keyword">call </span><a class="code" href="namespaceout__bin__module.html#ac5772f05ffdd0227d2fc17e27beb0f59">write_bin</a>(itprint)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keywordflow">if</span> (out_vtk ) <span class="keyword">call </span><a class="code" href="namespaceout__vtk__module.html#ac34f91e1b74dd533461d7ead905bf937">write_vtk</a>(itprint)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordflow">if</span> (out_silo) <span class="keyword">call </span>write_silo(itprint)</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">end subroutine </span><a class="code" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">write_output</a></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifdef OUTBIN</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"></span>  <span class="keyword">call </span><a class="code" href="namespaceout__bin__module.html#ac5772f05ffdd0227d2fc17e27beb0f59">write_bin</a>(itprint)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef OUTVTK</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span>  <span class="keyword">call </span><a class="code" href="namespaceout__vtk__module.html#ac34f91e1b74dd533461d7ead905bf937">write_vtk</a>(itprint)</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#ifdef OUTSILO                            </span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span>  <span class="keyword">call </span><a class="code" href="namespaceout__silo__module.html#a65763f848b9b5da2a20d8b55f53f8515">outputsilo</a>(itprint)</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#endif                                </span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keyword">end subroutine </span><a class="code" href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">write_output</a></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">!=======================================================================</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">end module </span><a class="code" href="namespaceoutput.html">output</a></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">!=======================================================================</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment">!=======================================================================</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">end module </span><a class="code" href="namespaceoutput.html">output</a></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">!=======================================================================</span></div>
 <div class="ttc" id="namespaceout__bin__module_html_ac5772f05ffdd0227d2fc17e27beb0f59"><div class="ttname"><a href="namespaceout__bin__module.html#ac5772f05ffdd0227d2fc17e27beb0f59">out_bin_module::write_bin</a></div><div class="ttdeci">subroutine write_bin(itprint)</div><div class="ttdoc">Writes Data, one file per processor. </div><div class="ttdef"><b>Definition:</b> <a href="_out___b_i_n___module_8f90_source.html#l00112">Out_BIN_Module.f90:112</a></div></div>
 <div class="ttc" id="namespaceout__vtk__module_html"><div class="ttname"><a href="namespaceout__vtk__module.html">out_vtk_module</a></div><div class="ttdoc">Output in VTK format. </div><div class="ttdef"><b>Definition:</b> <a href="_out___v_t_k___module_8f90_source.html#l00028">Out_VTK_Module.f90:28</a></div></div>
-<div class="ttc" id="namespaceout__vtk__module_html_ac34f91e1b74dd533461d7ead905bf937"><div class="ttname"><a href="namespaceout__vtk__module.html#ac34f91e1b74dd533461d7ead905bf937">out_vtk_module::write_vtk</a></div><div class="ttdeci">subroutine write_vtk(itprint)</div><div class="ttdoc">Writes Data, one file per processor. </div><div class="ttdef"><b>Definition:</b> <a href="_out___v_t_k___module_8f90_source.html#l00043">Out_VTK_Module.f90:43</a></div></div>
-<div class="ttc" id="namespaceout__bin__module_html"><div class="ttname"><a href="namespaceout__bin__module.html">out_bin_module</a></div><div class="ttdoc">Output in BIN format. </div><div class="ttdef"><b>Definition:</b> <a href="_out___b_i_n___module_8f90_source.html#l00029">Out_BIN_Module.f90:29</a></div></div>
+<div class="ttc" id="namespaceout__vtk__module_html_ac34f91e1b74dd533461d7ead905bf937"><div class="ttname"><a href="namespaceout__vtk__module.html#ac34f91e1b74dd533461d7ead905bf937">out_vtk_module::write_vtk</a></div><div class="ttdeci">subroutine write_vtk(itprint)</div><div class="ttdoc">Writes Data, one file per processor. </div><div class="ttdef"><b>Definition:</b> <a href="_out___v_t_k___module_8f90_source.html#l00042">Out_VTK_Module.f90:42</a></div></div>
+<div class="ttc" id="namespaceout__bin__module_html"><div class="ttname"><a href="namespaceout__bin__module.html">out_bin_module</a></div><div class="ttdoc">Output in BIN format. </div><div class="ttdef"><b>Definition:</b> <a href="_out___b_i_n___module_8f90_source.html#l00028">Out_BIN_Module.f90:28</a></div></div>
 <div class="ttc" id="namespaceout__silo__module_html"><div class="ttname"><a href="namespaceout__silo__module.html">out_silo_module</a></div><div class="ttdoc">Output in Silo (+HDF5) Format. </div><div class="ttdef"><b>Definition:</b> <a href="_out___silo___module_8f90_source.html#l00028">Out_Silo_Module.f90:28</a></div></div>
-<div class="ttc" id="namespaceoutput_html_a9a6f65196f6b514f504929c9e1f7582f"><div class="ttname"><a href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">output::write_output</a></div><div class="ttdeci">subroutine write_output(itprint)</div><div class="ttdoc">Writes output. </div><div class="ttdef"><b>Definition:</b> <a href="output_8f90_source.html#l00042">output.f90:42</a></div></div>
+<div class="ttc" id="namespaceoutput_html_a9a6f65196f6b514f504929c9e1f7582f"><div class="ttname"><a href="namespaceoutput.html#a9a6f65196f6b514f504929c9e1f7582f">output::write_output</a></div><div class="ttdeci">subroutine write_output(itprint)</div><div class="ttdoc">Writes output. </div><div class="ttdef"><b>Definition:</b> <a href="output_8f90_source.html#l00041">output.f90:41</a></div></div>
 <div class="ttc" id="namespaceoutput_html"><div class="ttname"><a href="namespaceoutput.html">output</a></div><div class="ttdoc">Writes output. </div><div class="ttdef"><b>Definition:</b> <a href="output_8f90_source.html#l00029">output.f90:29</a></div></div>
-<div class="ttc" id="namespaceout__silo__module_html_a65763f848b9b5da2a20d8b55f53f8515"><div class="ttname"><a href="namespaceout__silo__module.html#a65763f848b9b5da2a20d8b55f53f8515">out_silo_module::outputsilo</a></div><div class="ttdeci">subroutine outputsilo(itprint)</div><div class="ttdoc">Upper level wrapper. </div><div class="ttdef"><b>Definition:</b> <a href="_out___silo___module_8f90_source.html#l00347">Out_Silo_Module.f90:347</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -112,7 +112,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="namespacechemistry.html">   27</a></span>&#160;<span class="keyword">module</span> <a class="code" href="namespacechemistry.html">chemistry</a></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keywordtype">use </span>network</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacenetwork.html">network</a></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">contains</span></div>
@@ -125,7 +125,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="namespacechemistry.html#a33dc05889bfc2d0361a4a3f95086f68c">   43</a></span>&#160;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keywordtype">use </span>parameters<span class="keywordtype">, only</span> : neq, neqdyn, nx, ny, nz, tsc, rhosc</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespaceglobals.html">globals</a><span class="keywordtype">, only</span> : <a class="code" href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">u</a>, <a class="code" href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">primit</a>, <a class="code" href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">dt_cfl</a></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">use </span>network<span class="keywordtype">, only</span> : n_spec, n_elem</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacenetwork.html">network</a><span class="keywordtype">, only</span> : n_spec, n_elem</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacehydro__core.html">hydro_core</a><span class="keywordtype">, only</span> : <a class="code" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keywordtype">real</span> :: dt_seconds, T, y(n_spec), y0(n_elem)</div>
@@ -163,7 +163,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">subroutine </span><a class="code" href="namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e">chemstep</a>(y,y0,T, deltt)</div>
 <div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e">   91</a></span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacelinear__system.html">linear_system</a></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordtype">use </span>network<span class="keywordtype">, only</span> : n_spec, n_reac, n_elem, get_reaction_rates,  &amp;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keywordtype">use </span><a class="code" href="namespacenetwork.html">network</a><span class="keywordtype">, only</span> : n_spec, n_reac, n_elem, get_reaction_rates,  &amp;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                      derv, get_jacobian, n_nequ, check_no_conservation</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;  <span class="keywordtype">real (kind=8)</span>, <span class="keywordtype">intent(inout)</span> :: y(n_spec) </div>
@@ -228,20 +228,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">  end module </span><a class="code" href="namespacechemistry.html">chemistry</a></div>
 <div class="ttc" id="namespacechemistry_html"><div class="ttname"><a href="namespacechemistry.html">chemistry</a></div><div class="ttdoc">chemistry module </div><div class="ttdef"><b>Definition:</b> <a href="chemistry_8f90_source.html#l00027">chemistry.f90:27</a></div></div>
+<div class="ttc" id="namespacenetwork_html"><div class="ttname"><a href="namespacenetwork.html">network</a></div><div class="ttdoc">Chemical/atomic network module. </div><div class="ttdef"><b>Definition:</b> <a href="network_8f90_source.html#l00027">network.f90:27</a></div></div>
 <div class="ttc" id="namespacelinear__system_html_a51e9428c30e00182fa86755204de7762"><div class="ttname"><a href="namespacelinear__system.html#a51e9428c30e00182fa86755204de7762">linear_system::linsys</a></div><div class="ttdeci">subroutine linsys(a, b, n)</div><div class="ttdoc">Driver to solves a set of linear equations. </div><div class="ttdef"><b>Definition:</b> <a href="linear__system_8f90_source.html#l00178">linear_system.f90:178</a></div></div>
 <div class="ttc" id="namespacechemistry_html_ab808252fa02b3bfb1ac29ed7b2f5122e"><div class="ttname"><a href="namespacechemistry.html#ab808252fa02b3bfb1ac29ed7b2f5122e">chemistry::chemstep</a></div><div class="ttdeci">subroutine chemstep(y, y0, T, deltt)</div><div class="ttdoc">Advances the chemistry network in one cell. </div><div class="ttdef"><b>Definition:</b> <a href="chemistry_8f90_source.html#l00091">chemistry.f90:91</a></div></div>
-<div class="ttc" id="namespaceglobals_html_ae6519b751f8ef608c2074e27024335b7"><div class="ttname"><a href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">globals::u</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable u</div><div class="ttdoc">conserved varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00032">globals.f90:32</a></div></div>
-<div class="ttc" id="namespaceglobals_html_a149bece4e7407071629f69a8c7deb03a"><div class="ttname"><a href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">globals::primit</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable primit</div><div class="ttdoc">primitive varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00034">globals.f90:34</a></div></div>
-<div class="ttc" id="namespaceglobals_html_a1599fd11dcd5dfa9104003de3a2d03e5"><div class="ttname"><a href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">globals::dt_cfl</a></div><div class="ttdeci">real dt_cfl</div><div class="ttdoc">Current CFL $ t$. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00059">globals.f90:59</a></div></div>
+<div class="ttc" id="namespaceglobals_html_ae6519b751f8ef608c2074e27024335b7"><div class="ttname"><a href="namespaceglobals.html#ae6519b751f8ef608c2074e27024335b7">globals::u</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable u</div><div class="ttdoc">conserved varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00033">globals.f90:33</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a149bece4e7407071629f69a8c7deb03a"><div class="ttname"><a href="namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a">globals::primit</a></div><div class="ttdeci">real, dimension(:,:,:,:), allocatable primit</div><div class="ttdoc">primitive varibles </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00035">globals.f90:35</a></div></div>
+<div class="ttc" id="namespaceglobals_html_a1599fd11dcd5dfa9104003de3a2d03e5"><div class="ttname"><a href="namespaceglobals.html#a1599fd11dcd5dfa9104003de3a2d03e5">globals::dt_cfl</a></div><div class="ttdeci">real dt_cfl</div><div class="ttdoc">Current CFL $ t$. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00065">globals.f90:65</a></div></div>
 <div class="ttc" id="namespacelinear__system_html"><div class="ttname"><a href="namespacelinear__system.html">linear_system</a></div><div class="ttdoc">linear system inversion module </div><div class="ttdef"><b>Definition:</b> <a href="linear__system_8f90_source.html#l00029">linear_system.f90:29</a></div></div>
 <div class="ttc" id="namespacechemistry_html_a33dc05889bfc2d0361a4a3f95086f68c"><div class="ttname"><a href="namespacechemistry.html#a33dc05889bfc2d0361a4a3f95086f68c">chemistry::update_chem</a></div><div class="ttdeci">subroutine update_chem()</div><div class="ttdoc">Advances the chemistry network. </div><div class="ttdef"><b>Definition:</b> <a href="chemistry_8f90_source.html#l00043">chemistry.f90:43</a></div></div>
 <div class="ttc" id="namespacehydro__core_html"><div class="ttname"><a href="namespacehydro__core.html">hydro_core</a></div><div class="ttdoc">Basic hydro (and MHD) subroutines utilities. </div><div class="ttdef"><b>Definition:</b> <a href="hydro__core_8f90_source.html#l00030">hydro_core.f90:30</a></div></div>
-<div class="ttc" id="namespacehydro__core_html_a360e3d64343b30d94d270cfebc5b4eb3"><div class="ttname"><a href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">hydro_core::u2prim</a></div><div class="ttdeci">subroutine u2prim(uu, prim, T)</div><div class="ttdoc">Computes the primitive variables and temperature from conserved variables on a single cell...</div><div class="ttdef"><b>Definition:</b> <a href="hydro__core_8f90_source.html#l00045">hydro_core.f90:45</a></div></div>
+<div class="ttc" id="namespacehydro__core_html_a360e3d64343b30d94d270cfebc5b4eb3"><div class="ttname"><a href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">hydro_core::u2prim</a></div><div class="ttdeci">subroutine u2prim(uu, prim, T)</div><div class="ttdoc">Computes the primitive variables and temperature from conserved variables on a single cell...</div><div class="ttdef"><b>Definition:</b> <a href="hydro__core_8f90_source.html#l00047">hydro_core.f90:47</a></div></div>
 <div class="ttc" id="namespaceglobals_html"><div class="ttname"><a href="namespaceglobals.html">globals</a></div><div class="ttdoc">Module containing global variables. </div><div class="ttdef"><b>Definition:</b> <a href="globals_8f90_source.html#l00029">globals.f90:29</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

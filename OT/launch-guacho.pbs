@@ -1,23 +1,23 @@
 #!/bin/bash 
-#PBS -N M1-chem
-#PBS -e M1-chem.err
-#PBS -o M1-chem.out
+#PBS -N OT-HLLD-NC
+#PBS -e OT-HLLD-NC.err
+#PBS -o OT-HLLD-NC.out
 #PBS -r n
 
 ##PBS -m aeb
 #PBS -M esquivel@nucleares.unam.mx
-#PBS -l nodes=1:tvh:ppn=32
+#PBS -l nodes=1:gen2:ppn=8
 #PBS -q default
 
 ### Switch to the job's working directory, provided by PBS in PBS_O_WORKDIR
-WORKDIR="/home/esquivel/Guacho-1.2/chemcool"
-#PBS_O_WORKDIR="/home/esquivel/Guacho-1.2/AHC-M1AD"
+WORKDIR="/home/esquivel/Guacho-v1.2/OT/"
+#PBS_O_WORKDIR="/home/esquivel/Guacho-v1.2/OT/"
 cd $WORKDIR
 
 ### EXEPATH is the directory where your executable resides
 EXEPATH=$WORKDIR
 ###EXE is the name of your executable (compiled mpi program) 
-EXE="M1-chem"
+EXE="HLLD-NC"
 ### ARGS is optional. If you don't need it simply leave it empty
 ARGS=""
 ### ARGS is also optional.

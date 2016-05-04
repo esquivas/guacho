@@ -1,6 +1,8 @@
 <map id="init::initmain" name="init::initmain">
-<area shape="rect" id="node2" href="$namespacecooling__dmc.html#a7874b4f8a76399e87e0a22aecd088cf8" title="Reads the cooling curve table. " alt="" coords="145,5,312,32"/>
-<area shape="rect" id="node3" href="$namespacecooling__chi.html#acdcfaea636dd68b666577d8daf434d35" title="Reads the cooling curve table. " alt="" coords="149,56,308,83"/>
-<area shape="rect" id="node4" href="$namespacethermal__cond.html#ac611766519a4602033c83e3ed5ae3c00" title="Intializes Temperature array. " alt="" coords="165,107,292,149"/>
-<area shape="rect" id="node5" href="$namespacedifrad.html#a9bce19025195159710828548c95282dc" title="initializes random number generation " alt="" coords="172,173,285,200"/>
+<area shape="rect" id="node2" href="$namespacecooling__dmc.html#a55a57c51124b72d0399460cdfb266579" title="Initializes the DMC cooling. " alt="" coords="145,5,349,32"/>
+<area shape="rect" id="node4" href="$namespacecooling__chi.html#a0f8bb493311788e517176ff704a2b647" title="Initializes the DMC cooling. " alt="" coords="166,57,329,98"/>
+<area shape="rect" id="node6" href="$namespacethermal__cond.html#ac611766519a4602033c83e3ed5ae3c00" title="Intializes Temperature array. " alt="" coords="184,122,311,163"/>
+<area shape="rect" id="node7" href="$namespacedifrad.html#a9bce19025195159710828548c95282dc" title="initializes random number generation " alt="" coords="191,188,304,215"/>
+<area shape="rect" id="node3" href="$namespacecooling__dmc.html#a3a8c7735ef9bf3cad0505e493b149ebf" title="Reads the cooling curve table. " alt="" coords="397,5,597,32"/>
+<area shape="rect" id="node5" href="$namespacecooling__chi.html#a7ddc59e99b3410beccf7f7fa71a7405d" title="Reads the cooling curve table. " alt="" coords="418,57,577,98"/>
 </map>

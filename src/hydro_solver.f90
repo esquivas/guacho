@@ -2,9 +2,9 @@
 !> @file hydro_solver.f90
 !> @brief Hydrodynamical and Magnetohidrodynamocal solver module
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -27,21 +27,12 @@
 
 module hydro_solver
 
-#ifdef HLL
- use hll
-#endif
-#ifdef HLLC
+  use hll
   use hllc
-#endif
-#ifdef HLLE
   use hllE
-#endif
-#ifdef HLLD
   use hlld
-#endif
-#ifdef EOS_CHEM
+  use hlleSplitAll
   use chemistry
-#endif
   implicit none
 
 contains
@@ -50,7 +41,8 @@ contains
 !> @details Adds artificial viscosity to the conserved variables
 !! @n Takes the variables from the globals module and it assumes
 !! that the up are the stepped variables, while u are unstepped
-subroutine viscosity()
+
+  subroutine viscosity()
 
   use parameters, only : nx, ny, nz, eta
   use globals, only: u, up
@@ -69,47 +61,9 @@ subroutine viscosity()
   end do
   
 end subroutine viscosity
+
 !=======================================================================
-#ifdef CT
-subroutine current()
 
-  use parameters, only : nx, ny, nz
-  use globals, only :  f, g, h, e
-  use boundaries, only: boundaryI_ct
-
-  implicit none
-
-  integer :: i, j, k
-
-  do k=1,nz!+1
-     do j=1,ny!+1
-        do i=1,nx!+1
-           !
-! Determination of electric field (E= v x B) 
-!         i=max(i,0)            
-!         j=max(j,0)            
-!         k=max(k,0)            
-!         i=min(i,nx+1)
-!         j=min(j,ny+1)
-!         k=min(k,nz+1)
-
-
-           e(1,i,j,k)=0.25*(-g(8,i,j-1,k)-g(8,i,j,k) &
-                              +h(7,i,j,k-1)+h(7,i,j,k))
-           e(2,i,j,k)=0.25*(+f(8,i-1,j,k)+f(8,i,j,k) &
-                              -h(6,i,j,k-1)-h(6,i,j,k))
-           e(3,i,j,k)=0.25*(-f(7,i-1,j,k)-f(7,i,j,k) &
-                              +g(6,i,j-1,k)+g(6,i,j,k)) 
-
-        end do
-     end do
-  end do
-
-  call boundaryI_ct()  
-
-end subroutine current
-#endif
-!=======================================================================
 !> @brief Upwind timestep
 !> @details Performs the upwind timestep according to
 !! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} 
@@ -119,20 +73,15 @@ end subroutine current
 !> @param real [in] dt : timestep
 
 subroutine step(dt)
+  use parameters, only : nx, ny, nz, neqdyn, &
+                         user_source_terms, radiation_pressure, &
+                         eight_wave, enable_field_cd
 
-  use parameters, only : nx, ny, nz, neqdyn
-#ifdef CT
-  use globals, only:  up, u, primit, f, g, h, dx, dy, dz, e
-#else
-  use globals, only : up, u, primit, f, g, h, dx, dy, dz
-#endif 
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
+  use globals, only : up, u, primit,f, g, h, dx, dy, dz
+  use field_cd_module
   use sources
-#endif
   implicit none
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
   real :: s(neq)
-#endif
   real, intent(in) :: dt
   integer :: i, j, k
   real :: dtdx, dtdy, dtdz
@@ -141,40 +90,30 @@ subroutine step(dt)
   dtdy=dt/dy
   dtdz=dt/dz
 
+  if (enable_field_cd) call get_current()
+
   do k=1,nz
-     do j=1,ny
-        do i=1,nx
-
-           up(:5,i,j,k)=u(:5,i,j,k)-dtdx*(f(:5,i,j,k)-f(:5,i-1,j,k))    &
-                                 -dtdy*(g(:5,i,j,k)-g(:5,i,j-1,k))    &
-                                 -dtdz*(h(:5,i,j,k)-h(:5,i,j,k-1))
-#ifdef MHD
-#ifdef CT                                  
-           up(6,i,j,k)=u(6,i,j,k)-0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))    &
-                +0.5*dtdz*(e(2,i,j,k+1)-e(2,i,j,k-1))
+    do j=1,ny
+      do i=1,nx
+        
+        if (.not.enable_field_cd) then
+          !  upwind step for all variables
+          up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
+                                -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
+                                -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
+        else
            
-           up(7,i,j,k)=u(7,i,j,k)+0.5*dtdx*(e(3,i+1,j,k)-e(3,i-1,j,k))    &
-                -0.5*dtdz*(e(1,i,j,k+1)-e(1,i,j,k-1))
-           
-           up(8,i,j,k)=u(8,i,j,k)-0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))    &
-                              +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
+          call field_cd_update(i,j,k,dt)
 
-#else
-           up(6:8,i,j,k)=u(6:8,i,j,k)-dtdx*(f(6:8,i,j,k)-f(6:8,i-1,j,k))    &
-                                 -dtdy*(g(6:8,i,j,k)-g(6:8,i,j-1,k))    &
-                                 -dtdz*(h(6:8,i,j,k)-h(6:8,i,j,k-1))
-#endif
-#endif
+        endif
 
-#ifdef PASSIVES
-           up(neqdyn+1:,i,j,k)=u(neqdyn+1:,i,j,k)-dtdx*(f(neqdyn+1:,i,j,k)-f(neqdyn+1:,i-1,j,k))    &
-                                 -dtdy*(g(neqdyn+1:,i,j,k)-g(neqdyn+1:,i,j-1,k))    &
-                                 -dtdz*(h(neqdyn+1:,i,j,k)-h(neqdyn+1:,i,j,k-1))
-#endif
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-           call source(i,j,k,primit(:,i,j,k),s)
-           up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
-#endif
+        if (user_source_terms     .or. &
+            radiation_pressure    .or. &
+            eight_wave) then
+          call source(i,j,k,primit(:,i,j,k),s)
+          up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
+
+        end if
 
         end do
      end do
@@ -189,29 +128,18 @@ end subroutine step
 
 subroutine tstep()
 
-  use parameters, only : tsc
+  use parameters, only : tsc, riemann_solver, eq_of_state, &
+                         dif_rad, cooling, &
+                         th_cond
+  use constants
   use globals
   use hydro_core, only : calcprim
   use boundaries
-#ifdef C2ray
-  use C2Ray_RT, only: C2Ray_radiative_transfer
-#endif
-#ifdef COOLINGH
   use cooling_H
-#endif
-#ifdef COOLINGDMC
   use cooling_DMC
-#endif
-#ifdef COOLINGCHI
   use cooling_CHI
-#endif
-#ifdef RADDIFF
   use difrad
-#endif
-
-#ifdef THERMAL_COND
   use thermal_cond
-#endif
   implicit none
   real :: dtm
    
@@ -219,23 +147,16 @@ subroutine tstep()
   dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
-#ifdef HLL
-  call hllfluxes(1)
-#endif
-#ifdef HLLC
-  call hllcfluxes(1)
-#endif
-#ifdef HLLE
-  call hllEfluxes(1)
-#endif
-#ifdef HLLD
-  call hlldfluxes(1)
-#endif
+  if (riemann_solver == SOLVER_HLL ) call hllfluxes(1)
+  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
 
-  !calculates the electric current for CT
-#ifdef CT
-  call current()
-#endif  
+
   !   upwind timestep
   call step(dtm)
   
@@ -249,23 +170,15 @@ subroutine tstep()
 
   !   calculate the fluxes using the primitives
   !   with linear reconstruction (piecewise linear)
-#ifdef HLL
-  call hllfluxes(2)
-#endif
-#ifdef HLLC
-  call hllcfluxes(2)
-#endif
-#ifdef HLLE
-  call hllEfluxes(2)
-#endif
-#ifdef HLLD
-  call hlldfluxes(2)
-#endif
+  if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
+  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
+  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
+  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
 
-  !calculates the electric current for CT
-#ifdef CT
-  call current()
-#endif
   !  upwind timestep
   call step(dt_CFL)
 
@@ -277,48 +190,30 @@ subroutine tstep()
 
   ! update the chemistry network
   ! at this point is in cgs
-#ifdef EOS_CHEM
-  !  the primitives in the physical celles are upated
-  call update_chem()
-#endif
+  !  the primitives in the physical cell are upated
+  if (eq_of_state == EOS_CHEM) call update_chem()
 
- !  Do the Radiaiton transfer (Monte Carlo type)
-#ifdef RADDIFF
-  call diffuse_rad()
-#endif
+  !  Do the Radiation transfer (Monte Carlo type)
+  if (dif_rad) call diffuse_rad()
 
-#ifdef CEXCHANGE
- !****************************************************
-  !   apply charge exchange TO BE ADDED IN COLLING?
-  !   not fully implemented
-  !****************************************************
-  call cxchange(dt*tsc)
-#endif
+  !-------------------------
+  !   apply cooling/heating terms
 
-  !   apply cooling/heating
-#ifdef COOLINGH
-  !   add cooling to the conserved variables
-  call coolingh()
-   !  update the primitives with u
-  call calcprim(u, primit)
-#endif
-#ifdef COOLINGDMC
-  !   the primitives are updated in the cooling routine
-  call coolingdmc()
-#endif
-#ifdef COOLINGCHI
-  !   the primitives are updated in the cooling routine
-  call coolingchi()
-#endif
-#ifdef COOLINGCHEM
-  !the primitives are already updated in update_chem
-  call cooling_chem()
-#endif
+  !   add cooling (H rat e)to the conserved variables
+  if (cooling == COOL_H) then 
+    call coolingh()
+    !  update the primitives with u
+    call calcprim(u, primit)
+  end if
 
-#ifdef C2ray
-  !  Apply Rad transfer, and heating & Cooling w/C2-Ray
-  call C2ray_radiative_transfer(dt_CFL*tsc)
-#endif
+  ! DMC cooling (the primitives are updated in the cooling routine)
+  if (cooling == COOL_DMC) call coolingdmc()
+  
+  ! Chianti cooling (the primitives are updated in the cooling routine)
+  if (cooling == COOL_CHI) call coolingchi()
+
+  ! Chemistry network cooling (primitives are already updated in update_chem)
+  if (cooling == COOL_CHEM) call cooling_chem()
 
   !   boundary contiditions on u
   call boundaryI()
@@ -326,11 +221,8 @@ subroutine tstep()
   !  update primitives on the boundaries
   call calcprim(u,primit,only_ghost=.true.)
 
-
-#ifdef THERMAL_COND
   !  Thermal conduction
-  call thermal_conduction()
-#endif
+  if (th_cond /= 0 ) call thermal_conduction()
 
 end subroutine tstep
 

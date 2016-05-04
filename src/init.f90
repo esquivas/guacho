@@ -2,9 +2,9 @@
 !> @file init.f90
 !> @brief Guacho-3D initialization module
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2015 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -39,21 +39,14 @@ contains
 
 subroutine initmain(tprint, itprint)
 
-  use constants, only : yr
+  use constants
   use parameters
   use globals
-#ifdef COOLINGDMC
-  use cooling_dmc, only : read_table, cooltab
-#endif
-#ifdef COOLINGCHI
-  use cooling_chi, only : read_table, cooltab
-#endif
-#ifdef RADDIFF
+  use cooling_dmc
+  use cooling_chi
   use difrad
-#endif
-#ifdef THERMAL_COND
   use thermal_cond
-#endif
+  use field_cd_module
   use user_mod
 
   implicit none
@@ -64,32 +57,23 @@ subroutine initmain(tprint, itprint)
   integer :: err, nps
   integer, dimension(0:ndim-1) :: dims
   logical, dimension(0:ndim-1) :: period
+  logical :: perx=.false., pery=.false., perz=.false.  
 #endif  
   !initializes MPI
 
 #ifdef MPIP
-#ifdef PERIODX
-  logical, parameter :: perx=.true.
-#else
-  logical, parameter :: perx=.false.
-#endif
-#ifdef PERIODY
-  logical, parameter :: pery=.true.
-#else
-  logical, parameter :: pery=.false.
-#endif
-#ifdef PERIODZ
-  logical, parameter :: perz=.true.
-#else
-  logical, parameter :: perz=.false.
-#endif
+    
+  if (bc_left   == BC_PERIODIC .and. bc_right == BC_PERIODIC) perx=.true.
+  if (bc_bottom == BC_PERIODIC .and. bc_top   == BC_PERIODIC) pery=.true.
+  if (bc_out    == BC_PERIODIC .and. bc_in    == BC_PERIODIC) perz=.true.
+ 
   period(0)=perx
   period(1)=pery
   period(2)=perz
   dims(0)  =MPI_NBX
   dims(1)  =MPI_NBY
   dims(2)  =MPI_NBZ
-  !
+  
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
@@ -151,7 +135,7 @@ subroutine initmain(tprint, itprint)
   else
      itprint=itprint0
      time=real(itprint)*dtprint
-     if(rank.eq.master) then
+     if(rank == master) then
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,' at a time ',time*tsc/yr,' yr'
         print'(a)',' ' 
      end if
@@ -165,19 +149,23 @@ subroutine initmain(tprint, itprint)
   allocate (     f(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-#ifdef CT  
-  allocate (     e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-#endif  
+  allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
+  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+
+#ifdef BFIELD
+  if (enable_field_cd) &
+  allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+#endif
+
   !   DMC cooling
-#ifdef COOLINGDMC
-  call read_table()
-#endif
+  if (cooling == COOL_DMC) call init_cooling_dmc()
 
-!   CHIANTI COOLING
-#ifdef COOLINGCHI
-  call read_table()
-#endif
+  !   CHIANTI COOLING
+  if (cooling == COOL_CHI) call init_cooling_chianti()
 
+!  Deprecated soon to be removed
 !   BBC COOLING
 !#ifdef COOLINGBBC
 !  do ii=0,(nps-1)
@@ -191,31 +179,30 @@ subroutine initmain(tprint, itprint)
 !  end do
 !#endif
 
-#ifdef THERMAL_COND
-  call init_thermal_cond()
-#endif
-#ifdef RADDIFF
-  call init_rand()
-#endif
+  !  Thermal conduction
+  if (th_cond /= TC_OFF) call init_thermal_cond()
+  
+  !  Diffuse radiation transfer module required random numbers
+  if (dif_rad) call init_rand()
 
   !  create directories to write the outputs
-if (rank == master) then
-#ifdef OUTBIN
-call system('if [ ! -e '//trim(outputpath)//'BIN ]; then mkdir -p '&
-                        //trim(outputpath)//'BIN ; fi')
-#endif
-#ifdef OUTVTK
-call system('if [ ! -e '//trim(outputpath)//'VTK ]; then mkdir -p '&
-                           //trim(outputpath)//'VTK ; fi')
-#endif
-#ifdef OUTSILO
-call system('if [ ! -e '//trim(outputpath)//'SILO/BLOCKS ]; then mkdir -p '&
-                        //trim(outputpath)//'SILO/BLOCKS ; fi')
-#endif
-end if
+  if (rank == master) then
+    if (out_bin) then
+      call system('if [ ! -e '//trim(outputpath)//'BIN ]; then mkdir -p '&
+                              //trim(outputpath)//'BIN ; fi')
+    end if
+    if (out_vtk) then
+      call system('if [ ! -e '//trim(outputpath)//'VTK ]; then mkdir -p '&
+                              //trim(outputpath)//'VTK ; fi')
+    end if
+    if (out_silo) then
+      call system('if [ ! -e '//trim(outputpath)//'SILO/BLOCKS ]; then mkdir -p '&
+                              //trim(outputpath)//'SILO/BLOCKS ; fi')
+    end if
+  end if
 
   !  User input initialization, it is called always, 
-  !  it has to be there, even empty
+  !  it has to be there, even if empty
   call init_user_mod()
   
   !   write report of compilation parameters
@@ -228,14 +215,21 @@ end if
     print'(a,i0,a)', 'Running with ',neq,' total equations' 
     print'(a,i0,a,i0,a,i0)','Resolution is (nxtot, nytot, nztot) ', nxtot,' ',nytot,' ',nztot
     print'(a)',''
-#ifdef MHD
-     print'(a)', 'Full MHD enabled'
-     print'(a)', ''
-#endif
-#ifdef PMHD
-     print'(a)', 'Passive MHD enabled'
-     print'(a)', ''
-#endif
+
+    if (mhd) then
+      print'(a)', 'Full MHD enabled'
+      print'(a)', ''
+    end if
+    if (pmhd) then
+      print'(a)', 'Passive MHD enabled'
+      print'(a)', ''
+    end if
+    if (mhd .and. pmhd) then
+      print'(a)', "Error, select only one of the options, 'mhd' or 'pmhd'"
+      print'(a)', ''
+      stop
+    end if
+
 #ifdef DOUBLEP
      print'(a)', 'Double precision used (reals are 8 bytes long)'
      print'(a)', ''
@@ -243,181 +237,165 @@ end if
      print'(a)', 'Single precision used (reals are 4 bytes long)'
      print'(a)', ''
 #endif
-#ifdef HLLC
-     print'(a)', 'The Riemann solver is HLLC'
-     print'(a)', ''
-#endif
-#ifdef HLL
-     print'(a)', 'The Riemann solver is HLL'
-     print'(a)', ''
-#endif
-#ifdef HLL_HLLC
-     print'(a)', 'The Riemann solver is HLL-HLLC (hybrid)'
-     print'(a)', ''
-#endif
-#ifdef HLLE
-     print'(a)', 'The Riemann solver is HLLE'
-     print'(a)', ''
-#endif
-#ifdef HLLD
-     print'(a)', 'The Riemann solver is HLLD'
-     print'(a)', ''
-#endif
-#ifdef EOS_ADIABATIC
-     print'(a)', 'The code uses an AIABATIC EOS'
-     print'(a)', ''
-#endif
-#ifdef EOS_SINGLE_SPECIE
-     print'(a)', 'The EOS considers only one specie of H'
-     print'(a)', ''
-#endif
-#ifdef EOS_H_RATE
-     print'(a)', 'The EOS considers a rate equation for H'
-     print'(a)', ''
-#endif
-#ifdef EOS_CHEM
-     print'(a)', 'The EOS considers multiple species (chemical network)'
-     print'(a)', ''
-#endif
-#ifdef NO_COOL
-     print'(a)', 'Cooling is turned off'
-     print'(a)', ''
-#endif
-#ifdef COOLINGH
-     print'(a)', 'Radiative cooling ON (w/parametrized cooling curve)'
-     print'(a)', ''
-#endif
-#ifdef COOLINGBBG
-     print'(a)', 'Radiative cooling ON (w/ Benjamin Benson & Cox 2003 prescription)'
-     print'(a)', ''
-#endif
-#ifdef COOLINGDMC
-     print'(a)', 'Radiative cooling ON (w/ Dalgarno & Mc Cray, coronal eq.)'
-     print'(a)', ''
-#endif
-#ifdef COOLINGCHI
-     print'(a)', 'Radiative cooling ON (Uses table from CHIANTI)'
-     print'(a)', ''
-#endif
-#ifdef RADDIFF
-     print'(a)','Diffuse radiative transfer enabled, local'
-#endif
-     print'(a)', '-----  OUTPUT -----------------------'
-     print'(a)', 'path: '//trim(outputpath)
-     print'(a)', 'in the following format(s):'
-#ifdef OUTBIN
-     print'(a)', '*.bin (binary, with a small header)'
-#endif
-#ifdef OUTDAT
-     print'(a)', '*.dat (formatted, beware of big files)'
-#endif
-#ifdef OUTVTK
-     print'(a)', '*.vtk (binary VTK)'
-#endif
-     print'(a)', ''
-     print'(a)', '----- BOUNDARY CONDITIONS -----------'
-#ifdef PERIODX
-     print'(a)', 'LEFT & RIGHT: PERIODIC'
-#endif
-#ifdef PERIODY
-     print'(a)', 'BOTTOM & TOP: PERIODIC'
-#endif
-#ifdef PERIODZ
-     print'(a)', 'IN & OUT: PERIODIC'
-#endif
-#ifdef REFXL
-     print'(a)', 'LEFT:   REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFXL
-     print'(a)', 'LEFT:   OUTFLOW    (OPEN)'
-#endif
-#ifdef INFXL
-     print'(a)', 'LEFT:   INFLOW     (user defined)'
-#endif
-#ifdef REFXR
-     print'(a)', 'RIGHT:  REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFXR
-     print'(a)', 'RIGHT:  OUTFLOW    (OPEN)'
-#endif
-#ifdef INFXR
-     print'(a)', 'RIGHT:  INFLOW     (user defined)'
-#endif
-#ifdef REFYB
-     print'(a)', 'BOTTOM: REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFYB
-     print'(a)', 'BOTTOM: OUTFLOW    (OPEN)'
-#endif
-#ifdef INFYB
-     print'(a)', 'BOTTOM: INFLOW     (user defined)'
-#endif
-#ifdef REFYT
-     print'(a)', 'TOP:    REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFYT
-     print'(a)', 'TOP:    OUTFLOW    (OPEN)'
-#endif
-#ifdef INFYT
-     print'(a)', 'TOP:    INFLOW     (user defined)'
-#endif
-#ifdef REFZO
-     print'(a)', 'OUT:    REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFZO
-     print'(a)', 'OUT:    OUTFLOW    (OPEN)'
-#endif
-#ifdef INFZO
-     print'(a)', 'OUT:    INFLOW     (user defined)'
-#endif
-#ifdef REFZI
-     print'(a)', 'IN: REFLECTIVE (CLOSED)'
-#endif
-#ifdef OUTFZI
-     print'(a)', 'IN:     OUTFLOW    (OPEN)'
-#endif
-#ifdef INFZI
-     print'(a)', 'IN: INFLOW     (user defined)'
-#endif
+
+  if (riemann_solver == SOLVER_HLL) then
+    print'(a)', 'The Riemann solver is HLL'
     print'(a)', ''
-     print'(a)', '----- OTHER STUFF -----------'
-#ifdef RADDIFF
-     print'(a)', 'Diffuse radiation (local+MPI) enabled'
-#endif
-#ifdef TC_ISOTROPIC
-     print'(a)', 'Thermal conduction enabled (isotropic)'
-#endif
-#ifdef TC_ANISOTROPIC
-     print'(a)', 'Thermal conduction enabled (Anisotropic)'
-#endif
-#ifdef OTHERB
-     print'(a)', 'Other boundaries enabled (otherbounds.f90)'
-#endif
-     print'(a)', ''
-#if LIMITER==-1
-     print'(a)', 'No average in the limiter (reduces to 1st order)'
-#endif
-#if LIMITER==0
-     print'(a)', 'No limiter'
-#endif
-#if LIMITER==1
-     print'(a)', 'MINMOD limiter -most diffusive-'
-#endif
-#if LIMITER==2
-     print'(a)', 'Falle Limiter (Van Leer)'
-#endif
-#if LIMITER==3
-     print'(a)', 'Van Albada Limiter'
-#endif
-#if LIMITER==4
-     print'(a)', 'UMIST limiter -least diffusive-'
-#endif
-#if LIMITER==5
-     print'(a)', 'Woodward Limiter (MC-limiter; monotonized central difference)'
-#endif
-#if LIMITER==6
-     print'(a)', 'SUPERBEE limiter (tends to flatten circular waves)'
-#endif
+  else if (riemann_solver == SOLVER_HLLC) then
+    print'(a)', 'The Riemann solver is HLLC'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLE) then
+    print'(a)', 'The Riemann solver is HLLE'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLD) then
+    print'(a)', 'The Riemann solver is HLLD'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLE_SPLIT_B) then
+    print'(a)', 'The Riemann solver is HLLE with split B field'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLD_SPLIT_B) then
+    print'(a)', 'The Riemann solver is HLLD with split B field'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
+    print'(a)', 'The Riemann solver is HLLE with split in All Variables'
+    print'(a)', ''
+  else if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+    print'(a)', 'The Riemann solver is HLLD with split in All Variables'
+    print'(a)', ''
+  else
+    print'(a)', 'Unrecognized Riemann Solver'
+    print'(a)', ''
+    stop
+  end if
+
+  if (enable_field_cd) then
+    print'(a)', 'div(B) constrained with field-CD method'
+    print'(a)', ''
+  end if
+
+  if (eight_wave) then
+    print'(a)', 'div(B) constrained with 8 wave method'
+    print'(a)', ''
+  end if
+
+  if (eq_of_state == EOS_ADIABATIC) then
+    print'(a)', 'The code uses an AIABATIC EOS'
+    print'(a)', ''
+  else if (eq_of_state == EOS_SINGLE_SPECIE) then
+    print'(a)', 'The EOS considers only one specie of H'
+    print'(a)', ''
+  else if (eq_of_state == EOS_H_RATE) then
+    print'(a)', 'The EOS considers a rate equation for H'
+    print'(a)', ''
+  else if (eq_of_state == EOS_CHEM) then
+    print'(a)', 'The EOS considers multiple species (chemical network)'
+    print'(a)', ''
+  else
+    print'(a)', 'Unrecognized equation of state'
+    print'(a)', ''
+    stop
+  end if
+
+  if (cooling == COOL_NONE) then
+    print'(a)', 'Cooling is turned off'
+    print'(a)', ''
+  else if (cooling == COOL_H) then
+    print'(a)', 'Radiative cooling ON (w/parametrized cooling curve)'
+    print'(a)', ''
+  else if (cooling == COOL_BBC) then
+    print'(a)', 'Radiative cooling ON (w/ Benjamin Benson & Cox 2003 prescription)'
+    print'(a)', ''
+  else if (cooling == COOL_DMC) then
+    print'(a)', 'Radiative cooling ON (w/ Dalgarno & Mc Cray, coronal eq.)'
+    print'(a)', ''
+  else if (cooling == COOL_CHI) then
+    print'(a)', 'Radiative cooling ON (Uses table from CHIANTI)'
+    print'(a)', ''
+  else
+    print'(a)', 'Unrecognized cooling scheme'
+    print'(a)', ''
+    stop
+  end if
+
+  if (dif_rad) print'(a)','Diffuse radiative transfer enabled, local'
+
+
+  print'(a)', '-----  OUTPUT -----------------------'
+  print'(a)', 'path: '//trim(outputpath)
+  print'(a)', 'in the following format(s):'
+  if (out_bin) print'(a)', '*.bin (binary, with a small header)'
+  if (out_vtk) print'(a)', '*.vtk (binary VTK)'
+  print'(a)', ''
+
+  print'(a)', '----- BOUNDARY CONDITIONS -----------'
+  if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
+    print'(a)', 'LEFT & RIGHT: PERIODIC'
+  else if (bc_left == BC_PERIODIC .and. bc_right /= bc_left) then
+    print'(a)', 'Invalid periodic BCs'
+    stop
+  end if
+  if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
+    print'(a)', 'BOTTOM & TOP: PERIODIC'
+  else if (bc_bottom == BC_PERIODIC .and. bc_top /= bc_bottom) then
+    print'(a)', 'Invalid periodic BCs'
+    stop
+  end if
+  if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
+    print'(a)', 'IN & OUT: PERIODIC'
+  else if (bc_out == BC_PERIODIC .and. bc_in /= bc_out) then
+    print'(a)', 'Invalid periodic BCs'
+    stop
+  end if
+  if (bc_left == BC_OUTFLOW  ) print'(a)', 'LEFT:   OUTFLOW    (OPEN)'
+  if (bc_left == BC_CLOSED   ) print'(a)', 'LEFT:   REFLECTIVE (CLOSED)'
+  if (bc_left == BC_OTHER    ) print'(a)', 'LEFT:   OTHER      (user set)'
+  if (bc_right == BC_OUTFLOW ) print'(a)', 'RIGHT:  OUTFLOW    (OPEN)'
+  if (bc_right == BC_CLOSED  ) print'(a)', 'RIGHT:  REFLECTIVE (CLOSED)'
+  if (bc_right == BC_OTHER   ) print'(a)', 'RIGHT:  OTHER      (user set)'
+  if (bc_bottom == BC_OUTFLOW) print'(a)', 'BOTTOM: OUTFLOW    (OPEN)'
+  if (bc_bottom == BC_CLOSED ) print'(a)', 'BOTTOM: REFLECTIVE (CLOSED)'
+  if (bc_bottom == BC_OTHER  ) print'(a)', 'BOTTOM: OTHER      (user set)'
+  if (bc_top == BC_OUTFLOW   ) print'(a)', 'TOP:    OUTFLOW    (OPEN)'
+  if (bc_top == BC_CLOSED    ) print'(a)', 'TOP:    REFLECTIVE (CLOSED)'
+  if (bc_top == BC_OTHER     ) print'(a)', 'TOP:    OTHER      (user set)'
+  if (bc_out == BC_OUTFLOW   ) print'(a)', 'OUT:    OUTFLOW    (OPEN)'
+  if (bc_out == BC_CLOSED    ) print'(a)', 'OUT:    REFLECTIVE (CLOSED)'
+  if (bc_out == BC_OTHER     ) print'(a)', 'OUT:    OTHER      (user set)'
+  if (bc_in == BC_OUTFLOW    ) print'(a)', 'IN:     OUTFLOW    (OPEN)'
+  if (bc_in == BC_CLOSED     ) print'(a)', 'IN:     REFLECTIVE (CLOSED)'
+  if (bc_in == BC_OTHER      ) print'(a)', 'IN:     OTHER      (user set)'
+  if (bc_user)  print'(a)', 'Other boundaries enabled (user_mod.f90)'
+  print'(a)', ''
+
+  print'(a)', '----- OTHER STUFF -----------'
+  if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
+print'(a)', ''
+  if (th_cond == TC_ISOTROPIC) then
+    print'(a)', 'Thermal conduction enabled (isotropic)'
+  else if (th_cond == TC_ANISOTROPIC) then
+    print'(a)', 'Thermal conduction enabled (Anisotropic)'
+  endif
+  print'(a)', ''
+  if (slope_limiter == LIMITER_NO_AVERAGE) then
+    print'(a)', 'No average in the limiter (reduces to 1st order)'
+  else if (slope_limiter == LIMITER_NO_LIMIT) then
+    print'(a)', 'No limiter'
+  else if (slope_limiter == LIMITER_MINMOD) then
+    print'(a)', 'MINMOD limiter -most diffusive-'
+  else if (slope_limiter == LIMITER_VAN_LEER) then
+    print'(a)', 'Falle Limiter (Van Leer)'
+  else if (slope_limiter == LIMITER_VAN_ALBADA) then
+    print'(a)', 'Van Albada Limiter'
+  else if (slope_limiter == LIMITER_UMIST) then
+    print'(a)', 'UMIST limiter -least diffusive-'
+  else if (slope_limiter == LIMITER_WOODWARD) then
+    print'(a)', 'Woodward Limiter (MC-limiter; monotonized central difference)'
+  else if (slope_limiter == LIMITER_SUPERBEE) then
+    print'(a)', 'SUPERBEE limiter (tends to flatten circular waves)'
+  else
+    print'(a)', 'Unrecognized limiter'
+    stop
+  end if
      print'(a)', ''
      print'(a)','***********************************************'
 #ifdef MPIP
@@ -435,7 +413,7 @@ end subroutine initmain
 
 subroutine initflow(itprint)
 
-  use parameters, only : outputpath, iwarm, itprint0
+  use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
   implicit none
@@ -468,8 +446,8 @@ subroutine initflow(itprint)
           trim(outputpath)//'BIN/points',itprint,'.bin'
     unitin=10
 #endif
-    open(unit=unitin,file=file1,status='old', access='stream', &
-          convert='LITTLE_ENDIAN')
+    open(unit=unitin,file=file1,status='old', access='stream' )
+    !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
  
     !   discard the ascii header
     do while (byte_read /= achar(255) )

@@ -1,7 +1,7 @@
 !=======================================================================
 !> @file parameters.f90
 !> @brief parameters module
-!> @author C. Villarreal, M. Schneiter, A. Esquivel
+!> @author C. Villarreal, M. Shneiter, A. Esquivel
 !> @date 4/May/2016
 
 ! Copyright (c) 2016 Guacho Co-Op
@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./EXO/'
+  character (len=128),parameter ::  outputpath='./HLLD-CD/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> CHEM              : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_H_RATE
+  integer, parameter :: eq_of_state = EOS_ADIABATIC
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -82,7 +82,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  integer, parameter :: cooling = COOL_H
+  integer, parameter :: cooling = COOL_NONE
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
@@ -91,13 +91,13 @@ module parameters
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
   !! are set
-  integer, parameter :: bc_left   = BC_outflow
-  integer, parameter :: bc_right  = BC_outflow
-  integer, parameter :: bc_bottom = BC_outflow
-  integer, parameter :: bc_top    = BC_outflow
-  integer, parameter :: bc_out    = BC_outflow
-  integer, parameter :: bc_in     = BC_outflow
-  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
+  integer, parameter :: bc_left   = BC_PERIODIC
+  integer, parameter :: bc_right  = BC_PERIODIC
+  integer, parameter :: bc_bottom = BC_PERIODIC
+  integer, parameter :: bc_top    = BC_PERIODIC
+  integer, parameter :: bc_out    = BC_PERIODIC
+  integer, parameter :: bc_in     = BC_PERIODIC
+  logical, parameter :: bc_user   = .false. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .true.
+  logical, parameter :: user_source_terms = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -134,24 +134,24 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nxtot=512      !< Total grid size in X
+  integer, parameter :: nytot=512      !< Total grid size in Y
+  integer, parameter :: nztot=2        !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z   
+  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z   
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
   !  set box size   
   real, parameter :: xmax=1.          !< grid extent in X (code units)
-  real, parameter :: ymax=0.25        !< grid extent in Y (code units)
-  real, parameter :: zmax=1.          !< grid extent in Z (code units)
-  real, parameter :: xphys=0.3*au     !< grid extent in X (physical units, cgs)
+  real, parameter :: ymax=1.          !< grid extent in Y (code units)
+  real, parameter :: zmax=2./512.     !< grid extent in Z (code units)
+  real, parameter :: xphys=1.         !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -159,27 +159,26 @@ module parameters
   real, parameter :: mu = 1.           !< mean atomic mass
   
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0=1.e4                !<  reference temperature (for cs)
+  !real, parameter :: T0=1.e4                !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
-  real, parameter :: rhosc= amh*mu          !<  mass density scaling
-  real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
-  real, parameter :: vsc2 = gamma*Rg*T0/mu  !<  Velocity scaling squared
+  real, parameter :: rhosc= 1.              !<  mass density scaling
+  real, parameter :: Tempsc=1.              !<  Temperature scaling
+  real, parameter :: vsc2 = 1.              !<  Velocity scaling squared
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc)  !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 5.*day/tsc
+  real, parameter :: tmax    = 3.1
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.025 *day/tsc
-  real, parameter :: cfl=0.4        !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.01       !< artificial viscosity
+  real, parameter :: dtprint =  .1 /tsc
+  real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.0        !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
   integer            :: itprint0=141  !< number of output to do warm start
-
 
   !*********************************************************************
   !  some derived parameters (no need of user's input below this line)

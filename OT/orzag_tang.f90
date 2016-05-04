@@ -30,40 +30,40 @@ contains
     integer ::  i,j,k
     
     do i=nxmin,nxmax
-       do j=nymin,nymax
-          do k=nzmin,nzmax
+      do j=nymin,nymax
+        do k=nzmin,nzmax
 
-             ! Position measured from the bottom corner of the grid
-             x=(float(i+coords(0)*nx)+0.5)*dx*rsc !WHY +0.5?
-             y=(float(j+coords(1)*ny)+0.5)*dy*rsc !ANS: Position of cell center
+          ! Position measured from the bottom corner of the grid
+          x=(float(i+coords(0)*nx)+0.5)*dx*rsc
+          y=(float(j+coords(1)*ny)+0.5)*dy*rsc
 
-                vx = -sin( y*twopi )
-                vy =  sin( x*twopi )
-                vz = 0.
-#ifdef MHD 
-                bx = -sin( y*twopi  )/sqrt(4*pi)
-                by =  sin(2.*x*twopi)/sqrt(4*pi)
-                bz = 0.
+          vx = -sin( y*twopi )
+          vy =  sin( x*twopi )
+          vz = 0.
+#ifdef BFIELD
+          bx = -sin( y*twopi  )/sqrt(4*pi)
+          by =  sin(2.*x*twopi)/sqrt(4*pi)
+          bz = 0.
 #endif                              
 
-                !   total density and momenta
-                u(1,i,j,k) = rho
-                u(2,i,j,k) = rho*vx
-                u(3,i,j,k) = rho*vy
-                u(4,i,j,k) = rho*vz
-                !   total energy
+          !   total density and momenta
+          u( 1,i,j,k) = rho
+          u(2,i,j,k) = rho*vx
+          u(3,i,j,k) = rho*vy
+          u(4,i,j,k) = rho*vz
+          !   total energy
 
-#ifdef MHD 
-                u(5,i,j,k)=0.5*rho*(vx**2+vy**2+vz**2)+cv*p  &
-                               +0.5*(Bx**2+By**2+Bz**2)
-                u(6,i,j,k) =  Bx
-                u(7,i,j,k) =  By
-                u(8,i,j,k) =  BZ
+#ifdef BFIELD
+          u(5,i,j,k)=0.5*rho*(vx**2+vy**2+vz**2)+cv*p  &
+                         +0.5*(Bx**2+By**2+Bz**2)
+          u(6,i,j,k) =  Bx
+          u(7,i,j,k) =  By
+          u(8,i,j,k) =  BZ
 
 #else
-                u(5,i,j,k)=0.5*rho*(vx**2+vy**2+vz**2)+cv*p
+          u(5,i,j,k)=0.5*rho*(vx**2+vy**2+vz**2)+cv*p
 #endif
-          end do
+        end do
        end do
     end do
 

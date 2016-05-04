@@ -2,9 +2,9 @@
 !> @file cooling_dmc.f90
 !> @brief Cooling module with Dlgarno Mac Cray coronal cooling curve
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -29,19 +29,32 @@
 
 module cooling_dmc
 
-#ifdef COOLINGDMC
-
   implicit none
-  real (kind=8) :: cooltab(2,41)
+  real (kind=8), allocatable :: cooltab_dmc(:,:)
 
 contains
+
+!> @brief Initializes the DMC cooling
+!> @details Declares variables and reads table
+
+subroutine init_cooling_dmc()
+
+  implicit none
+
+  allocate(cooltab_dmc(2,41))
+  call read_table_dmc()
+
+
+end subroutine init_cooling_dmc
+
+!=======================================================================
 
 !> @brief Reads the cooling curve table
 !> @details Reads the Dalgarno McCray cooling courve
 !! the location is assumed in src/DMClib/coolingDMC.tab, 
 !! it is read by init subroutine
 
-subroutine read_table()
+subroutine read_table_dmc()
 
   use parameters, only : workdir, master
   use globals, only : rank
@@ -57,16 +70,16 @@ subroutine read_table()
      open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',status='old')
      do i=1,41
         read(10,*) a, b
-        cooltab(1,i)=10.d0**(a)
-        cooltab(2,i)=10.d0**(-b)
+        cooltab_dmc(1,i)=10.e0**(a)
+        cooltab_dmc(2,i)=10.e0**(-b)
      end do
      close(unit=10)
   endif
 #ifdef MPIP
-  call mpi_bcast(cooltab,82,mpi_real8,0,mpi_comm_world,err)
+  call mpi_bcast(cooltab_dmc,82,mpi_real8,0,mpi_comm_world,err)
 #endif
 
-end subroutine read_table
+end subroutine read_table_dmc
 
 !=======================================================================
 
@@ -80,14 +93,14 @@ function cooldmc(T)
   real (kind=8)     :: cooldmc, T0, T1, C0, C1
 
   if(T.gt.1e8) then
-    cooldmc=0.27D-26*Sqrt(dble(T))
+    cooldmc=0.27e-26*Sqrt(real(T,8))
   else
     if1=int(log10(T)*10)-39
-    T0=cooltab(1,if1)
-    c0=cooltab(2,if1)
-    T1=cooltab(1,if1+1)
-    c1=cooltab(2,if1+1)
-    cooldmc=(c1-c0)*(dble(T)-T0)/(T1-T0)+c0
+    T0=cooltab_dmc(1,if1)
+    c0=cooltab_dmc(2,if1)
+    T1=cooltab_dmc(1,if1+1)
+    c1=cooltab_dmc(2,if1+1)
+    cooldmc=(c1-c0)*(real(T,8)-T0)/(T1-T0)+c0
   end if
 
 end function cooldmc
@@ -126,7 +139,7 @@ subroutine coolingdmc()
 
               Aloss=cooldmc(T)
               dens=primit(1,i,j,k)
-              Ce=(Aloss*dble(dens)**2)/(Eth0*Psc)  ! cgs
+              Ce=(Aloss*real(dens,8)**2)/(Eth0*Psc)  ! cgs
 
               !  apply cooling to primitive and conserved variables
               primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)
@@ -143,8 +156,6 @@ subroutine coolingdmc()
 end subroutine coolingdmc
 
 !======================================================================
-
-#endif
 
 end module cooling_dmc
 

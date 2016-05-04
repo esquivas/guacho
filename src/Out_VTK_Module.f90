@@ -2,9 +2,9 @@
 !> @file Out_VTK_Module.f90
 !> @brief Output in VTK Format
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -27,7 +27,6 @@
 
 module  Out_VTK_Module
 
-#ifdef OUTVTK
   use parameters
   use globals
 
@@ -81,7 +80,7 @@ subroutine write_VTK(itprint)
   unitout=10
 #endif
 
-  open(unit=unitout,file=file1,status='replace',access='stream', convert='BIG_ENDIAN')
+  open(unit=unitout,file=file1,status='replace',access='stream')!, convert='BIG_ENDIAN')
 
   !   write the header
   x0=( float(coords(0)*nx) )*dx
@@ -175,23 +174,21 @@ subroutine write_VTK(itprint)
    end do
    write(unitout) lf  
 
-#if defined(PMHD) || defined(MHD)
+  if (pmhd .or. mhd) then
   !   MAGNETIC FIELD
-  write(cbuffer,'(a)') 'VECTORS BField float'
-  write(unitout) trim(cbuffer),lf
-   do k=1,nz
-      do j=1,ny
-         do i=1,nx
-            write(unitout)  real(primit(6,i,j,k)*bsc,4),           &
-                            real(primit(7,i,j,k)*bsc,4),           &
-                            real(primit(8,i,j,k)*bsc,4)
-         end do
-      end do
-   end do
-   write(unitout) lf  
-
-#endif 
-
+    write(cbuffer,'(a)') 'VECTORS BField float'
+    write(unitout) trim(cbuffer),lf
+     do k=1,nz
+        do j=1,ny
+           do i=1,nx
+              write(unitout)  real(primit(6,i,j,k)*bsc,4),           &
+                              real(primit(7,i,j,k)*bsc,4),           &
+                              real(primit(8,i,j,k)*bsc,4)
+           end do
+        end do
+     end do
+     write(unitout) lf  
+  end if 
 
   close(unitout)
 
@@ -200,8 +197,6 @@ subroutine write_VTK(itprint)
 end subroutine write_VTK
 
 !=======================================================================
-
-#endif
 
 end module Out_VTK_Module
 

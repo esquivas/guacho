@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=guacho
+PROGRAM= guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
@@ -12,13 +12,6 @@ VPATH = . : ../src
 #   of the mpi build (e.g. 'mpif90 --version')
 COMPILER= gfortran
 #COMPILER= ifort
-
-#   Compiler flags, make sure they are compatible with the previous selection 
-### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
-#FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
-#FLAGS= -O3 -cpp -vec-report0
-#FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 #   Compiler flags, make sure they are compatible with the previous selection 
 ### ifortran ###
@@ -45,7 +38,7 @@ MPIP = Y
 BFIELD = Y
 
 #   Include passive scalars (Y/N)
-PASSIVES = Y
+PASSIVES = N
 
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
@@ -61,7 +54,8 @@ SILO = N
 # Additional USER modules to compile (they can only call constants, 
 # parameters and globals)
 MODULES_USER= \
-exoplanet.o
+orzag_tang.o
+
 
 #####################################################
 # There should be no need to modify below this line #
@@ -118,7 +112,6 @@ OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
 #---------------------------------------------------
 # Set flags
-# Set flags
 ifeq ($(DOUBLEP),Y) 
 FLAGS += -DDOUBLEP
 ifeq ($(COMPILER),ifort)
@@ -173,7 +166,7 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 	${SRC_PATH}/C2Ray/*.mod
-	@echo "Done! (`date`)"	
+	@echo "Done! (`date`)"
 
 prebuild :
 	@echo "Guacho build started `date`"

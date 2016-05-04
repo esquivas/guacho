@@ -1,10 +1,10 @@
 !=======================================================================
 !> @file user_mod.f90
 !> @brief User input module
-!> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @author C. Villareal, M. Shneiter, A. Esquivel
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -30,8 +30,9 @@
 
 module user_mod
 
-  use RayleighTaylor
   ! load auxiliary modules
+  use OrzagTang2
+  
   implicit none
  
 contains
@@ -43,7 +44,7 @@ subroutine init_user_mod()
 
   implicit none      
   !  initialize modules loaded by user
-  call init_rt()
+  call init_ot()
 
 end subroutine init_user_mod
 
@@ -57,13 +58,10 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
- ! use globals, only : coords, dx, dy, dz, rank
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-!  real, intent(in) :: time
   
-
-  call impose_rt(u)
+  call impose_ot(u)
 
  end subroutine initial_conditions
   
@@ -73,22 +71,57 @@ subroutine initial_conditions(u)
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
+!> @param integer [in] order : order (mum of cells to be filled in case
+!> domain boundaries are being set, valid values are 1 or 2)
 
-#ifdef OTHERB
-subroutine impose_user_bc(u,time)
+subroutine impose_user_bc(u,order)
 
-  use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+                         bc_user, tsc
+  use globals   , only : time 
   implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, intent(in)  :: time
+  real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  integer, intent(in) :: order
+  real    :: time_sec
 
-!  call impose_exo(u,time)
- 
+  time_sec = time*tsc  
+
+  if (bc_user) then  
+    if (order == 1) then 
+
+    else if (order == 2) then
+    
+    end if
+  end if
+
 end subroutine impose_user_bc
 
 !=======================================================================
 
-#endif
+!> @brief User Defined source terms
+!> This is a generic interrface to add a source term S in the equation
+!> of the form:  dU/dt+dF/dx+dG/dy+dH/dz=S
+!> @param real [in] pp(neq) : vector of primitive variables
+!> @param real [inout] s(neq) : vector with source terms, has to add to
+!>  whatever is there, as other modules can add their own sources
+!> @param integer [in] i : cell index in the X direction
+!> @param integer [in] j : cell index in the Y direction
+!> @param integer [in] k : cell index in the Z direction
+
+subroutine get_user_source_terms(pp,s, i, j , k)
+
+  ! in this example a constant gravity is added
+  use constants,  only : Ggrav,Msun,Rsun
+  use parameters, only : neq, nymin, nymax, rsc, vsc
+  implicit none
+  integer, intent(in) :: i,j,k
+  real, intent(in)    :: pp(neq)
+  real, intent(inout) :: s(neq)
+
+
+end subroutine get_user_source_terms
+
+!=====================================================================
 
 end module user_mod
 

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -95,9 +95,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:a7874b4f8a76399e87e0a22aecd088cf8"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a7874b4f8a76399e87e0a22aecd088cf8">read_table</a> ()</td></tr>
-<tr class="memdesc:a7874b4f8a76399e87e0a22aecd088cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the cooling curve table.  <a href="#a7874b4f8a76399e87e0a22aecd088cf8">More...</a><br /></td></tr>
-<tr class="separator:a7874b4f8a76399e87e0a22aecd088cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55a57c51124b72d0399460cdfb266579"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a55a57c51124b72d0399460cdfb266579">init_cooling_dmc</a> ()</td></tr>
+<tr class="memdesc:a55a57c51124b72d0399460cdfb266579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the DMC cooling.  <a href="#a55a57c51124b72d0399460cdfb266579">More...</a><br /></td></tr>
+<tr class="separator:a55a57c51124b72d0399460cdfb266579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a3a8c7735ef9bf3cad0505e493b149ebf">read_table_dmc</a> ()</td></tr>
+<tr class="memdesc:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the cooling curve table.  <a href="#a3a8c7735ef9bf3cad0505e493b149ebf">More...</a><br /></td></tr>
+<tr class="separator:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af987bbf144f596d57b154427bbb82ae5"><td class="memItemLeft" align="right" valign="top">real(kind=8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#af987bbf144f596d57b154427bbb82ae5">cooldmc</a> (T)</td></tr>
 <tr class="memdesc:af987bbf144f596d57b154427bbb82ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cooling coefficient interpolating the table.  <a href="#af987bbf144f596d57b154427bbb82ae5">More...</a><br /></td></tr>
 <tr class="separator:af987bbf144f596d57b154427bbb82ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,9 +110,9 @@ Functions/Subroutines</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa692bc7125c6e889f3cf993f9f48f9d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa692bc7125c6e889f3cf993f9f48f9d3"></a>
-real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom"><b>cooltab</b></td></tr>
-<tr class="separator:aa692bc7125c6e889f3cf993f9f48f9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1358b27f75ff11f05db8143fa1cb37f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1358b27f75ff11f05db8143fa1cb37f2"></a>
+real(kind=8), dimension(:,:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><b>cooltab_dmc</b></td></tr>
+<tr class="separator:a1358b27f75ff11f05db8143fa1cb37f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Cooling module with Dalgarno McCray coronal cooling curve <br />
@@ -135,7 +138,7 @@ real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00077">77</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
+<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00090">90</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
 
 </div>
 </div>
@@ -154,7 +157,7 @@ real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom
 <p>High level wrapper to apply cooling with DMC table <br />
  cooling is applied in the entire domain and updates both the conserved and primitive variables </p>
 
-<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00103">103</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
+<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00116">116</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -167,12 +170,39 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a7874b4f8a76399e87e0a22aecd088cf8"></a>
+<a class="anchor" id="a55a57c51124b72d0399460cdfb266579"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">subroutine cooling_dmc::read_table </td>
+          <td class="memname">subroutine cooling_dmc::init_cooling_dmc </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Declares variables and reads table </p>
+
+<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00041">41</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecooling__dmc_a55a57c51124b72d0399460cdfb266579_cgraph.png" border="0" usemap="#namespacecooling__dmc_a55a57c51124b72d0399460cdfb266579_cgraph" alt=""/></div>
+<map name="namespacecooling__dmc_a55a57c51124b72d0399460cdfb266579_cgraph" id="namespacecooling__dmc_a55a57c51124b72d0399460cdfb266579_cgraph">
+<area shape="rect" id="node2" href="namespacecooling__dmc.html#a3a8c7735ef9bf3cad0505e493b149ebf" title="Reads the cooling curve table. " alt="" coords="257,5,457,32"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a3a8c7735ef9bf3cad0505e493b149ebf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine cooling_dmc::read_table_dmc </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -181,14 +211,14 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Reads the Dalgarno McCray cooling courve the location is assumed in src/DMClib/coolingDMC.tab, it is read by init subroutine </p>
 
-<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00045">45</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
+<p>Definition at line <a class="el" href="cooling__dmc_8f90_source.html#l00058">58</a> of file <a class="el" href="cooling__dmc_8f90_source.html">cooling_dmc.f90</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:11 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

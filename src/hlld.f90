@@ -2,9 +2,9 @@
 !> @file hlld.f90
 !> @brief HLLD approximate Riemann solver module
 !> @author  C. Villarreal  D'Angelo, A. Esquivel, M. Schneiter
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -29,7 +29,7 @@
 
 module hlld
 
-#ifdef HLLD
+#ifdef BFIELD
 
 contains
 
@@ -47,7 +47,7 @@ contains
 
 subroutine prim2fhlld(priml,primr,ff)
 
-  use parameters, only : neq, cv, neqdyn
+  use parameters, only : neq, cv, passives, neqdyn
   use hydro_core, only : cfastX, prim2f
   implicit none
   real, dimension(neq),intent(in   ) :: priml, primr   
@@ -119,10 +119,10 @@ subroutine prim2fhlld(priml,primr,ff)
     if(denl == 0) then
       vstl = primL(3)
       wstl = primL(4)
-      bystl= primL(7)
-      bzstl= primL(8)
-      print*,'stopped @ HLLD'
-      stop
+      bystl= 0.!primL(7)
+      bzstl= 0.!primL(8)
+      !print*,'stopped @ HLLD'
+      !stop
     else
 
       vstl = priml(3) - bx*priml(7)*sMmul/denl                      !vL*
@@ -130,25 +130,27 @@ subroutine prim2fhlld(priml,primr,ff)
       bystl= priml(7)*( priml(1)*slmul**2 - bx**2 )/denl            !byL*
       bzstl= priml(8)*( priml(1)*slmul**2 - bx**2 )/denl            !bzL*
 
-      vdotbl    = priml(2)*bx + priml(3)*priml(7) + priml(4)*priml(8) !vL dot BL
-      vstdotbstl= sM*bx + vstl*bystl + wstl*bzstl                     !vL* dot BL*  
+    end if
 
-      estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM !eL*
+    vdotbl    = priml(2)*bx + priml(3)*priml(7) + priml(4)*priml(8) !vL dot BL
+    vstdotbstl= sM*bx + vstl*bystl + wstl*bzstl                     !vL* dot BL*  
 
-      ff(1) = rhostl*sM
-      ff(2) = rhostl*SM**2+pst-bx**2
-      ff(3) = rhostl*sM*vstl-bx*bystl
-      ff(4) = rhostl*sM*wstl-bx*bzstl
-      ff(5) = sM*(estl+pst)-bx*(vstdotbstl)
-      ff(6) = 0.
-      ff(7) = bystl*sM-bx*vstl
-      ff(8) = bzstl*sM-bx*wstl
+    estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM !eL*
+
+    ff(1) = rhostl*sM
+    ff(2) = rhostl*SM**2+pst-bx**2
+    ff(3) = rhostl*sM*vstl-bx*bystl
+    ff(4) = rhostl*sM*wstl-bx*bzstl
+    ff(5) = sM*(estl+pst)-bx*(vstdotbstl)
+    ff(6) = 0.
+    ff(7) = bystl*sM-bx*vstl
+    ff(8) = bzstl*sM-bx*wstl
 
 #ifdef PASSIVES
+    if (passives) then
       ff(neqdyn+1:neq)=sM*priml(neqdyn+1:neq)*slmul/slmsM
+    end if
 #endif
-
-    endif
 
   return
   endif
@@ -165,10 +167,10 @@ subroutine prim2fhlld(priml,primr,ff)
     if(denr == 0) then
       vstl = primL(3)
       wstl = primL(4)
-      bystl= primL(7)
-      bzstl= primL(8)
-      print*,'stopped @ HLLD'
-      stop
+      bystl= 0.!primL(7)
+      bzstl= 0.!primL(8)
+      !print*,'stopped @ HLLD'
+      !stop
     else
 
       vstr = primr(3) - bx*primr(7)*sMmuR/denr                      !vR*
@@ -176,24 +178,27 @@ subroutine prim2fhlld(priml,primr,ff)
       bystr= primr(7)*( primr(1)*srmur**2 - bx**2 )/denr            !byR*
       bzstr= primr(8)*( primr(1)*srmur**2 - bx**2 )/denr            !bzR*
 
-      vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8) !vR dot BR
-      vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                     !vR* dot BR*  
+    end if
 
-      estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM !eR*
+    vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8) !vR dot BR
+    vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                     !vR* dot BR*  
 
-      ff(1) = rhostr*sM
-      ff(2) = rhostr*SM**2+pst-bx**2
-      ff(3) = rhostr*sM*vstr-bx*bystr
-      ff(4) = rhostr*sM*wstr-bx*bzstr
-      ff(5) = sM*(estr+pst)-bx*(vstdotbstr)
-      ff(6) = 0.
-      ff(7) = bystr*sM-bx*vstr
-      ff(8) = bzstr*sM-bx*wstr
+    estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM !eR*
+
+    ff(1) = rhostr*sM
+    ff(2) = rhostr*SM**2+pst-bx**2
+    ff(3) = rhostr*sM*vstr-bx*bystr
+    ff(4) = rhostr*sM*wstr-bx*bzstr
+    ff(5) = sM*(estr+pst)-bx*(vstdotbstr)
+    ff(6) = 0.
+    ff(7) = bystr*sM-bx*vstr
+    ff(8) = bzstr*sM-bx*wstr
 
 #ifdef PASSIVES
+    if (passives) then
       ff(neqdyn+1:neq)=sM*primr(neqdyn+1:neq)*srmur/srmsM
+    end if
 #endif
-  endif
 
   return
   endif
@@ -208,10 +213,10 @@ subroutine prim2fhlld(priml,primr,ff)
   if(denl == 0) then
     vstl =priml(3)
     wstl =priml(4)
-    bystl=priml(7)
-    bzstl=priml(8)
-    print*,'stopped @ HLLD'
-    stop
+    bystl=0.!priml(7)
+    bzstl=0.!priml(8)
+    !print*,'stopped @ HLLD'
+    !stop
   else
     vstl = priml(3) - bx*priml(7)*sMmul/denl                      !vL*
     wstl = priml(4) - bx*priml(8)*sMmul/denl                      !wL*
@@ -222,10 +227,10 @@ subroutine prim2fhlld(priml,primr,ff)
   if(denr == 0) then
     vstr =primr(3)
     wstr =primr(4)
-    bystr=primr(7)
-    bzstr=primr(8)
-    print*,'stopped @ HLLD'
-    stop
+    bystr=0.!primr(7)
+    bzstr=0.!primr(8)
+    !print*,'stopped @ HLLD'
+    !stop
     else
     vstr = primr(3) - bx*primr(7)*sMmuR/denr                      !vR*
     wstr = primr(4) - bx*primr(8)*sMmuR/denr                      !wR*
@@ -269,7 +274,9 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(8) = bzstst*sM-bx*wstst
 
 #ifdef PASSIVES
-    ff(neqdyn+1:neq) = sM*priml(neqdyn+1:neq)*slmul/slmsM
+    if (passives) then
+      ff(neqdyn+1:neq) = sM*priml(neqdyn+1:neq)*slmul/slmsM
+    end if
 #endif
 
   return
@@ -298,7 +305,9 @@ subroutine prim2fhlld(priml,primr,ff)
     ff(8) = bzstst*sM-bx*wstst
 
 #ifdef PASSIVES
-    ff(neqdyn+1:neq) = sM*primr(neqdyn+1:neq)*srmur/srmsM
+    if (passives) then
+      ff(neqdyn+1:neq) = sM*primr(neqdyn+1:neq)*srmur/srmsM
+    end if
 #endif
 
   return
