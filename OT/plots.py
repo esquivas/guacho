@@ -16,7 +16,7 @@ models = ('HLLE-CD','HLLE-8W','HLLE-NC','HLLD-CD','HLLD-8W','HLLD-NC',)
 
 for model in models:
 
-  path = '/Users/esquivel/Desktop/datos_diable/Guacho-1.2/OT/'+model+'/BIN/'
+  path = './'+model+'/BIN/'
   rho = readbin3d_all(nout=nout,neq=0,path=path,verbose=False, mhd=True)
   Pg  = readbin3d_all(nout=nout,neq=4,path=path,verbose=False, mhd=True)
   Temp = Pg/rho
