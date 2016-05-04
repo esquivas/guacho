@@ -1,7 +1,7 @@
 !=======================================================================
 !> @file hydro_core.f90
 !> @brief Hydrodynamical and Magnetohidrodynamocal bacic module
-!> @author Alejandro Esquivel
+!> @author Alejandro Esquivel, V. Sieyra, M. Shneiter
 !> @date 4/May/2016
 
 ! Copyright (c) 2016 Guacho Co-Op
@@ -427,8 +427,10 @@ subroutine prim2f(prim,ff,prim0)
         - prim0(7)*prim(6)-prim0(6)*prim(7)
         ff(4) = (prim(1)+prim0(1))*prim(2)*prim(4)-prim(6)*prim(8) &
         - prim0(8)*prim(6)-prim0(6)*prim(8)
-        ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) &
-        +cv*prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
+
+        ff(5) = prim(2)*(etot+prim(5)+0.5*((prim(6)+prim0(6))**2+(prim(7)&
+        +prim0(7))**2+(prim(8)+prim0(8))**2) &
+        +cv*prim0(5)+prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
         -(prim(6)+prim0(6))*(prim(2)*(prim(6)+prim0(6))+ &
         prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISAR
       end if
@@ -457,12 +459,19 @@ subroutine prim2f(prim,ff,prim0)
     ff(5) = prim(2)*(etot+prim(5))
   end if
 
-#ifdef BFIELD    
-  if (mhd .or. pmhd) then 
-    ff(6)=0.0
-    ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
-    ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
-  end if
+#ifdef BFIELD
+  if (mhd .or. pmhd) then
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
+        riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+      ff(6)=0.
+      ff(7)=prim(2)*(prim0(7)+prim(7))-prim(3)*(prim0(6)+prim(6))
+      ff(8)=prim(2)*(prim0(8)+prim(8))-prim(4)*(prim0(6)+prim(6))
+    else
+      ff(6)=0.0
+      ff(7)=prim(2)*prim(7)-prim(6)*prim(3)
+      ff(8)=prim(2)*prim(8)-prim(6)*prim(4)
+    endif
+  endif
 #endif
 
 #ifdef PASSIVES
