@@ -1,10 +1,10 @@
 !=======================================================================
 !> @file sources.f90
 !> @brief Adds source terms
-!> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @author A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-OP
 !
 ! This file is part of Guacho-3D.
 !
@@ -27,12 +27,15 @@
 !! pressure (not fully tested), and div(B) cleaning if the 8 wave
 !! scheme is used
 
-#if defined(GRAV) || defined(RADPRES) || defined(EIGHT_WAVE)
-
   module sources
+
   use parameters, only : neq, neqdyn, nxtot, nytot, nztot, &
-                         rsc, rhosc, vsc2, nx, ny, nz
+                         rsc, rhosc, vsc2, nx, ny, nz, &
+                         user_source_terms, radiation_pressure, &
+                         eight_wave
+
   use globals,    only : dx, dy, dz, coords
+
   implicit none
   
 contains
@@ -67,61 +70,6 @@ end subroutine getpos
 
 !=======================================================================
 
-#ifdef GRAV
-
-!> @brief Gravity due to point sources
-!> @details Adds the gravitational force due to point particles, at this
-!!  moment is fixed to two point sources (exoplanet)
-!> @param real [in] xc : X position of the cell
-!> @param real [in] yc : Y position of the cell
-!> @param real [in] zc : Z position of the cell
-!> @param real [in] pp(neq) : vector of primitive variables
-!> @param real [out] s(neq) : vector with source terms
-
-subroutine grav_source(xc,yc,zc,pp,s)
-  use constants, only : Ggrav
-  use exoplanet  ! this module contains the position of the planet
-  implicit none
-  real, intent(in)    :: xc, yc, zc
-  real, intent(in)    :: pp(neq)
-  real, intent(inout) :: s(neq)
-  integer, parameter  :: nb=2   ! 2 particles
-  real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  integer :: i
-
-  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
-  GM(2)=Ggrav*MassP/rsc/vsc2
-
-  !calculate distance from the sources
-  ! star
-  x(1)=xc
-  y(1)=yc
-  z(1)=zc
-  rad2(1) = x(1)**2 +y(1)**2 + z(1)**2
-  ! planet
-  x(2)=xc-xp
-  y(2)=yc
-  z(2)=zc-zp
-  rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
-
-  ! update source terms
-  do i=1, nb
-    ! momenta
-    s(2)= s(2)-pp(1)*GM(i)*x(i)/(rad2(i)**1.5)
-    s(3)= s(3)-pp(1)*GM(i)*y(i)/(rad2(i)**1.5)
-    s(4)= s(4)-pp(1)*GM(i)*z(i)/(rad2(i)**1.5)
-    ! energy
-    s(5)= s(5)-pp(1)*GM(i)*( pp(2)*x(i) +pp(3)*y(i) +pp(4)*z(i) )  &
-           /(rad2(i)**1.5 )
-  end do
-
-
-end subroutine grav_source
-
-#endif
-
-!=======================================================================
-
 !> @brief Radiation pressure force
 !> @details Adds the radiaiton pressure force due to photo-ionization
 !> @param integer [in] i : cell index in the X direction
@@ -134,18 +82,18 @@ end subroutine grav_source
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
 
-#ifdef RADPRES
-  subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
-#ifdef RADDIFF
+#ifdef PASSIVES
+
+subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
+
   use difrad
-#endif
-    implicit none
-    integer, intent(in)  :: i,j,k
-    real,    intent(in)  :: xc, yc, zc, rc, pp(neq)
-    real,    intent(inout) :: s(neq)
-    real :: radphi
-    !  the following is h/912Angstroms = h/lambda
-    real :: hlambda= 7.265e-22, Frad
+  implicit none
+  integer, intent(in)  :: i,j,k
+  real,    intent(in)  :: xc, yc, zc, rc, pp(neq)
+  real,    intent(inout) :: s(neq)
+  real :: radphi
+  !  the following is h/912Angstroms = h/lambda
+  real :: hlambda= 7.265e-22, Frad
 
   radphi= ph(i,j,k) 
 
@@ -158,13 +106,11 @@ end subroutine grav_source
   !  energy
   s(5) = s(5)+  Frad*( xc*pp(2) + yc*pp(3) + zc*pp(4) )/rc
 
-  end subroutine radpress_source
+end subroutine radpress_source
 
 #endif
 
 !=======================================================================
-
-#ifdef EIGHT_WAVE
 
 !> @brief Computes div(B)
 !> @details Computes div(B)
@@ -173,17 +119,21 @@ end subroutine grav_source
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [out] d :: div(B)
 
+#ifdef BFIELD
+
 subroutine divergence_B(i,j,k,d)
-use globals
-implicit none
-integer, intent(in) :: i,j,k
-real, intent(out)   :: d
-  
-d=  (primit(6,i+1,j,k)-primit(6,i-1,j,k))/(2.*dx)  &
+  use globals
+  implicit none
+  integer, intent(in) :: i,j,k
+  real, intent(out)   :: d
+
+  d=  (primit(6,i+1,j,k)-primit(6,i-1,j,k))/(2.*dx)  &
   + (primit(7,i,j+1,k)-primit(7,i,j-1,k))/(2.*dy)  &
   + (primit(8,i,j,k+1)-primit(8,i,j,k-1))/(2.*dz)
 
 end subroutine divergence_B
+
+#endif
 
 !=======================================================================
 
@@ -196,7 +146,9 @@ end subroutine divergence_B
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
 
-subroutine divbcorr_source(i,j,k,pp,s)
+#ifdef BFIELD
+
+subroutine divbcorr_8w_source(i,j,k,pp,s)
  
   implicit none
   integer, intent(in) :: i, j, k
@@ -220,7 +172,7 @@ subroutine divbcorr_source(i,j,k,pp,s)
     s(7)=s(7)-divB*pp(3)
     s(8)=s(8)-divB*pp(4)
 
-end subroutine divbcorr_source
+end subroutine divbcorr_8w_source
 
 #endif
 
@@ -233,10 +185,11 @@ end subroutine divbcorr_source
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] prim(neq) : vector of primitive variables
-!> @param real [out] s(neq) : vector with source terms'
+!> @param real [out] s(neq) : vector with source terms
 
 subroutine source(i,j,k,prim,s)
 
+  use user_mod, only : get_user_source_terms
   implicit none
   integer, intent(in)  :: i, j, k
   real, intent(in)     :: prim(neq)
@@ -249,28 +202,25 @@ subroutine source(i,j,k,prim,s)
   ! position with respect to the center of the grid
   call getpos( i, j, k, x, y ,z, r) 
 
-#ifdef GRAV
-  !  point source(s) gravity
-  call grav_source(x,y,z,prim,s)
-#endif
+  !  user source terms (such as gravity)
+  if (user_source_terms) call get_user_source_terms(prim,s,i,j,k)
 
-#ifdef RADPRES
+#ifdef PASSIVES
   !  photoionization radiation pressure
-  call radpress_source(i,j,k,x,y,z,r,prim,s)
-#endif
-#ifdef EIGHT_WAVE
-  !  divergence correction Powell et al. 1999
-  call divbcorr_source(i,j,k,prim,s)
+  if (radiation_pressure) call radpress_source(i,j,k,x,y,z,r,prim,s)
 #endif
 
-  
+#ifdef BFIELD
+  !  divergence correction Powell et al. 1999
+  if (eight_wave) call divbcorr_8w_source(i,j,k,prim,s)
+#endif
+
   return
+
 end subroutine source
 
 !=======================================================================
   
 end module sources
-
-#endif
 
 !=======================================================================

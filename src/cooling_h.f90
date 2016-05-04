@@ -2,9 +2,9 @@
 !> @file cooling_h.f90
 !> @brief Cooling with hydrogen rate parametrized cooling
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -27,7 +27,7 @@
 
 module cooling_H
 
-#ifdef COOLINGH
+#ifdef PASSIVES
 
   implicit none
  
@@ -40,12 +40,9 @@ contains
 
 subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz, tsc
+  use parameters, only : neq, nx, ny, nz, tsc, dif_rad
   use globals, only : u, coords, dt_CFL
-
-#ifdef RADDIFF
   use difrad, only : ph
-#endif
 
   implicit none
   real    :: dt_seconds
@@ -57,12 +54,11 @@ subroutine coolingh()
      do j=1,ny
         do i=1,nx
 
-#ifdef RADDIFF
-           call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
-#else
-           call atomic(dt_seconds,u(:,i,j,k),1.,1.)
-#endif
-
+          if (dif_rad) then
+            call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
+          else
+            call atomic(dt_seconds,u(:,i,j,k),1.,1.)
+          endif
 
         end do
      end do
@@ -266,7 +262,6 @@ subroutine atomic(dt,uu,tau,radphi)
   use hydro_core, only : u2prim
   implicit none
 
-
   real, intent(in)                 :: dt, tau, radphi
   real, intent(out),dimension(neq) :: uu
   real, dimension(neq)             :: prim
@@ -275,9 +270,7 @@ subroutine atomic(dt,uu,tau,radphi)
   !real (kind=16) :: gain, tprime, ce, ALOSS
   real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
   real (kind=8) :: tprime, ce  !, ALOSS
-#ifdef RADDIFF
   real(kind=8) :: fpn, gain
-#endif
 
   !    these need to be double precision in order for
   !      the ionization calculation to work
@@ -307,9 +300,7 @@ subroutine atomic(dt,uu,tau,radphi)
   rec=alpha(real(t,8))                !# rad. recombination rate
   y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction  
   dh=real( uu(1), 8 )                  !# H density
-#ifdef RADDIFF
   fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus
-#endif
   !print*,fpn
   !fpn=0.
 
@@ -317,11 +308,13 @@ subroutine atomic(dt,uu,tau,radphi)
   !    solution (see notes)
 
   a=rec+col
-#ifdef RADDIFF
-  b=-((2.+xi)*rec+(1.+xi)*col+fpn)
-#else
-  b=-((2.+xi)*rec+(1.+xi)*col    )
-#endif
+
+  if (dif_rad) then
+    b=-((2.+xi)*rec+(1.+xi)*col+fpn)
+  else
+    b=-((2.+xi)*rec+(1.+xi)*col    )
+  end if
+
   c=(1.+xi)*rec
   d=sqrt(b**2-4.*a*c)
   g0=(2.*a*y0+b+d)/(2.*a*y0+b-d)
@@ -343,12 +336,12 @@ subroutine atomic(dt,uu,tau,radphi)
   !  al=al*(1.-(0.5e4/max(1.e4,t))**4)
   !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
 
-#ifdef RADDIFF
-  gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
-  tprime=max( gain*real(T,8)/(dh**2*al),1000.)
-#else
-  tprime=10.
-#endif
+  if (dif_rad) then
+    gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
+    tprime=max( gain*real(T,8)/(dh**2*al),1000.)
+  else
+    tprime=10.
+  end if
   !tprime=1000.
 
   ce=(2.*dh*al)/(3.*boltzm*real(T,8))
@@ -358,20 +351,22 @@ subroutine atomic(dt,uu,tau,radphi)
   t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
-#if TWOTEMP
-  t1=1.E4-9990.*y1
-#endif
+!#if TWOTEMP
+!  t1=1.E4-9990.*y1
+!#endif
     !   update the uu array
   uu(neqdyn+1)=real(y1)*uu(1)
 
-#ifdef MHD
-  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
-       +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
-#else
-  uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-       +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+  if (mhd) then
+#ifdef BFIELD
+    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
+         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
+         +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
 #endif
+  else
+    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
+         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+  end if
 
 end subroutine atomic
 

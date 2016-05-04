@@ -2,9 +2,9 @@
 !> @file hllc.f90
 !> @brief HLLC approximate Riemann solver module
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -29,8 +29,6 @@
 
 module hllc
 
-#ifdef HLLC
-
 contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
@@ -45,7 +43,7 @@ contains
 
 subroutine prim2fhllc(priml,primr,ff)
 
-  use parameters, only : neq, neqdyn, cv
+  use parameters, only : neq, neqdyn, cv, pmhd, passives
   use hydro_core, only : csound, prim2f, prim2u
   implicit none
   real, dimension(neq),intent(in   ) :: priml, primr
@@ -88,11 +86,15 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(4)=rhost*priml(4)
     uuk(5)=rhost*( ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)) )
 
-#ifdef PMHD
+  if (pmhd) then
+#ifdef BFIELD
     uuk(6:8)=rhost*priml(6:8)/priml(1)
-#endif
+#endif 
+  end if
 #ifdef PASSIVES
+  if (passives) then
     uuk(neqdyn+1:neq)=rhost*priml(neqdyn+1:neq)/priml(1)
+  end if
 #endif
 
     call prim2f(priml,ff)
@@ -111,12 +113,17 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(4)=rhost*primr(4)
     uuk(5)=rhost*( ek/primr(1)+(sst-primr(2))*(sst+primr(5)/(primr(1)*srmur)) )
 
-#ifdef PMHD
+  if (pmhd) then
+#ifdef BFIELD
       !uuk(5)= 0.
     uuk(6:8)=rhost*primr(6:8)/primr(1)
 #endif
+  end if
+  
 #ifdef PASSIVES
+  if (passives) then
     uuk(neqdyn+1:neq)=rhost*primr(neqdyn+1:neq)/primr(1)
+  end if
 #endif
 
     call prim2f(primr,ff)
@@ -245,7 +252,6 @@ subroutine hllcfluxes(choice)
 
 end subroutine hllcfluxes
 
-#endif
 
 end module hllc
 

@@ -9,5 +9,6 @@ var searchData=
   ['photr',['photr',['../namespacedifrad.html#adf49e979d01582a3c0032f9bde3c4555',1,'difrad']]],
   ['phott',['phott',['../namespacedifrad.html#a28892e6d6f67cbcb8b65e79132cf959b',1,'difrad']]],
   ['pi',['pi',['../namespaceconstants.html#a815ad954ef712211ed1b1fdb8be42487',1,'constants']]],
-  ['primit',['primit',['../namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a',1,'globals']]]
+  ['primit',['primit',['../namespaceglobals.html#a149bece4e7407071629f69a8c7deb03a',1,'globals']]],
+  ['primit0',['primit0',['../namespaceglobals.html#a18a08f707a7c9f10a5fc25a1cce61f69',1,'globals']]]
 ];

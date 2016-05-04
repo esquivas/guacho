@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -108,9 +108,12 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr class="memitem:a7874b4f8a76399e87e0a22aecd088cf8"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a7874b4f8a76399e87e0a22aecd088cf8">cooling_dmc::read_table</a> ()</td></tr>
-<tr class="memdesc:a7874b4f8a76399e87e0a22aecd088cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the cooling curve table.  <a href="#a7874b4f8a76399e87e0a22aecd088cf8">More...</a><br /></td></tr>
-<tr class="separator:a7874b4f8a76399e87e0a22aecd088cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55a57c51124b72d0399460cdfb266579"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a55a57c51124b72d0399460cdfb266579">cooling_dmc::init_cooling_dmc</a> ()</td></tr>
+<tr class="memdesc:a55a57c51124b72d0399460cdfb266579"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the DMC cooling.  <a href="#a55a57c51124b72d0399460cdfb266579">More...</a><br /></td></tr>
+<tr class="separator:a55a57c51124b72d0399460cdfb266579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#a3a8c7735ef9bf3cad0505e493b149ebf">cooling_dmc::read_table_dmc</a> ()</td></tr>
+<tr class="memdesc:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads the cooling curve table.  <a href="#a3a8c7735ef9bf3cad0505e493b149ebf">More...</a><br /></td></tr>
+<tr class="separator:a3a8c7735ef9bf3cad0505e493b149ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af987bbf144f596d57b154427bbb82ae5"><td class="memItemLeft" align="right" valign="top">real(kind=8) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecooling__dmc.html#af987bbf144f596d57b154427bbb82ae5">cooling_dmc::cooldmc</a> (T)</td></tr>
 <tr class="memdesc:af987bbf144f596d57b154427bbb82ae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the cooling coefficient interpolating the table.  <a href="#af987bbf144f596d57b154427bbb82ae5">More...</a><br /></td></tr>
 <tr class="separator:af987bbf144f596d57b154427bbb82ae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,9 +123,9 @@ Functions/Subroutines</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa692bc7125c6e889f3cf993f9f48f9d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa692bc7125c6e889f3cf993f9f48f9d3"></a>
-real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom"><b>cooling_dmc::cooltab</b></td></tr>
-<tr class="separator:aa692bc7125c6e889f3cf993f9f48f9d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1358b27f75ff11f05db8143fa1cb37f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1358b27f75ff11f05db8143fa1cb37f2"></a>
+real(kind=8), dimension(:,:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><b>cooling_dmc::cooltab_dmc</b></td></tr>
+<tr class="separator:a1358b27f75ff11f05db8143fa1cb37f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Alejandro Esquivel </dd></dl>
@@ -132,7 +135,7 @@ real(kind=8), dimension(2, 41)&#160;</td><td class="memItemRight" valign="bottom
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

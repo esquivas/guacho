@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -110,15 +110,18 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">hydro_core::u2prim</a> (uu, prim, T)</td></tr>
 <tr class="memdesc:a360e3d64343b30d94d270cfebc5b4eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the primitive variables and temperature from conserved variables on a single cell.  <a href="#a360e3d64343b30d94d270cfebc5b4eb3">More...</a><br /></td></tr>
 <tr class="separator:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa561a55a4b2c677011c5f3d4adc209b5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#aa561a55a4b2c677011c5f3d4adc209b5">hydro_core::u2primsplitall</a> (uu, prim, prim0, T)</td></tr>
+<tr class="memdesc:aa561a55a4b2c677011c5f3d4adc209b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the primitive variables and temperature from conserved variables on a single cell.  <a href="#aa561a55a4b2c677011c5f3d4adc209b5">More...</a><br /></td></tr>
+<tr class="separator:aa561a55a4b2c677011c5f3d4adc209b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870">hydro_core::calcprim</a> (u, primit, only_ghost)</td></tr>
 <tr class="memdesc:a7966ebe81c520c9d275c4fd72fcb0870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updated the primitives, using the conserved variables in the entire domain.  <a href="#a7966ebe81c520c9d275c4fd72fcb0870">More...</a><br /></td></tr>
 <tr class="separator:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3">hydro_core::prim2u</a> (prim, uu)</td></tr>
-<tr class="memdesc:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the conserved conserved variables from the primitives in a single cell.  <a href="#a98cafc8f97d7a1b3f8050b8e442194c3">More...</a><br /></td></tr>
-<tr class="separator:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a725c2c598f080ea420f4043dbda3f996"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a725c2c598f080ea420f4043dbda3f996">hydro_core::prim2f</a> (prim, ff)</td></tr>
-<tr class="memdesc:a725c2c598f080ea420f4043dbda3f996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euler Fluxes in one cell.  <a href="#a725c2c598f080ea420f4043dbda3f996">More...</a><br /></td></tr>
-<tr class="separator:a725c2c598f080ea420f4043dbda3f996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1905b98f81e3c439a5a9349944d3e21f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a1905b98f81e3c439a5a9349944d3e21f">hydro_core::prim2u</a> (prim, uu, prim0)</td></tr>
+<tr class="memdesc:a1905b98f81e3c439a5a9349944d3e21f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the conserved conserved variables from the primitives in a single cell.  <a href="#a1905b98f81e3c439a5a9349944d3e21f">More...</a><br /></td></tr>
+<tr class="separator:a1905b98f81e3c439a5a9349944d3e21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ff0d86af34e441c69e4f9efd61e166"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a72ff0d86af34e441c69e4f9efd61e166">hydro_core::prim2f</a> (prim, ff, prim0)</td></tr>
+<tr class="memdesc:a72ff0d86af34e441c69e4f9efd61e166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euler Fluxes in one cell.  <a href="#a72ff0d86af34e441c69e4f9efd61e166">More...</a><br /></td></tr>
+<tr class="separator:a72ff0d86af34e441c69e4f9efd61e166"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64856096f7a7b7f65be1154d31916c2d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d">hydro_core::swapy</a> (var, neq)</td></tr>
 <tr class="memdesc:a64856096f7a7b7f65be1154d31916c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swaps the x and y components in a cell.  <a href="#a64856096f7a7b7f65be1154d31916c2d">More...</a><br /></td></tr>
 <tr class="separator:a64856096f7a7b7f65be1154d31916c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,7 +155,7 @@ real function&#160;</td><td class="memItemRight" valign="bottom"><b>average</b> 
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

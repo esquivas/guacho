@@ -1,7 +1,6 @@
 <map id="sources::source" name="sources::source">
 <area shape="rect" id="node2" href="$namespacesources.html#a378a8116ae16db2efa853343f88156d3" title="Gets position in the grid. " alt="" coords="199,5,315,32"/>
-<area shape="rect" id="node3" href="$namespacesources.html#aef9f6ca4bc770f0e768dbbba91b67415" title="Gravity due to point sources. " alt="" coords="183,56,332,83"/>
-<area shape="rect" id="node4" href="$namespacesources.html#a36b548c9c578b74c5f439ffaec7d3a9a" title="Radiation pressure force. " alt="" coords="169,107,345,133"/>
-<area shape="rect" id="node5" href="$namespacesources.html#a9c2d37de3b878eff7693a25d3dc3fe91" title="8 Wave source terms for div(B) correction " alt="" coords="172,157,343,184"/>
-<area shape="rect" id="node6" href="$namespacesources.html#a0478795277b4f25ec62d8e3e1f06611e" title="Computes div(B) " alt="" coords="393,157,549,184"/>
+<area shape="rect" id="node3" href="$namespacesources.html#a36b548c9c578b74c5f439ffaec7d3a9a" title="Radiation pressure force. " alt="" coords="169,56,345,83"/>
+<area shape="rect" id="node4" href="$namespacesources.html#aec44065d9d1bfd8a7d1f99bd6fde36b0" title="8 Wave source terms for div(B) correction " alt="" coords="183,107,331,149"/>
+<area shape="rect" id="node5" href="$namespacesources.html#a0478795277b4f25ec62d8e3e1f06611e" title="Computes div(B) " alt="" coords="393,115,549,141"/>
 </map>

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -97,15 +97,18 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3">u2prim</a> (uu, prim, T)</td></tr>
 <tr class="memdesc:a360e3d64343b30d94d270cfebc5b4eb3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the primitive variables and temperature from conserved variables on a single cell.  <a href="#a360e3d64343b30d94d270cfebc5b4eb3">More...</a><br /></td></tr>
 <tr class="separator:a360e3d64343b30d94d270cfebc5b4eb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa561a55a4b2c677011c5f3d4adc209b5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#aa561a55a4b2c677011c5f3d4adc209b5">u2primsplitall</a> (uu, prim, prim0, T)</td></tr>
+<tr class="memdesc:aa561a55a4b2c677011c5f3d4adc209b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the primitive variables and temperature from conserved variables on a single cell.  <a href="#aa561a55a4b2c677011c5f3d4adc209b5">More...</a><br /></td></tr>
+<tr class="separator:aa561a55a4b2c677011c5f3d4adc209b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a7966ebe81c520c9d275c4fd72fcb0870">calcprim</a> (u, primit, only_ghost)</td></tr>
 <tr class="memdesc:a7966ebe81c520c9d275c4fd72fcb0870"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updated the primitives, using the conserved variables in the entire domain.  <a href="#a7966ebe81c520c9d275c4fd72fcb0870">More...</a><br /></td></tr>
 <tr class="separator:a7966ebe81c520c9d275c4fd72fcb0870"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a98cafc8f97d7a1b3f8050b8e442194c3">prim2u</a> (prim, uu)</td></tr>
-<tr class="memdesc:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the conserved conserved variables from the primitives in a single cell.  <a href="#a98cafc8f97d7a1b3f8050b8e442194c3">More...</a><br /></td></tr>
-<tr class="separator:a98cafc8f97d7a1b3f8050b8e442194c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a725c2c598f080ea420f4043dbda3f996"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a725c2c598f080ea420f4043dbda3f996">prim2f</a> (prim, ff)</td></tr>
-<tr class="memdesc:a725c2c598f080ea420f4043dbda3f996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euler Fluxes in one cell.  <a href="#a725c2c598f080ea420f4043dbda3f996">More...</a><br /></td></tr>
-<tr class="separator:a725c2c598f080ea420f4043dbda3f996"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1905b98f81e3c439a5a9349944d3e21f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a1905b98f81e3c439a5a9349944d3e21f">prim2u</a> (prim, uu, prim0)</td></tr>
+<tr class="memdesc:a1905b98f81e3c439a5a9349944d3e21f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the conserved conserved variables from the primitives in a single cell.  <a href="#a1905b98f81e3c439a5a9349944d3e21f">More...</a><br /></td></tr>
+<tr class="separator:a1905b98f81e3c439a5a9349944d3e21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ff0d86af34e441c69e4f9efd61e166"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a72ff0d86af34e441c69e4f9efd61e166">prim2f</a> (prim, ff, prim0)</td></tr>
+<tr class="memdesc:a72ff0d86af34e441c69e4f9efd61e166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the Euler Fluxes in one cell.  <a href="#a72ff0d86af34e441c69e4f9efd61e166">More...</a><br /></td></tr>
+<tr class="separator:a72ff0d86af34e441c69e4f9efd61e166"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64856096f7a7b7f65be1154d31916c2d"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacehydro__core.html#a64856096f7a7b7f65be1154d31916c2d">swapy</a> (var, neq)</td></tr>
 <tr class="memdesc:a64856096f7a7b7f65be1154d31916c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swaps the x and y components in a cell.  <a href="#a64856096f7a7b7f65be1154d31916c2d">More...</a><br /></td></tr>
 <tr class="separator:a64856096f7a7b7f65be1154d31916c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,14 +172,14 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00134">134</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00247">247</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph.png" border="0" usemap="#namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph" alt=""/></div>
 <map name="namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph" id="namespacehydro__core_a7966ebe81c520c9d275c4fd72fcb0870_cgraph">
-<area shape="rect" id="node2" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="199,5,336,32"/></map>
+<area shape="rect" id="node2" href="namespacehydro__core.html#aa561a55a4b2c677011c5f3d4adc209b5" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="199,5,372,32"/><area shape="rect" id="node3" href="namespacehydro__core.html#a360e3d64343b30d94d270cfebc5b4eb3" title="Computes the primitive variables and temperature from conserved variables on a single cell..." alt="" coords="217,56,354,83"/></map>
 </div>
 </p>
 
@@ -248,14 +251,14 @@ Here is the call graph for this function:</div>
     <tr><td class="paramname">real</td><td>[in] Bx : value of the x component of the magnetic field </td></tr>
     <tr><td class="paramname">real</td><td>[in] By : value of the y component of the magnetic field </td></tr>
     <tr><td class="paramname">real</td><td>[in] Bz : value of the z component of the magnetic field </td></tr>
-    <tr><td class="paramname">real</td><td>[out] csx : fast magnetisonic speed in x </td></tr>
-    <tr><td class="paramname">real</td><td>[out] csy : fast magnetisonic speed in y </td></tr>
-    <tr><td class="paramname">real</td><td>[out] csz : fast magnetisonic speed in z </td></tr>
+    <tr><td class="paramname">real</td><td>[out] csx : fast magnetosonic speed in x </td></tr>
+    <tr><td class="paramname">real</td><td>[out] csy : fast magnetosonic speed in y </td></tr>
+    <tr><td class="paramname">real</td><td>[out] csz : fast magnetosonic speed in z </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00398">398</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00563">563</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -289,7 +292,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00423">423</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00584">584</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -331,7 +334,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00372">372</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00539">539</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -394,7 +397,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00455">455</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00618">618</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -460,11 +463,11 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00533">533</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00704">704</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a725c2c598f080ea420f4043dbda3f996"></a>
+<a class="anchor" id="a72ff0d86af34e441c69e4f9efd61e166"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -478,7 +481,13 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">real, dimension(neq), intent(out)&#160;</td>
-          <td class="paramname"><em>ff</em>&#160;</td>
+          <td class="paramname"><em>ff</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, dimension(neq), intent(in), optional&#160;</td>
+          <td class="paramname"><em>prim0</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -496,11 +505,11 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00270">270</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00404">404</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a98cafc8f97d7a1b3f8050b8e442194c3"></a>
+<a class="anchor" id="a1905b98f81e3c439a5a9349944d3e21f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -514,7 +523,13 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">real, dimension(neq), intent(out)&#160;</td>
-          <td class="paramname"><em>uu</em>&#160;</td>
+          <td class="paramname"><em>uu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, dimension(neq), intent(in), optional&#160;</td>
+          <td class="paramname"><em>prim0</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -531,7 +546,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00229">229</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00333">333</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -566,7 +581,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00320">320</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00484">484</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -601,7 +616,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00346">346</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00511">511</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
@@ -643,14 +658,63 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00045">45</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00047">47</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa561a55a4b2c677011c5f3d4adc209b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine hydro_core::u2primsplitall </td>
+          <td>(</td>
+          <td class="paramtype">real, dimension(neq), intent(in)&#160;</td>
+          <td class="paramname"><em>uu</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, dimension(neq), intent(out)&#160;</td>
+          <td class="paramname"><em>prim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, dimension(neq), intent(in)&#160;</td>
+          <td class="paramname"><em>prim0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real, intent(out)&#160;</td>
+          <td class="paramname"><em>T</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Computes the primitive variables and temperature from conserved variables on a single cell for the split method in all the variables </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">real</td><td>[in] uu(neq) : conserved variables in one cell (fluctuations) </td></tr>
+    <tr><td class="paramname">real</td><td>[out] prim(neq) : primitives in one cell (fluctuations) </td></tr>
+    <tr><td class="paramname">real</td><td>[in] prim0(neq) : primitives in one cell (mean value, initial conds) </td></tr>
+    <tr><td class="paramname">real</td><td>[out] T : Temperature [K] </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="hydro__core_8f90_source.html#l00145">145</a> of file <a class="el" href="hydro__core_8f90_source.html">hydro_core.f90</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:11 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

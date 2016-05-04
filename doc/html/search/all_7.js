@@ -16,6 +16,8 @@ var searchData=
   ['hlle',['hlle',['../namespacehlle.html',1,'']]],
   ['hlle_2ef90',['hlle.f90',['../hlle_8f90.html',1,'']]],
   ['hllefluxes',['hllefluxes',['../namespacehlle.html#a03540214994c25ce07877114dd37b641',1,'hlle']]],
+  ['hllefluxessplitall',['hllefluxessplitall',['../namespacehllesplitall.html#aec7af884734e4dc4826437265bff2dc7',1,'hllesplitall']]],
+  ['hllesplitall',['hllesplitall',['../namespacehllesplitall.html',1,'']]],
   ['hllfluxes',['hllfluxes',['../namespacehll.html#a27386fb5bcf705be5e8c2650484966c6',1,'hll']]],
   ['hr',['hr',['../namespaceconstants.html#a1c0cbdbdc4f321db2055f6cd61cdd3f4',1,'constants']]],
   ['hydro_5fcore',['hydro_core',['../namespacehydro__core.html',1,'']]],

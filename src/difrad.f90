@@ -2,9 +2,9 @@
 !> @file difrad.f90
 !> @brief Diffuse radiation module
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -25,8 +25,6 @@
 !> @brief Ray tracing Radiative Trasnport
 !> @details Ray tracing Radiative Trasnport
 
-#ifdef RADDIFF
-
 module difrad
 
   use parameters
@@ -43,7 +41,7 @@ module difrad
   real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI 
   real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI 
   real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI 
-  integer            :: buffersize(6)  !< Auxiliary buffer for MPI 
+  integer            :: buffersize(6) !< Auxiliary buffer for MPI 
 
 contains
 
@@ -636,14 +634,14 @@ subroutine progress(j,tot)
   integer(kind=4)::j,k
   integer(kind=4), intent(in) :: tot
   character(len=57)::bar="???% |                                                  |"
-  open (unit=6, carriagecontrol='fortran')
+  open (unit=6)
   write(unit=bar(1:3),fmt="(i3)") 100*j/tot
   bar(7:56)="."
   do k=1, 50*j/tot
     bar(6+k:6+k)="="
   enddo
   ! print the progress bar.
-  write(unit=6,fmt="(a1,a1,a57)") '+',char(13), bar
+  write(unit=6,fmt="(a1,a1,a57)",advance="no") '+',char(13), bar
 
 end subroutine progress
 
@@ -738,5 +736,3 @@ end subroutine diffuse_rad
 end module difrad
 
 !=======================================================================
-
-#endif

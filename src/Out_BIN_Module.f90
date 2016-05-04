@@ -1,11 +1,10 @@
-
 !=======================================================================
 !> @file Out_BIN_Module.f90
 !> @brief Output in BIN Format
 !> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -28,12 +27,10 @@
 
 module  Out_BIN_Module
 
-#ifdef OUTBIN
   use parameters
   use globals
-
+  use constants
 contains
-
 
 !=======================================================================
 !> @brief Writes header 
@@ -47,21 +44,24 @@ subroutine write_header(unit, neq_out, nghost_out)
   character (len=128) :: cbuffer
 
   !  Write ASCII header
-  write(unit) "**************** Output for Guacho v1.1****************",lf
+  write(unit) "**************** Output for Guacho v1.3****************",lf
 
-  write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, NZ
+  write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
   write(unit) trim(cbuffer), lf
   
   write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Block Origin, cells    : ", i0,x,i0,x,i0)') coords(0)*nx, coords(1)*ny, coords(2)*nz
+  write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)') &
+        coords(0)*nx, coords(1)*ny, coords(2)*nz
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,x,i0,x,i0)') MPI_NBX, MPI_NBY, MPI_NBZ
+  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') & 
+        MPI_NBX, MPI_NBY, MPI_NBZ
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') neq_out, neqdyn
+  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') &
+        neq_out, neqdyn
   write(unit) trim(cbuffer), lf
 
   write(cbuffer,'("Number of Ghost Cells  ", i0)') nghost_out
@@ -109,10 +109,8 @@ end subroutine write_header
 
 
 subroutine write_BIN(itprint)
-
-#ifdef RADDIFF
+  
   use difrad
-#endif
   implicit none
   integer, intent(in) :: itprint
   character (len=128) :: file1
@@ -122,13 +120,12 @@ subroutine write_BIN(itprint)
 #endif
   integer :: unitout
   integer :: ip
-#if DIVB
   integer ::  i, j, k
-  real :: divB(nx,ny,nz)
-#endif
+  real, allocatable :: divB(:,:,:)
 
 #ifdef MPIP
-  write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
+  write(file1,'(a,i3.3,a,i3.3,a)')  &
+        trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
   unitout=rank+10
 #else
   write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/points',itprint,'.bin'
@@ -138,12 +135,30 @@ subroutine write_BIN(itprint)
   ! take turns
   do ip=0, np-1
    if(rank == ip) then
-    open(unit=unitout,file=file1,status='replace',access='stream', &
-                   convert='LITTLE_ENDIAN')
+    open(unit=unitout,file=file1,status='replace',access='stream')
 
     ! write header, then data
     call write_header(unitout,neq,nghost)
-    write(unitout) u(:,:,:,:)
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
+       do k =nzmin,nzmax
+          do j = nymin,nymax
+             do i = nxmin, nxmax
+                write(unitout) u(1,i,j,k)+primit0(1,i,j,k)
+                write(unitout) u(2,i,j,k)
+                write(unitout) u(3,i,j,k)
+                write(unitout) u(4,i,j,k)
+                write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+&
+              0.5*(primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2)
+                write(unitout) u(6,i,j,k)+primit0(6,i,j,k)
+                write(unitout) u(7,i,j,k)+primit0(7,i,j,k)
+                write(unitout) u(8,i,j,k)+primit0(8,i,j,k)
+             end do
+          end do
+       end do
+                
+    else
+       write(unitout) u(:,:,:,:)
+    endif
 
     close(unitout)
     print'(i3,a,a)',rank," wrote file:",trim(file1)
@@ -156,84 +171,82 @@ subroutine write_BIN(itprint)
 
      !   write the emissvity and photoionizing rate
      !   if diffuse radiation enabled
-#ifdef RADDIFF
+  if (dif_rad) then
 
-     ! take turns
-  do ip=0, np-1
-    if(rank == ip) then
+       ! take turns
+    do ip=0, np-1
+      if(rank == ip) then
 
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
-      unitout=10+rank
-      open(unit=unitout,file=file1,status='replace', access='stream', &
-           convert='LITTLE_ENDIAN')
-      call write_header(unitout,1,0)
-      write (unitout) em(:,:,:)
-      close(unitout)
-      print'(i3,a,a)',rank," wrote file:",trim(file1)
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
+        unitout=10+rank
+        open(unit=unitout,file=file1,status='replace', access='stream')
+        call write_header(unitout,1,0)
+        write (unitout) em(:,:,:)
+        close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
 
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
-      unitout=10+rank
-      open(unit=unitout,file=file1,status='replace',access='stream', &
-                          convert='LITTLE_ENDIAN')
-      call write_header(unitout,1,0)
-      write (unitout) ph(:,:,:)
-      close(unitout)
-      print'(i3,a,a)',rank," wrote file:",trim(file1)
-      
-    end if
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
+        unitout=10+rank
+        open(unit=unitout,file=file1,status='replace',access='stream')
+        call write_header(unitout,1,0)
+        write (unitout) ph(:,:,:)
+        close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
+        
+      end if
 #ifdef MPIP   
-   call mpi_barrier(mpi_comm_world, err)
+        call mpi_barrier(mpi_comm_world, err)
 #endif
-  end do
+    end do
              
-#endif
+  end if
 
+#ifdef BFIELD
+  if (dump_divb) then
+    !   This is a hack to write div(B) to plot it easily
+    !  compute div(B)
+    allocate(divB(nx,ny,nz))
 
-#ifdef DIVB
-  !   This is a hack to write div(B) to plot it easily
-  !  compute div(B)
-  do k=1,nz
-    do j=1,ny
-      do i=1,nx
-        divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) + &
-                      (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) + &
-                      (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
+          divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) + &
+                        (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) + &
+                        (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
+        end do
       end do
     end do
-  end do
 
-  ! take turns to write to disk
-  do ip=0, np-1
-    if(rank == ip) then
-      write(file1,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
-      unitout=10+rank
+    ! take turns to write to disk
+    do ip=0, np-1
+      if(rank == ip) then
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
+        unitout=10+rank
 
-      open(unit=unitout,file=file1,status='replace',access='stream', &
-           convert='LITTLE_ENDIAN')
-
-      call write_header(unitout,1,0)
-      write (unitout) divB(:,:,:)
-      close(unitout)
-      
-    end if
-#ifdef MPIP
-   call mpi_barrier(mpi_comm_world, err)
+        open(unit=unitout,file=file1,status='replace',access='stream')
+        
+        call write_header(unitout,1,0)
+        write (unitout) divB(:,:,:)
+        close(unitout)
+        
+      end if
+#ifdef MPIP   
+        call mpi_barrier(mpi_comm_world, err)
 #endif
-  end do
+    end do
 
+    deallocate(divB)
+
+  end if
 #endif
-
 
 end subroutine write_BIN
 
 !=======================================================================
 
-#endif
-
 end module Out_BIN_Module
 
 !=======================================================================
-
-
-
-

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">Guacho 3D
-   &#160;<span id="projectnumber">V1.2</span>
+   &#160;<span id="projectnumber">V1.3</span>
    </div>
    <div id="projectbrief">A parallel 3D HD and MHD  for astrophysics</div>
   </td>
@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Modules</h2></td></tr>
 <tr class="memitem:namespaceconstants"><td class="memItemLeft" align="right" valign="top">module &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceconstants.html">constants</a></td></tr>
-<tr class="memdesc:namespaceconstants"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module containing physical and asronomical constants. <br /></td></tr>
+<tr class="memdesc:namespaceconstants"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module containing physical, asronomical constants, and other named constants. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -139,6 +139,10 @@ real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceconstants.html#a86e80095a8a44315466905ab42ec2814">constants::rsun</a> =6.955e10</td></tr>
 <tr class="memdesc:a86e80095a8a44315466905ab42ec2814"><td class="mdescLeft">&#160;</td><td class="mdescRight">solar mass (cgs) <br /></td></tr>
 <tr class="separator:a86e80095a8a44315466905ab42ec2814"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add68b109ce1b271a3efb3f89c974ef25"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add68b109ce1b271a3efb3f89c974ef25"></a>
+real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceconstants.html#add68b109ce1b271a3efb3f89c974ef25">constants::gsun</a> =274.e2</td></tr>
+<tr class="memdesc:add68b109ce1b271a3efb3f89c974ef25"><td class="mdescLeft">&#160;</td><td class="mdescRight">solar gravity (cgs) <br /></td></tr>
+<tr class="separator:add68b109ce1b271a3efb3f89c974ef25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a399e5e2bceae23d80dfe33489603dfa5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a399e5e2bceae23d80dfe33489603dfa5"></a>
 real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceconstants.html#a399e5e2bceae23d80dfe33489603dfa5">constants::mjup</a> =1.898E30</td></tr>
 <tr class="memdesc:a399e5e2bceae23d80dfe33489603dfa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Jupiter mass (cgs) <br /></td></tr>
@@ -175,6 +179,105 @@ real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceconstants.html#af554c9cfbc1f3c74a8176265ea5370dd">constants::myr</a> =3.1536E13</td></tr>
 <tr class="memdesc:af554c9cfbc1f3c74a8176265ea5370dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">1Myr in seconds <br /></td></tr>
 <tr class="separator:af554c9cfbc1f3c74a8176265ea5370dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58b01c37c76f22be170d5fb25639fc06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a58b01c37c76f22be170d5fb25639fc06"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hll</b> = 1</td></tr>
+<tr class="separator:a58b01c37c76f22be170d5fb25639fc06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69872c0ea647366e5c5d6cdc1af28295"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69872c0ea647366e5c5d6cdc1af28295"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hllc</b> = 2</td></tr>
+<tr class="separator:a69872c0ea647366e5c5d6cdc1af28295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95cf05cc605e4421723fa0cd966ba134"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a95cf05cc605e4421723fa0cd966ba134"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlle</b> = 3</td></tr>
+<tr class="separator:a95cf05cc605e4421723fa0cd966ba134"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a748a02df83ffec8a2367dabe79fe7bc7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a748a02df83ffec8a2367dabe79fe7bc7"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlld</b> = 4</td></tr>
+<tr class="separator:a748a02df83ffec8a2367dabe79fe7bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b3294bab12fa894c071740254c26f17"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b3294bab12fa894c071740254c26f17"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlle_split_b</b> = 5</td></tr>
+<tr class="separator:a1b3294bab12fa894c071740254c26f17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa723f27798804687c61684e04bdd2f09"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa723f27798804687c61684e04bdd2f09"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlld_split_b</b> = 6</td></tr>
+<tr class="separator:aa723f27798804687c61684e04bdd2f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3fc5b4edac90965c1b405e59a248273"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af3fc5b4edac90965c1b405e59a248273"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlle_split_all</b> = 7</td></tr>
+<tr class="separator:af3fc5b4edac90965c1b405e59a248273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9ab5aa7747aeac1262fe215a9b0c58a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9ab5aa7747aeac1262fe215a9b0c58a"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::solver_hlld_split_all</b> = 8</td></tr>
+<tr class="separator:ae9ab5aa7747aeac1262fe215a9b0c58a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3e59512dbf0a42c01db3469229b2127"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3e59512dbf0a42c01db3469229b2127"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::eos_adiabatic</b> = 1</td></tr>
+<tr class="separator:aa3e59512dbf0a42c01db3469229b2127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89bb364b21466277edb541c74e94bfcf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89bb364b21466277edb541c74e94bfcf"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::eos_single_specie</b> = 2</td></tr>
+<tr class="separator:a89bb364b21466277edb541c74e94bfcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ad214f7aa1db5e8b9fdb3997bba7de8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ad214f7aa1db5e8b9fdb3997bba7de8"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::eos_h_rate</b> = 3</td></tr>
+<tr class="separator:a0ad214f7aa1db5e8b9fdb3997bba7de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40cfe486c167a6aa7466690e83fc11cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a40cfe486c167a6aa7466690e83fc11cb"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::eos_chem</b> = 4</td></tr>
+<tr class="separator:a40cfe486c167a6aa7466690e83fc11cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fca9ad91fd0a4d02a26b9223b1d2ac8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fca9ad91fd0a4d02a26b9223b1d2ac8"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_none</b> = 0</td></tr>
+<tr class="separator:a7fca9ad91fd0a4d02a26b9223b1d2ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27416c440d81612a18374a4093b50ca5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27416c440d81612a18374a4093b50ca5"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_h</b> = 1</td></tr>
+<tr class="separator:a27416c440d81612a18374a4093b50ca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3d6d09ee54b9db2b8bdd7d16cf47f3e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3d6d09ee54b9db2b8bdd7d16cf47f3e"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_bbc</b> = 2</td></tr>
+<tr class="separator:ae3d6d09ee54b9db2b8bdd7d16cf47f3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb0dc0617af7cda135446e699657cd50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb0dc0617af7cda135446e699657cd50"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_dmc</b> = 3</td></tr>
+<tr class="separator:aeb0dc0617af7cda135446e699657cd50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a757947ca3f0cc8c8f163f97386e9125f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a757947ca3f0cc8c8f163f97386e9125f"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_chi</b> = 4</td></tr>
+<tr class="separator:a757947ca3f0cc8c8f163f97386e9125f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ea2a51f53cf5a545d5adf51efdbf22a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ea2a51f53cf5a545d5adf51efdbf22a"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::cool_chem</b> = 5</td></tr>
+<tr class="separator:a4ea2a51f53cf5a545d5adf51efdbf22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57135946987129a344cd1ba603dd0041"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a57135946987129a344cd1ba603dd0041"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::bc_outflow</b> = 1</td></tr>
+<tr class="separator:a57135946987129a344cd1ba603dd0041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98f86831a34610ee61fca9f8fad05761"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98f86831a34610ee61fca9f8fad05761"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::bc_closed</b> = 2</td></tr>
+<tr class="separator:a98f86831a34610ee61fca9f8fad05761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab1ea20f677fdc708b39f186ea09966f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab1ea20f677fdc708b39f186ea09966f"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::bc_periodic</b> = 3</td></tr>
+<tr class="separator:aab1ea20f677fdc708b39f186ea09966f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b4d3b9ede4fb976fbf6cec98db91ae3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7b4d3b9ede4fb976fbf6cec98db91ae3"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::bc_other</b> = 4</td></tr>
+<tr class="separator:a7b4d3b9ede4fb976fbf6cec98db91ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa39521197bcceaaca646cced11c25da9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa39521197bcceaaca646cced11c25da9"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_no_average</b> = -1</td></tr>
+<tr class="separator:aa39521197bcceaaca646cced11c25da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa36289b5ad3adce279db04f87d682b01"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa36289b5ad3adce279db04f87d682b01"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_no_limit</b> = 0</td></tr>
+<tr class="separator:aa36289b5ad3adce279db04f87d682b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53fb04aa382fa019ada266f8acd3414f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a53fb04aa382fa019ada266f8acd3414f"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_minmod</b> = 1</td></tr>
+<tr class="separator:a53fb04aa382fa019ada266f8acd3414f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab06d150933ec2b6f1584e1900d7b219c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab06d150933ec2b6f1584e1900d7b219c"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_van_leer</b> = 2</td></tr>
+<tr class="separator:ab06d150933ec2b6f1584e1900d7b219c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad37d7f599db134154c55bb158b2584d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad37d7f599db134154c55bb158b2584d4"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_van_albada</b> = 3</td></tr>
+<tr class="separator:ad37d7f599db134154c55bb158b2584d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb90148dbfeab991bfd8bd61012bb7eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb90148dbfeab991bfd8bd61012bb7eb"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_umist</b> = 4</td></tr>
+<tr class="separator:aeb90148dbfeab991bfd8bd61012bb7eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4806f751dd27b39900cc6d44c8586165"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4806f751dd27b39900cc6d44c8586165"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_woodward</b> = 5</td></tr>
+<tr class="separator:a4806f751dd27b39900cc6d44c8586165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6897509786ed4f54ebdb2e608e343400"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6897509786ed4f54ebdb2e608e343400"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::limiter_superbee</b> = 6</td></tr>
+<tr class="separator:a6897509786ed4f54ebdb2e608e343400"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa04d2b16b6c7837723fa62d461fd3aac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa04d2b16b6c7837723fa62d461fd3aac"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::tc_off</b> = 0</td></tr>
+<tr class="separator:aa04d2b16b6c7837723fa62d461fd3aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accbb947914448ab98a39316cfd3b514e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="accbb947914448ab98a39316cfd3b514e"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::tc_isotropic</b> = 1</td></tr>
+<tr class="separator:accbb947914448ab98a39316cfd3b514e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a503c8c75847b3418091b0f831c9226ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a503c8c75847b3418091b0f831c9226ff"></a>
+integer, parameter&#160;</td><td class="memItemRight" valign="bottom"><b>constants::tc_anisotropic</b> = 2</td></tr>
+<tr class="separator:a503c8c75847b3418091b0f831c9226ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Alejandro Esquivel </dd></dl>
@@ -184,7 +287,7 @@ real, parameter&#160;</td><td class="memItemRight" valign="bottom"><a class="el"
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Mar 10 2016 12:30:10 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed May 4 2016 14:53:09 for Guacho 3D by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>
