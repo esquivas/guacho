@@ -150,17 +150,10 @@ subroutine initmain(tprint, itprint)
   allocate (     g(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
-<<<<<<< HEAD
 
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
   allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
 
-=======
-
-  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
-  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
-
->>>>>>> master
 #ifdef BFIELD
   if (enable_field_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -275,8 +268,6 @@ subroutine initmain(tprint, itprint)
     stop
   end if
 
-<<<<<<< HEAD
-=======
   if (enable_field_cd) then
     print'(a)', 'div(B) constrained with field-CD method'
     print'(a)', ''
@@ -287,7 +278,6 @@ subroutine initmain(tprint, itprint)
     print'(a)', ''
   end if
 
->>>>>>> master
   if (eq_of_state == EOS_ADIABATIC) then
     print'(a)', 'The code uses an AIABATIC EOS'
     print'(a)', ''

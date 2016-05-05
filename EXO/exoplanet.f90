@@ -2,9 +2,9 @@
 !> @file exoplanet.f90
 !> @brief Exoplanet problem module
 !> @author M. Schneiter, C. Villarreal  D'Angelo, A. Esquivel
-!> @date 2/Nov/2014
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -152,118 +152,116 @@ subroutine impose_exo(u,time)
     do j=nymin,nymax
       do k=nzmin,nzmax
 
-      ! Position measured from the centre of the grid (star)
-      x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-      y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-      z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        ! Position measured from the centre of the grid (star)
+        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
+        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
 
-      ! Position measured from the centre of the planet
-      xpl=x-xp
-      ypl=y
-      zpl=z-zp
+        ! Position measured from the centre of the planet
+        xpl=x-xp
+        ypl=y
+        zpl=z-zp
 
-      ! Distance from the centre of the star
-      rads=sqrt(x**2+y**2+z**2)
+        ! Distance from the centre of the star
+        rads=sqrt(x**2+y**2+z**2)
 
-      ! Distance from the centre of the planet
-      radp=sqrt(xpl**2+ypl**2+zpl**2)         
+        ! Distance from the centre of the planet
+        radp=sqrt(xpl**2+ypl**2+zpl**2)         
 
-      ! IF INSIDE THE STAR
-      if( rads <= rsw) then
-      if(rads == 0.) rads=dx*0.10
+        ! IF INSIDE THE STAR
+        if( rads <= rsw) then
+          if(rads == 0.) rads=dx*0.10
 
-      VelX=VSW*X/RADS
-      VelY=VSW*Y/RADS
-      VelZ=VSW*Z/RADS
-      DENS=DSW!*RSW**2/RADS**2
-      !   total density and momena
-      u(1,i,j,k) = dens
-      u(2,i,j,k) = dens*velx
-      u(3,i,j,k) = dens*vely
-      u(4,i,j,k) = dens*velz
-      !   magnetic field
+          VelX=VSW*X/RADS
+          VelY=VSW*Y/RADS
+          VelZ=VSW*Z/RADS
+          DENS=DSW!*RSW**2/RADS**2
+          !   total density and momena
+          u(1,i,j,k) = dens
+          u(2,i,j,k) = dens*velx
+          u(3,i,j,k) = dens*vely
+          u(4,i,j,k) = dens*velz
+          !   magnetic field
 
+          if (pmhd .or. mhd) then
 #ifdef BFIELD
-
-      if (pmhd .or. mhd) then
-        cpi = bsw*(RSW/rads)**3/(2.*rads**2)
-        u(6,i,j,k) = 3.*y*x*cpi
-        u(7,i,j,k) = (3.*y**2-rads**2)*cpi
-        u(8,i,j,k) = 3.*y*z*cpi
-      end if
-
+            cpi = bsw*(RSW/rads)**3/(2.*rads**2)
+            u(6,i,j,k) = 3.*y*x*cpi
+            u(7,i,j,k) = (3.*y**2-rads**2)*cpi
+            u(8,i,j,k) = 3.*y*z*cpi
 #endif
+          end if
 
-      if (mhd) then
+          if (mhd) then
 #ifdef BFIELD
-        ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)        &
-        + cv*dens*Tsw       & 
-        + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+            ! total energy
+            u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)        &
+            + cv*dens*Tsw       & 
+            + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
 #endif
-      else
-        ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-        + cv*dens*1.9999*Tsw
-      endif
+          else
+            ! total energy
+            u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+            + cv*dens*1.9999*Tsw
+          endif
 
+          if (passives) then
 #ifdef PASSIVES
-      if (passives) then
-        !  density of neutrals
-        u(neqdyn+1,i,j,k)= 0.0001*dens
-        !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-        u(neqdyn+2,i,j,k)= dens   ! passive scalar
-      !              u(neqdyn+3,i,j,k)= 0.00001*dens   ! xci*rho
-      !              u(neqdyn+4,i,j,k)= 0.00001*dens   ! xhn*rho
-      !              u(neqdyn+5,i,j,k)= 0.00001*dens   ! xcn*rho
-      end if   
-#endif             
-      ! IF INSIDE THE PLANET
-      !!!           else if(radp <= rpw) then
-      !!!
-      !!!              if(radp == 0.) radp=dx*0.10
-      !!!              
-      !!!              VelX=VXORB+VPW*XPL/RADP
-      !!!              VelY=VYORB+VPW*YPL/RADP
-      !!!              VelZ=VZORB+VPW*ZPL/RADP
-      !!!              DENS=DPW!*RPW**2/RADP**2
-      !!!              !   total density and momenta
-      !!!              u(1,i,j,k) = dens
-      !!!              u(2,i,j,k) = dens*velx
-      !!!              u(3,i,j,k) = dens*vely
-      !!!              u(4,i,j,k) = dens*velz
-      !!!              !  Magnetic fields (IF MHD or PMHD)
-      !!!#if defined(PMHD) || defined(MHD)
-      !!!              cpi = bpw*(rpw/radp)**3/(2.*radp**2)
-      !!!              u(6,i,j,k) = 3.*ypl*xpl*cpi
-      !!!              u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
-      !!!              u(8,i,j,k) = 3.*ypl*zpl*cpi
-      !!!#endif
-      !!!              !   energy
-      !!!#ifdef MHD
-      !!!              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-      !!!                   + cv*dens*1.8*Tpw                    & 
-      !!!                   + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-      !!!#else
-      !!!              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-      !!!                   + cv*dens*1.8*Tpw
-      !!!#endif
-      !!!
-      !!!#ifdef PASSIVES
-      !!!              !  density of neutrals
-      !!!              u(neqdyn+1,i,j,k)=0.2*dens                
-      !!!              !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-      !!!              u(neqdyn+2,i,j,k)= -dens   ! passive scalar
-      !!!
-      !!!!              u(neqdyn+3,i,j,k)= 0.00001*dens   ! xci*rho
-      !!!!              u(neqdyn+4,i,j,k)= 0.00001*dens   ! xhn*rho
-      !!!!              u(neqdyn+5,i,j,k)= 0.99999*dens   ! xcn*rho
-      !!!#endif                
-      end if
+            !  density of neutrals
+            u(neqdyn+1,i,j,k)= 0.0001*dens
+            !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+            u(neqdyn+2,i,j,k)= dens   ! passive scalar
+#endif
+          end if
 
+
+        ! IF INSIDE THE PLANET
+        else if(radp <= rpw) then
+
+          if(radp == 0.) radp=dx*0.10
+          
+          VelX=VXORB+VPW*XPL/RADP
+          VelY=VYORB+VPW*YPL/RADP
+          VelZ=VZORB+VPW*ZPL/RADP
+          DENS=DPW!*RPW**2/RADP**2
+          !   total density and momenta
+          u(1,i,j,k) = dens
+          u(2,i,j,k) = dens*velx
+          u(3,i,j,k) = dens*vely
+          u(4,i,j,k) = dens*velz
+          !  Magnetic fields (IF MHD or PMHD)
+#ifdef BFIELD
+          cpi = bpw*(rpw/radp)**3/(2.*radp**2)
+          u(6,i,j,k) = 3.*ypl*xpl*cpi
+          u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
+          u(8,i,j,k) = 3.*ypl*zpl*cpi
+#endif
+          !   energy
+         if (mhd) then
+#ifdef BFIELD
+          u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+               + cv*dens*1.8*Tpw                    & 
+               + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+#endif
+        else
+          u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+               + cv*dens*1.8*Tpw
+        end if
+
+        if (passives) then
+#ifdef PASSIVES
+          !  density of neutrals
+          u(neqdyn+1,i,j,k)=0.2*dens                
+          !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+          u(neqdyn+2,i,j,k)= -dens   ! passive scalar
+        endif
+#endif
+
+        end if
+
+      end do
     end do
   end do
-end do
 
 end subroutine impose_exo
 

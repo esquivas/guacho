@@ -72,30 +72,16 @@ subroutine initial_conditions(u)
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 !> @param integer [in] order : order (mum of cells to be filled in case
-<<<<<<< HEAD:chemH/user_mod.f90
-!> domain boundaries are being set)
-
-subroutine impose_user_bc(u,order)
-
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, bc_other
-=======
 !> domain boundaries are being set, valid values are 1 or 2)
 
 subroutine impose_user_bc(u,order)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
                          bc_user, tsc
->>>>>>> master:OT/user_mod.f90
   use globals   , only : time 
   implicit none
   real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   integer, intent(in) :: order
-<<<<<<< HEAD:chemH/user_mod.f90
-
-  !  In this case the boundary is the same for 1st and second order)
-  if (order >= 1) then 
-    call impose_jet(u, time )
-=======
   real    :: time_sec
 
   time_sec = time*tsc  
@@ -106,15 +92,12 @@ subroutine impose_user_bc(u,order)
     else if (order == 2) then
     
     end if
->>>>>>> master:OT/user_mod.f90
   end if
 
 end subroutine impose_user_bc
 
 !=======================================================================
 
-<<<<<<< HEAD:chemH/user_mod.f90
-=======
 !> @brief User Defined source terms
 !> This is a generic interrface to add a source term S in the equation
 !> of the form:  dU/dt+dF/dx+dG/dy+dH/dz=S
@@ -140,7 +123,6 @@ end subroutine get_user_source_terms
 
 !=====================================================================
 
->>>>>>> master:OT/user_mod.f90
 end module user_mod
 
 !=======================================================================
