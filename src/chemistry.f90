@@ -1,7 +1,7 @@
 !=======================================================================
 !> @file chemistry.f90
 !> @brief chemistry  module
-!> @author A. Castellanos, A. Rodriguez, A. Raga  and A. Esquivel
+!> @author A. Castellanos, P. Rivera A. Rodriguez, A. Raga  and A. Esquivel
 !> @date 10/Mar/2016
 
 ! Copyright (c) 2016 A. Esquivel et al.

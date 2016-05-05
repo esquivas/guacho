@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel & Ernesto Zurbiggen
 !> @date 07/Sep/2015
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-OP
 !
 ! This file is part of Guacho-3D.
 !

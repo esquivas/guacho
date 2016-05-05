@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM= OT
+PROGRAM= guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
@@ -38,7 +38,7 @@ MPIP = Y
 BFIELD = Y
 
 #   Include passive scalars (Y/N)
-PASSSIVES = N
+PASSIVES = N
 
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
@@ -54,7 +54,7 @@ SILO = N
 # Additional USER modules to compile (they can only call constants, 
 # parameters and globals)
 MODULES_USER= \
-orzag_tang.o \
+orzag_tang.o
 
 
 #####################################################
