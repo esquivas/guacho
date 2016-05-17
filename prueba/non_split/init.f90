@@ -151,8 +151,12 @@ subroutine initmain(tprint, itprint)
   allocate (     h(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (Temp(nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
-  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL ) &
-  allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or.  &
+  riemann_solver == SOLVER_HLLD_SPLIT_ALL .or.      &
+  riemann_solver == SOLVER_HLL_SPLIT_ALL  .or.      &
+  riemann_solver == SOLVER_HLLC_SPLIT_ALL) then
+    allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+  end if
 
 #ifdef BFIELD
   if (enable_field_cd) &

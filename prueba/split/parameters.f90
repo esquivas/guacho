@@ -91,13 +91,13 @@ module parameters
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
   !! are set
-  integer, parameter :: bc_left   = BC_PERIODIC
-  integer, parameter :: bc_right  = BC_PERIODIC
-  integer, parameter :: bc_bottom = BC_OTHER
-  integer, parameter :: bc_top    = BC_OTHER
-  integer, parameter :: bc_out    = BC_PERIODIC
-  integer, parameter :: bc_in     = BC_PERIODIC
-  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
+  integer, parameter :: bc_left   = BC_OUTFLOW
+  integer, parameter :: bc_right  = BC_OUTFLOW
+  integer, parameter :: bc_bottom = BC_OUTFLOW
+  integer, parameter :: bc_top    = BC_OUTFLOW
+  integer, parameter :: bc_out    = BC_OUTFLOW
+  integer, parameter :: bc_in     = BC_OUTFLOW
+  logical, parameter :: bc_user   = .false. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -156,7 +156,7 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
-  real, parameter :: mu = 1.           !< mean atomic mass
+  real, parameter :: mu = 0.5           !< mean atomic mass
   real, parameter :: mu_1 = 1.!0.5           !< mean atomic mass neutral
   real, parameter :: mu_2 = 0.5              !< mean atomic mass ionized
   

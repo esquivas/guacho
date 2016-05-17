@@ -1,6 +1,6 @@
 !=======================================================================
-!> @file hllc.f90
-!> @brief HLLC approximate Riemann solver module
+!> @file hll.f90
+!> @brief HLL approximate Riemann solver module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
 
@@ -22,147 +22,85 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief HLLC approximate Riemann solver module
+!> @brief HLL approximate Riemann solver module
 !! @details The module contains the routines needed to Solve the Riemann
 !! problem in the entire domain and return the physical fluxes in x,y,z
-!! with the HLLC solver
+!! with the HLL solver
 
-module hllcSplitAll
+module hllSplitAll
 
 contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
-!! using the HLLC solver
+!! using the HLL solver
 !> @details Solves the Riemann problem at the interface betweem 
-!! PL and PR using the HLLC solver
+!! PL and PR using the HLL solver
 !> @n The fluxes are computed in the X direction, to obtain the
 !! y ans z directions a swap is performed
 !> @param real [in] primL : primitives at the Left state
 !> @param real [in] primR : primitives at the Right state
 !> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
 
-subroutine prim2fhllc(priml,primr,ff)
 
-  use parameters, only : neq, neqdyn, cv, pmhd, passives
-  use hydro_core, only : csound, prim2f, prim2u
-  implicit none
-  real, dimension(neq),intent(in   ) :: priml, primr
-  real, dimension(neq),intent(inout) :: ff
-  real, dimension(neq)               :: uu, uuk
-  real :: csl, csr, sl, sr, slmul, srmur, rholul, rhorur, sst
-  real :: rhost,ek
-  
-  call csound(priml(5),priml(1),csl)
-  call csound(primr(5),primr(1),csr)
+subroutine prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
 
-  sr=max(priml(2)+csl,primr(2)+csr)
-  sl=min(priml(2)-csl,primr(2)-csr)
+    use parameters, only : neq
+    use hydro_core, only : csound, prim2f, prim2u
+    implicit none
+    real, dimension(neq),intent(in   ) :: priml, primr, prim0l, prim0r
+    real, dimension(neq),intent(inout) :: ff
+    real, dimension(neq)               :: uR, uL, fL, fR
+    real :: csl, csr, sl, sr
 
-  if (sl > 0) then
-    call prim2f(priml,ff)
+    call csound(priml(5)+prim0l(5),priml(1)+prim0l(1),csl)
+    call csound(primr(5)+prim0l(5),primr(1)+prim0l(1),csr)
+
+    sr=max(priml(2)+csl,primr(2)+csr)
+    sl=min(priml(2)-csl,primr(2)-csr)
+
+    if (sl > 0) then
+       call prim2f(priml,ff,prim0=prim0l)
+       return
+    endif
+
+    if (sr < 0) then
+       call prim2f(primr,ff,prim0=prim0r)
+       return
+    endif
+
+    call prim2f(priml,fL,prim0=prim0l)
+    call prim2f(primr,fR,prim0=prim0r)
+    call prim2u(priml,uL,prim0=prim0l)
+    call prim2u(primr,uR,prim0=prim0r)
+
+    ff(:)=(sr*fL(:)-sl*fR(:)+sl*sr*(uR(:)-uL(:)))/(sr-sl)
     return
-  endif
-  
-  if (sr < 0) then
-    call prim2f(primr,ff)
-    return
-  endif
-  
-  slmul=sl-priml(2)
-  srmur=sr-primr(2)
-  rholul=priml(1)*priml(2)
-  rhorur=primr(1)*primr(2)
 
-  sst = (srmur*rhorur-slmul*rholul-primr(5)+priml(5) )        &  
-        / (srmur*primr(1)-slmul*priml(1) )
-  
-  if (sst >= 0.) then
-    rhost=priml(1)*(slmul)/(sl-sst)
-    ek= 0.5*priml(1)*(priml(2)**2+priml(3)**2+priml(4)**2)+cv*priml(5)
-
-    uuk(1)=rhost
-    uuk(2)=rhost*sst
-    uuk(3)=rhost*priml(3)
-    uuk(4)=rhost*priml(4)
-    uuk(5)=rhost*( ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)) )
-
-  if (pmhd) then
-#ifdef BFIELD
-    uuk(6:8)=rhost*priml(6:8)/priml(1)
-#endif 
-  end if
-#ifdef PASSIVES
-  if (passives) then
-    uuk(neqdyn+1:neq)=rhost*priml(neqdyn+1:neq)/priml(1)
-  end if
-#endif
-
-    call prim2f(priml,ff)
-    call prim2u(priml,uu)
-    ff(:)=ff(:) + sl*( uuk(:)-uu(:) )
-    return
-  endif
-
-  if (sst <= 0.) then
-    rhost=primr(1)*(srmur)/(sr-sst)
-    ek= 0.5*primr(1)*(primr(2)**2+primr(3)**2+primr(4)**2)+cv*primr(5)
-
-    uuk(1)=rhost
-    uuk(2)=rhost*sst
-    uuk(3)=rhost*primr(3)
-    uuk(4)=rhost*primr(4)
-    uuk(5)=rhost*( ek/primr(1)+(sst-primr(2))*(sst+primr(5)/(primr(1)*srmur)) )
-
-  if (pmhd) then
-#ifdef BFIELD
-      !uuk(5)= 0.
-    uuk(6:8)=rhost*primr(6:8)/primr(1)
-#endif
-  end if
-  
-#ifdef PASSIVES
-  if (passives) then
-    uuk(neqdyn+1:neq)=rhost*primr(neqdyn+1:neq)/primr(1)
-  end if
-#endif
-
-    call prim2f(primr,ff)
-    call prim2u(primr,uu)
-    ff(:)=ff(:) + sr*( uuk(:)-uu(:) )
-    return
-  endif
-
-  print*, 'Error in hllc'
-  print*, 'primL: ',priml(:)
-  print*, 'primR: ',primr(:)
-  stop
-
-end subroutine prim2fhllc
-
+    end subroutine prim2fhllSplitAll
 
 !=======================================================================
 
-!> @brief Calculates HLLC fluxes from the primitive variables 
+!> @brief Calculates HLL fluxes from the primitive variables 
 !!   on all the domain
-!> @details Calculates HLLC fluxes from the primitive variables 
+!> @details Calculates HLL fluxes from the primitive variables 
 !!   on all the domain
 !> @param integer [in] choice : 1, uses primit for the 1st half of timestep (first order)
 !!                  @n 2 uses primit for second order timestep
 
-subroutine hllcfluxes(choice)
+subroutine hllfluxesSplitAll(choice)
 
   use parameters, only : neq, nx, ny, nz
-  use globals, only : primit, f, g, h
+  use globals, only : primit, primit0, f, g, h
   use hydro_core, only : swapy, swapz, limiter
   implicit none
   integer, intent(in) :: choice
   integer :: i, j, k
-  real, dimension(neq) :: priml, primr, primll, primrr, ff
+  real, dimension(neq) :: priml, primr, primll, primrr, ff, prim0l, prim0r, prim0ll, prim0rr
   !
   select case(choice)
 
   case(1)        ! 1st half timestep
-
+ 
      do k=0,nz
         do j=0,ny
            do i=0,nx
@@ -170,27 +108,37 @@ subroutine hllcfluxes(choice)
               !------- x direction -------------------------------------
               priml(:)=primit(:,i  ,j ,k )
               primr(:)=primit(:,i+1,j ,k )
+              prim0l(:)=primit0(:,i ,j ,k)
+              prim0r(:)=primit0(:,i+1 ,j ,k)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               f(:,i,j,k)=ff(:)
-
               !------- y direction -------------------------------------
               priml(:)=primit(:,i ,j  ,k )
               primr(:)=primit(:,i, j+1,k )
+              prim0l(:)=primit0(:,i ,j   ,k)
+              prim0r(:)=primit0(:,i ,j+1 ,k)
+              
               call swapy(priml,neq)
               call swapy(primr,neq)
+              call swapy(prim0l,neq)
+              call swapy(prim0r,neq)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               call swapy(ff,neq)
               g(:,i,j,k)=ff(:)
-
               !------- z direction -------------------------------------
               priml(:)=primit(:,i ,j ,k  )
               primr(:)=primit(:,i, j, k+1)
+              prim0l(:)=primit0(:,i ,j ,k)
+              prim0r(:)=primit0(:,i ,j ,k+1)
+              
               call swapz(priml,neq)
               call swapz(primr,neq)
+              call swapz(prim0l,neq)
+              call swapz(prim0r,neq)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               call swapz(ff,neq)
               h(:,i,j,k)=ff(:)
 
@@ -203,15 +151,20 @@ subroutine hllcfluxes(choice)
      do k=0,nz
         do j=0,ny
            do i=0,nx
-
+  
               !------- x direction ------------------------------------
               priml (:)=primit(:,i,  j,k )
               primr (:)=primit(:,i+1,j,k )
               primll(:)=primit(:,i-1,j,k )
               primrr(:)=primit(:,i+2,j,k )
+              prim0l (:)=primit0(:,i   ,j ,k)
+              prim0r (:)=primit0(:,i+1 ,j ,k)
+              prim0ll(:)=primit0(:,i-1 ,j ,k)
+              prim0rr(:)=primit0(:,i+2 ,j ,k)
               call limiter(primll,priml,primr,primrr,neq)
+              call limiter(prim0ll,prim0l,prim0r,prim0rr,neq)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               f(:,i,j,k)=ff(:)
 
               !------- y direction ------------------------------------
@@ -219,40 +172,69 @@ subroutine hllcfluxes(choice)
               primr (:)=primit(:,i,j+1,k )
               primll(:)=primit(:,i,j-1,k )
               primrr(:)=primit(:,i,j+2,k )
+              prim0l (:)=primit0(:,i,j  ,k )
+              prim0r (:)=primit0(:,i,j+1,k )
+              prim0ll(:)=primit0(:,i,j-1,k )
+              prim0rr(:)=primit0(:,i,j+2,k )
+              
               call swapy(priml,neq)
               call swapy(primr,neq)
               call swapy(primll,neq)
               call swapy(primrr,neq)
+              
+              call swapy(prim0l,neq)
+              call swapy(prim0r,neq)
+              call swapy(prim0ll,neq)
+              call swapy(prim0rr,neq)
+              
               call limiter(primll,priml,primr,primrr,neq)
+              call limiter(prim0ll,prim0l,prim0r,prim0rr,neq)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               call swapy(ff,neq)
               g(:,i,j,k)=ff(:)
-
+              
               !------- z direction ------------------------------------
               priml (:)=primit(:,i,j,k  )
-              primr (:)=primit(:,i,j,k+1 )
-              primll(:)=primit(:,i,j,k-1 )
+              primr (:)=primit(:,i,j,k+1)
+              primll(:)=primit(:,i,j,k-1)
               primrr(:)=primit(:,i,j,k+2)
+              prim0l (:)=primit0(:,i,j,k  )
+              prim0r (:)=primit0(:,i,j,k+1)
+              prim0ll(:)=primit0(:,i,j,k-1)
+              prim0rr(:)=primit0(:,i,j,k+2)
+              
               call swapz(priml,neq)
               call swapz(primr,neq)
               call swapz(primll,neq)
               call swapz(primrr,neq)
+              
+              call swapz(prim0l,neq)
+              call swapz(prim0r,neq)
+              call swapz(prim0ll,neq)
+              call swapz(prim0rr,neq)
+              
               call limiter(primll,priml,primr,primrr,neq)
+              call limiter(prim0ll,prim0l,prim0r,prim0rr,neq)
 
-              call prim2fhllc(priml,primr,ff)
+              call prim2fhllSplitAll(priml,primr,prim0l,prim0r,ff)
               call swapz(ff,neq)
               h(:,i,j,k)=ff(:)
 
            end do
         end do
      end do
-
+     !----------------------------------------------------------------
   end select
 
-end subroutine hllcfluxes
+end subroutine hllfluxesSplitAll
 
-
-end module hllcSplitAll
+end module hllSplitAll
 
 !=======================================================================
+
+
+
+
+
+

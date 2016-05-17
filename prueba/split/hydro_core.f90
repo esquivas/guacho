@@ -611,9 +611,9 @@ end subroutine cfast
 !> @details Computes the fast magnetosonic speed in the x direction
 !> @param real [in] prim(neq) : vector with the primitives in one cell
 
+#ifdef BFIELD
 subroutine cfastX(prim,cfX)
 
-#ifdef BFIELD
 
   use parameters, only : neq, gamma
   implicit none
@@ -626,10 +626,9 @@ subroutine cfastX(prim,cfX)
 
   cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
  
-#endif
 
 end subroutine cfastX
-
+#endif
 !=======================================================================
 
 !> @brief Otains the timestep allowed by the CFL condition in the entire
@@ -685,8 +684,8 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
           dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
 #endif
         else
-          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
-              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+          if (riemann_solver == SOLVER_HLL_SPLIT_ALL .or. &
+              riemann_solver == SOLVER_HLLC_SPLIT_ALL) then
           ! split hydro
             call csound(primit(5,i,j,k)+primit0(5,i,j,k),primit(1,i,j,k)+primit0(1,i,j,k),c)
           else
