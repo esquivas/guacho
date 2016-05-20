@@ -62,122 +62,45 @@ subroutine initial_conditions(u)
                         gamma, mu, mu_1, mu_2
 
   use globals, only : coords, dy, dx, primit0
-  use constants, only : Rg,amh
+  use constants, only : Rg, amh, Ggrav, Msun, Rsun
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
-  integer :: i, j
-  real :: Tempc, rho, P, ym, xm, rad
+  integer :: i, j, k, jj
+  real :: Tempc, rho, P, ym, xm, rad, bb
 
   nc = 1.e9
   Tempc = 1.e6
   rho = nc*mu*amh
   P = nc*amh*Rg*Tempc
-  
+  bb=1.e-10
+
   u(1,:,:,:)= rho/rhosc
   u(2,:,:,:)= 0.
   u(3,:,:,:)= 0.
   u(4,:,:,:)= 0.
+!   u(5,:,:,:)= cv*P/Psc+0.5*(bb/Bsc)**2
+  u(6,:,:,:)= 0.
+  u(7,:,:,:)= bb/Bsc
+  u(8,:,:,:)= 0.
   
-  do j=nymin,nymax
-    ym = (float(j+coords(1)*ny-nytot/2) + 0.5)*dy*rsc
-    do i=nxmin,nxmax
-      xm = (float(i+coords(0)*nx-nxtot/2) + 0.5)*dx*rsc
-      rad = sqrt(xm*xm+ym*ym)
-      if(rad.le.0.5e8) then
-	u(5,i,j,:) = cv*P*3./Psc
-! 	print*,'energía dentro',u(5,i,j,:)
-      else
-        u(5,i,j,:) = cv*P/Psc
-!         print*,'energía fuera',u(5,i,j,:)
-      end if
-    end do
+  do j = nymin,nymax
+    ym = (float(jj-nytot/2) + 0.5)*dy*rsc ! para el pulso
+      do i = nxmin, nxmax
+           xm = (float(i+coords(0)*nx-nxtot/2) + 0.5)*dx*rsc ! para el pulso
+           rad = sqrt(xm*xm+ym*ym)                           ! para el pulso
+           if(rad.le.0.5e8) then
+             u(5,i,j,:) = cv*4.*P/Psc+0.5*(bb/Bsc)**2
+           else
+             u(5,i,j,:) = cv*P/Psc+0.5*(bb/Bsc)**2
+           end if
+        end do
   end do
   
-!   g = Ggrav*Msun/Rsun/Rsun
-!   nc = 1.e19
-!   Temp1 = 1.e4 
-!   P_0 = nc*kb*Temp1
-!   Temp2 = 1.e6
-!   
-! !   PULSO
-!   Tempp = 1.e4
-!   Pp = nc*kb*Tempp
-!   rhop = mu_2*Pp/Rg/Tempp
-! 
-!   
-! ! UNPERTURBED VARIABLES
-!   primit0(:,:,:,:)=0.
-!     
-!   do j = nymin,nymax
-!      jj = j +coords(1)
-! 
-!      y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
-!      
-!      P_y = P_0*exp(-integral(jj,Temp1,Temp2,mu_1, mu_2))
-!      
-!      equi(5,j)  = P_y/Psc       
-!      equi(2,j)  = 0.      
-!      equi(3,j)  = 0.
-!      equi(4,j)  = 0.
-!      
-!      if(y.le.2.e8)then
-!         equi(1,j)  = (mu_1*P_y/Rg/Temp1)/rhosc
-!      else
-!         equi(1,j)  = (mu_2*P_y/Rg/Temp2)/rhosc
-!      end if
-!      
-! 
-!      do k =nzmin, nzmax
-!         do i = nxmin, nxmax
-!            primit0(:,i,j,k) = equi(:,j)
-!         end do
-!      end do
-!   end do
-!   
-! !   defino las u's --> son las perturbadas
-! 
-!   u(:,:,:,:)=0.
-!   
-!   do j=nymin,nymax
-!     ym = (float(j+coords(1)*ny-nytot/2) + 0.5)*dy*rsc
-!     do i=nxmin,nxmax
-!       xm = (float(i+coords(0)*nx-nxtot/2) + 0.5)*dx*rsc
-!       rad = sqrt(xm*xm+ym*ym)
-!       if(rad.le.0.1e8) then
-! !         print*, 'entre'
-! 	u(1,i,j,:) = rhop/rhosc
-! 	u(5,i,j,:) = cv*Pp/Psc
-!       else
-! 	u(1,i,j,:) = 0.
-! 	u(5,i,j,:) = 0.
-!       end if
-!     end do
-!   end do
-! 
+  print*,'Presion',(u(5,nxmax,nymax,nzmax)-0.5*(bb/Bsc)**2)*Psc/cv
+!   print*,(u(5,nxmax,nymax,nzmax)*Psc-0.5*bb**2)/cv,P_y,P_y+0.5*bb**2
+!   stop
 end subroutine initial_conditions
-! 
-! real function integral(jj,Temp1,Temp2,mu_1, mu_2)
-!   use globals, only:dy
-!   implicit none
-!   integer, intent(in) :: jj 
-!   real,intent(in) ::Temp1, Temp2,mu_1,mu_2
-!   integer :: ii
-!   real :: y, g
-!   
-!   g = Ggrav*Msun/Rsun/Rsun
-!   integral=0.
-!   do ii=0,jj
-!      y = (float(ii)+0.5)*dy*rsc
-!      if(y.le.2.E8) then
-!         integral = integral + dy*rsc*mu_1*g/Rg/Temp1  
-!      else 
-!         integral = integral + dy*rsc*mu_2*g/Rg/Temp2  
-!      endif
-!   !   print*,jj,integral
-!   end do
-! !stop
-! end function integral
-!   
+
 !=====================================================================
 
 !> @brief User Defined Boundary conditions
@@ -329,17 +252,17 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin,prim0)
   ! momento
   s(2)= s(2)
   s(4)= s(4)
-  s(3)= s(3)!-pp(1)*g!GM/((R)**2.)
+  s(3)= s(3)-pp(1)*g!GM/((R)**2.)
   ! energy
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or.   &
       riemann_solver == SOLVER_HLLD_SPLIT_ALL .or.   &
       riemann_solver == SOLVER_HLL_SPLIT_ALL  .or.   &
       riemann_solver == SOLVER_HLLC_SPLIT_ALL) then
      if (present(prim0)) then
-       s(5)= s(5)!-(pp(1)+prim0(1))*pp(3)*g!GM/((R)**2. ) ! ver como meter prim0
+       s(5)= s(5)-(pp(1)+prim0(1))*pp(3)*g!GM/((R)**2. ) 
      end if
   else
-    s(5)= s(5)!-pp(1)*pp(3)*g
+    s(5)= s(5)-pp(1)*pp(3)*g
   end if
 
 end subroutine get_user_source_terms

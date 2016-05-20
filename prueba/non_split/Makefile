@@ -37,7 +37,7 @@ FLAGS = -cpp -O3
 MPIP = Y
 
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
-BFIELD = N
+BFIELD = Y
 
 #   Include passive scalars (Y/N)
 PASSIVES = N

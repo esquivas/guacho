@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./pulso/'
+  character (len=128),parameter ::  outputpath='./mhd/pulso/10G/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -46,7 +46,7 @@ module parameters
   !----------------------------------------
   
   logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
-  logical, parameter :: mhd      = .false.   !<  Enable full MHD
+  logical, parameter :: mhd      = .true.   !<  Enable full MHD
   
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
@@ -55,10 +55,10 @@ module parameters
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT_(ALL or B) : Split version of HLLE
   !> SOLVER_HLLD_SPLIT_(ALL or B) : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLL
+  integer, parameter :: riemann_solver = SOLVER_HLLE
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
-  logical, parameter :: eight_wave = .false.
+  logical, parameter :: eight_wave = .true.
   !>  Enable field-CD cleaning of div B
   logical, parameter :: enable_field_cd = .false.
   !>  Enable writting of divB to disk
@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .false.
+  logical, parameter :: user_source_terms = .true.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.

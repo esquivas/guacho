@@ -369,7 +369,8 @@ subroutine prim2u(prim,uu, prim0)
      if (present(prim0)) then
     !   kinetic+thermal+magnetic energies
         uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
+              + 0.5*(prim(6)**2+prim(7)**2+prim(8)**2)&
+              + prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
      else
         uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
              +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
@@ -436,11 +437,12 @@ subroutine prim2f(prim,ff,prim0)
         ff(4) = (prim(1)+prim0(1))*prim(2)*prim(4)-prim(6)*prim(8) &
         - prim0(8)*prim(6)-prim0(6)*prim(8)
 
-        ff(5) = prim(2)*(etot+prim(5)+0.5*((prim(6)+prim0(6))**2+(prim(7)&
-        +prim0(7))**2+(prim(8)+prim0(8))**2) &
-        +cv*prim0(5)+prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
+        ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) &
+        +cv*prim0(5)+prim0(5) &
+        +(prim0(6)**2+prim0(7)**2+prim0(8)**2) &
+        +(prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8))) &
         -(prim(6)+prim0(6))*(prim(2)*(prim(6)+prim0(6))+ &
-        prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISAR
+        prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISADO 20/05/2016
       end if
       else
         !  MHD (active)
@@ -684,8 +686,8 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
           dtp=min(dtp,dz/(abs(primit(4,i,j,k))+cz))
 #endif
         else
-          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
-              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
+          if (riemann_solver == SOLVER_HLL_SPLIT_ALL .or. &
+              riemann_solver == SOLVER_HLLC_SPLIT_ALL) then
           ! split hydro
             call csound(primit(5,i,j,k)+primit0(5,i,j,k),primit(1,i,j,k)+primit0(1,i,j,k),c)
           else

@@ -166,8 +166,10 @@ subroutine write_BIN(itprint)
 !        print*,'energía split',u(5,50,50,1)         
     else
        write(unitout) u(:,:,:,:)
-!        print*,'energía',u(5,50,50,1)
+!        print*,'energía',u(5,nxmax,nymax,nzmax)*Psc
+!        stop
     endif
+      
 
     close(unitout)
     print'(i3,a,a)',rank," wrote file:",trim(file1)

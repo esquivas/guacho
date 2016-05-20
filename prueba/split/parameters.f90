@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./pulso/'
+  character (len=128),parameter ::  outputpath='./hd/pulso/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -60,7 +60,7 @@ module parameters
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_field_cd = .false.
+  logical, parameter :: enable_field_cd = .false. ! ver cuando hagamos el split en el hlld
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
 
@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .false.
+  logical, parameter :: user_source_terms = .true.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -141,7 +141,7 @@ module parameters
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=1     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z   
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ

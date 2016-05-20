@@ -62,27 +62,44 @@ subroutine initial_conditions(u)
                         gamma, mu, mu_1, mu_2
 
   use globals, only : coords, dy, dx, primit0
-  use constants, only : Rg,amh
+  use constants, only : Rg, amh, Ggrav, Msun, Rsun
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
-  integer :: i, j
-  real :: Tempc, rho, P, ym, xm, rad
+  integer :: i, j, jj, k
+  real :: Temp_var, mu_var, rho, P_0, P_y, ym, xm, rad, g, y
 
+  mu_var = mu
+  g = Ggrav*Msun/Rsun/Rsun
   nc = 1.e9
-  Tempc = 1.e6
-  rho = nc*mu*amh
-  P = nc*amh*Rg*Tempc
+  Temp_var = 1.e6
+  rho = nc*mu_var*amh
+  P_0 = nc*amh*Rg*Temp_var
   
-!   VARIABLES NO PERTURBADAS
-  primit0(1,:,:,:)= rho/rhosc
-  primit0(2,:,:,:)= 0.
-  primit0(3,:,:,:)= 0.
-  primit0(4,:,:,:)= 0.
-  primit0(5,:,:,:)= P/Psc
+! VARIABLES NO PERTURBADAS
+  primit0(2,:,:,:)=0.
+  primit0(3,:,:,:)=0.
+  primit0(4,:,:,:)=0.
+    
+  do j = nymin,nymax
+     jj = j + coords(1)*ny
 
+     y = (float(jj) + 0.5)*dy*rsc
+     
+     P_y = P_0*exp(-integral(jj,Temp_var,mu_var))
+          
+
+     do k =nzmin, nzmax
+        do i = nxmin, nxmax
+           primit0(5,i,j,k) = P_y/Psc
+           primit0(1,i,j,k) = (mu_var*P_y/Rg/Temp_var)/rhosc
+        end do
+     end do
+  end do
+  
 ! VARIABLES PERTURBADAS
   u(:,:,:,:)=0.
   
+! PULSO
   do j=nymin,nymax
     ym = (float(j+coords(1)*ny-nytot/2) + 0.5)*dy*rsc
     do i=nxmin,nxmax
@@ -90,98 +107,37 @@ subroutine initial_conditions(u)
       rad = sqrt(xm*xm+ym*ym)
       if(rad.le.0.5e8) then
 !         print*, 'entre'
-	u(5,i,j,:) = cv*P*2./Psc  ! E-cv*primit0(5)
+	u(5,i,j,:) = cv*0.12666724448792355*3./Psc  ! E-cv*primit0(5)
       else
 	u(5,i,j,:) = 0.
       end if
     end do
   end do
   
-!   g = Ggrav*Msun/Rsun/Rsun
-!   nc = 1.e19
-!   Temp1 = 1.e4 
-!   P_0 = nc*kb*Temp1
-!   Temp2 = 1.e6
-!   
-! !   PULSO
-!   Tempp = 1.e4
-!   Pp = nc*kb*Tempp
-!   rhop = mu_2*Pp/Rg/Tempp
-! 
-!   
-! ! UNPERTURBED VARIABLES
-!   primit0(:,:,:,:)=0.
-!     
-!   do j = nymin,nymax
-!      jj = j +coords(1)
-! 
-!      y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
-!      
-!      P_y = P_0*exp(-integral(jj,Temp1,Temp2,mu_1, mu_2))
-!      
-!      equi(5,j)  = P_y/Psc       
-!      equi(2,j)  = 0.      
-!      equi(3,j)  = 0.
-!      equi(4,j)  = 0.
-!      
-!      if(y.le.2.e8)then
-!         equi(1,j)  = (mu_1*P_y/Rg/Temp1)/rhosc
-!      else
-!         equi(1,j)  = (mu_2*P_y/Rg/Temp2)/rhosc
-!      end if
-!      
-! 
-!      do k =nzmin, nzmax
-!         do i = nxmin, nxmax
-!            primit0(:,i,j,k) = equi(:,j)
-!         end do
-!      end do
-!   end do
-!   
-! !   defino las u's --> son las perturbadas
-! 
-!   u(:,:,:,:)=0.
-!   
-!   do j=nymin,nymax
-!     ym = (float(j+coords(1)*ny-nytot/2) + 0.5)*dy*rsc
-!     do i=nxmin,nxmax
-!       xm = (float(i+coords(0)*nx-nxtot/2) + 0.5)*dx*rsc
-!       rad = sqrt(xm*xm+ym*ym)
-!       if(rad.le.0.1e8) then
-! !         print*, 'entre'
-! 	u(1,i,j,:) = rhop/rhosc
-! 	u(5,i,j,:) = cv*Pp/Psc
-!       else
-! 	u(1,i,j,:) = 0.
-! 	u(5,i,j,:) = 0.
-!       end if
-!     end do
-!   end do
-! 
+ 
 end subroutine initial_conditions
-! 
-! real function integral(jj,Temp1,Temp2,mu_1, mu_2)
-!   use globals, only:dy
-!   implicit none
-!   integer, intent(in) :: jj 
-!   real,intent(in) ::Temp1, Temp2,mu_1,mu_2
-!   integer :: ii
-!   real :: y, g
-!   
-!   g = Ggrav*Msun/Rsun/Rsun
-!   integral=0.
-!   do ii=0,jj
-!      y = (float(ii)+0.5)*dy*rsc
+ 
+real function integral(jj,Temp_var,mu_var)
+  use globals, only:dy
+  implicit none
+  integer, intent(in) :: jj 
+  real,intent(in) ::Temp_var,mu_var
+  integer :: ii
+  real :: y, g
+  
+  g = Ggrav*Msun/Rsun/Rsun
+  integral=0.
+  do ii=0,jj
+     y = (float(ii)+0.5)*dy*rsc
 !      if(y.le.2.E8) then
-!         integral = integral + dy*rsc*mu_1*g/Rg/Temp1  
+        integral = integral + dy*rsc*mu_var*g/Rg/Temp_var  
 !      else 
 !         integral = integral + dy*rsc*mu_2*g/Rg/Temp2  
 !      endif
-!   !   print*,jj,integral
-!   end do
-! !stop
-! end function integral
-!   
+  end do
+!stop
+end function integral
+  
 !=====================================================================
 
 !> @brief User Defined Boundary conditions
