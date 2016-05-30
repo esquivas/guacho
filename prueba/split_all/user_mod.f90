@@ -72,7 +72,7 @@ subroutine initial_conditions(u)
   Tempc = 1.e6
   rho = nc*mu*amh
   P = nc*amh*Rg*Tempc
-  bb = 1.e-10
+  bb = 10.
   
 !   VARIABLES NO PERTURBADAS
   primit0(1,:,:,:)= rho/rhosc

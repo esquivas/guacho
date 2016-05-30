@@ -7,7 +7,7 @@
 PROGRAM= guachos
 
 #  Seaerh Path, object files are searched in the order below
-VPATH = . : ../../../src
+VPATH = . : ../../src
 
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler

@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .true.
+  logical, parameter :: user_source_terms = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -141,7 +141,7 @@ module parameters
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=1     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z   
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ

@@ -72,7 +72,7 @@ subroutine initial_conditions(u)
   Tempc = 1.e6
   rho = nc*mu*amh
   P = nc*amh*Rg*Tempc
-  bb=1.e-10
+  bb=10.
 
   u(1,:,:,:)= rho/rhosc
   u(2,:,:,:)= 0.
@@ -84,12 +84,13 @@ subroutine initial_conditions(u)
   u(8,:,:,:)= 0.
   
   do j = nymin,nymax
-    ym = (float(jj-nytot/2) + 0.5)*dy*rsc ! para el pulso
+    ym = (float(j+coords(1)*ny-nytot/2) + 0.5)*dy*rsc ! para el pulso
       do i = nxmin, nxmax
            xm = (float(i+coords(0)*nx-nxtot/2) + 0.5)*dx*rsc ! para el pulso
            rad = sqrt(xm*xm+ym*ym)                           ! para el pulso
            if(rad.le.0.5e8) then
              u(5,i,j,:) = cv*4.*P/Psc+0.5*(bb/Bsc)**2
+             print*,'pulso'
            else
              u(5,i,j,:) = cv*P/Psc+0.5*(bb/Bsc)**2
            end if

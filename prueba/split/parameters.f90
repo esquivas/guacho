@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./hd/pulso/'
+  character (len=128),parameter ::  outputpath='./pulso/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .true.
+  logical, parameter :: user_source_terms = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.

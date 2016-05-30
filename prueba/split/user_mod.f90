@@ -66,36 +66,20 @@ subroutine initial_conditions(u)
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
   integer :: i, j, jj, k
-  real :: Temp_var, mu_var, rho, P_0, P_y, ym, xm, rad, g, y
+  real :: Tempc, rho, P, ym, xm, rad
 
-  mu_var = mu
-  g = Ggrav*Msun/Rsun/Rsun
   nc = 1.e9
-  Temp_var = 1.e6
-  rho = nc*mu_var*amh
-  P_0 = nc*amh*Rg*Temp_var
+  Tempc = 1.e6
+  rho = nc*mu*amh
+  P = nc*amh*Rg*Tempc
   
 ! VARIABLES NO PERTURBADAS
+  primit0(1,:,:,:)= rho/rhosc
   primit0(2,:,:,:)=0.
   primit0(3,:,:,:)=0.
   primit0(4,:,:,:)=0.
-    
-  do j = nymin,nymax
-     jj = j + coords(1)*ny
-
-     y = (float(jj) + 0.5)*dy*rsc
-     
-     P_y = P_0*exp(-integral(jj,Temp_var,mu_var))
-          
-
-     do k =nzmin, nzmax
-        do i = nxmin, nxmax
-           primit0(5,i,j,k) = P_y/Psc
-           primit0(1,i,j,k) = (mu_var*P_y/Rg/Temp_var)/rhosc
-        end do
-     end do
-  end do
-  
+  primit0(5,:,:,:)= P/Psc
+      
 ! VARIABLES PERTURBADAS
   u(:,:,:,:)=0.
   
@@ -107,7 +91,7 @@ subroutine initial_conditions(u)
       rad = sqrt(xm*xm+ym*ym)
       if(rad.le.0.5e8) then
 !         print*, 'entre'
-	u(5,i,j,:) = cv*0.12666724448792355*3./Psc  ! E-cv*primit0(5)
+	u(5,i,j,:) = cv*3.*P/Psc  ! E-cv*primit0(5)
       else
 	u(5,i,j,:) = 0.
       end if
