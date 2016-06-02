@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./mhd/2temp/'
+  character (len=128),parameter ::  outputpath='./10G/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -141,7 +141,7 @@ module parameters
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=1     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z   
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
@@ -151,7 +151,7 @@ module parameters
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
   real, parameter :: zmax=0.1     !< grid extent in Z (code units)
-  real, parameter :: xphys=1.e9         !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=7.5e8         !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)

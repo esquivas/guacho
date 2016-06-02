@@ -59,18 +59,20 @@ subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, &
                         nzmax, cv, rsc, vsc2, rhosc, Tempsc, ny, &
-                        gamma, mu, mu_1, mu_2, nghost
+                        gamma, mu, mu_1, mu_2, nghost, xphys
 
   use globals, only : coords, dy, dx, primit0, rank
   use constants, only : Rg, amh, Ggrav, Msun, Rsun
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
-  integer :: i, j, jj, k, err, ndim
+  integer :: i, j, jj, k, err, ii, dim_temp
+  integer, parameter :: ndim=31
   real :: Temp_ch, Temp_c,mu_var, rho, P_0, P_y, ym, xm, rad, g, y, bb
-  real :: Tempi(1-nghost:nytot+nghost)
-  real :: ycoord, tempcoord
-  real :: temptab(2,31) !la tabla es una matriz 
+  real :: Tempi(1-nghost:nytot+nghost)!Tempi(1:nytot)
+  real :: ycoord, tempcoord, ymin, yi, a, b
+  real :: temptab(2,ndim) !la tabla es una matriz 
 
+  ymin = 5.e7
   mu_var = mu
   g = Ggrav*Msun/Rsun/Rsun
   nc = 1.e19
@@ -78,7 +80,7 @@ subroutine initial_conditions(u)
   Temp_c = 1.e6
   rho = nc*mu_var*amh
   P_0 = nc*amh*Rg*Temp_ch
-  bb = 1.e-10
+  bb = 10.
   
 ! VARIABLES NO PERTURBADAS
   primit0(2,:,:,:)=0.
@@ -107,28 +109,37 @@ subroutine initial_conditions(u)
 ! leo la tabla
   if (rank.eq.master)then
   open(unit=20,file='temp.dat',status='old')
-    do i=1,31
-      read(10,*) ycoord, tempcoord
+    do i=1,ndim
+      read(20,*) ycoord, tempcoord
       temptab(1,i)=ycoord
       temptab(2,i)=tempcoord
     end do
-    close(unit=10)
+    close(unit=20)
+    do j=1, nytot
+      y  = (float(j) + 0.5)*dy*rsc + ymin
+      yi = y*ndim/xphys
+      ii = int(yi-0.5)-1
+!    do i=1,30
+!      if(temptab(1,i).le.y.lt.temptab(1,i+1))then
+      a = (temptab(2,ii+1)-temptab(2,ii))/(temptab(1,ii+1)-temptab(1,ii))
+      b = temptab(2,ii)-a*temptab(1,ii)
+      Tempi(j)=a*y+b
+!      else
+!        cycle
+!      end if
+!    end do
+    print*,j,y,ii,Tempi(j)
+    end do
+    Tempi(1-nghost)=Tempi(1)
+    Tempi(0)=Tempi(1)
+    Tempi(nytot+1)=Tempi(nytot)
+    Tempi(nytot+2)=Tempi(nytot)
   end if
-  
-#ifdef MPIP
-  call mpi_bcast(temptab,62,mpi_double_precision,0,mpi_comm_world,err)
-#endif
 
-  do j=1, nytot
-   y = (float(j) + 0.5)*dy*rsc
-   do i=1,30
-     if(temptab(1,i).le.y.lt.temptab(1,i+1))then
-       Tempi(j)=(temptab(2,i+1)-temptab(2,i))*y/(temptab(1,i+1)-temptab(1,i))+temptab(2,i)
-     else
-       cycle
-     end if
-   end do
-  end do
+dim_temp= nytot+2*nghost-1  
+#ifdef MPIP
+  call mpi_bcast(Tempi,dim_temp,mpi_double_precision,0,mpi_comm_world,err)
+#endif
     
   do j = nymin,nymax
      jj = j + coords(1)*ny
