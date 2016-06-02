@@ -139,11 +139,7 @@ subroutine write_BIN(itprint)
 
     ! write header, then data
     call write_header(unitout,neq,nghost)
-    
-    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
-    riemann_solver == SOLVER_HLLD_SPLIT_ALL     .or. &
-    riemann_solver == SOLVER_HLL_SPLIT_ALL      .or. &
-    riemann_solver == SOLVER_HLLC_SPLIT_ALL) then
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
        do k =nzmin,nzmax
           do j = nymin,nymax
              do i = nxmin, nxmax
@@ -151,22 +147,17 @@ subroutine write_BIN(itprint)
                 write(unitout) u(2,i,j,k)
                 write(unitout) u(3,i,j,k)
                 write(unitout) u(4,i,j,k)
-                if (mhd) then
-                  write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+&
-                0.5*(primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2) !REVISADO 16/05/2015
-                  write(unitout) u(6,i,j,k)+primit0(6,i,j,k)
-                  write(unitout) u(7,i,j,k)+primit0(7,i,j,k)
-                  write(unitout) u(8,i,j,k)+primit0(8,i,j,k)
-                else
-                  write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k) !REVISADO 16/05/2015
-                end if
+                write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+&
+              0.5*(primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2)
+                write(unitout) u(6,i,j,k)+primit0(6,i,j,k)
+                write(unitout) u(7,i,j,k)+primit0(7,i,j,k)
+                write(unitout) u(8,i,j,k)+primit0(8,i,j,k)
              end do
           end do
        end do
-!        print*,'energía split',u(5,50,50,1)         
+                
     else
        write(unitout) u(:,:,:,:)
-!        print*,'energía',u(5,50,50,1)
     endif
 
     close(unitout)
