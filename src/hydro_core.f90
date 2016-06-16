@@ -77,17 +77,17 @@ subroutine u2prim(uu, prim, T)
   
   prim(5)=max(prim(5),1e-16)
 
-#ifdef  BFIELD
   if (mhd .or. pmhd) then
+#ifdef  BFIELD
     prim(6:8) = uu(6:8)
+#endif
   end if 
-#endif
 
-#ifdef PASSIVES
   if (passives) then
+#ifdef PASSIVES
     prim(neqdyn+1:neq) = uu(neqdyn+1:neq)
-  end if
 #endif
+  end if
 
   !   Temperature calculation
 
@@ -356,16 +356,15 @@ subroutine prim2u(prim,uu, prim0)
 
   if (mhd) then
 #ifdef BFIELD
-     if (present(prim0)) then
+    if (present(prim0)) then
     !   kinetic+thermal+magnetic energies
         uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
              +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
-#endif
      else
         uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
              +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
      end if
-
+#endif
   else 
 
 !     if present(prim0) then
@@ -409,12 +408,11 @@ subroutine prim2f(prim,ff,prim0)
   real,    dimension(neq), intent(out) :: ff
   real :: etot
 
-
   if (mhd) then
-#ifdef BFIELD
     if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
       riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
       if (present(prim0)) then
+#ifdef BFIELD
         etot = 0.5*( (prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)    &
         + prim(6)**2+prim(7)**2+prim(8)**2  )  &
         + cv*prim(5)                           &
@@ -433,8 +431,10 @@ subroutine prim2f(prim,ff,prim0)
         +cv*prim0(5)+prim0(5)+0.5*(prim0(6)**2+prim0(7)**2+prim0(8)**2) ) &
         -(prim(6)+prim0(6))*(prim(2)*(prim(6)+prim0(6))+ &
         prim(3)*(prim(7)+prim0(7))+prim(4)*(prim(8)+prim0(8))) !REVISAR
+#endif
       end if
       else
+#ifdef BFIELD
         !  MHD (active)
         etot= 0.5*( prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)    &
         + prim(6)**2+prim(7)**2+prim(8)**2  )  &
@@ -446,8 +446,8 @@ subroutine prim2f(prim,ff,prim0)
         ff(4) = prim(1)*prim(2)*prim(4)-prim(6)*prim(8)
         ff(5) = prim(2)*(etot+prim(5)+0.5*(prim(6)**2+prim(7)**2+prim(8)**2) ) &
         -prim(6)*(prim(2)*prim(6)+prim(3)*prim(7)+prim(4)*prim(8))
+#endif
     end if
-#endif   /*  MHD  */
   else
     ! HD or PMHD
     etot= 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
@@ -501,10 +501,12 @@ subroutine swapy(var,neq)
   var(2)=var(3)
   var(3)=aux
   
-  if (mhd .or. pmhd) then 
+  if (mhd .or. pmhd) then
+#ifdef BFIELD
     aux=var(6)
     var(6)=var(7)
     var(7)=aux
+#endif
   end if 
 
 end subroutine swapy
@@ -528,10 +530,12 @@ subroutine swapz(var,neq)
   var(2)=var(4)
   var(4)=aux
   
-  if (mhd .or. pmhd) then 
+  if (mhd .or. pmhd) then
+#ifdef BFIELD
     aux=var(6)
     var(6)=var(8)
     var(8)=aux
+#endif
   end if
 
 end subroutine swapz
@@ -589,9 +593,9 @@ end subroutine cfast
 !> @details Computes the fast magnetosonic speed in the x direction
 !> @param real [in] prim(neq) : vector with the primitives in one cell
 
-subroutine cfastX(prim,cfX)
-
 #ifdef BFIELD
+
+subroutine cfastX(prim,cfX)
 
   use parameters, only : neq, gamma
   implicit none
@@ -604,9 +608,9 @@ subroutine cfastX(prim,cfX)
 
   cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
  
-#endif
-
 end subroutine cfastX
+
+#endif
 
 !=======================================================================
 
@@ -636,7 +640,10 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
   real,    intent(out) :: dt
   logical, intent(out) :: dump_flag
   real              :: dtp
-  real              :: c, cx, cy, cz
+  real              :: c
+#ifdef BFIELD
+  real              :: cx, cy, cz
+#endif
   integer :: i, j, k, err
   
   dtp=1.e30
