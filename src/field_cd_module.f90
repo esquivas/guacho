@@ -4,7 +4,7 @@
 !> @author C. Villareal D'Angelo, M. Schneiter, A. Esquivel
 !> @date 26/Apr/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -303,9 +303,9 @@ subroutine field_cd_update(i,j,k,dt)
 #ifdef PASSIVES
   if (passives) &
   up(neqdyn+1:,i,j,k)=u(neqdyn+1:,i,j,k)                    &
-            -dtdx*(f(:neqdyn+1,i,j,k)-f(neqdyn+1:,i-1,j,k)) &
-            -dtdy*(g(:neqdyn+1,i,j,k)-g(neqdyn+1:,i,j-1,k)) &
-            -dtdz*(h(:neqdyn+1,i,j,k)-h(neqdyn+1:,i,j,k-1))
+            -dtdx*(f(neqdyn+1:,i,j,k)-f(neqdyn+1:,i-1,j,k)) &
+            -dtdy*(g(neqdyn+1:,i,j,k)-g(neqdyn+1:,i,j-1,k)) &
+            -dtdz*(h(neqdyn+1:,i,j,k)-h(neqdyn+1:,i,j,k-1))
 #endif
   ! evolution of B with field-CD
   up(6,i,j,k)=u(6,i,j,k)                                    &
