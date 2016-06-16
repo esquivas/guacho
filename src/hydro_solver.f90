@@ -90,7 +90,9 @@ subroutine step(dt)
   dtdy=dt/dy
   dtdz=dt/dz
 
+#ifdef BFIELD
   if (enable_field_cd) call get_current()
+#endif
 
   do k=1,nz
     do j=1,ny
@@ -102,9 +104,10 @@ subroutine step(dt)
                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
                                 -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
         else
-           
-          call field_cd_update(i,j,k,dt)
 
+#ifdef BFIELD
+          call field_cd_update(i,j,k,dt)
+#endif
         endif
 
         if (user_source_terms     .or. &
