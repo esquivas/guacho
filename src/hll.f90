@@ -31,6 +31,8 @@ module hll
 
 contains
 
+!=======================================================================
+
 !> @brief Solves the Riemann problem at the interface PL,PR
 !! using the HLL solver
 !> @details Solves the Riemann problem at the interface betweem 
@@ -74,6 +76,7 @@ subroutine prim2fhll(priml,primr,ff)
     call prim2u(primr,uR)
 
     ff(:)=(sr*fL(:)-sl*fR(:)+sl*sr*(uR(:)-uL(:)))/(sr-sl)
+
     return
 
     end subroutine prim2fhll
@@ -111,6 +114,7 @@ subroutine hllfluxes(choice)
 
               call prim2fhll(priml,primr,ff)
               f(:,i,j,k)=ff(:)
+
               !------- y direction -------------------------------------
               priml(:)=primit(:,i ,j  ,k )
               primr(:)=primit(:,i, j+1,k )
@@ -120,6 +124,7 @@ subroutine hllfluxes(choice)
               call prim2fhll(priml,primr,ff)
               call swapy(ff,neq)
               g(:,i,j,k)=ff(:)
+
               !------- z direction -------------------------------------
               priml(:)=primit(:,i ,j ,k  )
               primr(:)=primit(:,i, j, k+1)
