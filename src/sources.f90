@@ -29,7 +29,7 @@
 
   module sources
 
-  use parameters, only : neq, neqdyn, nxtot, nytot, nztot, &
+  use parameters, only : neq, nxtot, nytot, nztot, &
                          rsc, rhosc, vsc2, nx, ny, nz, &
                          user_source_terms, radiation_pressure, &
                          eight_wave
