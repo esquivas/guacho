@@ -58,7 +58,7 @@ def u2prim(file_in, ublock, equation, mhd = False) :
                                           +pblock[6,::]**2
                                           +pblock[7,::]**2 )  /cv
     pblock[4,::] = pblock[4,::] * rhosc * vsc**2
-  if (mhd and equation >= 5 and equation <= 7) :
+  if ( mhd and (equation >= 5) and (equation <= 7) ) :
     Bsc = np.sqrt(4.*np.pi*rhosc*vsc**2)
     pblock[equation,::] = pblock[equation,::] * Bsc
   return pblock[equation,::]
@@ -156,7 +156,8 @@ def get_boxsize(nout,path='',base='points',verbose=False):
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   nx, ny, nz          = head_info[2]
-  return (nx, ny, nz)
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  return (nx*mpi_x, ny*mpi_y, nz*mpi_z)
 
 '''
   Returns the basic scalings
