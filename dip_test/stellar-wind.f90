@@ -100,9 +100,9 @@ subroutine impose_wind(u,time)
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
@@ -124,7 +124,11 @@ subroutine impose_wind(u,time)
 
           if (pmhd .or. mhd) then
 #ifdef BFIELD
-            cpi = bsw*(RSW/rads)**3/(2.*rads**2)
+            if (rads <= 0.8*rsw) then
+              cpi = bsw*(1./0.8 )**3/(2.*rads**2)
+            else
+              cpi = bsw*(RSW/rads)**3/(2.*rads**2)
+            end if
             u(6,i,j,k) = 3.*y*x*cpi
             u(7,i,j,k) = (3.*y**2-rads**2)*cpi
             u(8,i,j,k) = 3.*y*z*cpi
@@ -141,7 +145,7 @@ subroutine impose_wind(u,time)
           else
             ! total energy
             u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-            + cv*dens*1.9999*Tsw
+            + cv*dens*Tsw
           endif
 
           if (passives) then
@@ -150,6 +154,7 @@ subroutine impose_wind(u,time)
             u(neqdyn+1,i,j,k)= 0.0001*dens
 #endif
           end if
+
         end if
 
       end do
