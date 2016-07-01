@@ -14,12 +14,12 @@ plt.ion()
 
 path = '/Users/esquivel/Desktop/datos_diable/guacho-working/HR-CH/BIN/'
 
-firstRead = False
+firstRead = True
 video   = False
 
 MHD = True
 
-for nout in range(10,11):
+for nout in range(38,39):
 
   if firstRead :
     rhosc = get_scalings(nout=0, path=path, verbose=True )[2]
@@ -70,6 +70,14 @@ for nout in range(10,11):
       rL = 1
       texture = np.random.rand(rho_c.shape[0]/rL,rho_c.shape[1]/rL).astype(np.float32)
       texture =scipy.ndimage.zoom(texture,rL)
+      XX = np.linspace(extent_axis[0][0],extent_axis[0][1],rho.shape[0])
+      YY = np.linspace(extent_axis[1][0],extent_axis[1][1],rho.shape[0])
+      ZZ = np.linspace(extent_axis[2][0],extent_axis[2][1],rho.shape[0])
+      nskip = 4
+      K,Y = np.meshgrid(ZZ[::nskip],XX[::nskip])
+      #K = K + nskip/2
+      #Y = Y + nskip/2
+      #extent = [0.,Lx,0.,Lx]
 
   if video :
     kernellen=50
@@ -146,7 +154,7 @@ for nout in range(10,11):
       extent= [ extent_axis[0][0],extent_axis[0][1],extent_axis[1][0],extent_axis[1][1] ] )
     plt.xlabel(r'$X~[\mathrm{R_\odot}]$')
     plt.ylabel(r'$Y~[\mathrm{R_\odot}]$')
-    plt.title(r'Passive Scalar')
+    plt.title(r'Neutral density')
     plt.colorbar(label=(r'[$\mathrm{g~cm^{-3}}$]') )
 
 
@@ -167,6 +175,18 @@ for nout in range(10,11):
     plt.ylabel(r'$Y~[\mathrm{R_\odot}]$')
     plt.title(r'Ionization fraction')
     plt.colorbar(label=(r'') )
+
+
+    plt.figure(8) ; plt.clf()
+    plt.streamplot(K,Y,bx[nxtot/2,::nskip,::nskip],by[nztot/2,::nskip,::nskip],color='k', density=[2,2])
+    plt.imshow(magb[nztot/2,::,::], origin='lower', cmap = 'viridis',
+      norm = LogNorm(),
+      extent= [ extent_axis[0][0],extent_axis[0][1],extent_axis[1][0],extent_axis[1][1] ] )
+    plt.xlabel(r'$X~[\mathrm{R_\odot}]$')
+    plt.ylabel(r'$Y~[\mathrm{R_\odot}]$')
+    plt.title(r'Magnetic Field')
+    plt.colorbar(label=(r'') )
+    
 
 
     print('minmax v:') ; minmax(magv)
