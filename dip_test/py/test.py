@@ -15,16 +15,17 @@ plt.ion()
 path = '/Users/esquivel/Desktop/datos_diable/guacho-working/NC-HLLE/BIN/'
 nout = 0
 firstRead = True
-video   = True
+video   = False
 
 Hydro = False
 
-for nout in range(0,101):
+for nout in range(1,2):
 
   if firstRead :
     rhosc = get_scalings(nout=0, path=path, verbose=True )[2]
     nxtot, nytot, nztot = get_boxsize(nout=0, path=path, verbose=True )
-  
+    '''
+    '''
     if (Hydro):
       rho   = readbin3d_all(nout=nout,neq=0,path=path,verbose=False,mhd=False)
       vx    = readbin3d_all(nout=nout,neq=1,path=path,verbose=False,mhd=False)
@@ -53,10 +54,9 @@ for nout in range(0,101):
 
   if video :
     kernellen=50
-    nframes = 3
-    frame = nout*nframes
+    frame = nout*150
 
-    for t in np.linspace(0,1,nframes):
+    for t in np.linspace(0,1,150):
       kernel = np.sin(np.arange(kernellen)*np.pi/kernellen)*(1+np.sin(2*np.pi*5*(np.arange(kernellen)/float(kernellen)+t)))
       kernel = kernel.astype(np.float32)
 
@@ -66,7 +66,7 @@ for nout in range(0,101):
 
       plt.figure(3) ; plt.clf()
       plt.imshow(image*rho[nztot/2,::,::], norm = LogNorm(), origin='lower', 
-        vmin=1e-18, vmax=2e-16, cmap = 'viridis' )
+        vmin=1e-20, vmax=1e-16, cmap = 'viridis' )
       plt.colorbar()
       plt.savefig("PNG/image-%04d.png"%frame,dpi=100, bbox_inches='tight' )
 
@@ -101,7 +101,7 @@ for nout in range(0,101):
 
     plt.figure(4) ; plt.clf()
     plt.imshow(rho[nztot/2,::,::], norm = LogNorm(), origin='lower', cmap = 'viridis'
-     ,vmin=1e-18, vmax=2e-16 )
+     ,vmin=1e-20, vmax=1e-16 )
     plt.colorbar()
     plt.title(r'Density')
 

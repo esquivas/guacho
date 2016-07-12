@@ -89,26 +89,37 @@ subroutine initial_conditions(u)
         u(2,i,j,k) = dens*velx
         u(3,i,j,k) = dens*vely
         u(4,i,j,k) = dens*velz
+
         if (pmhd .or. mhd) then
+#ifdef BFIELD
           cpi = bsw*(RSW/rads)**3/(2.*rads**2)
           u(6,i,j,k) = 3.*y*x*cpi
           u(7,i,j,k) = (3.*y**2-rads**2)*cpi
           u(8,i,j,k) = 3.*y*z*cpi
+#endif
         end if
         if (mhd) then
+#ifdef BFIELD
           ! total energy
           u(5,i,j,k)=0.5*dens*vsw**2         &
-               + cv*dens*1.9999*Tsw       & 
-               + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+                + cv * dens * 1.9999 * Tsw         &
+                + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+               ! + cv*dens*1.9999*Tsw  &
+#endif
         else
-                ! total energy
+          ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-               + cv*dens*1.9999*Tsw
+                + cv * dens* Tsw
+                !+ cv*dens*1.9999*Tsw
         end if
+
         if (passives) then
+#ifdef PASSIVES
           !  density of neutrals
           u(neqdyn+1,i,j,k)= 0.0001*dens
+#endif
         end if
+
       end do
     end do
   end do
@@ -165,26 +176,24 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   real :: xc,yc,zc, GM, rad
-  integer :: l
-
+ 
   GM=Ggrav*MassS/rsc/vsc2
 
-
   !   get cell position
-  xc=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  yc=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-  zc=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+  xc=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+  yc=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+  zc=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
   ! calculate distance from the sources
-  rad = xc**2 +yc**2 + zc**2
+  rad = xc**2+yc**2+zc**2
   ! update source terms with gravity
-    ! momenta
-    s(2)= s(2)-pp(1)*GM*xc/(rad**1.5)
-    s(3)= s(3)-pp(1)*GM*yc/(rad**1.5)
-    s(4)= s(4)-pp(1)*GM*zc/(rad**1.5)
-    ! energy
-    s(5)= s(5)-pp(1)*GM*( pp(2)*xc +pp(3)*yc +pp(4)*zc )  &
-           /(rad**1.5 )
+  ! momenta
+  s(2)= s(2)-pp(1)*GM*xc/(rad**1.5)
+  s(3)= s(3)-pp(1)*GM*yc/(rad**1.5)
+  s(4)= s(4)-pp(1)*GM*zc/(rad**1.5)
+  ! energy
+  s(5)= s(5)-pp(1)*GM*( pp(2)*xc +pp(3)*yc +pp(4)*zc )  &
+         /(rad**1.5 )
 
 end subroutine get_user_source_terms
 
