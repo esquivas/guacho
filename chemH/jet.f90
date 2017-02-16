@@ -4,7 +4,7 @@
 !> @author A. Esquivel
 !> @date 24/Nov/2014
 
-! Copyright (c) 2014 A. Esquivel et al.
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -17,6 +17,7 @@
 ! but WITHOUT ANY WARRANTY; without even the implied warranty of
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ! GNU General Public License for more details.
+!
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
@@ -45,7 +46,7 @@ contains
 
   subroutine init_jet()
 
-    use constants, only : au, pi
+    use constants, only : au, pi, yr
     implicit none
     
     Rj    = 400.*au/rsc   !  jet radius
@@ -60,10 +61,10 @@ contains
     alpha =6.*pi/180.
     omegaP=2.*pi/(2142.*yr/tsc)
 
-    denj  = 3.e3                      !  density
-    Tempj = 100.                      !  jet temperature
+    denj  = 300.                      !  density
+    Tempj = 1000./Tempsc              !  jet temperature
     vj0   = 200.e5/vsc                !  mean velocity
-    dVj   = (200./3.)*1e5/vsc         !  amplitude of variability
+    dvj   = (200./3.)*1e5/vsc         !  amplitude of variability
     tau   = 535.*yr/tsc               !  period of variability
     omega = 2.*pi/tau                 !  initial position
     
@@ -92,56 +93,58 @@ contains
 
     omegat = omega*time   ! for jet variability
 
-    do i=nxmin,nxmax
-       do j=nymin,nymax
-          do k=nzmin,nzmax
-           
-           !   measured from the corner of the computational mesh
-           x=(float(i+coords(0)*nx) - 0.5)*dx
-           y=(float(j+coords(1)*ny) - 0.5)*dy
-           z=(float(k+coords(2)*nz) - 0.5)*dz
+    do k=nzmin,nzmax
+      do j=nymin,nymax
+        do i=nxmin,nxmax
 
-           xp=x-posj(1)
-           yp=y-posj(2)
-           zp=z-posj(3)
+          !   measured from the corner of the computational mesh
+          x=(float(i+coords(0)*nx) - 0.5)*dx
+          y=(float(j+coords(1)*ny) - 0.5)*dy
+          z=(float(k+coords(2)*nz) - 0.5)*dz
 
-           rx= xp*coso      - yp*sino
-           ry= xp*cosa*sino + yp*cosa*coso - zp*sina
-           rz= xp*sina*sino + yp*sina*coso + zp*cosa
-           
-           rad=sqrt(rx**2+ry**2)          
+          xp=x-posj(1)
+          yp=y-posj(2)
+          zp=z-posj(3)
 
-           !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
+          rx= xp*coso      - yp*sino
+          ry= xp*cosa*sino + yp*cosa*coso - zp*sina
+          rz= xp*sina*sino + yp*sina*coso + zp*cosa
 
-           if( (abs(rz) <= Lj).and.(rad <= Rj) ) then
+          rad=sqrt(rx**2+ry**2)
 
-              !  inside the jet source
-              vjet= vj0 + dvj*sin(omegat)
-              !vjet=sign(vjet,rz)
-              !
-              !   total density and momenta
-              u(1,i,j,k) = denj
-              u(2,i,j,k) = denj*vjet*sina*coso
-              u(3,i,j,k) = denj*vjet*sina*sino
-              u(4,i,j,k) = denj*vjet*cosa
-              !   energy
-              u(5,i,j,k)=0.5*denj*vjet**2+cv*denj*0.9501*Tempj/Tempsc
+          !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
 
+          if( (abs(rz) <= Lj).and.(rad <= Rj) ) then
+
+            !  inside the jet source
+            vjet= vj0 + dvj*sin(omegat)
+            !vjet=sign(vjet,rz)
+            !
+            !   total density and momenta
+            u(1,i,j,k) = denj
+            u(2,i,j,k) = denj*vjet*sina*coso
+            u(3,i,j,k) = denj*vjet*sina*sino
+            u(4,i,j,k) = denj*vjet*cosa
+            !   energy
+            u(5,i,j,k)=0.5*denj*vjet**2 + cv*denj*0.9951*Tempj
 #ifdef PASSIVES
-              !  passive scalars needed for the chemistry network
-              u( 6,i,j,k) = 0.9989 * u(1,i,j,k)
-              u( 7,i,j,k) = 0.0001 * u(1,i,j,k)
-              u( 8,i,j,k) = 0.001/2. * u(1,i,j,k)
-              u( 9,i,j,k) = 0.0001 * u(1,i,j,k)
-              u(10,i,j,k) = + u(1,i,j,k)
+            !  passive scalars needed for the chemistry network
+            !  this is a neutral jet (99% H0)
+            u( 6,i,j,k) = 0.9899   * denj
+            u( 7,i,j,k) = 0.0001   * denj
+            u( 8,i,j,k) = 0.01/2.  * denj
+            u( 9,i,j,k) = 0.0001   * denj
+            u(10,i,j,k) = + u(1,i,j,k)
 #endif
 
-           endif
+          endif
              
-          end do
-       end do
+        end do
+      end do
     end do
 
   end subroutine impose_jet
+
   !--------------------------------------------------------------------
+
 end module jet
