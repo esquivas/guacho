@@ -134,9 +134,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=256      !< Total grid size in X
-  integer, parameter :: nytot=256      !< Total grid size in Y
-  integer, parameter :: nztot=256      !< Total grid size in Z
+  integer, parameter :: nxtot=128      !< Total grid size in X
+  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nztot=128      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -156,7 +156,7 @@ module parameters
   !  For the equation of state
   real, parameter :: cv=100.           !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
-  real, parameter :: mu = 1.          !< mean atomic mass
+  real, parameter :: mu = 0.5          !< mean atomic mass (only H fully ionized)
   
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=1.e4                !<  reference temperature (for cs)
