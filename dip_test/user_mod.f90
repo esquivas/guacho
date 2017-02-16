@@ -83,8 +83,10 @@ subroutine initial_conditions(u)
         VelX=VSW*X/RADS
         VelY=VSW*Y/RADS
         VelZ=VSW*Z/RADS
-        DENS=0.01*DSW*RSW**2/RADS**2
-        !   total density and momena
+
+        !DENS=0.01*DSW*RSW**2/RADS**2
+        DENS=DSW*RSW**2/RADS**2
+        !   total density and momenta
         u(1,i,j,k) = dens
         u(2,i,j,k) = dens*velx
         u(3,i,j,k) = dens*vely
