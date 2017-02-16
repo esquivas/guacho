@@ -59,7 +59,8 @@ subroutine init_wind()
   !  Stellar wind, imposed at the 1.5x  sonic point (cm)
   RSW   = rsun   !*************
   VSW   = 10.e5       !*************      ! Stellar wind velocity (cm/s)
-  dsw   = 1.544e-16!((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
+  !dsw   = 1.544e-16
+  dsw   = (AMDOT/RSW)/(4*pi*RSW*VSW)   ! Stellar density @RS (g cm^-3)
   bsw   = 1.0                            ! Stellar magnetic field (g)
 
   ! change to code units
@@ -95,6 +96,11 @@ subroutine impose_wind(u,time)
 #endif
   integer ::  i,j,k
 
+  if (time < 0.) then 
+    print*, 'We have a problem here'
+    stop
+  end if
+  
   do i=nxmin,nxmax
     do j=nymin,nymax
       do k=nzmin,nzmax
