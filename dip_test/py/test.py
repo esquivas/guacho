@@ -19,7 +19,7 @@ video   = False
 
 MHD = True
 
-for nout in range(38,39):
+for nout in range(25,26):
 
   if firstRead :
     rhosc = get_scalings(nout=0, path=path, verbose=True )[2]
@@ -187,6 +187,14 @@ for nout in range(38,39):
     plt.title(r'Magnetic Field')
     plt.colorbar(label=(r'') )
     
+
+    plt.figure(9) ; plt.clf()
+    plt.imshow(magv[::,::,nxtot/2].T, origin='lower', cmap = 'magma',
+      extent= [ extent_axis[0][0],extent_axis[0][1],extent_axis[1][0],extent_axis[1][1] ] )
+    plt.xlabel(r'$Z~[\mathrm{R_\odot}]$')
+    plt.ylabel(r'$Y~[\mathrm{R_\odot}]$')
+    plt.title(r'Magnitude of the velocity')
+    plt.colorbar(label=(r'[$\mathrm{km~s^{-1}}$]') )
 
 
     print('minmax v:') ; minmax(magv)
