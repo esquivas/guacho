@@ -48,7 +48,7 @@ contains
   use globals, only: u, up
   implicit none
   integer :: i, j, k
-  
+
   do k=1,nz
      do j=1,ny
         do i=1,nx
@@ -59,14 +59,14 @@ contains
         end do
      end do
   end do
-  
+
 end subroutine viscosity
 
 !=======================================================================
 
 !> @brief Upwind timestep
 !> @details Performs the upwind timestep according to
-!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} 
+!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x}
 !!\left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] @f]
 !! (in 3D), it takes @f$ U^{n+1} @f$=up from the global variables
 !! and @f$ U^{n} @f$=u
@@ -97,7 +97,7 @@ subroutine step(dt)
   do k=1,nz
     do j=1,ny
       do i=1,nx
-        
+
         if (.not.enable_field_cd) then
           !  upwind step for all variables
           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
@@ -145,8 +145,8 @@ subroutine tstep()
   use thermal_cond
   implicit none
   real :: dtm
-   
-  !  1st half timestep ========================   
+
+  !  1st half timestep ========================
   dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
@@ -162,10 +162,10 @@ subroutine tstep()
 
   !   upwind timestep
   call step(dtm)
-  
+
   !   add viscosity
   !call viscosity()
-  
+
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
   call boundaryII()
@@ -187,23 +187,23 @@ subroutine tstep()
 
   !  add viscosity
   call viscosity()
-  
+
   !  copy the up's on the u's
   u=up
 
-  ! update the chemistry network
-  ! at this point is in cgs
-  !  the primitives in the physical cell are upated
-  if (eq_of_state == EOS_CHEM) call update_chem()
-
   !  Do the Radiation transfer (Monte Carlo type)
   if (dif_rad) call diffuse_rad()
+
+  ! update the chemistry network
+  ! at this point is in cgs
+  !  the primitives in the physical domain are upated
+  if (eq_of_state == EOS_CHEM) call update_chem()
 
   !-------------------------
   !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
-  if (cooling == COOL_H) then 
+  if (cooling == COOL_H) then
     call coolingh()
     !  update the primitives with u
     call calcprim(u, primit)
@@ -211,7 +211,7 @@ subroutine tstep()
 
   ! DMC cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_DMC) call coolingdmc()
-  
+
   ! Chianti cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_CHI) call coolingchi()
 
