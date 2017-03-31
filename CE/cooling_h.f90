@@ -338,8 +338,6 @@ end if
    y1=min(y1,0.9999)
    y1=max(y1,0.)
 
-
-
    !    find the new total energy using the cooling and heating rates
    !    and assuming that the cooling goes approximately linear with
    !    temperature
