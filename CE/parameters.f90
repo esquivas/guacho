@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_CHEM
+  integer, parameter :: eq_of_state = EOS_H_RATE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
