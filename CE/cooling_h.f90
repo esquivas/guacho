@@ -42,7 +42,7 @@ contains
 subroutine coolingh()
 
   use parameters, only : neq, nx, ny, nz, tsc
-  use globals, only : u, coords, df_CFL
+  use globals, only : u, coords, dt_CFL
   use difrad, only  : phCold, phHot
 
   implicit none
