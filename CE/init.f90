@@ -374,7 +374,7 @@ subroutine initmain(tprint, itprint)
   print'(a)', '----- OTHER STUFF -----------'
   if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
   print'(a)', ''
-  if (beta_pressure) print'(a)' 'Radiation pressure (Bourrier) enabled'
+  if (beta_pressure) print'(a)', 'Radiation pressure (Bourrier) enabled'
   print'(a)', ''
   if (th_cond == TC_ISOTROPIC) then
     print'(a)', 'Thermal conduction enabled (isotropic)'
