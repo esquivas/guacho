@@ -253,7 +253,7 @@ END FUNCTION ALOSS
 subroutine atomic(dt,uu,tau,radphi1, radphi2)
 
   use parameters
-  use globals, only : dx, active
+  use globals, only : dx
   use hydro_core, only : u2prim
   implicit none
 
