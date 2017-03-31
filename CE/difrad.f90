@@ -479,7 +479,7 @@ subroutine radbounds()
 
   !   loop over MPI blocks to ensure the rays are followed to the
   !   entire domain
-  do ip=1,int( sqrt(float(mpicol)**2+float(mpirow)**2+float(mpirowz)**2) )
+  do ip=1,int( sqrt(float(MPI_NBX)**2+float(MPI_NBY)**2+float(MPI_NBZ)**2) )
 
    !print'(a,2i3, 6i7)','**',rank,np,buffersize
    call mpi_allgather(buffersize(:)   , 6, mpi_integer, &
