@@ -146,7 +146,7 @@ module parameters
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=6     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
   !> total number of MPI processes
