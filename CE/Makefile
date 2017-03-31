@@ -67,11 +67,11 @@ globals.o
 
 OBJECTS_MAIN=\
 user_mod.o \
-difrad.o \
 network.o \
 field_cd_module.o \
 hydro_core.o \
 linear_system.o \
+difrad.o \
 chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
