@@ -41,10 +41,10 @@
   integer, parameter :: n_nequ = n_spec - nequil 
 
   ! indexes of the different species
-  integer, parameter :: H  = 1
-  integer, parameter :: HP = 2
-  integer, parameter :: H2 = 3
-  integer, parameter :: ie = 4
+  integer, parameter :: H  = 1   ! H0
+  integer, parameter :: HP = 2   ! H+
+  integer, parameter :: H2 = 3   ! H_2
+  integer, parameter :: ie = 4   ! n_e
   !   Integer, parameter :: iM  = n_spec+1
 
   ! indexes of the equilibrium species
