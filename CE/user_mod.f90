@@ -54,13 +54,12 @@ end subroutine init_user_mod
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
-subroutine initial_conditions(u,time)
+subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
   use globals, only : coords, dx, dy, dz, rank
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, intent(in) :: time
   integer :: i,j,k
   real :: x,y,z, rads, velx, vely, velz, dens
 
@@ -118,15 +117,29 @@ end subroutine initial_conditions
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
+!> @param integer [in] order : order (mum of cells to be filled in case
+!> domain boundaries are being set, valid values are 1 or 2)
 
-subroutine impose_user_bc(u,time)
+subroutine impose_user_bc(u,order)
 
-  use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+                         bc_user, tsc
+  use globals   , only : time
   implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, intent(in)  :: time
+  real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  integer, intent(in) :: order
+  real    :: time_sec
 
-  call impose_exo(u,time)
+  time_sec = time*tsc
+
+  if (bc_user) then
+    if (order == 1) then
+      call impose_exo(u,time)
+    else if (order == 2) then
+      call impose_exo(u,time)
+    end if
+  end if
+
 end subroutine impose_user_bc
 
 !=======================================================================
