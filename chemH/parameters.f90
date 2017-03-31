@@ -62,8 +62,8 @@ module parameters
   !> Equation of state used to compute T and P
   !> EOS_ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
-  !> H_RATE            : Using n_HI and n_HII
-  !> CHEM              : Enables a full chemical network
+  !> EOS_H_RATE        : Using n_HI and n_HII
+  !> EOS_CHEM          : Enables a full chemical network
   logical, parameter :: eq_of_state = EOS_CHEM
 
   !> Type of cooling (choose only one)
@@ -78,10 +78,10 @@ module parameters
   !> Boundary conditions
   !> BC_OUTFLOW   :  Outflow boundary conditions (free flow)
   !> BC_CLOSED    :  Closed BCs, (aka reflective)
-  !> BC_ PERIODIC : Periodic BCs
+  !> BC_PERIODIC  : Periodic BCs
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
-  !! are set
+  !! are set  in user_mod
   integer, parameter :: bc_left   = BC_OUTFLOW
   integer, parameter :: bc_right  = BC_OUTFLOW
   integer, parameter :: bc_bottom = BC_OUTFLOW
