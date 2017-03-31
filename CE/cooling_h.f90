@@ -41,7 +41,7 @@ contains
 
 subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz
+  use parameters, only : neq, nx, ny, nz, tsc
   use globals, only : u, coords, df_CFL
   use difrad, only  : phCold, phHot
 
@@ -55,7 +55,7 @@ subroutine coolingh()
     do j=1,ny
       do k=1,nz
 
-        call atomic(dt,u(:,i,j,k),1.,phCold(i,j,k), phHot(i,j,k))
+        call atomic(dt_seconds,u(:,i,j,k),1.,phCold(i,j,k), phHot(i,j,k))
 
       end do
     end do
