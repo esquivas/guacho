@@ -146,6 +146,7 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin)
   ! Adds the Rad Pressure according to the Beta profile of Bourrier
   use constants,  only : Ggrav, Msun
   use parameters
+  use globals, only : coords, dx, dy, dz
   use exoplanet
   use radpress
   implicit none
@@ -155,17 +156,23 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  real :: v, fracv, frac_neutro, a, b, c
+  real :: v, fracv, frac_neutro, a, b, c, xc, yc, zc
 
   if (present(iin)) i=iin
   if (present(jin)) j=jin
   if (present(kin)) k=kin
+
+  !  get position from the grid
+  x(1)=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+  y(1)=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+  z(1)=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
   !calculate distance from the sources
   ! star
   x(1)=xc
   y(1)=yc
   z(1)=zc
+
   rad2(1) = x(1)**2 +y(1)**2 + z(1)**2
   ! planet
   x(2)=xc-xp
