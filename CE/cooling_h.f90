@@ -43,7 +43,7 @@ subroutine coolingh()
 
   use parameters, only : neq, nx, ny, nz, tsc, charge_exchange
   use globals, only : u, coords, dt_CFL
-  use difrad, only  : phCold, phHot
+  use difrad, only  : phCold, phHot, ph
 
   implicit none
   real :: dt_seconds
