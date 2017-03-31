@@ -57,7 +57,7 @@ subroutine coolingh()
         if (charge_exchange) then
           call atomic(dt_seconds,u(:,i,j,k),1.,phCold(i,j,k), phHot(i,j,k))
         else
-          call atomic(dt,u(:,i,j,k),1.,ph(i,j,k), 1.)
+          call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k), 1.)
         end if
       end do
     end do
