@@ -34,12 +34,9 @@ module difrad
   implicit none
   real, parameter    :: a0=6.3e-18    !< Fotoionization cross section
   integer, parameter :: nrays=1000000 !< Number of rays
-#ifdef CEXCHANGE
- real, allocatable  :: phCold(:,:,:)     !< Photoionizing rate
- real, allocatable  :: phHot(:,:,:)     !< Photoionizing rate
-#else
+  real, allocatable  :: phCold(:,:,:)     !< Photoionizing rate
+  real, allocatable  :: phHot(:,:,:)     !< Photoionizing rate
   real, allocatable  :: ph(:,:,:)     !< Photoionizing rate
-#endif
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
   real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI
@@ -64,12 +61,12 @@ subroutine init_rand()
   character (len=10) :: system_time
   real :: rtime
 
-#ifdef CEXCHANGE
+if (charge_exchange) then
   allocate( phCold(nx,ny,nz) )
   allocate( phHot(nx,ny,nz) )
-#else
+else
   allocate( ph(nx,ny,nz) )
-#endif
+end if
   allocate( em(nx,ny,nz) )
 
   !allocate buffers for transmission of photons
@@ -691,12 +688,12 @@ subroutine diffuse_rad()
 
   !nmax = nxtot*nytot*nztot/10000/np
   !resets the photoionization rate
-#ifdef CEXCHANGE
- phCold(:,:,:)=0.
- phHot(:,:,:)=0.
-#else
- ph (:,:,:)=0.
-#endif
+  if (charge_exchange) then
+    phCold(:,:,:)=0.
+    phHot(:,:,:)=0.
+  else
+    ph (:,:,:)=0.
+  end if
   em (:,:,:)=0.
   buffersize(:)=0
 
@@ -759,13 +756,14 @@ subroutine diffuse_rad()
   ! trace photons across boundaries)
   call radbounds()
 
-#ifdef CEXCHANGE
-  phCold(:,:,:)=phCold(:,:,:)/float(nmax)
-  phHot(:,:,:)=phHot(:,:,:)/float(nmax)
-#else
-  em = ph
-  ph(:,:,:)=ph(:,:,:)/float(nmax)
-#endif
+  if (charge_exchange) then
+    phCold(:,:,:)=phCold(:,:,:)/float(nmax)
+    phHot(:,:,:)=phHot(:,:,:)/float(nmax)
+  else
+    em = ph
+    ph(:,:,:)=ph(:,:,:)/float(nmax)
+  end if
+  
   return
 end subroutine diffuse_rad
 
