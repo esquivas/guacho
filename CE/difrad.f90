@@ -25,8 +25,6 @@
 !> @brief Ray tracing Radiative Trasnport
 !> @details Ray tracing Radiative Trasnport
 
-#ifdef RADDIFF
-
 module difrad
 
   use parameters
@@ -763,14 +761,10 @@ subroutine diffuse_rad()
     em = ph
     ph(:,:,:)=ph(:,:,:)/float(nmax)
   end if
-  
+
   return
 end subroutine diffuse_rad
 
 !=======================================================================
 
 end module difrad
-
-!=======================================================================
-
-#endif
