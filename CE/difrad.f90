@@ -42,20 +42,20 @@ module difrad
 #endif
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
-  real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI 
-  real, allocatable  :: photR(:,:,:)  !< Auxiliary buffer for MPI 
-  real, allocatable  :: photB(:,:,:)  !< Auxiliary buffer for MPI 
-  real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI 
-  real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI 
-  real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI 
-  integer            :: buffersize(6)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI
+  real, allocatable  :: photR(:,:,:)  !< Auxiliary buffer for MPI
+  real, allocatable  :: photB(:,:,:)  !< Auxiliary buffer for MPI
+  real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI
+  real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI
+  real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI
+  integer            :: buffersize(6)  !< Auxiliary buffer for MPI
 
 contains
 
 !=======================================================================
 
-!> @brief initializes random number generation 
-!> @details initializes random number generation 
+!> @brief initializes random number generation
+!> @details initializes random number generation
 
 subroutine init_rand()
   implicit none
@@ -92,7 +92,7 @@ subroutine init_rand()
 #ifdef MPIP
   rand_seed=rand_seed*rank
 #endif
-  call random_seed(put=rand_seed)    
+  call random_seed(put=rand_seed)
   deallocate(rand_seed)
 
 end subroutine init_rand
@@ -105,14 +105,14 @@ end subroutine init_rand
 !> @param real [out] emax : maximum emissivity in the entire grid
 
 subroutine emdiff(emax)
-  
+
   use hydro_core, only : u2prim
   implicit none
   real, intent(out) :: emax
   real :: prim(neq)
   real :: T, emaxp, de, emLym, emHeII
   integer :: i ,j , k, err
-  ! 
+  !
  !real :: x,y,z,rad,rstar,vol,emstar
   !
   !   clear  variables
@@ -120,7 +120,7 @@ subroutine emdiff(emax)
 
   do i=1,nx
      do j=1,ny
-        do k=1,nz       
+        do k=1,nz
            call u2prim(u(:,i,j,k), prim, T)
            !  electron density
            de=max(u(1,i,j,k)-u(neqdyn+1,i,j,k),0.)
@@ -247,8 +247,8 @@ end subroutine starsource
 !=======================================================================
 
 !> @brief Photon trajectories
-!> @details Launches a photon from cell (xc,yc,zc) in the (xd,yd,zd) 
-!! direction, with f and ionizing photons, and updates the 
+!> @details Launches a photon from cell (xc,yc,zc) in the (xd,yd,zd)
+!! direction, with f and ionizing photons, and updates the
 !! photoionizing rate
 !> @param real [in] xl0 : Initial X position
 !> @param real [in] yl0 : Initial Y position
@@ -267,7 +267,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   real :: xa, xb, ya, yb, za, zb
   real :: dl, dxl, dyl, dzl, xl, yl, zl, dtau
   real :: fmin
-  integer :: i, j ,k 
+  integer :: i, j ,k
   !
   xa=1.
   xb=float(nx+1)
@@ -290,8 +290,8 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
 
   i=int(xl+0.5)
   j=int(yl+0.5)
-  k=int(zl+0.5)  
-  
+  k=int(zl+0.5)
+
   if (i < 1) then
     buffersize(1)=buffersize(1)+1
     photL(1,1, buffersize(1))= xl0+float(nx)
@@ -367,34 +367,24 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
       .and. (j <= ny).and.(j >= 1) &
       .and. (k <= nz).and.(k >= 1) &
       )
-#ifdef CEXCHANGE
-     if (dtau < 1E-5) then
-        dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
-        phCold(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
-        phHot(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3                                                                              
-        f=(1.-dtau)*f
-     else
-        !stellar attenuation
-        dtau = u(neqdyn+5,i,j,k)*a0*dl*dx*rsc
-        phHot(i,j,k) = phHot(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+5,i,j,k)*(dx*rsc)**3)
-        f=f*exp(-dtau)
-        !planetary attenuation
-        dtau = u(neqdyn+3,i,j,k)*a0*dl*dx*rsc
-        phCold(i,j,k) = phCold(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+3,i,j,k)*(dx*rsc)**3)
-        f=f*exp(-dtau)
-        
-     end if
 
-#else
-     dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
-     if (dtau < 1E-5) then
-        ph(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
-        f=(1.-dtau)*f
-     else
-        ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+1,i,j,k)*(dx*rsc)**3) !< We add(-) the absorption to obtain the new number of photons. (Nnew = N - absorption)
-        f=f*exp(-dtau)
-     end if
-#endif
+    dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
+    if (dtau < 1E-5) then
+      phCold(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+      phHot (i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+      f=(1.-dtau)*f
+    else
+      !stellar attenuation
+      dtau = u(neqdyn+3,i,j,k)*a0*dl*dx*rsc
+      phHot(i,j,k) = phHot(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+3,i,j,k)*(dx*rsc)**3)
+      f=f*exp(-dtau)
+      !planetary attenuation
+      dtau = u(neqdyn+5,i,j,k)*a0*dl*dx*rsc
+      phCold(i,j,k) = phCold(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+5,i,j,k)*(dx*rsc)**3)
+      f=f*exp(-dtau)
+    end if
+    !  notice I changed the order of the passive scalars from
+    !  what Leo had originally
 
      xl=xl+dxl
      yl=yl+dyl
@@ -481,8 +471,8 @@ end subroutine photons
 
 !=======================================================================
 
-!> @brief follows the rays across MPI boundaries    
-!> @details follows the rays across MPI boundaries    
+!> @brief follows the rays across MPI boundaries
+!> @details follows the rays across MPI boundaries
 
 subroutine radbounds()
 #ifdef MPIP
@@ -492,14 +482,14 @@ subroutine radbounds()
   integer,  parameter :: length=np*6
   integer:: status(MPI_STATUS_SIZE), err
 
-  !   loop over MPI blocks to ensure the rays are followed to the 
+  !   loop over MPI blocks to ensure the rays are followed to the
   !   entire domain
   do ip=1,int( sqrt(float(mpicol)**2+float(mpirow)**2+float(mpirowz)**2) )
 
    !print'(a,2i3, 6i7)','**',rank,np,buffersize
    call mpi_allgather(buffersize(:)   , 6, mpi_integer, &
         Allbuffersize(:), 6, mpi_integer, comm3d ,err)
-  
+
    ! to the left
    if (left /= -1) then
       sizeSend=Allbuffersize(6*rank+1)
@@ -652,7 +642,7 @@ subroutine radbounds()
            photI(2,4,niter),photI(2,5,niter),photI(2,6,niter),photI(2,7,niter) )
     end do
   end if
-  
+
   allBuffersize(:)=0
 
   end do
@@ -687,11 +677,11 @@ end subroutine progress
 !=======================================================================
 
 !> @brief  Diffuse radiation driver
-!> @details Upper level wrapper to compute the diffuse photoionization 
+!> @details Upper level wrapper to compute the diffuse photoionization
 !!rate
 
 subroutine diffuse_rad()
-  
+
   use constants, only : Rsun
   implicit none
   real :: f, dirx,diry,dirz
@@ -754,7 +744,7 @@ subroutine diffuse_rad()
                      float(j-coords(1)*ny)+0.5, &
                      float(k-coords(2)*nz)+0.5, &
                      dirx,diry,dirz,f)
-        !call progress(niter,nrays)      
+        !call progress(niter,nrays)
      end if
      !
   end do
