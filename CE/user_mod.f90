@@ -1,10 +1,10 @@
 !=======================================================================
 !> @file user_mod.f90
 !> @brief User input module
-!> @author Alejandro Esquivel
-!> @date 2/Nov/2014
+!> @author C. Villarreal, M. Schneiter, A. Esquivel
+!> @date 4/May/2016
 
-! Copyright (c) 2014 A. Esquivel, M. Schneiter, C. Villareal D'Angelo
+! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -30,18 +30,19 @@
 
 module user_mod
 
-  use exoplanet
   ! load auxiliary modules
-  implicit none
+  use exoplanet
 
+  implicit none
+ 
 contains
 
 !> @brief Initializes variables in the module, as well as other
 !! modules loaded by user.
-!! @n It has to be present, even if empty
+!! @n It has to be present, even if empty 
 subroutine init_user_mod()
 
-  implicit none
+  implicit none      
   !  initialize modules loaded by user
   call init_exo()
 
@@ -50,21 +51,23 @@ end subroutine init_user_mod
 !=====================================================================
 
 !> @brief Here the domain is initialized at t=0
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
 subroutine initial_conditions(u)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals, only : coords, dx, dy, dz, rank
+  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+                         pmhd, mhd, passives
+  use globals,    only: coords, dx ,dy ,dz
+
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  integer :: i,j,k
-  real :: x,y,z, rads, velx, vely, velz, dens
 
-  ! We impose first the stellar wind, on the entire domain, and later
-  ! we will include the exoplanet
+  integer :: i,j,k
+  real :: x,y,z, rads, velx, vely, velz, dens,cpi
+  !  the star wind does not cover the entire domain, we fill here 
+  !  as if the exoplanet is absent
   do i=nxmin,nxmax
     do j=nymin,nymax
       do k=nzmin,nzmax
@@ -86,23 +89,28 @@ subroutine initial_conditions(u)
         u(2,i,j,k) = dens*velx
         u(3,i,j,k) = dens*vely
         u(4,i,j,k) = dens*velz
-        ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                    + cv*dens*1.9999*Tsw
-        !   Here the number density of the wind and planet
-        !   components separately
-        u(neqdyn+2,i,j,k) = 0.9999*dens     ! xhi*rho S ion
-        u(neqdyn+3,i,j,k) =  1.E-4*dens     ! xhn*rho S neutro
-        u(neqdyn+4,i,j,k) = 1.E-25*dens     ! xci*rho P ion
-        u(neqdyn+5,i,j,k) = 1.E-25*dens     ! xcn*rho P neutro
-        ! ne
-        u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
-        !density of neutrals
-        u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-
-        !   passive scalar (tag) for stellar material
-        u(neqdyn+7,i,j,k)= 1000*dens
-
+        if (pmhd .or. mhd) then
+          cpi = bsw*(RSW/rads)**3/(2.*rads**2)
+          u(6,i,j,k) = 3.*y*x*cpi
+          u(7,i,j,k) = (3.*y**2-rads**2)*cpi
+          u(8,i,j,k) = 3.*y*z*cpi
+        end if
+        if (mhd) then
+          ! total energy
+          u(5,i,j,k)=0.5*dens*vsw**2         &
+               + cv*dens*Tsw       & 
+               + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+        else
+                ! total energy
+          u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+               + cv*dens*1.9999*Tsw
+        end if
+        if (passives) then
+          !  density of neutrals
+          u(neqdyn+1,i,j,k)= 0.0001*dens
+          !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+          u(neqdyn+2,i,j,k)= dens   ! passive scalar
+        end if
       end do
     end do
   end do
@@ -110,36 +118,29 @@ subroutine initial_conditions(u)
   call impose_exo(u,0.)
 
 end subroutine initial_conditions
-
+  
 !=====================================================================
 
 !> @brief User Defined Boundary conditions
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 !> @param integer [in] order : order (mum of cells to be filled in case
-!> domain boundaries are being set, valid values are 1 or 2)
+!> domain boundaries are being set)
 
 subroutine impose_user_bc(u,order)
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         bc_user, tsc
-  use globals   , only : time
+  use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+  use globals,    only: time
   implicit none
-  real :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   integer, intent(in) :: order
-  real    :: time_sec
 
-  time_sec = time*tsc
-
-  if (bc_user) then
-    if (order == 1) then
-      call impose_exo(u,time)
-    else if (order == 2) then
-      call impose_exo(u,time)
-    end if
+  !  In this case the boundary is the same for 1st and second order)
+  if (order >= 1) then 
+    call impose_exo(u,time)
   end if
-
+ 
 end subroutine impose_user_bc
 
 !=======================================================================
@@ -150,42 +151,40 @@ end subroutine impose_user_bc
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [inout] s(neq) : vector with source terms, has to add to
 !>  whatever is there, as other modules can add their own sources
-!> @param integer [in] iin : cell index in the X direction
-!> @param integer [in] jin : cell index in the Y direction
-!> @param integer [in] kin : cell index in the Z direction
+!> @param integer [in] i : cell index in the X direction
+!> @param integer [in] j : cell index in the Y direction
+!> @param integer [in] k : cell index in the Z direction
 
-subroutine get_user_source_terms(pp,s, iin, jin , kin)
+subroutine get_user_source_terms(pp,s, i, j , k)
 
-  ! Adds the Rad Pressure according to the Beta profile of Bourrier
-  use constants,  only : Ggrav, Msun
-  use parameters
-  use globals, only : coords, dx, dy, dz
+  ! in this example a constant gravity is added
+  use constants,  only : Ggrav
+  use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2
+  use globals,    only : dx, dy, dz, coords
   use exoplanet
-  use radpress
   implicit none
-  integer, intent(in), optional    :: iin, jin, kin
-  integer  :: i,j,k, l, index, Nr
+  integer, intent(in) :: i,j,k
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  real :: v, fracv, frac_neutro, a, b, c, xc, yc, zc
+  integer :: l
+  real    :: xc ,yc, zc
 
-  if (present(iin)) i=iin
-  if (present(jin)) j=jin
-  if (present(kin)) k=kin
+  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
+  GM(2)=    Ggrav*MassP/rsc/vsc2
 
-  !  get position from the grid
-  x(1)=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  y(1)=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-  z(1)=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
-  !calculate distance from the sources
+  !   get cell position
+  xc=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
+  yc=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
+  zc=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+
+  ! calculate distance from the sources
   ! star
   x(1)=xc
   y(1)=yc
   z(1)=zc
-
   rad2(1) = x(1)**2 +y(1)**2 + z(1)**2
   ! planet
   x(2)=xc-xp
@@ -193,29 +192,7 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin)
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
-  GM(1)=Ggrav*MassS/rsc/vsc2
-  GM(2)=Ggrav*MassP/rsc/vsc2
-
-  if ( beta_pressure ) then
-    !compute Beta for radiation pressure
-    Nr = 800 !!vr and Br dimension
-
-    frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
-    a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
-    b = sqrt(1-a**2)                 !!sin(theta)
-    c = atan2(yc,xc)                  !!Phi
-
-    v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
-
-    fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
-    index = int(fracv)+1
-
-    Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
-    !!Linear interpolation for Beta, active allows turn on the Beta term.
-
-    GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
-  end if
-  ! update source terms
+  ! update source terms with gravity
   do l=1, nb
     ! momenta
     s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
@@ -223,10 +200,13 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin)
     s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
     ! energy
     s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
-    /(rad2(l)**1.5 )
+           /(rad2(l)**1.5 )
   end do
 
 end subroutine get_user_source_terms
+
+
+!=======================================================================
 
 end module user_mod
 
