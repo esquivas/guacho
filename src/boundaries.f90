@@ -440,8 +440,10 @@ subroutine boundaryII()
   !   left
   if (bc_left == BC_OUTFLOW) then
     if (coords(0).eq.0) then
+      j=nghost
       do i=nxmin,0
-        up(:,i,:,:)=up(:,1,:,:)
+        up(:,i,:,:)=up(:,j,:,:)
+        j=j-1
       enddo
     end if
   end if
@@ -449,8 +451,10 @@ subroutine boundaryII()
   !   right
   if (bc_right == BC_OUTFLOW) then
     if (coords(0).eq.MPI_NBX-1) then
+      j=nx
       do i=nxp,nxmax
-        up(:,i,:,:)=up(:,nx,:,:)
+        up(:,i,:,:)=up(:,j,:,:)
+        j=j-1
       enddo
     end if
   end if
@@ -458,8 +462,10 @@ subroutine boundaryII()
   !   bottom
   if (bc_bottom == BC_OUTFLOW) then
     if (coords(1).eq.0) then
+      j= nghost
       do i=nymin,0
-        up(:,:,i,:)=up(:,:,1,:)
+        up(:,:,i,:)=up(:,:,j,:)
+        j=j-1
       enddo
     end if
   end if
@@ -467,8 +473,10 @@ subroutine boundaryII()
   !   top
   if (bc_top == BC_OUTFLOW) then
     if (coords(1).eq.MPI_NBY-1) then
+      j=ny
       do i=nyp,nymax
-        up(:,:,i,:)=up(:,:,ny,:)
+        up(:,:,i,:)=up(:,:,j,:)
+        j=j-1
       enddo
     end if
   end if
@@ -476,8 +484,10 @@ subroutine boundaryII()
   !   out
   if (bc_out == BC_OUTFLOW) then
     if (coords(2).eq.0) then
+      j=nghost
       do i=nzmin,0
-        up(:,:,:,i)=up(:,:,:,1)
+        up(:,:,:,i)=up(:,:,:,j)
+        j = j-1
       enddo
     end if
   end if
@@ -485,8 +495,10 @@ subroutine boundaryII()
   !   in
   if (bc_in == BC_OUTFLOW) then
     if (coords(2).eq.MPI_NBZ-1) then
+      j=nz
       do i=nzp,nzmax
-        up(:,:,:,i)=up(:,:,:,nz)
+        up(:,:,:,i)=up(:,:,:,j)
+        j = j-1
       enddo
     end if
   end if
