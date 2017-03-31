@@ -130,6 +130,9 @@ module parameters
   !> Include radiative pressure Bourrier
   logical, parameter :: beta_pressure = .false.
 
+  !> Include charge_exchange
+  logical, parameter :: charge_exchange = .false.
+
 
 #ifdef PASSIVES
   integer, parameter :: npas=7        !< num. of passive scalars
