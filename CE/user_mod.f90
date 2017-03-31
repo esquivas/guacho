@@ -107,7 +107,7 @@ subroutine initial_conditions(u)
     end do
   end do
 
-  call impose_exo(u,0.)
+  !call impose_exo(u,0.)
 
 end subroutine initial_conditions
 
@@ -134,9 +134,9 @@ subroutine impose_user_bc(u,order)
 
   if (bc_user) then
     if (order == 1) then
-      call impose_exo(u,time)
+      !call impose_exo(u,time)
     else if (order == 2) then
-      call impose_exo(u,time)
+      !call impose_exo(u,time)
     end if
   end if
 
