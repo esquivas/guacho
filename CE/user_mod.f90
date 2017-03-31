@@ -196,24 +196,25 @@ subroutine get_user_source_terms(pp,s, iin, jin , kin)
   GM(1)=Ggrav*MassS/rsc/vsc2
   GM(2)=Ggrav*MassP/rsc/vsc2
 
-  !compute Beta for radiation pressure
-  Nr = 800 !!vr and Br dimension
+  if ( beta_pressure ) then
+    !compute Beta for radiation pressure
+    Nr = 800 !!vr and Br dimension
 
-  frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
-  a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
-  b = sqrt(1-a**2)                 !!sin(theta)
-  c = atan2(yc,xc)                  !!Phi
+    frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
+    a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
+    b = sqrt(1-a**2)                 !!sin(theta)
+    c = atan2(yc,xc)                  !!Phi
 
-  v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+    v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
 
-  fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
-  index = int(fracv)+1
+    fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
+    index = int(fracv)+1
 
-  Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
-  !!Linear interpolation for Beta, active allows turn on the Beta term.
+    Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
+    !!Linear interpolation for Beta, active allows turn on the Beta term.
 
-  GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
-
+    GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
+  end if
   ! update source terms
   do l=1, nb
     ! momenta
