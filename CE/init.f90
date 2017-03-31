@@ -438,7 +438,7 @@ subroutine initflow(itprint)
 
   if (.not.iwarm) then
 
-    call initial_conditions(u)
+    call initial_conditions(u,0.)
 
   else
 
