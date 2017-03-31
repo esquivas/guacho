@@ -138,7 +138,7 @@ end subroutine get_jacobian
 
 subroutine get_reaction_rates(rate,T,phiH,phiC)
   implicit none
-  real (kind=8), intent(in)                    :: T
+  real (kind=8), intent(in)                    :: T, phiH, phiC
   real (kind=8), dimension(n_reac),intent(out) ::rate
 
   rate(alpha) = 2.55d-13*(1.e4/T)**0.79
