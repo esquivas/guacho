@@ -60,9 +60,9 @@ subroutine getpos(i,j,k,x,y,z,r)
   integer, intent(in)  :: i, j, k
   real,    intent(out) :: x, y, z, r
 
-  x=real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  y=real(j+coords(1)*ny-nytot/2)+0.5)*dy
-  z=real(k+coords(2)*nz-nztot/2)+0.5)*dz
+  x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+  y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+  z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
   
   r  = sqrt(x**2 +y**2 +z**2 )
   
