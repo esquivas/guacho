@@ -34,7 +34,7 @@ FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 MPIP = Y
 
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
-BFIELD = Y
+BFIELD = N
 
 #   Include passive scalars (Y/N)
 PASSIVES = Y
