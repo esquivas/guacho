@@ -179,7 +179,7 @@ logical function check_no_conservation(y,y0_in)
 
   check_no_conservation = .false.
 
-  y0_calc(iHt)= y(Hhp) + y(Hh0) + y(Hcp) + y(Hc0)
+  y0_calc(Ht)= y(Hhp) + y(Hh0) + y(Hcp) + y(Hc0)
 
   do i = 1, n_elem
     if ( y0_calc(i) > 1.0001*y0_in(i) ) check_no_conservation = .true.
