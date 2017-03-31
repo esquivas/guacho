@@ -363,24 +363,35 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
       .and. (k <= nz).and.(k >= 1) &
       )
 
-    dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
-    if (dtau < 1E-5) then
-      phCold(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
-      phHot (i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
-      f=(1.-dtau)*f
-    else
-      !stellar attenuation
-      dtau = u(neqdyn+3,i,j,k)*a0*dl*dx*rsc
-      phHot(i,j,k) = phHot(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+3,i,j,k)*(dx*rsc)**3)
-      f=f*exp(-dtau)
-      !planetary attenuation
-      dtau = u(neqdyn+5,i,j,k)*a0*dl*dx*rsc
-      phCold(i,j,k) = phCold(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+5,i,j,k)*(dx*rsc)**3)
-      f=f*exp(-dtau)
-    end if
-    !  notice I changed the order of the passive scalars from
-    !  what Leo had originally
+    if ( charge_exchange ) then
 
+      dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
+      if (dtau < 1E-5) then
+        phCold(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+        phHot (i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+        f=(1.-dtau)*f
+      else
+        !stellar attenuation
+        dtau = u(neqdyn+3,i,j,k)*a0*dl*dx*rsc
+        phHot(i,j,k) = phHot(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+3,i,j,k)*(dx*rsc)**3)
+        f=f*exp(-dtau)
+        !planetary attenuation
+        dtau = u(neqdyn+5,i,j,k)*a0*dl*dx*rsc
+        phCold(i,j,k) = phCold(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+5,i,j,k)*(dx*rsc)**3)
+        f=f*exp(-dtau)
+      end if
+      !  notice I changed the order of the passive scalars from
+      !  what Leo had originally
+    else
+      dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
+      if (dtau < 1E-5) then
+         ph(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+         f=(1.-dtau)*f
+      else
+         ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+1,i,j,k)*(dx*rsc)**3) !< We add(-) the absorption to obtain the new number of photons. (Nnew = N - absorption)
+         f=f*exp(-dtau)
+      end if
+    end if
      xl=xl+dxl
      yl=yl+dyl
      zl=zl+dzl

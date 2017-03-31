@@ -41,7 +41,7 @@ contains
 
 subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz, tsc
+  use parameters, only : neq, nx, ny, nz, tsc, charge_exchange
   use globals, only : u, coords, dt_CFL
   use difrad, only  : phCold, phHot
 
@@ -54,9 +54,11 @@ subroutine coolingh()
   do i=1,nx
     do j=1,ny
       do k=1,nz
-
-        call atomic(dt_seconds,u(:,i,j,k),1.,phCold(i,j,k), phHot(i,j,k))
-
+        if (charge_exchange) then
+          call atomic(dt_seconds,u(:,i,j,k),1.,phCold(i,j,k), phHot(i,j,k))
+        else
+          call atomic(dt,u(:,i,j,k),1.,ph(i,j,k), 1.)
+        end if
       end do
     end do
   end do
