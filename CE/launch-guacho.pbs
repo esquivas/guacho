@@ -1,7 +1,7 @@
-#!/bin/bash 
-#PBS -N guacho-wind
-#PBS -e guacho-wind.err
-#PBS -o guacho-wind.out
+#!/bin/bash
+#PBS -N guacho-CE
+#PBS -e guacho-CE.err
+#PBS -o guacho-CE.out
 #PBS -r n
 
 ##PBS -m aeb
@@ -10,14 +10,14 @@
 #PBS -q default
 
 ### Switch to the job's working directory, provided by PBS in PBS_O_WORKDIR
-WORKDIR="/home/esquivel/guacho-working/dip_test/"
-#PBS_O_WORKDIR="/home/esquivel/guacho-working/dip_test/"
+WORKDIR="/home/esquivel/guacho-working/CE/"
+#PBS_O_WORKDIR="/home/esquivel/guacho-working/CE/"
 cd $WORKDIR
 
 ### EXEPATH is the directory where your executable resides
 EXEPATH=$WORKDIR
-###EXE is the name of your executable (compiled mpi program) 
-EXE="wind"
+###EXE is the name of your executable (compiled mpi program)
+EXE="Guacho"
 ### ARGS is optional. If you don't need it simply leave it empty
 ARGS=""
 ### ARGS is also optional.
