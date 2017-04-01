@@ -124,9 +124,9 @@ subroutine impose_exo(u,time)
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   real, intent (in) :: time
   real :: x, y, z, xpl, ypl, zpl
-  real :: velx, vely, velz, rads, dens, radp, phi, a
-  real :: vxorb, vzorb, vyorb, omega, deltax ! cpi
-  integer ::  i,j,k, iplanet, jplanet, kplanet
+  real :: velx, vely, velz, rads, dens, radp, phi!, a
+  real :: vxorb, vzorb, vyorb, omega!, deltax ! cpi
+  integer ::  i,j,k!, iplanet, jplanet, kplanet
   phi=-25.*pi/180.
 
   omega=2.*pi/TORB
@@ -202,7 +202,7 @@ subroutine impose_exo(u,time)
           u(2,i,j,k) = dens*velx
           u(3,i,j,k) = dens*vely
           u(4,i,j,k) = dens*velz
-          
+
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
           + cv*dens*1.5*Tpw
