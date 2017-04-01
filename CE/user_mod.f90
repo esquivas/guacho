@@ -105,7 +105,7 @@ subroutine initial_conditions(u)
         u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
         !density of neutrals
         u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-        
+
         !   passive scalar (tag) for stellar material
         u(neqdyn+7,i,j,k)= 1000*dens
 
@@ -155,22 +155,22 @@ end subroutine impose_user_bc
 
 subroutine get_user_source_terms(pp,s, i, j , k)
 
-  ! in this example a constant gravity is added
+  ! Adds the Rad Pressure according to the Beta profile of Bourrier
   use constants,  only : Ggrav
   use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2
   use globals,    only : dx, dy, dz, coords
   use exoplanet
   implicit none
-  integer, intent(in) :: i,j,k
+  integer, intent(in) :: i,j,k,l, index, Nr
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  integer :: l
   real    :: xc ,yc, zc
+  real :: v, fracv, frac_neutro, a, b, c, xc, yc, zc
 
-  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
-  GM(2)=    Ggrav*MassP/rsc/vsc2
+  GM(1)= Ggrav*MassS/rsc/vsc2
+  GM(2)= Ggrav*MassP/rsc/vsc2
 
 
   !   get cell position
@@ -189,6 +189,26 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   y(2)=yc
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
+
+  if ( beta_pressure ) then
+    !compute Beta for radiation pressure
+    Nr = 800 !!vr and Br dimension
+
+    frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
+    a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
+    b = sqrt(1-a**2)                 !!sin(theta)
+    c = atan2(yc,xc)                  !!Phi
+
+    v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+
+    fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
+    index = int(fracv)+1
+
+    Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
+    !!Linear interpolation for Beta, active allows turn on the Beta term.
+
+    GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
+  end if
 
   ! update source terms with gravity
   do l=1, nb
