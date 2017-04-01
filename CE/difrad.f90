@@ -33,6 +33,8 @@ module difrad
   real, parameter    :: a0=6.3e-18    !< Fotoionization cross section
   integer, parameter :: nrays=1000000 !< Number of rays
   real, allocatable  :: ph(:,:,:)     !< Photoionizing rate
+  real, allocatable  :: phCold(:,:,:)     !< Photoionizing rate
+  real, allocatable  :: phHot(:,:,:)     !< Photoionizing rate
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
   real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI
@@ -57,7 +59,12 @@ subroutine init_rand()
   character (len=10) :: system_time
   real :: rtime
 
-  allocate( ph(nx,ny,nz) )
+  if (charge_exchange) then
+    allocate( phCold(nx,ny,nz) )
+    allocate( phHot(nx,ny,nz) )
+  else
+    allocate( ph(nx,ny,nz) )
+  end if
   allocate( em(nx,ny,nz) )
 
   !allocate buffers for transmission of photons
@@ -349,14 +356,33 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
       .and. (k <= nz).and.(k >= 1) &
       )
 
-     dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
-     if (dtau < 1E-5) then
+    if (charge_exchange) then
+      dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
+      if (dtau < 1E-5) then
+        phCold(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+        phHot (i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
+        f=(1.-dtau)*f
+      else
+        !stellar attenuation
+        dtau = u(neqdyn+3,i,j,k)*a0*dl*dx*rsc
+        phHot(i,j,k) = phHot(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+3,i,j,k)*(dx*rsc)**3)
+        f=f*exp(-dtau)
+        !planetary attenuation
+        dtau = u(neqdyn+5,i,j,k)*a0*dl*dx*rsc
+        phCold(i,j,k) = phCold(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+5,i,j,k)*(dx*rsc)**3)
+        f=f*exp(-dtau)
+      end if
+    else
+      dtau=u(neqdyn+1,i,j,k)*a0*dl*dx*rsc
+      if (dtau < 1E-5) then
         ph(i,j,k)=f*a0*dl/((dx*rsc)**2)!*dx*rsc*/dx**3/rsc**3
         f=(1.-dtau)*f
-     else
+      else
         ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+1,i,j,k)*(dx*rsc)**3)
         f=f*exp(-dtau)
-     end if
+      end if
+    end if
+
      !dtau=u(6,i,j,k)*a0*dl*dx*rsc
      !ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )!/(u(6,i,j,k)+1e-30)
      !f=f*exp(-dtau)
@@ -662,8 +688,14 @@ subroutine diffuse_rad()
 
   !nmax = nxtot*nytot*nztot/10000/np
   !resets the photoionization rate
-  ph (:,:,:)=0.
+  if (charge_exchange) then
+    phCold(:,:,:)=0.
+    phHot(:,:,:)=0.
+  else
+    ph (:,:,:)=0.
+  end if
   em (:,:,:)=0.
+
   buffersize(:)=0
 
   !   computes the emissivity at each cell
@@ -671,14 +703,14 @@ subroutine diffuse_rad()
 
   !   fire the photon torpedoes! (nrays=1000000  moved to header)
   !   posicion de la fuente ionizante, in the entire domain
-!    xc=float(nxtot/2)*dx
-!    yc=float(nytot/2)*dy
-!    zc=float(nztot/2)*dz
+  !    xc=float(nxtot/2)*dx
+  !    yc=float(nytot/2)*dy
+  !    zc=float(nztot/2)*dz
 
   !   posicion de la fuente ionizante
-  xc=float(nxtot/2)*dx
-  yc=float(nytot/2)*dy
-  zc=float(nztot/2)*dz
+  xc = real(nxtot/2)*dx
+  yc = real(nytot/2)*dy
+  zc = real(nztot/2)*dz
 
   ! To  impose the photoionizing field of a star
   ! this is the radius of the actual star [cm]
@@ -725,8 +757,13 @@ subroutine diffuse_rad()
   ! trace photons across boundaries)
   call radbounds()
 
-  em=ph
-  ph(:,:,:)=ph(:,:,:)/float(nmax)
+  if (charge_exchange) then
+    phCold(:,:,:)=phCold(:,:,:)/float(nmax)
+    phHot(:,:,:)=phHot(:,:,:)/float(nmax)
+  else
+    em=ph
+    ph(:,:,:)=ph(:,:,:)/float(nmax)
+  end if
 
   return
 end subroutine diffuse_rad
