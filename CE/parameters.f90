@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./MB-NRP-NCE/'
+  character (len=128),parameter ::  outputpath='./MB-RP-NCE/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -128,7 +128,7 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure = .false.
+  logical, parameter :: beta_pressure = .true.
 
   !> Include charge_exchange
   logical, parameter :: charge_exchange = .false.

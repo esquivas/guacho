@@ -169,7 +169,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   integer :: l
   real    :: xc ,yc, zc
 
-  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
+  GM(1)=    Ggrav*MassS/rsc/vsc2
   GM(2)=    Ggrav*MassP/rsc/vsc2
 
 

@@ -50,7 +50,7 @@ subroutine read_table_beta()
   allocate( Beta(nx,ny,nz) )
 
   if(rank == master) then
-     open(unit=21,file=trim(workdir)//'src/CE/Beta_bourrier.dat', status='unknown')
+     open(unit=21,file=trim(workdir)//'Beta_bourrier.dat', status='unknown')
      do i=1, size(vr)
         read(21,*) a, b
         vr(i) = a
