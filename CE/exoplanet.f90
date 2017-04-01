@@ -62,7 +62,6 @@ subroutine init_exo()
   real :: ampdot ! mdot_planet (g/s)
   !----------------STAR PARAMETERS ------------------
 
-
   MassS = 1.1*msun
   AMDOT = 2.E-14*msun/yr              ! Stellar Mass Loss rate (g s^-1)
 
@@ -72,7 +71,6 @@ subroutine init_exo()
 
   vsw   = 205.e5   !*************       ! Stellar wind velocity (cm/s)
   dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
-
 
   !----------------PLANET PARAMETERS------------------
   MassP =0.67*mjup
@@ -84,10 +82,9 @@ subroutine init_exo()
   vpw   = 10.e5                       ! Planets wind velocity (cm/s)
   dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))   ! Planetary wind density
 
-
   !ORBITAL PARAMETERS
   rorb= 0.047*AU !0.47**AU
-  torb=3.52*day
+  torb= 3.52*day
 
   ! change to code units
   dsw=dsw/rhosc
@@ -139,18 +136,17 @@ subroutine impose_exo(u,time)
 
   !Orbital planetary velocity (moves in the xz-plane)
   vxorb= -omega*Rorb*sin(omega*TIME+phi)
-  vzorb= omega*Rorb*cos(omega*TIME+phi)
+  vzorb=  omega*Rorb*cos(omega*TIME+phi)
   vyorb=0.
-
 
   do i=nxmin,nxmax
     do j=nymin,nymax
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
         ! Position measured from the centre of the planet
         xpl=x-xp
@@ -171,7 +167,7 @@ subroutine impose_exo(u,time)
           VelY=VSW*Y/RADS
           VelZ=VSW*Z/RADS
           DENS=DSW*RSW**2/RADS**2
-          !   total density and momena
+          !   total density and momenta
           u(1,i,j,k) = dens
           u(2,i,j,k) = dens*velx
           u(3,i,j,k) = dens*vely
@@ -193,7 +189,7 @@ subroutine impose_exo(u,time)
           !   passive scalar (tag) for stellar material
           u(neqdyn+7,i,j,k)= 1000*dens
 
-              ! IF INSIDE THE PLANET
+          ! IF INSIDE THE PLANET
         else if(radp <= rpw) then
 
           if(radp == 0.) radp=dx*0.10
@@ -209,7 +205,7 @@ subroutine impose_exo(u,time)
           u(4,i,j,k) = dens*velz
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                   + cv*dens*1.5*Tpw
+          + cv*dens*1.5*Tpw
           !   Here the number density of the wind and planet
           !   components separately
           u(neqdyn+2,i,j,k) = 1.e-25*dens     ! xhi*rho S ion
@@ -224,11 +220,12 @@ subroutine impose_exo(u,time)
           !   passive scalar (tag) for planetary material
           u(neqdyn+7,i,j,k)= -1000*dens
 
-           end if
+        end if
 
-        end do
-     end do
+      end do
+    end do
   end do
+
 end subroutine impose_exo
 
 !=======================================================================
