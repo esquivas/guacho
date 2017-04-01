@@ -6,7 +6,7 @@
 
 ##PBS -m aeb
 #PBS -M esquivel@nucleares.unam.mx
-#PBS -l nodes=1:gen3:ppn=32
+#PBS -l nodes=1:tvh:ppn=32
 #PBS -q default
 
 ### Switch to the job's working directory, provided by PBS in PBS_O_WORKDIR
