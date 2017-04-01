@@ -173,9 +173,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   GM(2)= Ggrav*MassP/rsc/vsc2
 
   !   get cell position
-  xc=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  yc=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-  zc=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+  xc=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+  yc=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+  zc=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
   ! calculate distance from the sources
   ! star
