@@ -45,7 +45,7 @@ module parameters
   !  If integer, choose from list provided
   !----------------------------------------
 
-  logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
+  logical, parameter :: pmhd     = .false.   !<  enadble passive mhd
   logical, parameter :: mhd      = .false.   !<  Enable full MHD
 
   !> Approximate Riemman Solver
@@ -62,7 +62,7 @@ module parameters
   !>  Enable field-CD cleaning of div B
   logical, parameter :: enable_field_cd = .false.
   !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .true.
+  logical, parameter :: dump_divb = .false.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -184,7 +184,7 @@ module parameters
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=141  !< number of output to do warm start
+  integer            :: itprint0=0  !< number of output to do warm start
 
 
   !*********************************************************************
