@@ -185,7 +185,6 @@ subroutine impose_exo(u,time)
           u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
           !density of neutrals
           u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-
           !   passive scalar (tag) for stellar material
           u(neqdyn+7,i,j,k)= 1000*dens
 
@@ -203,15 +202,18 @@ subroutine impose_exo(u,time)
           u(2,i,j,k) = dens*velx
           u(3,i,j,k) = dens*vely
           u(4,i,j,k) = dens*velz
+          
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
           + cv*dens*1.5*Tpw
+
           !   Here the number density of the wind and planet
           !   components separately
           u(neqdyn+2,i,j,k) = 1.e-25*dens     ! xhi*rho S ion
           u(neqdyn+3,i,j,k) = 1.e-25*dens     ! xhn*rho S neutro
           u(neqdyn+4,i,j,k) =    0.5*dens     ! xci*rho P ion
           u(neqdyn+5,i,j,k) =    0.5*dens     ! xcn*rho P neutro
+
           ! ne
           u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
           !density of neutrals
