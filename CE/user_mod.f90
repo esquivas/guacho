@@ -168,7 +168,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
   real    :: xc ,yc, zc
-  real :: v, fracv, frac_neutro, a, b, c, xc, yc, zc
+  real :: v, fracv, frac_neutro, a, b, c
 
   GM(1)= Ggrav*MassS/rsc/vsc2
   GM(2)= Ggrav*MassP/rsc/vsc2
