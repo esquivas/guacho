@@ -161,7 +161,8 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   use globals,    only : dx, dy, dz, coords
   use exoplanet
   implicit none
-  integer, intent(in) :: i,j,k,l, index, Nr
+  integer, intent(in) :: i, j, k
+  integer             :: l, index, Nr
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
