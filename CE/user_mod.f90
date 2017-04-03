@@ -160,6 +160,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2
   use globals,    only : dx, dy, dz, coords
   use exoplanet
+  use radpress
   implicit none
   integer, intent(in) :: i, j, k
   integer             :: l, index, Nr
