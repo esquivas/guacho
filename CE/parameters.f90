@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_H_RATE
+  integer, parameter :: eq_of_state = EOS_CHEM
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -82,7 +82,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  integer, parameter :: cooling = COOL_H
+  integer, parameter :: cooling = COOL_NONE
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
@@ -128,10 +128,10 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure = .true.
+  logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange = .false.
+  logical, parameter :: charge_exchange = .true.
 
 
 #ifdef PASSIVES
