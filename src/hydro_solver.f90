@@ -197,7 +197,7 @@ subroutine tstep()
   ! update the chemistry network
   ! at this point is in cgs
   !  the primitives in the physical domain are upated
-  if (eq_of_state == EOS_CHEM) call update_chem()
+  !if (eq_of_state == EOS_CHEM) call update_chem()
 
   !-------------------------
   !   apply cooling/heating terms
@@ -217,6 +217,8 @@ subroutine tstep()
 
   ! Chemistry network cooling (primitives are already updated in update_chem)
   if (cooling == COOL_CHEM) call cooling_chem()
+
+  if (cooling == COOL_NONE) call calcprim(u,primit)
 
   !   boundary contiditions on u
   call boundaryI()
