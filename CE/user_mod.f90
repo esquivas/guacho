@@ -205,6 +205,14 @@ subroutine get_user_source_terms(pp,s, i, j , k)
     fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
     index = int(fracv)+1
 
+    if (index < 1) then
+      print*, 'index out of bounds', index
+      index = 1
+    else if ( index > 800 ) then
+      print*, 'index out of bounds', index
+      index = 800
+    end if
+    
     Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
     !!Linear interpolation for Beta, active allows turn on the Beta term.
 
