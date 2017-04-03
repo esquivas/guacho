@@ -207,11 +207,11 @@ subroutine get_user_source_terms(pp,s, i, j , k)
 
     if (index < 1) then
       print*, 'index out of bounds', index, xc, yc, zc
-      print*, icoords(:),i, j, k
+      print*, coords(:),i, j, k
       index = 1
     else if ( index > 800 ) then
       print*, 'index out of bounds', index, xc, yc, zc
-      print*, icoords(:), i, j, k
+      print*, coords(:), i, j, k
       index = 800
     end if
 
