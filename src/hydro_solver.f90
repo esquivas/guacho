@@ -223,9 +223,10 @@ subroutine tstep()
 
   if ( (cooling == COOL_H).or.(cooling == COOL_NONE) ) then
     !  must update primitives in all the domain
+        call calcprim(u,primit)
   else
     !  update primitives on the boundaries
-    call calcprim(u,primit)
+    call calcprim(u,primit,only_ghost=.true.)
   end if
 
   !  Thermal conduction
