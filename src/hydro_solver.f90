@@ -205,8 +205,6 @@ subroutine tstep()
   !   add cooling (H rat e)to the conserved variables
   if (cooling == COOL_H) then
     call coolingh()
-    !  update the primitives with u
-    call calcprim(u, primit)
   end if
 
   ! DMC cooling (the primitives are updated in the cooling routine)
@@ -223,8 +221,13 @@ subroutine tstep()
   !   boundary contiditions on u
   call boundaryI()
 
-  !  update primitives on the boundaries
-  call calcprim(u,primit,only_ghost=.true.)
+  if ( (cooling == COOL_H).or.(cooling == COOL_NONE) ) then
+    !  must update primitives in all the domain
+        call calcprim(u,primit)
+  else
+    !  update primitives on the boundaries
+    call calcprim(u,primit,only_ghost=.true.)
+  end if
 
   !  Thermal conduction
   if (th_cond /= 0 ) call thermal_conduction()
