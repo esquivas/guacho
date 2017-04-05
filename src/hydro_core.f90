@@ -268,11 +268,11 @@ subroutine calcprim(u,primit, only_ghost)
       do i=0,nx+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,j,0   ),primit(:,i,j,0 ),primit0(:,i,j,0 ),Temp(i,j,0   ) )
-            call u2primSplitAll(u(:,i,j,nz+1),primit(:,i,j,nz),primit0(:,i,j,nz),Temp(i,j,nz+1) )
+            call u2primSplitAll(u(:,i,j,0   ), primit(:,i,j,0 ), primit0(:,i,j,0 ),Temp(i,j,0   ) )
+            call u2primSplitAll(u(:,i,j,nz+1), primit(:,i,j,nz+1), primit0(:,i,j,nz+1), Temp(i,j,nz+1) )
          else
-            call u2prim(u(:,i,j,0   ),primit(:,i,j,0 ),Temp(i,j,0   ) )
-            call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz),Temp(i,j,nz+1) )
+            call u2prim(u(:,i,j,0   ), primit(:,i,j,0   ), Temp(i,j,0   ) )
+            call u2prim(u(:,i,j,nz+1), primit(:,i,j,nz+1), Temp(i,j,nz+1) )
          end if
       end do
     end do
@@ -282,8 +282,8 @@ subroutine calcprim(u,primit, only_ghost)
       do i=0,nx+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,0   ,k),primit(:,i,0   ,k),primit0(:,i,0   ,k),Temp(i,0   ,k) )
-            call u2primSplitAll(u(:,i,ny+1,k),primit(:,i,ny+1,k),primit0(:,i,ny+1   ,k),Temp(i,ny+1,k) )
+            call u2primSplitAll(u(:,i,0   ,k), primit(:,i,0   ,k), primit0(:,i,0   ,k), Temp(i,0   ,k) )
+            call u2primSplitAll(u(:,i,ny+1,k), primit(:,i,ny+1,k), primit0(:,i,ny+1   ,k), Temp(i,ny+1,k) )
         else
            call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
            call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
@@ -296,11 +296,11 @@ subroutine calcprim(u,primit, only_ghost)
       do j=0,ny+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,0   ,j,k),primit(:,0   ,j,k),primit0(:,0   ,j,k),Temp(i,0   ,k) )
-            call u2primSplitAll(u(:,nx+1,j,k),primit(:,nx+1,j,k),primit0(:,nx+1,j,k),Temp(nx+1,j,k) )
+            call u2primSplitAll(u(:,0   ,j,k), primit(:,0   ,j,k), primit0(:,0   ,j,k), Temp(0,j,k) )
+            call u2primSplitAll(u(:,nx+1,j,k), primit(:,nx+1,j,k), primit0(:,nx+1,j,k), Temp(nx+1,j,k) )
         else
-           call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
-           call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
+           call u2prim(u(:,0   ,j,k), primit(:,0   ,j,k), Temp(0   ,j,k) )
+           call u2prim(u(:,nx+1,j,k), primit(:,nx+1,j,k), Temp(nx+1,j,k) )
         end if
       end do
     end do
@@ -312,9 +312,9 @@ subroutine calcprim(u,primit, only_ghost)
         do i=nxmin,nxmax
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,j,k),primit(:,i,j,k),primit0(:,i,j,k),Temp(i,j,k) )
+            call u2primSplitAll(u(:,i,j,k),primit(:,i,j,k), primit0(:,i,j,k), Temp(i,j,k) )
          else
-            call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+            call u2prim(u(:,i,j,k), primit(:,i,j,k), Temp(i,j,k) )
          end if
 
         end do
