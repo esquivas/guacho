@@ -176,7 +176,7 @@ def get_scalings(nout,path='',base='points',verbose=False):
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
  pos denotes the position of the cut in cells, neq the equation to be retrieved
 '''
-def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, , entropy=False):
+def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, entropy=False):
 
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
