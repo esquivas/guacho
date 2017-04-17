@@ -41,7 +41,7 @@ contains
 subroutine update_neutral_fraction()
 
   use parameters, only : neq, nx, ny, nz, tsc, dif_rad
-  use globals, only : u, coords, dt_CFL
+  use globals, only : u, primit, coords, dt_CFL
   use difrad, only : ph
 
   implicit none
@@ -55,9 +55,9 @@ subroutine update_neutral_fraction()
         do i=1,nx
 
           if (dif_rad) then
-            call solve_h_rate(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
+            call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,ph(i,j,k) )
           else
-            call solve_h_rate(dt_seconds,u(:,i,j,k),1.,0.)
+            call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,0.)
           endif
 
         end do
@@ -103,25 +103,22 @@ end function colf
 
 !=======================================================================
 
-!> @brief Updates the ionization fraction and applpies cooling
-!> @details Calculates the new ionization state and energy density
-!!      using a time dependent ionization calculation and an
-!!      approximate time dependent cooling calculation
-!> @param real [in] dt      : timestep (seconds)
-!> @param real [in] uu(neq) : conserved variablas in one cell
-!> @param real [in] tau     : optical depth (not in use)
-!> @param real [in] radphi  : photoionizing rate
+!> @brief Updates the ionization fraction using Hrate eqn.
+!> @param real [in] dt        : timestep (seconds)
+!> @param real [in] uu(neq)   : conserved variablas in one cell
+!> @param real [in] prim(neq) : primitive variablas in one cell
+!> @param real [in] tau       : optical depth (not in use)
+!> @param real [in] radphi    : photoionizing rate
 
-subroutine solve_h_rate(dt,uu,tau,radphi)
+subroutine solve_h_rate(dt,uu,prim,tau,radphi)
 
   use parameters
   use hydro_core, only : u2prim
   implicit none
 
-  real, intent(in)                 :: dt, tau, radphi
-  real, intent(out),dimension(neq) :: uu
-  real, dimension(neq)             :: prim
-  real                             :: T
+  real, intent(in)                   :: dt, tau, radphi
+  real, intent(inout),dimension(neq) :: uu, prim
+  real                               :: T
   real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
   real (kind=8) :: tprime, ce
   real (kind=8) :: fpn, gain
