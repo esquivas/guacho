@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./MB-RP-NCE/'
+  character (len=128),parameter ::  outputpath='./MB-NRP-NCE/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -65,7 +65,7 @@ module parameters
   logical, parameter :: dump_divb = .false.
 
   !  Type of output (silo has to be set in Makefile)
-  logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
+  logical, parameter :: out_bin  = .false.   !< binary i/o (needed for warmstart)
   logical, parameter :: out_vtk  = .false.  !< vtk (also binary)
 
   !> Equation of state used to compute T and P
