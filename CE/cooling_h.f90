@@ -205,11 +205,11 @@ END FUNCTION ALOSS
 
 subroutine  cooling_h_neq(pp,uu,dt, radphi)
 
-  use parameters, only : neqdyn, dif_rad, mhd, cv
+  use parameters, only : neqdyn, dif_rad, mhd, cv, neq
   use hydro_core, only : u2prim
   implicit none
-  real, intent(inout),dimension(neq) :: uu, pp
-  real, intent(in)                 :: dt, radphi
+  real, intent(inout) :: uu(neq), pp(neq)
+  real, intent(in)    :: dt, radphi
   real :: y0, y1, h0, dh0, T, gain, tprime
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
