@@ -196,30 +196,28 @@ END FUNCTION ALOSS
 
 !=======================================================================
 
-!> @brief Updates the ionization fraction and applpies cooling
-!> @details Calculates the new ionization state and energy density
-!!      using a time dependent ionization calculation and an
-!!      approximate time dependent cooling calculation
-!> @param real [in] dt      : timestep (seconds)
+!> @brief
+!> @details
+!> @param real [in] uu(neq) : primitive variablas in one cell
 !> @param real [in] uu(neq) : conserved variablas in one cell
-!> @param real [in] tau     : optical depth (not in use)
+!> @param real [in] dt      : timestep (seconds)
 !> @param real [in] radphi  : photoionizing rate
 
 subroutine  cooling_h_neq(pp,uu,dt, radphi)
 
-  use parameters, only : neqdyn, dif_rad
+  use parameters, only : neqdyn, dif_rad, mhd
   use hydro_core, only : u2prim
   implicit none
 
   real, intent(in)                 :: dt, radphi
-  real, intent(inout),dimension(neq) :: uu, prim
+  real, intent(inout),dimension(neq) :: uu, pp
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
   y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt)
   dh  = real( pp(1)             , 8)   !# total NH
   dh0 = real( pp(neqdyn+1)      , 8)   !# neutrals density
 
-  call u2prim(uu,prim,T)            !# temperature
+  call u2prim(uu,prim,T)               !# get temperature
 
   !  get the energy losses
   al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
@@ -257,7 +255,7 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
          +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
   end if
 
-end subroutine atomic
+end subroutine cooling_h_neq
 
 #endif
 
