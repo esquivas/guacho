@@ -205,7 +205,7 @@ END FUNCTION ALOSS
 
 subroutine  cooling_h_neq(pp,uu,dt, radphi)
 
-  use parameters, only : neqdyn, dif_rad, mhd, cv, neq
+  use parameters, only : neqdyn, dif_rad, mhd, cv, neq, Tempsc
   use constants,  only : Kb
   use hydro_core, only : u2prim
   implicit none
@@ -249,12 +249,12 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   if (mhd) then
 #ifdef BFIELD
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
-         +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
+         +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)      &
+         +0.5*      (pp(6)**2+pp(7)**2+pp(8)**2)
 #endif
   else
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+         +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
   end if
 
 end subroutine cooling_h_neq
