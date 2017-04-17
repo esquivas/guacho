@@ -55,7 +55,7 @@ subroutine coolingh()
       do i=1,nx
 
         if (dif_rad) then
-          if (charge_exchange) then
+          if (.not.charge_exchange) then
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, ph(i,j,k))
           else
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, phCold(i,j,k)+phHot(i,j,k))
