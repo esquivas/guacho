@@ -196,7 +196,7 @@ subroutine tstep()
   if (dif_rad) call diffuse_rad()
 
   !  Advance neutral fraction (only Us) if H rate is used
-  if (eq_of_state == H_RATE) call update_neutral_fraction()
+  if (eq_of_state == EOS_H_RATE) call update_neutral_fraction()
 
   ! update the chemistry network
   ! at this point is in cgs
