@@ -64,7 +64,7 @@ subroutine update_neutral_fraction()
      end do
   end do
 
-end subroutine update_neutral_fraction()
+end subroutine update_neutral_fraction
 
 !======================================================================
 
