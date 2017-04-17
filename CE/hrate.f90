@@ -119,8 +119,7 @@ subroutine solve_h_rate(dt,uu,prim,tau,radphi)
   real, intent(in)                   :: dt, tau, radphi
   real, intent(inout),dimension(neq) :: uu, prim
   real                               :: T
-  real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
-  real (kind=8) :: tprime, ce
+  real (kind=8) :: etau, dh, y0, g0, e, y1
   real (kind=8) :: fpn, gain
   real (kind=8) :: col,rec,a,b,c,d
   !    parameters
