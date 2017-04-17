@@ -137,6 +137,7 @@ subroutine tstep()
   use constants
   use globals
   use hydro_core, only : calcprim
+  use hrate,      only : update_neutral_fraction
   use boundaries
   use cooling_H
   use cooling_DMC
@@ -225,7 +226,7 @@ subroutine tstep()
   !   boundary contiditions on u
   call boundaryI()
 
-  if ( (cooling == COOL_H).or.(cooling == COOL_NONE) ) then
+  if (cooling == COOL_NONE) then
     !  must update primitives in all the domain
         call calcprim(u,primit)
   else
