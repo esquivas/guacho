@@ -211,7 +211,7 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   implicit none
   real, intent(inout) :: uu(neq), pp(neq)
   real, intent(in)    :: dt, radphi
-  real,               :: T
+  real                :: T
   real(kind = 8)      :: y0, y1, dh, dh0, gain, tprime, al, ce, t1
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
