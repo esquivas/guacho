@@ -41,7 +41,7 @@ contains
 subroutine coolingh()
 
   use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
-  use globals, only : u, primit,coords, dt_CFL
+  use globals, only : u, primit, dt_CFL
   use difrad, only : ph, phCold, phHot
 
   implicit none
@@ -205,19 +205,19 @@ END FUNCTION ALOSS
 
 subroutine  cooling_h_neq(pp,uu,dt, radphi)
 
-  use parameters, only : neqdyn, dif_rad, mhd
+  use parameters, only : neqdyn, dif_rad, mhd, cv
   use hydro_core, only : u2prim
   implicit none
-
-  real, intent(in)                 :: dt, radphi
   real, intent(inout),dimension(neq) :: uu, pp
+  real, intent(in)                 :: dt, radphi
+  real :: y0, y1, h0, dh0, T, gain, tprime
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
   y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt)
   dh  = real( pp(1)             , 8)   !# total NH
   dh0 = real( pp(neqdyn+1)      , 8)   !# neutrals density
 
-  call u2prim(uu,prim,T)               !# get temperature
+  call u2prim(uu,pp,T)               !# get temperature
 
   !  get the energy losses
   al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
