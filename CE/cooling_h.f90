@@ -211,7 +211,8 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   implicit none
   real, intent(inout) :: uu(neq), pp(neq)
   real, intent(in)    :: dt, radphi
-  real(kind = 8)      :: y0, y1, dh, dh0, T, gain, tprime, al, ce
+  real,               :: T
+  real(kind = 8)      :: y0, y1, dh, dh0, gain, tprime, al, ce, t1
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
   y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt)
@@ -236,7 +237,7 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   end if
   !tprime=1000.
 
-  ce=(2.*dh*al)/(3.*boltzm*real(T,8))
+  ce=(2.*dh*al)/(3.*Kb*real(T,8))
   t1=tprime+(t-tprime)*exp(-ce*dt) !# new temperature
 
   t1=max(t1,0.1*real(t,8) )
