@@ -41,7 +41,7 @@ contains
 subroutine coolingh()
 
   use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
-  use globals, only : u, coords, dt_CFL
+  use globals, only : u, primit,coords, dt_CFL
   use difrad, only : ph, phCold, phHot
 
   implicit none
