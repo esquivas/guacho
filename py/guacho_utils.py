@@ -70,7 +70,7 @@ def u2prim(file_in, ublock, equation, mhd = False, entropy=False) :
   consider that the index in python is that used in fortran -1
   e.g. density corresponds to equation 0
 '''
-def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False):
+def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False, conserved = False):
   head_info = read_header(file_in,verbose=verbose)
   f                   = head_info[0]
   f_kind              = head_info[1]
@@ -81,13 +81,16 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False
     count=(nx+2*nghost)*(ny+2*nghost)*(nz+2*nghost)*neqs)\
     .reshape(neqs,nx+2*nghost,ny+2*nghost,nz+2*nghost,order='F')
   f.close()
-  primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy)
+  if (conserved):
+    primit = data[equation,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)]
+  else :
+    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy)
   return primit
 
 '''
   Returns the 3D array for equation neq in all the domain
 '''
-def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entropy = False):
+def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entropy = False, conserved = False):
 
   print 'Retrieving 3D map for eqn',neq
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
@@ -109,7 +112,7 @@ def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entro
         if proc ==0 :
           map3d=np.zeros(shape=(nx*mpi_x,ny*mpi_y,nz*mpi_z))
         proc = proc+1
-        map3d[x0:x0+nx,y0:y0+ny,z0:z0+nz] = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy)
+        map3d[x0:x0+nx,y0:y0+ny,z0:z0+nz] = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, conserved = conserved)
   return map3d.T
 
 '''
@@ -176,7 +179,7 @@ def get_scalings(nout,path='',base='points',verbose=False):
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
  pos denotes the position of the cut in cells, neq the equation to be retrieved
 '''
-def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, entropy=False):
+def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, entropy=False, conserved = False):
 
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
@@ -212,7 +215,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-ip*nx
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy)
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, conserved = conserved)
             map2d[y0:y0+ny,z0:z0+nz]= block[offset,::,::]
 
         elif cut == 2:
@@ -225,7 +228,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-jp*ny
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy )
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, conserved = conserved )
             map2d[x0:x0+nx,z0:z0+nz]= block[::,offset,::]
 
         elif cut == 3:
@@ -238,7 +241,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-kp*nz
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy)
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, conserved = conserved)
             map2d[x0:x0+nx,y0:y0+ny]= block[::,::,offset]
 
         proc = proc +1
