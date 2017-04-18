@@ -65,7 +65,7 @@ subroutine read_table_chianti()
   real (kind=8) :: a, b
 
   if(rank == master) then
-     open(unit=10,file= trim(workdir)//'/src/CHIANTIlib/coolingCHIANTI.tab',status='old')
+     open(unit=10,file= trim(workdir)//'../src/CHIANTIlib/coolingCHIANTI.tab',status='old')
      do i=1,41
         read(10,*) a, b
         cooltab_chianti(1,i)=a
