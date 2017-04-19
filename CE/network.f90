@@ -41,7 +41,7 @@
   integer, parameter :: n_nequ = n_spec - nequil
 
   !  first index for the species in the global array
-  integer, parameter :: n1_chem = 7 
+  integer, parameter :: n1_chem = 7
 
   ! indexes of the different species
   integer, parameter :: Hhp = 1  ! hot ionized H
@@ -139,16 +139,16 @@ end subroutine get_jacobian
 
 !=======================================================================
 
-subroutine get_reaction_rates(rate,T,phiH,phiC)
+subroutine get_reaction_rates(rate,T,phiHot,phiCold)
   implicit none
-  real (kind=8), intent(in)                    :: T, phiH, phiC
+  real (kind=8), intent(in)                    :: T, phiHot, phiCold
   real (kind=8), dimension(n_reac),intent(out) ::rate
 
   rate(alpha) = 2.55d-13*(1.e4/T)**0.79
   rate(coll ) = 5.83e-11*sqrt(T)*exp(-157828./T)
   rate(beta ) = 4.0E-08
-  rate(phiH ) = phiH
-  rate(phiC ) = phiC
+  rate(phiH ) = phiHot
+  rate(phiC ) = phiCold
 
 end subroutine get_reaction_rates
 
