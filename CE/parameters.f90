@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./MB-RP-NCE/'
+  character (len=128),parameter ::  outputpath='./MB3b/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_H_RATE
+  integer, parameter :: eq_of_state = EOS_CHEM
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -82,7 +82,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  integer, parameter :: cooling = COOL_H
+  integer, parameter :: cooling = COOL_NONE
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
@@ -91,12 +91,12 @@ module parameters
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
   !! are set
-  integer, parameter :: bc_left   = BC_outflow
-  integer, parameter :: bc_right  = BC_outflow
-  integer, parameter :: bc_bottom = BC_outflow
-  integer, parameter :: bc_top    = BC_outflow
-  integer, parameter :: bc_out    = BC_outflow
-  integer, parameter :: bc_in     = BC_outflow
+  integer, parameter :: bc_left   = BC_OUTFLOW
+  integer, parameter :: bc_right  = BC_OUTFLOW
+  integer, parameter :: bc_bottom = BC_OUTFLOW
+  integer, parameter :: bc_top    = BC_OUTFLOW
+  integer, parameter :: bc_out    = BC_OUTFLOW
+  integer, parameter :: bc_in     = BC_OUTFLOW
   logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
@@ -128,10 +128,10 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure = .true.
+  logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange = .false.
+  logical, parameter :: charge_exchange = .true.
 
 
 #ifdef PASSIVES
@@ -140,9 +140,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nxtot=200      !< Total grid size in X
+  integer, parameter :: nytot=50      !< Total grid size in Y
+  integer, parameter :: nztot=200      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
