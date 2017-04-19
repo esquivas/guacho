@@ -738,9 +738,9 @@ subroutine diffuse_rad()
      if( (ii==coords(0)).and.(jj==coords(1)).and.(kk==coords(2))) then
         in=in+1
         ! trace the photon
-        call photons(float(i-coords(0)*nx)+0.5, &
-                     float(j-coords(1)*ny)+0.5, &
-                     float(k-coords(2)*nz)+0.5, &
+        call photons(float(i-coords(0)*nx)-0.5, &
+                     float(j-coords(1)*ny)-0.5, &
+                     float(k-coords(2)*nz)-0.5, &
                      dirx,diry,dirz,f)
         !call progress(niter,nrays)
      end if
