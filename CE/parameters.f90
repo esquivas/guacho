@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./MB3b/'
+  character (len=128),parameter ::  outputpath='./MB3c/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
