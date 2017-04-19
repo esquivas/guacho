@@ -144,9 +144,9 @@ subroutine impose_exo(u,time)
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
         ! Position measured from the centre of the planet
         xpl=x-xp
