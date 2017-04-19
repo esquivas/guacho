@@ -218,7 +218,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
     Beta(i,j,k) = ( Br(index)+(v-vr(index)) * ( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index)) ) *frac_neutro!*active
     !!Linear interpolation for Beta, active allows turn on the Beta term.
 
-    GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
+    GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
   end if
 
   ! update source terms with gravity
