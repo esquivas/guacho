@@ -70,7 +70,7 @@ subroutine update_chem()
         end do
 
         !primit(6) = y(Hh0) + y(Hc0)
-        u(6,u,j,k) = y(Hh0) + y(Hc0)
+        u(6,i,j,k) = y(Hh0) + y(Hc0)
 
       end do
     end do
