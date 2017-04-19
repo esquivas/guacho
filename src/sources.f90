@@ -37,7 +37,7 @@
   use globals,    only : dx, dy, dz, coords
 
   implicit none
-  
+
 contains
 
 !=======================================================================
@@ -51,7 +51,7 @@ contains
 !> @param real [out] x : X position form the center of the grid (code units)
 !> @param real [out] y : Y position form the center of the grid (code units)
 !> @param real [out] z : Z position form the center of the grid (code units)
-!> @param real [out] r : Spherical radius form the center of the grid 
+!> @param real [out] r : Spherical radius form the center of the grid
 !! (code units)
 
 subroutine getpos(i,j,k,x,y,z,r)
@@ -60,12 +60,12 @@ subroutine getpos(i,j,k,x,y,z,r)
   integer, intent(in)  :: i, j, k
   real,    intent(out) :: x, y, z, r
 
-  x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-  z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
-  
+  x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+  y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+  z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
+
   r  = sqrt(x**2 +y**2 +z**2 )
-  
+
 end subroutine getpos
 
 !=======================================================================
@@ -95,7 +95,7 @@ subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
   !  the following is h/912Angstroms = h/lambda
   real :: hlambda= 7.265e-22, Frad
 
-  radphi= ph(i,j,k) 
+  radphi= ph(i,j,k)
 
   !  update the source terms
   Frad=radphi*pp(6)*hlambda*rsc/rhosc/vsc2
@@ -149,23 +149,23 @@ end subroutine divergence_B
 #ifdef BFIELD
 
 subroutine divbcorr_8w_source(i,j,k,pp,s)
- 
+
   implicit none
   integer, intent(in) :: i, j, k
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   real                :: divB
-  
+
   call divergence_B(i,j,k,divB)
 
   ! update source terms
     ! momenta
-    s(2)= s(2)-divB*pp(6) 
-    s(3)= s(3)-divB*pp(7) 
-    s(4)= s(4)-divB*pp(8) 
+    s(2)= s(2)-divB*pp(6)
+    s(3)= s(3)-divB*pp(7)
+    s(4)= s(4)-divB*pp(8)
 
     ! energy
-    s(5)= s(5)-divB*(pp(2)*pp(6)+pp(3)*pp(7)+pp(4)*pp(8))      
+    s(5)= s(5)-divB*(pp(2)*pp(6)+pp(3)*pp(7)+pp(4)*pp(8))
 
     ! Faraday law
     s(6)=s(6)-divB*pp(2)
@@ -195,12 +195,12 @@ subroutine source(i,j,k,prim,s)
   real, intent(in)     :: prim(neq)
   real, intent(out)    :: s(neq)
   real :: x, y, z, r
-  
+
   ! resets the source terms
   s(:) = 0.
-  
+
   ! position with respect to the center of the grid
-  call getpos( i, j, k, x, y ,z, r) 
+  call getpos( i, j, k, x, y ,z, r)
 
   !  user source terms (such as gravity)
   if (user_source_terms) call get_user_source_terms(prim,s,i,j,k)
@@ -220,7 +220,7 @@ subroutine source(i,j,k,prim,s)
 end subroutine source
 
 !=======================================================================
-  
+
 end module sources
 
 !=======================================================================
