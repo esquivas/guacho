@@ -67,6 +67,9 @@ subroutine update_chem()
         do l = 1, n_spec
           primit(n1_chem+l-1, i,j,k) = y(l)
           u     (n1_chem+l-1, i,j,k) = y(l)
+
+          primit(6) = y(Hh0) + y(Hc0)
+          u(6)      = y(Hh0) + y(Hc0)
         end do
 
       end do
