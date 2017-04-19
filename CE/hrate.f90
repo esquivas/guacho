@@ -42,7 +42,7 @@ subroutine update_neutral_fraction()
 
   use parameters, only : neq, nx, ny, nz, tsc, dif_rad
   use globals, only : u, primit, coords, dt_CFL
-  use difrad, only : ph
+  use difrad, only : ph, phCold, phHot
 
   implicit none
   real    :: dt_seconds
@@ -55,10 +55,14 @@ subroutine update_neutral_fraction()
         do i=1,nx
 
           if (dif_rad) then
-            call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,ph(i,j,k) )
+            if (.not.charge_exchange) then
+              call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,ph(i,j,k) )
+            else
+              call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,phHot(i,j,k)+phCold(i,j,k) )
+            end if
           else
             call solve_h_rate(dt_seconds,u(:,i,j,k), primit(:,i,j,k), 1.,0.)
-          endif
+          end if
 
         end do
      end do
