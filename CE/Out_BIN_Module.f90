@@ -234,6 +234,7 @@ subroutine write_BIN(itprint)
         call write_header(unitout,1,0)
         write (unitout) divB(:,:,:)
         close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
 
       end if
 #ifdef MPIP
@@ -259,7 +260,7 @@ subroutine write_BIN(itprint)
         call write_header(unitout,1,0)
         write (unitout) beta(:,:,:)
         close(unitout)
-
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
       end if
 #ifdef MPIP
         call mpi_barrier(mpi_comm_world, err)
