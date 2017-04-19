@@ -175,9 +175,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   GM(2)= Ggrav*MassP/rsc/vsc2
 
   !   get cell position
-  xc=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  yc=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-  zc=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
+  xc=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+  yc=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+  zc=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
   ! calculate distance from the sources
   ! star
@@ -215,7 +215,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
       index = 800
     end if
 
-    Beta(i,j,k) = (Br(index)+(v-vr(index))*(Br(index+1)-Br(index))/(vr(index+1)-vr(index)))*frac_neutro!*active
+    Beta(i,j,k) = ( Br(index)+(v-vr(index)) * ( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index)) ) *frac_neutro!*active
     !!Linear interpolation for Beta, active allows turn on the Beta term.
 
     GM(1)=GM(1)*(1-Beta(i,j,k)) !!Update scale factor GM
