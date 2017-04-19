@@ -57,6 +57,7 @@ subroutine read_table_beta()
         Br(i) = b
      enddo
      close(unit=21)
+     print*, "just read Bourrier's beta table"
   endif
 #ifdef MPIP
   call mpi_bcast(Br,size(Br),mpi_double_precision,0,mpi_comm_world,err)
