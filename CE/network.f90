@@ -40,6 +40,9 @@
   ! number of non-equilibrium equations
   integer, parameter :: n_nequ = n_spec - nequil
 
+  !  first index for the species in the global array
+  integer, parameter :: n1_chem = 7 
+
   ! indexes of the different species
   integer, parameter :: Hhp = 1  ! hot ionized H
   integer, parameter :: Hh0 = 2  ! hot neutral H
