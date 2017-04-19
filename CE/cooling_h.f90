@@ -244,17 +244,22 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
-
-
   if (mhd) then
 #ifdef BFIELD
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
          +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)      &
          +0.5*      (pp(6)**2+pp(7)**2+pp(8)**2)
+
+    !  update pressure
+    pp(5) = ( uu(5) - 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)   &
+                    - 0.5*      (pp(6)**2+pp(7)**2+pp(8)**2) ) /cv
 #endif
   else
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
          +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
+
+    !  update pressure
+    pp(5) = ( uu(5) - 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)  ) /cv
   end if
 
 end subroutine cooling_h_neq
