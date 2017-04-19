@@ -195,7 +195,8 @@ subroutine tstep()
   !  Do the Radiation transfer (Monte Carlo type)
   if (dif_rad) call diffuse_rad()
 
-  !  Advance neutral fraction (only Us) if H rate is used
+  !  Advance neutral fraction (only Us) if H rate is used, updates the
+  !  rest of the primitives
   if (eq_of_state == EOS_H_RATE) call update_neutral_fraction()
 
   ! update the chemistry network
