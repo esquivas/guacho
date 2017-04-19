@@ -202,7 +202,7 @@ subroutine tstep()
   ! update the chemistry network
   ! at this point is in cgs
   !  the primitives in the physical domain are upated
-  !if (eq_of_state == EOS_CHEM) call update_chem()
+  if (eq_of_state == EOS_CHEM) call update_chem()
 
   !-------------------------
   !   apply cooling/heating terms

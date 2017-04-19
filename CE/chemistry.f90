@@ -58,15 +58,15 @@ subroutine update_chem()
 
         !   get the primitives (and T)
         call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
-        y(1:n_spec) = primit(neqdyn+1:neqdyn+n_spec,i,j,k)
+        y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
         y0(1      ) = primit(1,i,j,k)
         !  update the passive primitives (should not work in single precision)
         !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
         call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
         !  update the primitives and conserved variables
         do l = 1, n_spec
-          primit(l+neqdyn, i,j,k) = y(l)
-          u      (l+neqdyn,i,j,k) = y(l)
+          primit(n1_chem+l-1, i,j,k) = y(l)
+          u     (n1_chem+l-1, i,j,k) = y(l)
         end do
 
       end do
