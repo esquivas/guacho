@@ -48,7 +48,7 @@ subroutine u2prim(uu, prim, T)
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
                          pmhd, mhd, eq_of_state, charge_exchange
   use constants
-  use network,  only : n_spec
+  use network,  only : n1_chem, n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
@@ -115,13 +115,8 @@ subroutine u2prim(uu, prim, T)
   if (eq_of_state == EOS_CHEM) then
     !  Assumes that rho scaling is mu*mh
     dentot = 0.
-    do i = neqdyn+1, neqdyn+n_spec
-      if (charge_exchange) then
-        !  because neqdyn+1 is used for the sum of neutrals
-        dentot = prim(i+1) + dentot
-      else
-        dentot = prim(i) + dentot
-      end if
+    do i = n1_chem, n1_chem+n_spec-1
+      dentot = prim(i) + dentot
     end do
     dentot = max(dentot, 1e-15)
     T=max(1.,(prim(5)/dentot)*Tempsc )
