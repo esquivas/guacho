@@ -41,7 +41,7 @@
   integer, parameter :: n_nequ = n_spec - nequil
 
   !  first index for the species in the global array
-  integer, parameter :: n1_chem = 7 
+  integer, parameter :: n1_chem = 6 
 
   ! indexes of the different species
   integer, parameter :: H  = 1   ! H0
