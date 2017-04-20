@@ -92,7 +92,8 @@ subroutine initial_conditions(u)
 
         ! total energy
         u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-        + cv*dens*1.9999*Tsw
+        + cv*dens*Tsw
+        !+ cv*dens*1.9999*Tsw
 
         !   Here the number density of the wind and planet
         !   components separately

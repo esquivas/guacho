@@ -174,7 +174,8 @@ subroutine impose_exo(u,time)
           u(4,i,j,k) = dens*velz
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-          + cv*dens*1.9999*Tsw
+          + cv*dens*Tsw
+          !+ cv*dens*1.9999*Tsw
           !   Here the number density of the wind and planet
           !   components separately
           u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
@@ -205,7 +206,8 @@ subroutine impose_exo(u,time)
 
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-          + cv*dens*1.5*Tpw
+          + cv*dens*Tpw
+          !+ cv*dens*1.5*Tpw
 
           !   Here the number density of the wind and planet
           !   components separately
