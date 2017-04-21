@@ -87,7 +87,7 @@ subroutine update_chem()
         end do
 
         !  jpdate the total neutrals as well
-        primit(6,i,j,k)  = y(Hh0) + y(Hc0)
+        !primit(6,i,j,k)  = y(Hh0) + y(Hc0)
         u(6,i,j,k)       = y(Hh0) + y(Hc0)
 
       end do
@@ -152,12 +152,12 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     call linsys(jac,y1, n_spec)
 
     y(:)=y(:) + y1(:)
-    y(:)=max(y(:),1.e-10)
+    y(:)=max(y(:),1.e-40)
 
     yt(:)=y1(:)/y(:)
 
     !  exit the loop if converged
-    if(all(abs(y1(:)) <= 0.01)) exit
+    if(all(abs(y1(:)) <= 0.0001)) exit
 
     n=n+1
 
