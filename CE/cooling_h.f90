@@ -224,11 +224,6 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   !  get the energy losses
   al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
 
-  !if(al.lt.0.) write(*,*) 'que paso !'
-  !if(al.lt.0.) al=0.
-  !  al=al*(1.-(0.5e4/max(1.e4,t))**4)
-  !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
-
   if (dif_rad) then
     gain=real(radphi,8)*dh0*Kb*1.E4 !3.14d5
     tprime=max( gain*real(T,8)/(dh**2*al),1000.)
