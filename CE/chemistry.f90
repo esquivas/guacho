@@ -52,7 +52,7 @@ subroutine update_chem()
   implicit none
   real :: dt_seconds, T, y(n_spec), y0(n_elem)
   integer :: i, j, k, l
-  real    :: x, y, z, rads
+  real    :: xs, ys, zs, rads
 
   dt_seconds = dt_CFL*tsc
   failed_convergence = 0.
@@ -62,9 +62,9 @@ subroutine update_chem()
       do i=1,nx
 
         ! Position measured from the centre of the grid (star)
-        x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
-        y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
-        z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
+        xs=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+        ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+        zs=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
         !   get the primitives (and T)
         call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
@@ -73,7 +73,7 @@ subroutine update_chem()
         !  update the passive primitives (should not work in single precision)
 
         ! Distance from the centre of the star
-        rads=sqrt(x**2+y**2+z**2)
+        rads=sqrt(xs**2+ys**2+zs**2)
         ! IF INSIDE THE STAR
         if( rads < rsw) then
           !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
