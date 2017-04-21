@@ -28,6 +28,7 @@ module chemistry
 
   use network
   implicit none
+  integer :: failed_convergence
 
 contains
 
@@ -42,40 +43,56 @@ contains
 subroutine update_chem()
 
   use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc
-  use globals, only : u, primit, dt_CFL
+  use globals, only : u, primit, dt_CFL, coords, dx, dy, dz, rank
   use network, only : n_spec, n_elem, n1_chem
   use hydro_core, only : u2prim
   use difrad, only : phCold, phHot
+  use exoplanet, only : RSW
   implicit none
   real :: dt_seconds, T, y(n_spec), y0(n_elem)
   integer :: i, j, k, l
+  real    :: x, y, z, rads
 
   dt_seconds = dt_CFL*tsc
+  failed_convergence = 0.
 
   do k=1,nz
     do j=1,ny
       do i=1,nx
+
+        ! Position measured from the centre of the grid (star)
+        x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
         !   get the primitives (and T)
         call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
         y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
         y0(1      ) = primit(1,i,j,k)
         !  update the passive primitives (should not work in single precision)
-        !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
-        call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
-        !  update the primitives and conserved variables
+
+        ! Distance from the centre of the star
+        rads=sqrt(x**2+y**2+z**2)
+        ! IF INSIDE THE STAR
+        if( rads < rsw) then
+          !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
+          call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
+
+        end if
+          !  update the primitives and conserved variables
         do l = 1, n_spec
           primit(n1_chem+l-1, i,j,k) = y(l)
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
 
-        !primit(6) = y(Hh0) + y(Hc0)
-        u(6,i,j,k) = y(Hh0) + y(Hc0)
+        primit(6,i,j,k)  = y(Hh0) + y(Hc0)
+        u(6,i,j,k)       = y(Hh0) + y(Hc0)
 
       end do
     end do
   end do
 
+  if (failed_convergence > 0) print'(a,i3,a,i,a)', 'in rank: ', rank, 'chemistry convergence failed in ', failed_convergence, ' cells'
 
 end subroutine update_chem
 
@@ -144,11 +161,12 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
 
   end do
 
-  !if (n >= niter) then
+  if (n >= niter) then
+    failed_convergence = failed convergence + 1
   !  print*, "failed to converge after ", niter, " iterations"
   !else
   !  print*, 'converged after ', n+1, ' iterations'
-  !end if
+  end if
 
   return
 
