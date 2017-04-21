@@ -244,6 +244,8 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
+  t1 = T
+
   if (mhd) then
 #ifdef BFIELD
     uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
