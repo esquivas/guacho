@@ -61,19 +61,19 @@ subroutine update_chem()
     do j=1,ny
       do i=1,nx
 
-        ! Position measured from the centre of the grid (star)
-        xs=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
-        ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
-        zs=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
-
         !   get the primitives (and T)
         call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
         y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
         y0(1      ) = primit(1,i,j,k)
         !  update the passive primitives (should not work in single precision)
 
+        ! Position measured from the centre of the grid (star)
+        xs=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+        ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+        zs=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
         ! Distance from the centre of the star
         rads=sqrt(xs**2+ys**2+zs**2)
+
         ! IF OUTSIDE THE STAR
         if( rads >= rsw) then
           !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
@@ -120,7 +120,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yt(n_spec),yin(n_spec), y0_in(n_elem)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=500       ! number of iterations
+  integer, parameter  :: niter=100       ! number of iterations
   integer :: n,i,iff
 
   n=0
@@ -152,12 +152,12 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     call linsys(jac,y1, n_spec)
 
     y(:)=y(:) + y1(:)
-    y(:)=max(y(:),1.e-40)
+    y(:)=max(y(:),1.e-10)
 
     yt(:)=y1(:)/y(:)
 
     !  exit the loop if converged
-    if(all(abs(y1(:)) <= 0.0001)) exit
+    if(all(abs(y1(:)) <= 0.01)) exit
 
     n=n+1
 
