@@ -74,8 +74,8 @@ subroutine update_chem()
 
         ! Distance from the centre of the star
         rads=sqrt(xs**2+ys**2+zs**2)
-        ! IF INSIDE THE STAR
-        if( rads < rsw) then
+        ! IF OUTSIDE THE STAR
+        if( rads >= rsw) then
           !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
           call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
 
@@ -86,6 +86,7 @@ subroutine update_chem()
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
 
+        !  jpdate the total neutrals as well
         primit(6,i,j,k)  = y(Hh0) + y(Hc0)
         u(6,i,j,k)       = y(Hh0) + y(Hc0)
 
@@ -119,7 +120,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yt(n_spec),yin(n_spec), y0_in(n_elem)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=200       ! number of iterations
+  integer, parameter  :: niter=500       ! number of iterations
   integer :: n,i,iff
 
   n=0
