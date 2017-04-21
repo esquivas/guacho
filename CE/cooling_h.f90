@@ -203,15 +203,15 @@ END FUNCTION ALOSS
 !> @param real [in] dt      : timestep (seconds)
 !> @param real [in] radphi  : photoionizing rate
 
-subroutine  cooling_h_neq(pp,uu,dt, radphi)
+subroutine  cooling_h_neq(pp, uu, dt, radphi)
 
-  use parameters, only : neqdyn, dif_rad, mhd, cv, neq, Tempsc
-  use constants,  only : Kb
+  use parameters, only : neqdyn, dif_rad, mhd, cv, neq, Tempsc, eq_of_state
+  use constants
   use hydro_core, only : u2prim
   implicit none
   real, intent(inout) :: uu(neq), pp(neq)
   real, intent(in)    :: dt, radphi
-  real                :: T
+  real                :: T, ch_factor
   real(kind = 8)      :: y0, y1, dh, dh0, gain, tprime, al, ce, t1
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
@@ -244,24 +244,22 @@ subroutine  cooling_h_neq(pp,uu,dt, radphi)
   t1=min(t1,10.*real(t,8) )
   !  t1=max(t1,tprime)
 
-  t1 = T
+  ch_factor = real(t1)/T
 
+  !  update pressure
+  pp(5) = pp(5) * ch_factor
+
+  !  update total energy density
   if (mhd) then
 #ifdef BFIELD
-    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)      &
-         +0.5*      (pp(6)**2+pp(7)**2+pp(8)**2)
 
-    !  update pressure
-    pp(5) = ( uu(5) - 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)   &
-                    - 0.5*      (pp(6)**2+pp(7)**2+pp(8)**2) ) /cv
+    uu(5) = cv*pp(5) + 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)      &
+                     + 0.5*      (pp(6)**2+pp(7)**2+pp(8)**2)
+
 #endif
   else
-    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
+    uu(5) = cv*pp(5) + 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
 
-    !  update pressure
-    pp(5) = ( uu(5) - 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)  ) /cv
   end if
 
 end subroutine cooling_h_neq
