@@ -44,7 +44,7 @@ subroutine update_chem()
 
   use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,  &
                       nxtot, nytot, nztot
-  use globals, only : u, primit, dt_CFL, coords, dx, dy, dz, rank,
+  use globals, only : u, primit, dt_CFL, coords, dx, dy, dz, rank
   use network, only : n_spec, n_elem, n1_chem
   use hydro_core, only : u2prim
   use difrad, only : phCold, phHot
