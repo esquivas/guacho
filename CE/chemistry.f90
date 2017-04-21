@@ -93,7 +93,7 @@ subroutine update_chem()
     end do
   end do
 
-  if (failed_convergence > 0) print'(a,i3,a,i,a)', 'in rank: ', rank, 'chemistry convergence failed in ', failed_convergence, ' cells'
+  if (failed_convergence > 0) print'(a,i3,a,i,a)', 'in rank: ', rank, ', chemistry convergence failed in ', failed_convergence, ' cells'
 
 end subroutine update_chem
 
@@ -119,7 +119,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yt(n_spec),yin(n_spec), y0_in(n_elem)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=100       ! number of iterations
+  integer, parameter  :: niter=200       ! number of iterations
   integer :: n,i,iff
 
   n=0
