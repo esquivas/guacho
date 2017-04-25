@@ -162,8 +162,8 @@ subroutine nr_init(y,y0)
 
   yhi=y0(Ht)
 
-  y(Hsp) = 0.4* yhi
-  y(Hs0) = 0.1*yhi
+  y(Hsp) = 0.40* yhi
+  y(Hs0) = 0.01*yhi
   y(Hpp) = 0.1*yhi
   y(Hp0) = 0.4*yhi
   y(ie ) = y(Hsp) + y(Hpp)
