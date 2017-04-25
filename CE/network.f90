@@ -44,10 +44,10 @@
   integer, parameter :: n1_chem = 7
 
   ! indexes of the different species
-  integer, parameter :: Hhp = 1  ! hot ionized H
-  integer, parameter :: Hh0 = 2  ! hot neutral H
-  integer, parameter :: Hcp = 3  ! cold ionized H
-  integer, parameter :: Hc0 = 4  ! cold neutral H
+  integer, parameter :: Hsp = 1  ! star ionized H
+  integer, parameter :: Hs0 = 2  ! star neutral H
+  integer, parameter :: Hpp = 3  !  ionized H
+  integer, parameter :: Hp0 = 4  !  n1eutral H
   integer, parameter :: ie  = 5  ! electron density
 
   ! indexes of the equilibrium species
@@ -75,19 +75,19 @@ subroutine derv(y,rate,dydt,y0)
   real (kind=8), intent(out) :: dydt(n_spec)
   real (kind=8), intent(in)  :: rate(n_reac)
 
-  dydt(Hhp)= rate(coll)*y(Hh0)*y(ie)  - rate(alpha)*y(Hhp)*y(ie) + &
-             rate(beta)*y(Hh0)*y(Hcp) - rate(beta)*y(Hhp)*y(Hc0) + &
-             rate(phiH)*y(Hh0)
+  dydt(Hsp)= rate(coll)*y(Hs0)*y(ie)  - rate(alpha)*y(Hsp)*y(ie) + &
+             rate(beta)*y(Hs0)*y(Hpp) - rate(beta)*y(Hsp)*y(Hp0) + &
+             rate(phiH)*y(Hs0)
 
-  dydt(Hh0) = - dydt(Hhp)
+  dydt(Hs0) = - dydt(Hsp)
 
-  dydt(Hcp)= rate(coll)*y(Hc0)*y(ie)  - rate(alpha)*y(Hcp)*y(ie) + &
-             rate(beta)*y(Hc0)*y(Hhp) - rate(beta)*y(Hcp)*y(Hh0) + &
-             rate(phiC)*y(Hc0)
+  dydt(Hpp)= rate(coll)*y(Hp0)*y(ie)  - rate(alpha)*y(Hpp)*y(ie) + &
+             rate(beta)*y(Hp0)*y(Hsp) - rate(beta)*y(Hpp)*y(Hs0) + &
+             rate(phiC)*y(Hp0)
 
   !conservation species
-  dydt(Hc0) = - y0(Ht) + y(Hcp)+ y(Hh0)+ y(Hcp)+ y(Hc0)
-  dydt(ie ) = - y(ie) + y(Hhp) + y(Hcp)
+  dydt(Hp0) = - y0(Ht) + y(Hsp)+ y(Hs0)+ y(Hpp)+ y(Hp0)
+  dydt(ie ) = - y(ie) + y(Hsp) + y(Hpp)
 
    end subroutine derv
 
@@ -100,39 +100,39 @@ subroutine get_jacobian(y,jacobian,rate)
   real (kind=8), intent(out) :: jacobian(n_spec,n_spec)
   real (kind=8), intent(in)  :: rate(n_reac)
 
-  !Hhp
-  jacobian(Hhp, Hhp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hc0)
-  jacobian(Hhp, Hh0) =   rate(coll )*y(ie ) + rate(beta)*y(Hcp) + phiH
-  jacobian(Hhp, Hcp) =   rate(beta )*y(Hh0)
-  jacobian(Hhp, Hc0) = - rate(beta )*y(Hhp)
-  jacobian(Hhp, ie ) =   rate(coll )*y(Hh0) - rate(alpha)*y(Hcp)
+  !Hsp
+  jacobian(Hsp, Hsp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hp0)
+  jacobian(Hsp, Hs0) =   rate(coll )*y(ie ) + rate(beta)*y(Hpp) + phiH
+  jacobian(Hsp, Hpp) =   rate(beta )*y(Hs0)
+  jacobian(Hsp, Hp0) = - rate(beta )*y(Hsp)
+  jacobian(Hsp, ie ) =   rate(coll )*y(Hs0) - rate(alpha)*y(Hsp)
 
-  !Hh0
-  jacobian(Hh0, Hhp) = - jacobian(Hhp, Hhp)
-  jacobian(Hh0, Hh0) = - jacobian(Hhp, Hh0)
-  jacobian(Hh0, Hcp) = - jacobian(Hhp, Hcp)
-  jacobian(Hh0, Hc0) = - jacobian(Hhp, Hc0)
-  jacobian(Hh0, ie ) = - jacobian(Hhp, ie )
+  !Hs0
+  jacobian(Hs0, Hsp) = - jacobian(Hsp, Hsp)
+  jacobian(Hs0, Hs0) = - jacobian(Hsp, Hs0)
+  jacobian(Hs0, Hpp) = - jacobian(Hsp, Hpp)
+  jacobian(Hs0, Hp0) = - jacobian(Hsp, Hp0)
+  jacobian(Hs0, ie ) = - jacobian(Hsp, ie )
 
-  !Hcp
-  jacobian(Hcp, Hhp) =   rate(beta )*y(Hc0)
-  jacobian(Hcp, Hh0) = - rate(beta )*y(Hhp)
-  jacobian(Hcp, Hcp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hh0)
-  jacobian(Hcp, Hc0) =   rate(coll )*y(ie ) + rate(beta)*y(Hhp) + phiC
-  jacobian(Hcp, ie ) =   rate(coll )*y(Hc0) - rate(alpha)*y(Hcp)
+  !Hpp
+  jacobian(Hpp, Hsp) =   rate(beta )*y(Hp0)
+  jacobian(Hpp, Hs0) = - rate(beta )*y(Hpp)
+  jacobian(Hpp, Hpp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hs0)
+  jacobian(Hpp, Hp0) =   rate(coll )*y(ie ) + rate(beta)*y(Hsp) + phiC
+  jacobian(Hpp, ie ) =   rate(coll )*y(Hp0) - rate(alpha)*y(Hpp)
 
   !Htot
-  jacobian(Hc0, Hhp) = 1.
-  jacobian(Hc0, Hh0) = 1.
-  jacobian(Hc0, Hcp) = 1.
-  jacobian(Hc0, Hc0) = 1.
-  jacobian(Hc0, ie ) = 0.
+  jacobian(Hp0, Hsp) = 1.
+  jacobian(Hp0, Hs0) = 1.
+  jacobian(Hp0, Hpp) = 1.
+  jacobian(Hp0, Hp0) = 1.
+  jacobian(Hp0, ie ) = 0.
 
   !ne
-  jacobian(ie , Hhp) =  1.
-  jacobian(ie , Hh0) =  0.
-  jacobian(ie , Hcp) =  1.
-  jacobian(ie , Hc0) =  0.
+  jacobian(ie , Hsp) =  1.
+  jacobian(ie , Hs0) =  0.
+  jacobian(ie , Hpp) =  1.
+  jacobian(ie , Hp0) =  0.
   jacobian(ie , ie ) = -1.
 
 end subroutine get_jacobian
@@ -162,11 +162,11 @@ subroutine nr_init(y,y0)
 
   yhi=y0(Ht)
 
-  y(Hhp) = yhi/4.
-  y(Hh0) = yhi/4.
-  y(Hcp) = yhi/4.
-  y(Hc0) = yhi/4.
-  y(ie ) = y(Hhp) + y(HCp)
+  y(Hsp) = yhi/4.
+  y(Hs0) = yhi/4.
+  y(Hpp) = yhi/4.
+  y(Hp0) = yhi/4.
+  y(ie ) = y(Hsp) + y(Hpp)
 
   return
 end subroutine nr_init
@@ -182,7 +182,7 @@ logical function check_no_conservation(y,y0_in)
 
   check_no_conservation = .false.
 
-  y0_calc(Ht)= y(Hhp) + y(Hh0) + y(Hcp) + y(Hc0)
+  y0_calc(Ht)= y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
 
   do i = 1, n_elem
     if ( y0_calc(i) > 1.0001*y0_in(i) ) check_no_conservation = .true.
