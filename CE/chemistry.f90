@@ -45,7 +45,7 @@ subroutine update_chem()
   use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,  &
                       nxtot, nytot, nztot
   use globals, only : u, primit, dt_CFL, coords, dx, dy, dz, rank
-  use network, only : n_spec, n_elem, n1_chem
+  use network, only : n_spec, n_elem, n1_chem, Hs0, Hp0
   use hydro_core, only : u2prim
   use difrad, only : phCold, phHot
   use exoplanet, only : RSW
@@ -82,13 +82,13 @@ subroutine update_chem()
         end if
           !  update the primitives and conserved variables
         do l = 1, n_spec
-          primit(n1_chem+l-1, i,j,k) = y(l)
+          !primit(n1_chem+l-1, i,j,k) = y(l)
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
 
         !  jpdate the total neutrals as well
-        !primit(6,i,j,k)  = y(Hh0) + y(Hc0)
-        u(6,i,j,k)       = y(Hh0) + y(Hc0)
+        !primit(6,i,j,k)  = y(Hs0) + y(Hp0)
+        u(6,i,j,k)       = y(Hs0) + y(Hp0)
 
       end do
     end do
