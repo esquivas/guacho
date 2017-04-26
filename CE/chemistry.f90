@@ -91,7 +91,7 @@ subroutine update_chem()
         u(6,i,j,k) = y(Hs0) + y(Hp0)
         !  "correct" the density
         u(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
-        pp(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+        primit(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
 
       end do
     end do
