@@ -48,11 +48,11 @@ subroutine update_chem()
   use network, only : n_spec, n_elem, n1_chem, Hsp, Hs0, Hpp, Hp0
   use hydro_core, only : u2prim
   use difrad, only : phCold, phHot
-  use exoplanet, only : RSW
+  use exoplanet, only : RSW, RPW, xp, yp, zp
   implicit none
   real :: dt_seconds, T, y(n_spec), y0(n_elem)
   integer :: i, j, k, l
-  real    :: xs, ys, zs, rads
+  real    :: xs, ys, zs, rads, xpl, ypl, zpl
 
   dt_seconds = dt_CFL*tsc
   failed_convergence = 0.
@@ -71,11 +71,19 @@ subroutine update_chem()
         xs=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
         ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
         zs=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
+        ! Position measured from the centre of the planet
+        xpl=x-xp
+        ypl=y
+        zpl=z-zp
+
         ! Distance from the centre of the star
         rads=sqrt(xs**2+ys**2+zs**2)
+        ! Distance from the centre of the planet
+        radp=sqrt(xpl**2+ypl**2+zpl**2)
+
 
         ! IF OUTSIDE THE STAR
-        if( rads >= rsw) then
+        if( (rads >= rsw) .and. (radp >= rpw) then
           !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
           call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
 
