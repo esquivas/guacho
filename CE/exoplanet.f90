@@ -179,8 +179,8 @@ subroutine impose_exo(u,time)
           !   components separately
           u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
           u(neqdyn+3,i,j,k) =  1.E-4*dens   ! xhn*rho S neutro
-          u(neqdyn+4,i,j,k) = 1.E-25*dens   ! xci*rho P ion
-          u(neqdyn+5,i,j,k) = 1.E-25*dens   ! xcn*rho P neutro
+          u(neqdyn+4,i,j,k) = 0.*dens   ! xci*rho P ion
+          u(neqdyn+5,i,j,k) = 0.*dens   ! xcn*rho P neutro
           ! ne
           u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
           !density of neutrals
@@ -209,10 +209,10 @@ subroutine impose_exo(u,time)
 
           !   Here the number density of the wind and planet
           !   components separately
-          u(neqdyn+2,i,j,k) = 1.e-25*dens     ! xhi*rho S ion
-          u(neqdyn+3,i,j,k) = 1.e-25*dens     ! xhn*rho S neutro
-          u(neqdyn+4,i,j,k) =    0.5*dens     ! xci*rho P ion
-          u(neqdyn+5,i,j,k) =    0.5*dens     ! xcn*rho P neutro
+          u(neqdyn+2,i,j,k) =  0.*dens     ! xhi*rho S ion
+          u(neqdyn+3,i,j,k) =  0.*dens     ! xhn*rho S neutro
+          u(neqdyn+4,i,j,k) =  0.5*dens     ! xci*rho P ion
+          u(neqdyn+5,i,j,k) =  0.5*dens     ! xcn*rho P neutro
 
           ! ne
           u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
