@@ -244,6 +244,9 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   !  update pressure
   pp(5) = pp(5) * ch_factor
 
+  !  set pressure flor "a la mala"
+  pp(5) = max(pp(5),pp(1)*1000./Tempsc)
+
   !  update total energy density
   if (mhd) then
 #ifdef BFIELD
