@@ -52,7 +52,7 @@ subroutine update_chem()
   implicit none
   real :: dt_seconds, T, y(n_spec), y0(n_elem)
   integer :: i, j, k, l
-  real    :: xs, ys, zs, rads, xpl, ypl, zpl
+  real    :: xs, ys, zs, rads, radp, xpl, ypl, zpl
 
   dt_seconds = dt_CFL*tsc
   failed_convergence = 0.
@@ -72,9 +72,9 @@ subroutine update_chem()
         ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
         zs=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
         ! Position measured from the centre of the planet
-        xpl=x-xp
-        ypl=y
-        zpl=z-zp
+        xpl=xs-xp
+        ypl=ys
+        zpl=zs-zp
 
         ! Distance from the centre of the star
         rads=sqrt(xs**2+ys**2+zs**2)
