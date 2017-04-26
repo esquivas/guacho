@@ -162,10 +162,10 @@ subroutine nr_init(y,y0)
 
   yhi=y0(Ht)
 
-  y(Hsp) = 0.40* yhi
+  y(Hsp) = 0.49* yhi
   y(Hs0) = 0.01*yhi
-  y(Hpp) = 0.1*yhi
-  y(Hp0) = 0.4*yhi
+  y(Hpp) = 0.25*yhi
+  y(Hp0) = 0.25*yhi
   y(ie ) = y(Hsp) + y(Hpp)
 
   return
@@ -185,7 +185,7 @@ logical function check_no_conservation(y,y0_in)
   y0_calc(Ht)= y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
 
   do i = 1, n_elem
-    if ( y0_calc(i) > 1.0001*y0_in(i) ) check_no_conservation = .true.
+    if ( y0_calc(i) > 1.001*y0_in(i) ) check_no_conservation = .true.
   end do
 
 end function check_no_conservation
