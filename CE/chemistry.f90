@@ -83,7 +83,7 @@ subroutine update_chem()
 
 
         ! IF OUTSIDE THE STAR
-        if( (rads >= rsw) .and. (radp >= rpw) then
+        if( (rads >= rsw) .and. (radp >= rpw) ) then
           !call chemstep(primit( (neqdyn+1):(neqdyn+n_spec),i,j,k), primit(1,i,j,k), T, dt_seconds )
           call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
 
