@@ -45,7 +45,7 @@ subroutine update_chem()
   use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,  &
                       nxtot, nytot, nztot
   use globals, only : u, primit, dt_CFL, coords, dx, dy, dz, rank
-  use network, only : n_spec, n_elem, n1_chem, Hs0, Hp0
+  use network, only : n_spec, n_elem, n1_chem, Hsp, Hs0, Hpp, Hp0
   use hydro_core, only : u2prim
   use difrad, only : phCold, phHot
   use exoplanet, only : RSW
@@ -88,7 +88,9 @@ subroutine update_chem()
 
         !  jpdate the total neutrals as well
         !primit(6,i,j,k)  = y(Hs0) + y(Hp0)
-        u(6,i,j,k)       = y(Hs0) + y(Hp0)
+        u(6,i,j,k) = y(Hs0) + y(Hp0)
+        !  "correct" the density
+        u(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
 
       end do
     end do
@@ -118,7 +120,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8), intent(inout) :: y(n_spec)
   real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH, phiC
   real (kind=8) :: dtm
-  real (kind=8) :: y1(n_spec),yt(n_spec),yin(n_spec), y0_in(n_elem)
+  real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
   integer, parameter  :: niter=100       ! number of iterations
   integer :: n,i,iff
@@ -152,9 +154,8 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     call linsys(jac,y1, n_spec)
 
     y(:)=y(:) + y1(:)
-    y(:)=max(y(:),1.e-40)
-
-    yt(:)=y1(:)/y(:)
+    !y(:)=max(y(:),1.e-40)
+    !yt(:)=y1(:)/y(:)
 
     !  exit the loop if converged
     if(all(abs(y1(:)) <= 0.0001)) exit
