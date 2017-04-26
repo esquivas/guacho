@@ -212,7 +212,7 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   real, intent(inout) :: uu(neq), pp(neq)
   real, intent(in)    :: dt, radphi
   real                :: T, ch_factor
-  real(kind = 8)      :: y0, y1, dh, dh0, gain, tprime, al, ce, t1
+  real(kind = 8)      :: y0, y1, dh, dh0, gain, Tprime, al, ce, T1
 
   y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
   y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt)
@@ -226,20 +226,20 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
 
   if (dif_rad) then
     gain=real(radphi,8)*dh0*Kb*1.E4 !3.14d5
-    tprime=max( gain*real(T,8)/(dh**2*al),1000.)
+    Tprime=max( gain*real(T,8)/(dh**2*al),1000.)
   else
     tprime=10.
   end if
   !tprime=1000.
 
   ce=(2.*dh*al)/(3.*Kb*real(T,8))
-  t1=tprime+(t-tprime)*exp(-ce*dt) !# new temperature
+  T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
-  t1=max(t1,0.1*real(t,8) )
-  t1=min(t1,10.*real(t,8) )
+  T1=max(T1,0.1*real(T,8) )
+  T1=min(T1,10.*real(T,8) )
   !  t1=max(t1,tprime)
 
-  ch_factor = real(t1)/T
+  ch_factor = real(T1)/T
 
   !  update pressure
   pp(5) = pp(5) * ch_factor
