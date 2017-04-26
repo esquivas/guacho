@@ -245,7 +245,7 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   pp(5) = pp(5) * ch_factor
 
   !  set pressure flor "a la mala"
-  pp(5) = max(pp(5),pp(1)*1000./Tempsc)
+  pp(5) = max(pp(5),(pp(1)+pp(11))*1000./Tempsc)
 
   !  update total energy density
   if (mhd) then
