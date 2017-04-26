@@ -28,7 +28,7 @@ module exoplanet
 
   use parameters
   implicit none
-  real :: RSW     !< Stellar radius
+  real :: RSW     !< Stellar wind radius
   real :: TSW     !< Stellar wind temperature
   real :: VSW     !< Stellar wind velocity
   real :: dsw     !< Stellar Wind Density
