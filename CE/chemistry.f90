@@ -90,6 +90,7 @@ subroutine update_chem()
         end if
           !  update the primitives and conserved variables
         do l = 1, n_spec
+          y(l) = max( y(l), 0. )
           !primit(n1_chem+l-1, i,j,k) = y(l)
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
