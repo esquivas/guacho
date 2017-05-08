@@ -132,7 +132,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=100       ! number of iterations
+  integer, parameter  :: niter=200       ! number of iterations
   integer :: n,i,iff
 
   n=0
@@ -143,14 +143,14 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
 
   call get_reaction_rates(rate,T,phiH, phiC)
 
-  !  initial guess for Newton-Raphson
-  if ( check_no_conservation(y,y0_in) ) then
-    !print*, '*****Reset Initial Guess ********'
-    !print*, "T=", T
-    call nr_init(y,y0_in)
-  end if
-
   do while ( n <= niter )
+
+    !  initial guess for Newton-Raphson
+    if ( check_no_conservation(y,y0_in) ) then
+      !print*, '*****Reset Initial Guess ********'
+      !print*, "T=", T
+      call nr_init(y,y0_in)
+    end if
 
     call derv(y,rate,dydt,y0)
     call get_jacobian(y,jac,rate)
