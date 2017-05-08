@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./MB3c/'
+  character (len=128),parameter ::  outputpath='./MB3d/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -128,7 +128,7 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure = .false.
+  logical, parameter :: beta_pressure = .true.
 
   !> Include charge_exchange
   logical, parameter :: charge_exchange = .true.
@@ -140,13 +140,13 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=200      !< Total grid size in X
-  integer, parameter :: nytot=50      !< Total grid size in Y
-  integer, parameter :: nztot=200      !< Total grid size in Z
+  integer, parameter :: nxtot=400      !< Total grid size in X
+  integer, parameter :: nytot=100      !< Total grid size in Y
+  integer, parameter :: nztot=400      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX=8     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
   !> total number of MPI processes
