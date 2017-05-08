@@ -1,12 +1,12 @@
 #!/bin/bash
-#PBS -N guacho-MB3b
-#PBS -e guacho-MB3b.err
-#PBS -o guacho-MB3b.out
+#PBS -N MB3d
+#PBS -e MB3d.err
+#PBS -o MB3d.out
 #PBS -r n
 
 ##PBS -m aeb
 #PBS -M esquivel@nucleares.unam.mx
-#PBS -l nodes=1:tff:ppn=32
+#PBS -l nodes=2:tvh:ppn=32
 #PBS -q default
 
 ### Switch to the job's working directory, provided by PBS in PBS_O_WORKDIR
@@ -17,7 +17,7 @@ cd $WORKDIR
 ### EXEPATH is the directory where your executable resides
 EXEPATH=$WORKDIR
 ###EXE is the name of your executable (compiled mpi program)
-EXE="MB3b"
+EXE="M3d"
 ### ARGS is optional. If you don't need it simply leave it empty
 ARGS=""
 ### ARGS is also optional.
