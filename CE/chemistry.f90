@@ -132,7 +132,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=200       ! number of iterations
+  integer, parameter  :: niter=100       ! number of iterations
   integer :: n,i,iff
 
   n=0
@@ -168,7 +168,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     !yt(:)=y1(:)/y(:)
 
     !  exit the loop if converged
-    if(all(abs(y1(:)) <= 0.0001)) exit
+    if(all(abs(y1(:)) <= 0.001)) exit
 
     n=n+1
 
