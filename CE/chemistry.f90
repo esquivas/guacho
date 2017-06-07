@@ -55,7 +55,7 @@ subroutine update_chem()
   real    :: xs, ys, zs, rads, radp, xpl, ypl, zpl
 
   dt_seconds = dt_CFL*tsc
-  failed_convergence = 0.
+  failed_convergence = 0
 
   do k=1,nz
     do j=1,ny
@@ -95,7 +95,7 @@ subroutine update_chem()
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
 
-        !  jpdate the total neutrals as well
+        !   update the total neutrals as well
         !primit(6,i,j,k)  = y(Hs0) + y(Hp0)
         u(6,i,j,k) = y(Hs0) + y(Hp0)
         !  "correct" the density
