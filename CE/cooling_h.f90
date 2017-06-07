@@ -235,14 +235,14 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   ce=(2.*dh*al)/(3.*Kb*real(T,8))
   T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
-  T1=max(T1,0.1*real(T,8) )
-  T1=min(T1,10.*real(T,8) )
+  T1=max(T1,0.5*real(T,8) )
+  T1=min(T1,2.*real(T,8) )
   !  t1=max(t1,tprime)
 
   ch_factor = real(T1)/T
 
   !  update pressure
-  pp(5) = pp(5) * ch_factor
+  !pp(5) = pp(5) * ch_factor
 
   !  set pressure floor "a la mala"
   pp(5) = max(pp(5),(pp(1)+pp(11))*10000./Tempsc)
