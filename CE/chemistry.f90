@@ -88,19 +88,21 @@ subroutine update_chem()
           call chemstep(y, y0, T, dt_seconds,phHot(i,j,k),phCold(i,j,k))
 
         end if
-          !  update the primitives and conserved variables
+
+        !  update the primitives and conserved variables
         do l = 1, n_spec
           y(l) = max( y(l), 0. )
           !primit(n1_chem+l-1, i,j,k) = y(l)
           u     (n1_chem+l-1, i,j,k) = y(l)
         end do
-
-        !   update the total neutrals as well
+        
+        !   update the total neutrals (the prmimitive is updated in cooling)
         !primit(6,i,j,k)  = y(Hs0) + y(Hp0)
         u(6,i,j,k) = y(Hs0) + y(Hp0)
         !  "correct" the density
-        u(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+        u(1,i,j,k)      = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
         primit(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+
 
       end do
     end do
@@ -132,7 +134,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
-  integer, parameter  :: niter=100       ! number of iterations
+  integer, parameter  :: niter=1000     ! number of iterations
   integer :: n,i,iff
 
   n=0
@@ -146,11 +148,11 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   do while ( n <= niter )
 
     !  initial guess for Newton-Raphson
-    if ( check_no_conservation(y,y0_in) ) then
-      !print*, '*****Reset Initial Guess ********'
-      !print*, "T=", T
-      call nr_init(y,y0_in)
-    end if
+    !if ( check_no_conservation(y,y0_in) ) then
+    !  print*, '*****Reset Initial Guess ********'
+    !  print*, "T=", T
+    !  call nr_init(y,y0_in)
+    !end if
 
     call derv(y,rate,dydt,y0)
     call get_jacobian(y,jac,rate)
