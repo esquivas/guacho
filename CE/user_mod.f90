@@ -193,45 +193,51 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
   if ( beta_pressure ) then
-    !compute Beta for radiation pressure
-    Nr = 800 !!vr and Br dimension
 
-    frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
-    a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
-    b = sqrt(1-a**2)                 !!sin(theta)
-    c = atan2(yc,xc)                  !!Phi
+    !  do only outside BC
+    if( (rads >= rsw) .and. (radp >= rpw) ) then
 
-    v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+      !compute Beta for radiation pressure
+      Nr = 800 !!vr and Br dimension
 
-    fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
-    index = int(fracv)+1
+      frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
+      a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
+      b = sqrt(1-a**2)                 !!sin(theta)
+      c = atan2(yc,xc)                  !!Phi
 
-    if (index < 1) then
-      !print*, 'index out of bounds', index, xc, yc, zc
-      !print*, coords(:),i, j, k
-      index = 1
-    else if ( index > 800 ) then
-      !print*, 'index out of bounds', index, xc, yc, zc
-      !print*, coords(:), i, j, k
-      index = 800
+      v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+
+      fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
+      index = int(fracv)+1
+
+      if (index < 1) then
+        !print*, 'index out of bounds', index, xc, yc, zc
+        !print*, coords(:),i, j, k
+        index = 1
+      else if ( index > 800 ) then
+        !print*, 'index out of bounds', index, xc, yc, zc
+        !print*, coords(:), i, j, k
+        index = 800
+      end if
+
+      Beta(i,j,k) = ( Br(index)+(v-vr(index)) * ( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index)) ) *frac_neutro!*active
+      !!Linear interpolation for Beta, active allows turn on the Beta term.
+
+      GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
     end if
 
-    Beta(i,j,k) = ( Br(index)+(v-vr(index)) * ( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index)) ) *frac_neutro!*active
-    !!Linear interpolation for Beta, active allows turn on the Beta term.
+    ! update source terms with gravity
+    do l=1, nb
+      ! momenta
+      s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
+      s(3)= s(3)-pp(1)*GM(l)*y(l)/(rad2(l)**1.5)
+      s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
+      ! energy
+      s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
+      /(rad2(l)**1.5 )
+    end do
 
-    GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
   end if
-
-  ! update source terms with gravity
-  do l=1, nb
-    ! momenta
-    s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
-    s(3)= s(3)-pp(1)*GM(l)*y(l)/(rad2(l)**1.5)
-    s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
-    ! energy
-    s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
-           /(rad2(l)**1.5 )
-  end do
 
 end subroutine get_user_source_terms
 
