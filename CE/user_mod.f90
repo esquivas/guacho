@@ -195,7 +195,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   if ( beta_pressure ) then
 
     !  do only outside BC
-    if( (rads >= rsw) .and. (radp >= rpw) ) then
+    if( (rad(1) >= rsw) .and. (rad(2) >= rpw) ) then
 
       !compute Beta for radiation pressure
       Nr = 800 !!vr and Br dimension
