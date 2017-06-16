@@ -146,27 +146,21 @@ $(PROGRAM)  : prebuild ${OBJECTS_ALL}
 	@echo Linking flags used: $(LINKFLAGS)
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS)  $(OBJECTS_ALL) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
-  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
-  ${SRC_PATH}/C2Ray/*.mod
+	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
 coldens : prebuild ${OBJECTS_COLDENS}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_COLDENS) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
-	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
-	${SRC_PATH}/C2Ray/*.mod
+	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
 lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_LYAT) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
-	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
-	${SRC_PATH}/C2Ray/*.mod
+	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
 prebuild :
@@ -191,37 +185,7 @@ prebuild :
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
 
-# C2ray routines and modules
-%.o:src/C2ray/%.f95
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:src/C2Ray/%.f90
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:.src/C2Ray/%.f
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:src/C2Ray/%.F95
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:/src/C2Ray/%.F90
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:src//C2Ray/%.F
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
 
 clean :
-	rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
-	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
-		${SRC_PATH}/C2Ray/*.mod
-	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
-
-cleanall :
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
-	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
-		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
-		${SRC_PATH}/C2Ray/*.modrm -f SS/BIN/*
-	rm -f ${USR_PATH}/SILO/*.root
-	rm -f ${USR_PATH}/SILO/BLOCKS/*
+	rm -f *.o *.mod
+	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err
