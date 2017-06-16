@@ -158,7 +158,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   ! Adds the Rad Pressure according to the Beta profile of Bourrier
   use constants,  only : Ggrav
   use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2,&
-                         beta_pressure
+                         beta_pressure, vsc
   use globals,    only : dx, dy, dz, coords
   use exoplanet
   use radpress
@@ -201,11 +201,13 @@ subroutine get_user_source_terms(pp,s, i, j , k)
       Nr = 800 !!vr and Br dimension
 
       frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
-      a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
-      b = sqrt(1-a**2)                 !!sin(theta)
-      c = atan2(yc,xc)                  !!Phi
+      !a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
+      !b = sqrt(1-a**2)                 !!sin(theta)
+      !c = atan2(yc,xc)                  !!Phi
 
-      v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+      !v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+      !  Radial velocity in km s^-1
+      v =  ( (pp(1)*xc + pp(2)*yc + pp(3)*zc)/sqrt(rad2(1)) ) * (vsc/1e5)
 
       fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
       index = int(fracv)+1
@@ -220,7 +222,8 @@ subroutine get_user_source_terms(pp,s, i, j , k)
         index = 800
       end if
 
-      Beta(i,j,k) = ( Br(index)+(v-vr(index)) * ( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index)) ) *frac_neutro!*active
+      Beta(i,j,k) = ( Br(index) + (v-vr(index))*( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index) ) ) *frac_neutro!*active
+
       !!Linear interpolation for Beta, active allows turn on the Beta term.
       GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
 
