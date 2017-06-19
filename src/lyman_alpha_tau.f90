@@ -441,7 +441,7 @@ program lyman_alpha_tau
   use constants, only : pi
   use parameters, only : xmax,master, mpi_real_kind, &
                          outputpath, nxtot, nytot
-  use globals, only : u, dx, dy, rank, comm3d
+  use globals, only : u, rank, comm3d
   use lyman_alpha_utilities
 
   implicit none
