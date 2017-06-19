@@ -104,6 +104,7 @@ coldens.o #   not updated to Guacho V1.3
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 hydro_core.o \
+Out_BIN_Module.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
 # Join object lists
