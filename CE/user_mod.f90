@@ -192,7 +192,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
-  if ( beta_pressure ) then
+  beta(i,j,k) = 0. 
+
+if ( beta_pressure ) then
 
     !  do only outside BC
     if( (rad2(1) >= rsw**2) .and. (rad2(2) >= rpw**2) ) then
@@ -207,7 +209,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
 
       !v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
       !  Radial velocity in km s^-1
-      v =  ( (pp(1)*xc + pp(2)*yc + pp(3)*zc)/sqrt(rad2(1)) ) * (vsc/1e5)
+      v =  ( (pp(2)*xc + pp(3)*yc + pp(4)*zc)/sqrt(rad2(1)) ) * (vsc/1e5)
 
       fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
       index = int(fracv)+1
@@ -216,13 +218,13 @@ subroutine get_user_source_terms(pp,s, i, j , k)
         !print*, 'index out of bounds', index, xc, yc, zc
         !print*, coords(:),i, j, k
         index = 1
-      else if ( index > 800 ) then
+      else if ( index > 799 ) then
         !print*, 'index out of bounds', index, xc, yc, zc
         !print*, coords(:), i, j, k
-        index = 800
+        index = 799
       end if
 
-      Beta(i,j,k) = ( Br(index) + (v-vr(index))*( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index) ) ) *frac_neutro!*active
+      Beta(i,j,k) = ( Br(index)  + (v-vr(index))*( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index) ) ) *frac_neutro!*active
 
       !!Linear interpolation for Beta, active allows turn on the Beta term.
       GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
