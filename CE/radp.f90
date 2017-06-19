@@ -58,10 +58,12 @@ subroutine read_table_beta()
      enddo
      close(unit=21)
      print*, "just read Bourrier's beta table"
+     print*,'v(1): ', vr(1), ' v(800): ', vr(800)
+     print*,'Beta(1): ', Br(1), ' Beta(800): ', Br(800)
   endif
 #ifdef MPIP
   call mpi_bcast(Br,size(Br),mpi_double_precision,0,mpi_comm_world,err)
-  call mpi_bcast(vr,size(Br),mpi_double_precision,0,mpi_comm_world,err)
+  call mpi_bcast(vr,size(vr),mpi_double_precision,0,mpi_comm_world,err)
 #endif
 
 end subroutine read_table_beta
