@@ -142,7 +142,8 @@ subroutine read_data(u,itprint,filepath)
   integer, intent(in) :: itprint
   character (len=128), intent(in) :: filepath
   character                       :: byte_read
-  integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
+  integer :: nxp, nyp, nzp, dxp, dyp, dzp. x0p, y0p, z0p, &
+             mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
   integer :: unitin, ip, err
   character (len=128) file1
 
@@ -385,7 +386,7 @@ subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
 
   write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
   unitout=11
-  open(unit=unitout,file=file1,status='unknown',acess='stream')
+  open(unit=unitout,file=file1,status='unknown',access='stream')
 
   call write_header(unitout,1,0)
   write (unitout) map(:,:,:)
@@ -464,7 +465,7 @@ program lyman_alpha_tau
   nymap = nytot
   allocate( map(nxmap, nymap,nvmap))
   allocate(map1(nxmap, nymap,nvmap))
-  
+
   ! initializes program
   call init_LA()
 
