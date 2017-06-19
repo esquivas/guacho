@@ -170,7 +170,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
   real    :: xc ,yc, zc
-  real :: v, fracv, frac_neutro, a, b, c
+  real :: v, fracv, frac_neutro !, a, b, c
 
   GM(1)= Ggrav*MassS/rsc/vsc2
   GM(2)= Ggrav*MassP/rsc/vsc2
@@ -192,7 +192,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
-  beta(i,j,k) = 0. 
+  beta(i,j,k) = 0.
 
 if ( beta_pressure ) then
 
