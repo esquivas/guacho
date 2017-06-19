@@ -328,7 +328,7 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
           !  obtain original position
           call getXYZ(i,j,k, x,y,z)
           !only do to the side facing the observer
-          if(z < -30.*dz ) then
+          if(z > 30.*dz ) then
             !  do the rotation of the coordinates
             call rotation_x(theta_x,x,y,z,xn,yn,zn)
             call rotation_y(theta_y,xn,yn,zn,x,y,z)
@@ -353,10 +353,10 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
             !  make sure the result lies in the map bounds
             if( (iobs >=1    ).and.(jobs >=1    ).and. &
                 (iobs <=nxmap).and.(jobs <=nymap) ) then
-              if ((T < 1e5).and.(prim(7)<0)) then
+              !if ((T < 1e5).and.(prim(7)<0)) then
               map(iobs,jobs,:)= map(iobs,jobs,:) + &
                                   dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
-              end if
+              !end if
             end if
           end if
       end do
@@ -480,7 +480,7 @@ program lyman_alpha_tau
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  loop_over_outputs : do itprint=68,75
+  loop_over_outputs : do itprint=0,70
 
     !  read ph and u from file
     call read_data(u,itprint,filepath)
