@@ -142,7 +142,7 @@ subroutine read_data(u,itprint,filepath)
   integer, intent(in) :: itprint
   character (len=128), intent(in) :: filepath
   character                       :: byte_read
-  integer :: nxp, nyp, nzp, dxp, dyp, dzp. x0p, y0p, z0p, &
+  integer :: nxp, nyp, nzp, dxp, dyp, dzp, x0p, y0p, z0p, &
              mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
   integer :: unitin, ip, err
   character (len=128) file1
