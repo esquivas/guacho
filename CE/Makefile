@@ -105,6 +105,7 @@ coldens.o #   not updated to Guacho V1.3
 LYAT = \
 network.o \
 hydro_core.o \
+difrad.o \
 Out_BIN_Module.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
