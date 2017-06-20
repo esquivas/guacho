@@ -377,7 +377,6 @@ end subroutine fill_map
 !> @param real [in] map(nxmap,mymap) : Target map
 
 subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
-  use  Out_BIN_Module, only : write_header
   implicit none
   integer, intent(in) :: nxmap, nymap,nvmap,itprint
   character (len=128), intent(in) :: filepath
@@ -389,7 +388,6 @@ subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
   unitout=11
   open(unit=unitout,file=file1,status='unknown',access='stream')
 
-  call write_header(unitout,1,0)
   write (unitout) map(:,:,:)
   close(unitout)
 
