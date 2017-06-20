@@ -2,10 +2,10 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=Guacho
+PROGRAM=M1a
 
 #  Seaerh Path, object files are searched in the order below
-VPATH = . : ../src
+VPATH = . : ../ : ../../src
 
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
@@ -105,8 +105,6 @@ coldens.o #   not updated to Guacho V1.3
 LYAT = \
 network.o \
 hydro_core.o \
-difrad.o \
-Out_BIN_Module.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
 # Join object lists
