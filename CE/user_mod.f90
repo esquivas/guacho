@@ -192,10 +192,10 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
-  beta(i,j,k) = 0.
 
 if ( beta_pressure ) then
 
+    beta(i,j,k) = 0.
     !  do only outside BC
     if( (rad2(1) >= rsw**2) .and. (rad2(2) >= rpw**2) ) then
 
