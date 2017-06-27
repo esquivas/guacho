@@ -317,9 +317,13 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
   real, intent(out) :: map(nxmap,nymap,nvmap)
   integer :: i,j,k, iobs, jobs
   real :: x,y,z,xn,yn,zn, vx, vy, vz,vxn, vyn, vzn, velsc
-  real :: T, prim(neq), profile(nvmap)
+  real :: T, prim(neq), profile(nvmap), profileH(nvmap)
   real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
   velsc=sqrt(vsc2)
+
+  ! Hack to use two Temperatures
+  call phigauss(1e4, vzn,vmin,vmax,nvmap,profile)
+  call phigauss(1e6, vzn,vmin,vmax,nvmap,profileH)
 
   do k=1,nz
      do j=1,ny
@@ -348,16 +352,23 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
             call rotation_y(theta_y,vxn,vyn,vzn,vx,vy,vz)
             call rotation_z(theta_z,vx,vy,vz,vxn,vyn,vzn)
 
-            !  calculate the line profile function
-            call phigauss(T, vzn,vmin,vmax,nvmap,profile)
+            !  calculate the line profile functions
+            !call phigauss(T, vzn,vmin,vmax,nvmap,profile)
             !  make sure the result lies in the map bounds
             if( (iobs >=1    ).and.(jobs >=1    ).and. &
                 (iobs <=nxmap).and.(jobs <=nymap) ) then
               !if ((T < 1e5).and.(prim(7)<0)) then
               map(iobs,jobs,:)= map(iobs,jobs,:) + &
-                                  dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
+                                  dz*rsc*prim(neqdyn+3)*sigmaLA*lambdaLA*profileH(:) &
+                                  dz*rsc*prim(neqdyn+5)*sigmaLA*lambdaLA*profile(:)
+              !                    dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
+
               !end if
             end if
+
+
+
+
           end if
       end do
     end do
@@ -384,7 +395,7 @@ subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
   character (len=128) file1
   integer ::  unitout
 
-  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
+  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-2T-',itprint,'.bin'
   unitout=11
   open(unit=unitout,file=file1,status='unknown',access='stream')
 
