@@ -321,10 +321,6 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
   real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
   velsc=sqrt(vsc2)
 
-  ! Hack to use two Temperatures
-  call phigauss(1e4, vzn,vmin,vmax,nvmap,profile)
-  call phigauss(1e6, vzn,vmin,vmax,nvmap,profileH)
-
   do k=1,nz
      do j=1,ny
         do i=1,nx
@@ -354,6 +350,10 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
 
             !  calculate the line profile functions
             !call phigauss(T, vzn,vmin,vmax,nvmap,profile)
+            ! Hack to use two Temperatures
+            call phigauss(1e4, vzn,vmin,vmax,nvmap,profile)
+            call phigauss(1e6, vzn,vmin,vmax,nvmap,profileH)
+
             !  make sure the result lies in the map bounds
             if( (iobs >=1    ).and.(jobs >=1    ).and. &
                 (iobs <=nxmap).and.(jobs <=nymap) ) then
