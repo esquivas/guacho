@@ -359,7 +359,7 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
                 (iobs <=nxmap).and.(jobs <=nymap) ) then
               !if ((T < 1e5).and.(prim(7)<0)) then
               map(iobs,jobs,:)= map(iobs,jobs,:) + &
-                                  dz*rsc*prim(neqdyn+3)*sigmaLA*lambdaLA*profileH(:) &
+                                  dz*rsc*prim(neqdyn+3)*sigmaLA*lambdaLA*profileH(:) + &
                                   dz*rsc*prim(neqdyn+5)*sigmaLA*lambdaLA*profile(:)
               !                    dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
 
