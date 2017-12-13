@@ -49,7 +49,7 @@ subroutine update_chem()
   real :: dt_seconds, T, y(n_spec), y0(n_elem)
   integer :: i, j, k, l
 
-  dt_seconds = dt_CFL*tsc
+  dt_seconds = dt_CFL*tsc  !  this is the time in seconds
 
   do k=1,nz
     do j=1,ny
