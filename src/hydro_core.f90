@@ -353,26 +353,18 @@ subroutine prim2u(prim,uu, prim0)
      uu(4) = prim(1)*prim(4)
   end if
 
-
+#ifndef BFIELD
+  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
+#else
   if (mhd) then
-#ifdef BFIELD
     if (present(prim0)) then
-    !   kinetic+thermal+magnetic energies
-        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
-     else
-        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
-     end if
-#endif
-  else
-
-!     if present(prim0) then
-!        !   kinetic+thermal energies
-!        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-!     else
-        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-!     end if
+      !   kinetic+thermal+magnetic energies
+      uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+      +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
+    else
+      uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
+                +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
+    end if
   end if
 
 #ifdef BFIELD
