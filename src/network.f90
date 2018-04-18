@@ -38,19 +38,22 @@
   integer, parameter :: n_elem = 1
 
   ! number of non-equilibrium equations
-  integer, parameter :: n_nequ = n_spec - nequil 
+  integer, parameter :: n_nequ = n_spec - nequil
+
+  !  first index for the species in the global array
+  integer, parameter :: n1_chem = 6 
 
   ! indexes of the different species
-  integer, parameter :: H  = 1
-  integer, parameter :: HP = 2
-  integer, parameter :: H2 = 3
-  integer, parameter :: ie = 4
+  integer, parameter :: H  = 1   ! H0
+  integer, parameter :: HP = 2   ! H+
+  integer, parameter :: H2 = 3   ! H_2
+  integer, parameter :: ie = 4   ! n_e
   !   Integer, parameter :: iM  = n_spec+1
 
   ! indexes of the equilibrium species
   integer, parameter :: iHt = 1
 
-  ! number of species with 
+  ! number of species with
   integer, parameter :: iHn = 3
 
   ! number of reaction rates
@@ -109,7 +112,7 @@ subroutine get_jacobian(y,jacobian,rate)
   jacobian(h , hp) = +   rate(ir5)*y(ie)
   jacobian(h , h2) = +4.*rate(ir1)*y(h2) + 2.*rate(ir2)*y(h )   &
                      +2.*rate(ir3)*y(ie) +    rate(ir6)         &
-                     +2.*rate(ir7) 
+                     +2.*rate(ir7)
   jacobian(h , ie) = +2.*rate(ir3)*y(h2) -    rate(ir4)*y(h )   &
                      +   rate(ir5)*y(hp)
   !hp
@@ -161,7 +164,7 @@ subroutine nr_init(y,y0)
   real, intent(out) :: y(n_spec)
   real, intent(in ) :: y0(n_elem)
   real :: yhi
-  
+
   yhi=y0(iht)
 
   y(h)=yhi/2.
@@ -185,7 +188,7 @@ logical function check_no_conservation(y,y0_in)
 
   y0_calc(iHt)=y(H)+y(Hp)+2.*y(H2)
 
-  do i = 1, n_elem 
+  do i = 1, n_elem
     if ( y0_calc(i) > 1.0001*y0_in(i) ) check_no_conservation = .true.
   end do
 
@@ -196,4 +199,3 @@ end function check_no_conservation
 end module network
 
 !=======================================================================
- 
