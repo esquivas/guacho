@@ -46,9 +46,9 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_state
+                         pmhd, mhd, eq_of_state, charge_exchange
   use constants
-  use network,  only : n_spec
+  use network,  only : n1_chem, n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
@@ -115,7 +115,7 @@ subroutine u2prim(uu, prim, T)
   if (eq_of_state == EOS_CHEM) then
     !  Assumes that rho scaling is mu*mh
     dentot = 0.
-    do i = neqdyn+1, neqdyn+n_spec
+    do i = n1_chem, n1_chem+n_spec-1
       dentot = prim(i) + dentot
     end do
     dentot = max(dentot, 1e-15)
@@ -263,11 +263,11 @@ subroutine calcprim(u,primit, only_ghost)
       do i=0,nx+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,j,0   ),primit(:,i,j,0 ),primit0(:,i,j,0 ),Temp(i,j,0   ) )
-            call u2primSplitAll(u(:,i,j,nz+1),primit(:,i,j,nz+1),primit0(:,i,j,nz+1),Temp(i,j,nz+1) )
+            call u2primSplitAll(u(:,i,j,0   ), primit(:,i,j,0 ), primit0(:,i,j,0 ),Temp(i,j,0   ) )
+            call u2primSplitAll(u(:,i,j,nz+1), primit(:,i,j,nz+1), primit0(:,i,j,nz+1), Temp(i,j,nz+1) )
          else
-            call u2prim(u(:,i,j,0   ),primit(:,i,j,0   ),Temp(i,j,0   ) )
-            call u2prim(u(:,i,j,nz+1),primit(:,i,j,nz+1),Temp(i,j,nz+1) )
+            call u2prim(u(:,i,j,0   ), primit(:,i,j,0   ), Temp(i,j,0   ) )
+            call u2prim(u(:,i,j,nz+1), primit(:,i,j,nz+1), Temp(i,j,nz+1) )
          end if
       end do
     end do
@@ -277,8 +277,8 @@ subroutine calcprim(u,primit, only_ghost)
       do i=0,nx+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,0   ,k),primit(:,i,0   ,k),primit0(:,i,0   ,k),Temp(i,0   ,k) )
-            call u2primSplitAll(u(:,i,ny+1,k),primit(:,i,ny+1,k),primit0(:,i,ny+1   ,k),Temp(i,ny+1,k) )
+            call u2primSplitAll(u(:,i,0   ,k), primit(:,i,0   ,k), primit0(:,i,0   ,k), Temp(i,0   ,k) )
+            call u2primSplitAll(u(:,i,ny+1,k), primit(:,i,ny+1,k), primit0(:,i,ny+1   ,k), Temp(i,ny+1,k) )
         else
            call u2prim(u(:,i,0   ,k),primit(:,i,0   ,k),Temp(i,0   ,k) )
            call u2prim(u(:,i,ny+1,k),primit(:,i,ny+1,k),Temp(i,ny+1,k) )
@@ -291,11 +291,11 @@ subroutine calcprim(u,primit, only_ghost)
       do j=0,ny+1
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,0   ,j,k),primit(:,0   ,j,k),primit0(:,0   ,j,k),Temp(0,j   ,k) )
-            call u2primSplitAll(u(:,nx+1,j,k),primit(:,nx+1,j,k),primit0(:,nx+1,j,k),Temp(nx+1,j,k) )
+            call u2primSplitAll(u(:,0   ,j,k), primit(:,0   ,j,k), primit0(:,0   ,j,k), Temp(0,j,k) )
+            call u2primSplitAll(u(:,nx+1,j,k), primit(:,nx+1,j,k), primit0(:,nx+1,j,k), Temp(nx+1,j,k) )
         else
-           call u2prim(u(:,0   ,j,k),primit(:,0   ,j,k),Temp(0   ,j,k) )
-           call u2prim(u(:,nx+1,j,k),primit(:,nx+1,j,k),Temp(nx+1,j,k) )
+           call u2prim(u(:,0   ,j,k), primit(:,0   ,j,k), Temp(0   ,j,k) )
+           call u2prim(u(:,nx+1,j,k), primit(:,nx+1,j,k), Temp(nx+1,j,k) )
         end if
       end do
     end do
@@ -307,9 +307,9 @@ subroutine calcprim(u,primit, only_ghost)
         do i=nxmin,nxmax
          if (riemann_solver == SOLVER_HLLE_SPLIT_ALL .or. &
              riemann_solver == SOLVER_HLLD_SPLIT_ALL) then
-            call u2primSplitAll(u(:,i,j,k),primit(:,i,j,k),primit0(:,i,j,k),Temp(i,j,k) )
+            call u2primSplitAll(u(:,i,j,k),primit(:,i,j,k), primit0(:,i,j,k), Temp(i,j,k) )
          else
-            call u2prim(u(:,i,j,k),primit(:,i,j,k),Temp(i,j,k) )
+            call u2prim(u(:,i,j,k), primit(:,i,j,k), Temp(i,j,k) )
          end if
 
         end do
@@ -353,27 +353,21 @@ subroutine prim2u(prim,uu, prim0)
      uu(4) = prim(1)*prim(4)
   end if
 
+  ! energy for hydro and passive mhd
+  uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
 
-  if (mhd) then
 #ifdef BFIELD
-    if (present(prim0)) then
+if (mhd) then
+  if (present(prim0)) then
     !   kinetic+thermal+magnetic energies
-        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)+prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
-     else
-        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5) &
-             +0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
-     end if
-#endif
+    uu(5) = uu(5) + 0.5*(prim(6)**2+prim(7)**2+prim(8)**2)          &
+                  + 0.5*prim0(1)*(prim(2)**2+prim(3)**2+prim(4)**2) &
+                  + prim0(6)*prim(6)+prim0(7)*prim(7)+prim0(8)*prim(8)
   else
-
-!     if present(prim0) then
-!        !   kinetic+thermal energies
-!        uu(5) = 0.5*(prim(1)+prim0(1))*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-!     else
-        uu(5) = 0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)+cv*prim(5)
-!     end if
+    uu(5) = uu(5) + 0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
   end if
+end if
+#else
 
 #ifdef BFIELD
   if (mhd .or. pmhd) then
