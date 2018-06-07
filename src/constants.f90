@@ -29,8 +29,9 @@ module constants
   implicit none
 
   real, parameter :: pi=acos(-1.)      !< @f$ \pi @f$
+  real, parameter :: deg = pi/180.     !< conversion from deg to rad
   real, parameter :: amh=1.66e-24      !< hydrogen mass
-  real, parameter :: Kb=1.38e-16       !< Boltzmann constant (cgs)  
+  real, parameter :: Kb=1.38e-16       !< Boltzmann constant (cgs)
   real, parameter :: Rg=8.3145e7       !< Gas constant (cgs)
   real, parameter :: Ggrav=6.67259e-8  !< Gravitational constant (cgs)
   real, parameter :: clight=2.99E10    !< speed of light in vacuum (cgs)
@@ -40,7 +41,7 @@ module constants
   real, parameter :: gsun=274.e2       !< solar gravity (cgs)
   real, parameter :: Mjup=1.898E30     !< Jupiter mass (cgs)
   real, parameter :: Rjup=7.1492E9     !< Jupiter radius (cgs)
-     
+
   real, parameter :: AU=1.496e13       !< 1AU in cm
   real, parameter :: pc=3.0857E18      !< 1pc in cm
   real, parameter :: kpc=3.0857E21     !< 1Kpc in cm
@@ -64,7 +65,7 @@ module constants
   !  Equations of state
   integer, parameter :: EOS_ADIABATIC     = 1
   integer, parameter :: EOS_SINGLE_SPECIE = 2
-  integer, parameter :: EOS_H_RATE        = 3 
+  integer, parameter :: EOS_H_RATE        = 3
   integer, parameter :: EOS_CHEM          = 4
 
   !  Cooling Schemes
