@@ -46,7 +46,7 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_stateg
+                         pmhd, mhd, eq_of_state
   use constants
   use network,  only : n1_chem, n_spec
   implicit none
