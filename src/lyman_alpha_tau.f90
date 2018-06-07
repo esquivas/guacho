@@ -209,9 +209,9 @@ end subroutine read_data
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
 
-    x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-    y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-    z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+    x=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+    y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+    z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
   end subroutine getXYZ
 
