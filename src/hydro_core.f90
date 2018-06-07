@@ -46,7 +46,7 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_state
+                         pmhd, mhd, eq_of_stateg
   use constants
   use network,  only : n1_chem, n_spec
   implicit none
@@ -90,7 +90,6 @@ subroutine u2prim(uu, prim, T)
   end if
 
   !   Temperature calculation
-
   if (eq_of_state == EOS_ADIABATIC) then
     T=(prim(5)/r)*Tempsc
   end if
