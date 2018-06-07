@@ -10,7 +10,7 @@
 #PBS -q default
 
 ### Switch to the job's working directory
-WORKDIR="/home/esquivel/guacho-working/twojet/"
+WORKDIR="/home/esquivel/guacho-dev/twojet/"
 cd $WORKDIR
 ### EXEPATH is the directory where your executable resides
 EXEPATH=$WORKDIR
