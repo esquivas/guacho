@@ -67,7 +67,7 @@ subroutine init_exo()
 
   TSW   = 1.3E6 !3.0E6     !************      ! Stellar temperature (K)
   !  Stellar wind, imposed at the 1.5x  sonic point (cm)
-  RSW   = 1.5*Ggrav*MassS/2./(Rg*Tsw/0.6) !********************
+  RSW   = 1.1*Ggrav*MassS/2./(Rg*Tsw/0.6) !********************
 
   vsw   = 205.e5   !*************       ! Stellar wind velocity (cm/s)
   dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
