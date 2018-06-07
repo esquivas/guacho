@@ -46,7 +46,7 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_state, charge_exchange
+                         pmhd, mhd, eq_of_state
   use constants
   use network,  only : n1_chem, n_spec
   implicit none
@@ -367,7 +367,7 @@ if (mhd) then
     uu(5) = uu(5) + 0.5*(prim(6)**2+prim(7)**2+prim(8)**2)
   end if
 end if
-#else
+#endif
 
 #ifdef BFIELD
   if (mhd .or. pmhd) then
