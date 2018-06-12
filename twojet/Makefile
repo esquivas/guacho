@@ -144,7 +144,7 @@ $(PROGRAM)  : prebuild ${OBJECTS_ALL}
 	@echo Linking flags used: $(LINKFLAGS)
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS)  $(OBJECTS_ALL) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+#	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
   ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
   ${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
