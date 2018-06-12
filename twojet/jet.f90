@@ -51,10 +51,10 @@ contains
     use constants, only : au, pi, deg
     implicit none
 
-    Rj(1)    = 400.*au/rsc   !  jet radius
-    Rj(2)    = 400.*au/rsc   !  jet radius
-    Lj(1)    = 400.*au/rsc   !  jet length
-    Lj(2)    = 400.*au/rsc   !  jet length
+    Rj(1)    = 300.*au/rsc   !  jet radius
+    Rj(2)    = 300.*au/rsc   !  jet radius
+    Lj(1)    = 500.*au/rsc   !  jet length
+    Lj(2)    = 500.*au/rsc   !  jet length
     !  jet position(s)
     posj(1,1)= -1560*au /rsc
     posj(1,2)=     0.!*au /rsc
@@ -65,11 +65,11 @@ contains
     posj(2,3)=  140*au /rsc
 
     !  jet orientation parameters
-    alpha(1) = -10.*deg
+    alpha(1) =   7.*deg
     alpha(2) =  29.*deg
     omegaP(1)=2.*pi/(200.*yr/tsc)
     omegaP(2)=2.*pi/(200.*yr/tsc)
-    phiJ(1)   =-10.*deg
+    phiJ(1)   =-30.*deg
     phiJ(2)   = 60.*deg
 
     !  outflow parameters
@@ -87,10 +87,11 @@ contains
 
   subroutine impose_jet(u,time)
     use globals, only : coords, dx, dy, dz
+    use constants, only : deg
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent (in)   :: time
-    real :: x, y, z, rad, xp, yp, zp, rx, ry, rz, vjet
+    real :: x, y, z, rad, xp, yp, zp, rx, ry, rz, vjet, radC
     !  precesion opening angle (or initial direction, repect to the z axis)
     real :: omegat(njets)
     real :: sina(njets), cosa(njets)
@@ -129,20 +130,43 @@ contains
             !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
 
             if( (abs(rz) <= Lj(nj)).and.(rad <= Rj(nj)) ) then
+
               !  inside the jet source
               vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
               vjet=sign(vjet,rz)
 
-              !   total density and momenta
-              u(1,i,j,k) =   denj(nj)
-              u(2,i,j,k) =   denj(nj)*vjet*sina(nj)*coso(nj)
-              u(3,i,j,k) =   denj(nj)*vjet*sina(nj)*sino(nj)
-              u(4,i,j,k) =   denj(nj)*vjet*cosa(nj)
-              !   energy
-              u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
-              !  passive scalars needed for the chemistry network
-              u(6,i,j,k) = denj(nj)
-            end if
+              if (nj == 2) then
+               !   total density and momenta
+                u(1,i,j,k) =   denj(nj)
+                u(2,i,j,k) =   denj(nj)*vjet*sina(nj)*coso(nj)
+                u(3,i,j,k) =   denj(nj)*vjet*sina(nj)*sino(nj)
+                u(4,i,j,k) =   denj(nj)*vjet*cosa(nj)
+                !   energy
+                u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
+                !  passive scalars needed for the chemistry network
+                u(6,i,j,k) = denj(nj)
+
+              else
+
+                radC = sqrt( xp**2 + yp**2 + zp**2 )
+                if ( atan2(rz,rad) <300.*deg) then
+                  vjet=0.
+                else
+                  vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
+                end if
+                !   total density and momenta
+                u(1,i,j,k) = denj(nj)
+                u(2,i,j,k) = denj(nj)*vjet*xp/radC
+                u(3,i,j,k) = denj(nj)*vjet*yp/radC
+                u(4,i,j,k) = denj(nj)*vjet*zp/radC
+                !   energy
+                u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
+                !  passive scalars needed for the chemistry network
+                u(6,i,j,k) = denj(nj)
+
+              endif
+
+            endif
 
           end do
 
@@ -151,5 +175,6 @@ contains
     end do
 
   end subroutine impose_jet
+
   !--------------------------------------------------------------------
 end module jet
