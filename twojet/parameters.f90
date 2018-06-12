@@ -95,7 +95,7 @@ module parameters
   integer, parameter :: bc_right  = BC_OUTFLOW
   integer, parameter :: bc_bottom = BC_OUTFLOW
   integer, parameter :: bc_top    = BC_OUTFLOW
-  integer, parameter :: bc_out    = BC_CLOSED
+  integer, parameter :: bc_out    = BC_OUTFLOW
   integer, parameter :: bc_in     = BC_OUTFLOW
   logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
 
@@ -134,9 +134,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=256      !< Total grid size in X
-  integer, parameter :: nytot=256      !< Total grid size in Y
-  integer, parameter :: nztot=512      !< Total grid size in Z
+  integer, parameter :: nxtot=128      !< Total grid size in X
+  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nztot=256      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -151,7 +151,7 @@ module parameters
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
   real, parameter :: zmax=2.          !< grid extent in Z (code units)
-  real, parameter :: xphys=1.5e4*au    !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=15.e3*au    !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -170,11 +170,11 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 2.e3*yr/tsc
+  real, parameter :: tmax    = 10000.*yr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 10.*yr/tsc
-  real, parameter :: cfl=0.4        !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.0        !< artificial viscosity
+  real, parameter :: dtprint = 50.*yr/tsc
+  real, parameter :: cfl=0.3        !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.001        !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
