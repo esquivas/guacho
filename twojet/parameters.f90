@@ -134,8 +134,8 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=128      !< Total grid size in X
-  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nxtot=256      !< Total grid size in X
+  integer, parameter :: nytot=256      !< Total grid size in Y
   integer, parameter :: nztot=256      !< Total grid size in Z
 
 #ifdef MPIP
@@ -170,7 +170,7 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 10000.*yr/tsc
+  real, parameter :: tmax    = 5000.*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 50.*yr/tsc
   real, parameter :: cfl=0.3        !< Courant-Friedrichs-Lewy number
