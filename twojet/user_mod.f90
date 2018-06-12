@@ -60,7 +60,7 @@ subroutine initial_conditions(u)
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, Tempsc
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, parameter :: T_ism = 1000./Tempsc, dens_ism= 10.
+  real, parameter :: T_ism = 1000./Tempsc, dens_ism= 100.
   integer :: i,j,k
 
   do k=nzmin,nzmax
