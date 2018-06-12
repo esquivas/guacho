@@ -37,7 +37,7 @@ module jet
   !  alpha is the angle with respect to z at t=0
   !  the angle can be adjusted by rotating it by a precesion
   !  angle (omegaP x t)
-  real, save :: alpha(njets), omegaP(njets)
+  real :: alpha(njets), omegaP(njets), phiJ(njets)
 
 contains
 
@@ -51,28 +51,32 @@ contains
     use constants, only : au, pi, deg
     implicit none
 
-    Rj(:)    = 400.*au/rsc   !  jet radius
-    Lj(:)    = 400.*au/rsc   !  jet length
-
+    Rj(1)    = 400.*au/rsc   !  jet radius
+    Rj(2)    = 400.*au/rsc   !  jet radius
+    Lj(1)    = 400.*au/rsc   !  jet length
+    Lj(2)    = 400.*au/rsc   !  jet length
     !  jet position(s)
-    posj(1,1)= -5.e3*au /rsc
-    posj(1,2)=  5.e3*au /rsc
-    posj(1,3)= 0.!e3*au /rsc
+    posj(1,1)= -1560*au /rsc
+    posj(1,2)=     0.!*au /rsc
+    posj(1,3)=  -140*au /rsc
 
-    posj(2,1)=  5e3*au /rsc
-    posj(2,2)=  5e3*au /rsc
-    posj(2,3)= 0.!e3*au /rsc
+    posj(2,1)= 1560*au /rsc
+    posj(2,2)=    0.  !*au /rsc
+    posj(2,3)=  140*au /rsc
 
     !  jet orientation parameters
-    alpha(1) = 30.*deg
-    alpha(2) =-10.*deg
-    omegaP(1)=2.*pi/(2000.*yr/tsc)
-    omegaP(2)=2.*pi/(2000.*yr/tsc)
+    alpha(1) = -10.*deg
+    alpha(2) =  29.*deg
+    omegaP(1)=2.*pi/(200.*yr/tsc)
+    omegaP(2)=2.*pi/(200.*yr/tsc)
+    phiJ(1)   =-10.*deg
+    phiJ(2)   = 60.*deg
 
     !  outflow parameters
-    denj(:)  = 300.                      !  density
-    Tempj(:) = 1000./Tempsc              !  jet temperature
-    vj0(:)   = 200.e5/vsc                !  mean velocity
+    denj(:)  = 10.                      !  density
+    Tempj(1) = 100./Tempsc              !  jet temperature
+    Tempj(2) = 30./Tempsc              !  jet temperature
+    vj0(:)   = 100.e5/vsc                !  mean velocity
     dVj(:)   = 0.!(200./3.)*1e5/vsc      !  amplitude of variability
     tau(:)   = 500.*yr/tsc               !  period of variability
     omega(:) = 2.*pi/tau
@@ -91,14 +95,13 @@ contains
     real :: omegat(njets)
     real :: sina(njets), cosa(njets)
     real :: coso(njets), sino(njets)
-    integer ::  i,j,k, nj
+    integer ::  i,j,k,nj
 
     do nj=1,njets
-      sina(nj)= sin(alpha(nj))
-      cosa(nj)= cos(alpha(nj))
-
-      sino(nj)= sin(omegaP(nj)*time)
-      coso(nj)= cos(omegaP(nj)*time)
+      sina(nj)= sin( alpha(nj) )
+      cosa(nj)= cos( alpha(nj) )
+      sino(nj)= sin( phiJ(nj) )!sin(omegaP(nj)*time + phij(nj) )
+      coso(nj)= cos( phiJ(nj) )!cos(omegaP(nj)*time + phij(nj) )
 
       omegat(nj) = omega(nj)*time   ! for jet variability
     end do
@@ -111,17 +114,17 @@ contains
           y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
           z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
-          do nj = 1, njets
+          do nj =1,njets
 
             xp=x-posj(nj,1)
             yp=y-posj(nj,2)
             zp=z-posj(nj,3)
 
-            rx= xp*coso(nj)          - yp*sino(nj)
-            ry= xp*cosa(nj)*sino(nj) + yp*cosa(nj)*coso(nj) - zp*sina(nj)
-            rz= xp*sina(nj)*sino(nj) + yp*sina(nj)*coso(nj) + zp*cosa(nj)
+            rx =   xp*cosa(nj)*coso(nj) + yp*cosa(nj)*sino(nj) - zp*sina(nj)
+            ry = - xp*sino(nj)          + yp*coso(nj)
+            rz =   xp*sina(nj)*coso(nj) + yp*sina(nj)*sino(nj) + zp*cosa(nj)
 
-            rad=sqrt(rx**2+ry**2)
+            rad=sqrt( rx**2 + ry**2 )
 
             !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
 
@@ -129,16 +132,16 @@ contains
               !  inside the jet source
               vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
               vjet=sign(vjet,rz)
-              !
+
               !   total density and momenta
-              u(1,i,j,k) = denj(nj)
-              u(2,i,j,k) = denj(nj)*vjet*sina(nj)*coso(nj)
-              u(3,i,j,k) = denj(nj)*vjet*sina(nj)*sino(nj)
-              u(4,i,j,k) = denj(nj)*vjet*cosa(nj)
+              u(1,i,j,k) =   denj(nj)
+              u(2,i,j,k) =   denj(nj)*vjet*sina(nj)*coso(nj)
+              u(3,i,j,k) =   denj(nj)*vjet*sina(nj)*sino(nj)
+              u(4,i,j,k) =   denj(nj)*vjet*cosa(nj)
               !   energy
               u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
               !  passive scalars needed for the chemistry network
-              u(1,i,j,k) = denj(nj)
+              u(6,i,j,k) = denj(nj)
             end if
 
           end do
