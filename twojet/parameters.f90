@@ -134,9 +134,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=256      !< Total grid size in X
-  integer, parameter :: nytot=256      !< Total grid size in Y
-  integer, parameter :: nztot=256      !< Total grid size in Z
+  integer, parameter :: nxtot=128      !< Total grid size in X
+  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nztot=128      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
