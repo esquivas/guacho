@@ -37,7 +37,7 @@ module jet
   !  alpha is the angle with respect to z at t=0
   !  the angle can be adjusted by rotating it by a precesion
   !  angle (omegaP x t)
-  real :: alpha(njets), omegaP(njets), phiJ(njets)
+  real :: alpha(njets), omegaP(njets), phiJ(njets), theta(njets)
 
 contains
 
@@ -51,17 +51,17 @@ contains
     use constants, only : au, pi, deg
     implicit none
 
-    Rj(1)    = 300.*au/rsc   !  jet radius
-    Rj(2)    = 300.*au/rsc   !  jet radius
-    Lj(1)    = 500.*au/rsc   !  jet length
-    Lj(2)    = 500.*au/rsc   !  jet length
+    Rj(1)    = 2*300.*au/rsc   !  jet radius
+    Rj(2)    = 2*300.*au/rsc   !  jet radius
+    Lj(1)    = 2*500.*au/rsc   !  jet length
+    Lj(2)    = 2*500.*au/rsc   !  jet length
     !  jet position(s)
     posj(1,1)= -1560*au /rsc
-    posj(1,2)=     0.!*au /rsc
+    posj(1,2)=  0.!*au /rsc
     posj(1,3)=  -140*au /rsc
 
     posj(2,1)= 1560*au /rsc
-    posj(2,2)=    0.  !*au /rsc
+    posj(2,2)=-1000*au /rsc
     posj(2,3)=  140*au /rsc
 
     !  jet orientation parameters
@@ -69,14 +69,15 @@ contains
     alpha(2) =  29.*deg
     omegaP(1)=2.*pi/(200.*yr/tsc)
     omegaP(2)=2.*pi/(200.*yr/tsc)
-    phiJ(1)   =-30.*deg
-    phiJ(2)   = 60.*deg
-
+    phiJ(1)   = 30.*deg
+    phiJ(2)   =-60.*deg
+    theta(1)  = 15.*deg
+    theta(2)  = 15.*deg
     !  outflow parameters
     denj(:)  = 10.                      !  density
-    Tempj(1) = 100./Tempsc              !  jet temperature
-    Tempj(2) = 30./Tempsc              !  jet temperature
-    vj0(:)   = 100.e5/vsc                !  mean velocity
+    Tempj(1) = 1000./Tempsc              !  jet temperature
+    Tempj(2) = 1000./Tempsc              !  jet temperature
+    vj0(:)   = 300.e5/vsc                !  mean velocity
     dVj(:)   = 0.!(200./3.)*1e5/vsc      !  amplitude of variability
     tau(:)   = 500.*yr/tsc               !  period of variability
     omega(:) = 2.*pi/tau
@@ -115,7 +116,7 @@ contains
           y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
           z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
-          do nj =1,njets
+          do nj =1,2
 
             xp=x-posj(nj,1)
             yp=y-posj(nj,2)
@@ -131,29 +132,29 @@ contains
 
             if( (abs(rz) <= Lj(nj)).and.(rad <= Rj(nj)) ) then
 
-              !  inside the jet source
-              vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
-              vjet=sign(vjet,rz)
+            !  !  inside the jet source
+            !  vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
+            !  vjet=sign(vjet,rz)
 
-              if (nj == 2) then
-               !   total density and momenta
-                u(1,i,j,k) =   denj(nj)
-                u(2,i,j,k) =   denj(nj)*vjet*sina(nj)*coso(nj)
-                u(3,i,j,k) =   denj(nj)*vjet*sina(nj)*sino(nj)
-                u(4,i,j,k) =   denj(nj)*vjet*cosa(nj)
-                !   energy
-                u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
-                !  passive scalars needed for the chemistry network
-                u(6,i,j,k) = denj(nj)
+            !  if (nj <= 2) then
+            !   !   total density and momenta
+            !    u(1,i,j,k) =   denj(nj)
+            !    u(2,i,j,k) =   denj(nj)*vjet*sina(nj)*coso(nj)
+            !    u(3,i,j,k) =   denj(nj)*vjet*sina(nj)*sino(nj)
+            !    u(4,i,j,k) =   denj(nj)*vjet*cosa(nj)
+            !    !   energy
+            !    u(5,i,j,k)=0.5*denj(nj)*vjet**2 + cv*denj(nj)*Tempj(nj)
+            !    !  passive scalars needed for the chemistry network
+            !    u(6,i,j,k) = denj(nj)
 
-              else
+            !  else
 
-                radC = sqrt( xp**2 + yp**2 + zp**2 )
-                if ( atan2(rz,rad) <300.*deg) then
+                if ( atan(rad/abs(rz)) > theta(nj) ) then
                   vjet=0.
                 else
                   vjet= vj0(nj) + dvj(nj)*sin(omegat(nj))
                 end if
+                radC = sqrt( xp**2 + yp**2 + zp**2 )
                 !   total density and momenta
                 u(1,i,j,k) = denj(nj)
                 u(2,i,j,k) = denj(nj)*vjet*xp/radC
@@ -166,7 +167,7 @@ contains
 
               endif
 
-            endif
+            !endif
 
           end do
 
