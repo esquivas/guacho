@@ -38,7 +38,7 @@ contains
 
 !>@brief Boundary conditions for 1st order half timestep
 !>@details Boundary conditions for 1st order half timestep
-!! @n The conditions only are imposed at the innermost ghost cell, 
+!! @n The conditions only are imposed at the innermost ghost cell,
 !! on the u (unstepped) variables
 
 subroutine boundaryI()
@@ -141,7 +141,7 @@ subroutine boundaryI()
     end if
   end if
 
-#endif  
+#endif
 
   !   Reflecting BCs
   !     left
@@ -254,7 +254,7 @@ end subroutine boundaryI
 !! on the up (stepped) variables
 
 subroutine boundaryII()
- 
+
   implicit none
 
 #ifdef MPIP
@@ -276,7 +276,7 @@ subroutine boundaryII()
 #endif
 
 #ifdef MPIP
- 
+
   !   Exchange boundaries between processors
   !   -------------------------------------------------------------
 
@@ -505,9 +505,9 @@ subroutine boundaryII()
 
   !   other type of bounadries  <e.g. winds jets outflows>
   if (bc_user) call impose_user_bc(up,2)
-  
+
   return
-  
+
 end subroutine boundaryII
 
 !=======================================================================
