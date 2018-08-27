@@ -44,19 +44,19 @@ module parameters
   !  If logical use true or false
   !  If integer, choose from list provided
   !----------------------------------------
-  
+
   logical, parameter :: pmhd     = .false.  !<  enadle passive mhd
   logical, parameter :: mhd      = .true.   !<  Enable full MHD
-  
+
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
-  !> SOLVER_HLLC : HLLC solver 
+  !> SOLVER_HLLC : HLLC solver
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
   integer, parameter :: riemann_solver = SOLVER_HLLD
-    
+
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
@@ -127,7 +127,7 @@ module parameters
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
-  
+
 #ifdef PASSIVES
   integer, parameter :: npas=2        !< num. of passive scalars
 #else
@@ -142,12 +142,12 @@ module parameters
   !   mpi array of processors
   integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z   
+  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
-  !  set box size   
+  !  set box size
   real, parameter :: xmax=1.           !< grid extent in X (code units)
   real, parameter :: ymax=1.           !< grid extent in Y (code units)
   real, parameter :: zmax=1.           !< grid extent in Z (code units)
@@ -157,7 +157,7 @@ module parameters
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
-  
+
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=1.e4                !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
@@ -199,7 +199,7 @@ module parameters
   logical, parameter :: passives = .false.  !<  enable passive scalars
 #endif
  integer, parameter :: ndim=3         !< num. of dimensions
-  integer, parameter :: nghost=2      !< num. of ghost cells
+ integer, parameter :: nghost=2       !< num. of ghost cells
 
   !> number of dynamical equations
 #ifdef BFIELD
@@ -234,10 +234,10 @@ module parameters
   integer, parameter :: nymax = ny + nghost  !< upper bound of hydro arrays in y
   integer, parameter :: nzmin = 1  - nghost  !< lower bound of hydro arrays in z
   integer, parameter :: nzmax = nz + nghost  !< upper bound of hydro arrays in z
-  
+
   !  more mpi stuff
   integer, parameter ::master=0  !<  rank of master of MPI processes
-  
+
   !   set floating point precision (kind) for MPI messages
 #ifdef MPIP
 #ifdef DOUBLEP
@@ -250,4 +250,3 @@ module parameters
 end module parameters
 
 !=======================================================================
-
