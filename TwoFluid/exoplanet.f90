@@ -43,7 +43,7 @@ module exoplanet
   real :: benv     !< Magnetic Field
 
   !Planetary wind parameters
-  real :: bpw     !< Planetary Magnetic Field  
+  real :: bpw     !< Planetary Magnetic Field
   real :: RPW     !< Planetary radius
   real :: TPW     !< Planetary wind temperature
   real :: VPW     !< Planetary wind velocity
@@ -57,7 +57,7 @@ module exoplanet
   real :: rhop    !< planetary density
   real :: volp    !< planetary volume
   real :: rorb    !<  orbital radius
-  
+
   !Some other stellar parameters
   real :: MassS   !< Mass of the Star
   real :: Rss     !< star radius
@@ -69,7 +69,7 @@ contains
 !=======================================================================
 
 !> @brief Module initialization
-!> @details Here the parameters of the Star are initialized, and scaled 
+!> @details Here the parameters of the Star are initialized, and scaled
 !! to code units
 
 subroutine init_exo()
@@ -84,7 +84,7 @@ subroutine init_exo()
 
   !ORBITAL PARAMETERS
   rorb=.047*AU!0.47**AU
-  
+
   !----------------STAR PARAMETERS ------------------
   MassS = 1.1*msun
   RsS   = 1.2*rsun
@@ -99,38 +99,38 @@ subroutine init_exo()
 
   !----------------IONIZED ENVIRONMENT PARAMETERS ------------------
 !  denv   = 1.1*msun
-!         = 
+!         =
 !         =      ! Stellar Mass Loss rate (g s^-1)
 !         =      ! Stellar temperature (K)
-!         = 
+!         =
 !         =      ! Stellar wind velocity (cm/s)
 !         =      ! Stellar density @RS (g cm^-3)
 !         =      ! Stellar magnetic field (g)
 !
 
-  
+
   !----------------PLANET PARAMETERS------------------
   MassP = 0.67*mjup
   AMPDOT= 1.E10   !***********         ! Planetary Mass Loss rate (g/s)
   TPW   = 1E4                          ! Planets temperature
-  RPW   = 1.38*Rjup                    ! Planetary wind radius (cm) 
+  RPW   = 1.38*Rjup                    ! Planetary wind radius (cm)
   VolP  = 4.*pi*RPW**3./3.             ! Planets density
   rhoP  = MassP/VolP                   ! Planets density
   vpw   = 60.e5 !Ves at 1R_e =42 km/s  ! Planets wind velocity (cm/s)
   dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))    ! Planetary wind density
   bpw   = 0.04                         ! Planetary magnetic field (g)
 
-  
+
   ! change to code units
   dsw=dsw/rhosc
-  vsw=vsw/sqrt(vsc2)
+  vsw=vsw/vsc
   Tsw=Tsw/Tempsc
   Rsw=Rsw/rsc
   RsS=RsS/rsc
-  bsw=bsw/bsc 
+  bsw=bsw/bsc
   bpw=bpw/bsc
   dpw=dpw/rhosc
-  vpw=vpw/sqrt(vsc2)
+  vpw=vpw/vsc2
   Tpw=Tpw/Tempsc
   Rpw=Rpw/rsc
 
@@ -142,9 +142,9 @@ subroutine init_exo()
       do i=nxmin,nxmax
 
         ! Position measured from the centre of the grid (planet)
-        xpl=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        ypl=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        zpl=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+        ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+        zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
         ! Distance from the centre of the planet (centred)
         radp=sqrt(xpl**2+ypl**2+zpl**2)
@@ -155,7 +155,7 @@ subroutine init_exo()
     end do
   end do
 
-  
+
 end subroutine init_exo
 
 !=======================================================================
@@ -169,7 +169,7 @@ end subroutine init_exo
 
 subroutine impose_exo(u,time)
 !subroutine impose_exo(u,time)
-  
+
   use constants, only : pi
   use globals, only : coords, dx, dy, dz
   implicit none
@@ -185,84 +185,64 @@ subroutine impose_exo(u,time)
   do k=nzmin,nzmax
      do j=nymin,nymax
           do i=nxmin,nxmax
-           
+
            ! Position measured from the centre of the grid (planet)
-           xpl=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-           ypl=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-           zpl=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
-           
+           xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+           ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+           zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+
            ! Distance from the centre of the planet (centred)
            radp=sqrt(xpl**2+ypl**2+zpl**2)
-           
+
            ! IF INSIDE THE PLANET
-                   
            if(radp <= 1.1*rpw) then
               if(radp == 0.) radp=dx*0.10
               VelX=VPW*XPL/RADP
               VelY=VPW*YPL/RADP
               VelZ=VPW*ZPL/RADP
               DENS=DPW!*RPW**2/RADP**2
-              
+
               if(radp <= 0.9*rpw) then
-                 
+
                  VelX=0.!VPW*XPL/RADP
                  VelY=0.!VPW*YPL/RADP
                  VelZ=0.!VPW*ZPL/RADP
                  DENS=DPW!*RPW**2/RADP**2
-                 !                 DENS=DPW*RPW**2/RADP**2
               end if
-!           else if (radp > 1.1*rpw.and.time.eq.0) then
-!              VelX=VPW*XPL/RADP
-!              VelY=VPW*YPL/RADP
-!              VelZ=VPW*ZPL/RADP
-!              DENS=DPW*RPW**2/RADP**2
-!           end if
+
               !   total density and momenta
-                 
               u(1,i,j,k) = dens
               u(2,i,j,k) = dens*velx
               u(3,i,j,k) = dens*vely
               u(4,i,j,k) = dens*velz
-           
+
               !  Magnetic fields (IF MHD or PMHD)
 #ifdef BFIELD
 !              cpi = bpw*(rpw/radp)**3/(2.*radp**2)
 !              u(6,i,j,k) = 3.*ypl*xpl*cpi
 !              u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
 !              u(8,i,j,k) = 3.*ypl*zpl*cpi
-              
               u(6,i,j,k) = 0.
               u(7,i,j,k) = 0.
               u(8,i,j,k) = 0.
-              
-#endif
+
               !   energy
-              if (mhd) then
-#ifdef BFIELD
-                 u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                      + cv*dens*Tpw                !    & 
- !                     + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-#endif
-              else
-                 u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-                      + cv*dens*Tpw
-              end if
-              
-              if (passives) then
+              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)              &
+                       + cv*dens*Tpw                                     &
+                       + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
 #ifdef PASSIVES
-                 !  density of neutrals
-                 u(neqdyn+1,i,j,k)=1.*dens                
-                 !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-                 u(neqdyn+2,i,j,k)= -dens   ! passive scalar
-              endif
+              !  density of neutrals
+              u(neqdyn+1,i,j,k)=1.*dens
+              !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+              u(neqdyn+2,i,j,k)= -dens   ! passive scalar
 #endif
-              
+
            end if
-           
+
         end do
      end do
   end do
-  
+
 end subroutine impose_exo
 
 !=======================================================================
