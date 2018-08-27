@@ -24,7 +24,7 @@
 
 !> @brief Guacho-3D Main Program
 !! This is the main program unit of the Guacho-3D code.
-!! @n The code itegrates Euler equations in three dimensions, 
+!! @n The code itegrates Euler equations in three dimensions,
 !! the choice of the integration method is set in the makefile.
 !! @n The flow (conserved) variables are taken to be:
 !! @n ieq=
@@ -98,7 +98,7 @@ program guacho
 
   !   time integration
   do while (time <= tmax)
-  
+
     !   computes the timestep
     call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
 
