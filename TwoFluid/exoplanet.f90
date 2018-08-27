@@ -66,186 +66,184 @@ module exoplanet
   logical, allocatable :: flagP(:,:,:)
 contains
 
-!=======================================================================
+  !=======================================================================
 
-!> @brief Module initialization
-!> @details Here the parameters of the Star are initialized, and scaled
-!! to code units
+  !> @brief Module initialization
+  !> @details Here the parameters of the Star are initialized, and scaled
+  !! to code units
 
-subroutine init_exo()
-  use globals,    only: coords, dx ,dy ,dz
-  use constants, only : Msun, Yr, Ggrav, pi, mjup, au, day,Rjup, rsun
-  implicit none
-  real :: amdot  ! mdot_star (MSUN/yr)
-  real :: ampdot ! mdot_planet (g/s)
-  integer :: i,j,k
-  real    :: xpl, ypl, zpl, radp
-
-
-  !ORBITAL PARAMETERS
-  rorb=.047*AU!0.47**AU
-
-  !----------------STAR PARAMETERS ------------------
-  MassS = 1.1*msun
-  RsS   = 1.2*rsun
-  AMDOT = 2.E-14*msun/yr              ! Stellar Mass Loss rate (g s^-1)
-  TSW   = 1.56E6     !*************   ! Stellar temperature (K)
-  !  Stellar wind, imposed at the 1.5x  sonic point (cm)
-  RSW   = rorb-xphys/2. !Distance from centre of star a.w.t sw is imposed
-  vsw   = 200.e5     !*************      ! Stellar wind velocity (cm/s)
-  dsw   = ((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
-  bsw   = 1.E-5                          ! Stellar magnetic field (g)
+  subroutine init_exo()
+    use globals,    only: coords, dx ,dy ,dz
+    use constants, only : Msun, Yr, Ggrav, pi, mjup, au, day,Rjup, rsun
+    implicit none
+    real :: amdot  ! mdot_star (MSUN/yr)
+    real :: ampdot ! mdot_planet (g/s)
+    integer :: i,j,k
+    real    :: xpl, ypl, zpl, radp
 
 
-  !----------------IONIZED ENVIRONMENT PARAMETERS ------------------
-!  denv   = 1.1*msun
-!         =
-!         =      ! Stellar Mass Loss rate (g s^-1)
-!         =      ! Stellar temperature (K)
-!         =
-!         =      ! Stellar wind velocity (cm/s)
-!         =      ! Stellar density @RS (g cm^-3)
-!         =      ! Stellar magnetic field (g)
-!
+    !ORBITAL PARAMETERS
+    rorb=.047*AU!0.47**AU
+
+    !----------------STAR PARAMETERS ------------------
+    MassS = 1.1*msun
+    RsS   = 1.2*rsun
+    AMDOT = 2.E-14*msun/yr              ! Stellar Mass Loss rate (g s^-1)
+    TSW   = 1.56E6     !*************   ! Stellar temperature (K)
+    !  Stellar wind, imposed at the 1.5x  sonic point (cm)
+    RSW   = rorb-xphys/2. !Distance from centre of star a.w.t sw is imposed
+    vsw   = 200.e5     !*************      ! Stellar wind velocity (cm/s)
+    dsw   = ((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
+    bsw   = 1.E-5                          ! Stellar magnetic field (g)
 
 
-  !----------------PLANET PARAMETERS------------------
-  MassP = 0.67*mjup
-  AMPDOT= 1.E10   !***********         ! Planetary Mass Loss rate (g/s)
-  TPW   = 1E4                          ! Planets temperature
-  RPW   = 1.38*Rjup                    ! Planetary wind radius (cm)
-  VolP  = 4.*pi*RPW**3./3.             ! Planets density
-  rhoP  = MassP/VolP                   ! Planets density
-  vpw   = 60.e5 !Ves at 1R_e =42 km/s  ! Planets wind velocity (cm/s)
-  dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))    ! Planetary wind density
-  bpw   = 0.04                         ! Planetary magnetic field (g)
+    !----------------IONIZED ENVIRONMENT PARAMETERS ------------------
+    !  denv   = 1.1*msun
+    !         =
+    !         =      ! Stellar Mass Loss rate (g s^-1)
+    !         =      ! Stellar temperature (K)
+    !         =
+    !         =      ! Stellar wind velocity (cm/s)
+    !         =      ! Stellar density @RS (g cm^-3)
+    !         =      ! Stellar magnetic field (g)
+    !
 
 
-  ! change to code units
-  dsw=dsw/rhosc
-  vsw=vsw/vsc
-  Tsw=Tsw/Tempsc
-  Rsw=Rsw/rsc
-  RsS=RsS/rsc
-  bsw=bsw/bsc
-  bpw=bpw/bsc
-  dpw=dpw/rhosc
-  vpw=vpw/vsc2
-  Tpw=Tpw/Tempsc
-  Rpw=Rpw/rsc
-
-  !  tag planet
-  allocate(flagP(nxmin:nxmax,nymin:nymax,nzmin:nzmax))
-  flagP(:,:,:) = .False.
-  do k=nzmin,nzmax
-    do j=nymin,nymax
-      do i=nxmin,nxmax
-
-        ! Position measured from the centre of the grid (planet)
-        xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-        ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-        zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
-
-        ! Distance from the centre of the planet (centred)
-        radp=sqrt(xpl**2+ypl**2+zpl**2)
-        ! IF INSIDE THE PLANET
-        if(radp <= rpw) flagP(i,j,k)=.true.
-
-      end do
-    end do
-  end do
+    !----------------PLANET PARAMETERS------------------
+    MassP = 0.67*mjup
+    AMPDOT= 1.E10   !***********         ! Planetary Mass Loss rate (g/s)
+    TPW   = 1E4                          ! Planets temperature
+    RPW   = 1.38*Rjup                    ! Planetary wind radius (cm)
+    VolP  = 4.*pi*RPW**3./3.             ! Planets density
+    rhoP  = MassP/VolP                   ! Planets density
+    vpw   = 60.e5 !Ves at 1R_e =42 km/s  ! Planets wind velocity (cm/s)
+    dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))    ! Planetary wind density
+    bpw   = 0.04                         ! Planetary magnetic field (g)
 
 
-end subroutine init_exo
+    ! change to code units
+    dsw=dsw/rhosc
+    vsw=vsw/vsc
+    Tsw=Tsw/Tempsc
+    Rsw=Rsw/rsc
+    RsS=RsS/rsc
+    bsw=bsw/bsc
+    bpw=bpw/bsc
+    dpw=dpw/rhosc
+    vpw=vpw/vsc2
+    Tpw=Tpw/Tempsc
+    Rpw=Rpw/rsc
 
-!=======================================================================
+    !  tag planet
+    allocate(flagP(nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+    flagP(:,:,:) = .False.
+    do k=nzmin,nzmax
+      do j=nymin,nymax
+        do i=nxmin,nxmax
 
-!> @brief Inject sources of wind
-!> @details Imposes the sources of wond from the star and planet
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-!! conserver variables
-!> @param real [time] time : current integration timr
-  !--------------------------------------------------------------------
+          ! Position measured from the centre of the grid (planet)
+          xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+          ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+          zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
-subroutine impose_exo(u,time)
-!subroutine impose_exo(u,time)
-
-  use constants, only : pi
-  use globals, only : coords, dx, dy, dz
-  implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, intent (in) :: time
-  real :: x, y, z, xpl, ypl, zpl
-  real :: velx, vely, velz, rads, dens, radp, phi
-#ifdef BFIELD
-  real :: cpi
-#endif
-  integer ::  i,j,k
-
-  do k=nzmin,nzmax
-     do j=nymin,nymax
-          do i=nxmin,nxmax
-
-           ! Position measured from the centre of the grid (planet)
-           xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-           ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-           zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
-
-           ! Distance from the centre of the planet (centred)
-           radp=sqrt(xpl**2+ypl**2+zpl**2)
-
-           ! IF INSIDE THE PLANET
-           if(radp <= 1.1*rpw) then
-              if(radp == 0.) radp=dx*0.10
-              VelX=VPW*XPL/RADP
-              VelY=VPW*YPL/RADP
-              VelZ=VPW*ZPL/RADP
-              DENS=DPW!*RPW**2/RADP**2
-
-              if(radp <= 0.9*rpw) then
-
-                 VelX=0.!VPW*XPL/RADP
-                 VelY=0.!VPW*YPL/RADP
-                 VelZ=0.!VPW*ZPL/RADP
-                 DENS=DPW!*RPW**2/RADP**2
-              end if
-
-              !   total density and momenta
-              u(1,i,j,k) = dens
-              u(2,i,j,k) = dens*velx
-              u(3,i,j,k) = dens*vely
-              u(4,i,j,k) = dens*velz
-
-              !  Magnetic fields (IF MHD or PMHD)
-#ifdef BFIELD
-!              cpi = bpw*(rpw/radp)**3/(2.*radp**2)
-!              u(6,i,j,k) = 3.*ypl*xpl*cpi
-!              u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
-!              u(8,i,j,k) = 3.*ypl*zpl*cpi
-              u(6,i,j,k) = 0.
-              u(7,i,j,k) = 0.
-              u(8,i,j,k) = 0.
-
-              !   energy
-              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)              &
-                       + cv*dens*Tpw                                     &
-                       + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-#ifdef PASSIVES
-              !  density of neutrals
-              u(neqdyn+1,i,j,k)=1.*dens
-              !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-              u(neqdyn+2,i,j,k)= -dens   ! passive scalar
-#endif
-
-           end if
+          ! Distance from the centre of the planet (centred)
+          radp=sqrt(xpl**2+ypl**2+zpl**2)
+          ! IF INSIDE THE PLANET
+          if(radp <= rpw) flagP(i,j,k)=.true.
 
         end do
-     end do
-  end do
+      end do
+    end do
 
-end subroutine impose_exo
 
-!=======================================================================
+  end subroutine init_exo
+
+  !=======================================================================
+
+  !> @brief Inject sources of wind
+  !> @details Imposes the sources of wond from the star and planet
+  !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+  !! conserver variables
+  !> @param real [time] time : current integration timr
+  !--------------------------------------------------------------------
+
+  subroutine impose_exo(u,time)
+    !subroutine impose_exo(u,time)
+
+    use constants, only : pi
+    use globals, only : coords, dx, dy, dz
+    implicit none
+    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    real, intent (in) :: time
+    real :: x, y, z, xpl, ypl, zpl
+    real :: velx, vely, velz, rads, dens, radp, phi
+    #ifdef BFIELD
+    real :: cpi
+    #endif
+    integer ::  i,j,k
+
+    do k=nzmin,nzmax
+      do j=nymin,nymax
+        do i=nxmin,nxmax
+
+          ! Position measured from the centre of the grid (planet)
+          xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+          ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+          zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+
+          ! Distance from the centre of the planet (centred)
+          radp=sqrt(xpl**2+ypl**2+zpl**2)
+
+          ! IF INSIDE THE PLANET
+          if(radp <= 1.1*rpw) then
+            if(radp == 0.) radp=dx*0.10
+            VelX=VPW*XPL/RADP
+            VelY=VPW*YPL/RADP
+            VelZ=VPW*ZPL/RADP
+            DENS=DPW!*RPW**2/RADP**2
+
+            if(radp <= 0.9*rpw) then
+
+              VelX=0.!VPW*XPL/RADP
+              VelY=0.!VPW*YPL/RADP
+              VelZ=0.!VPW*ZPL/RADP
+              DENS=DPW!*RPW**2/RADP**2
+            end if
+
+            !   total density and momenta
+            u(1,i,j,k) = dens
+            u(2,i,j,k) = dens*velx
+            u(3,i,j,k) = dens*vely
+            u(4,i,j,k) = dens*velz
+
+            !  Magnetic fields (IF MHD or PMHD)
+            !              cpi = bpw*(rpw/radp)**3/(2.*radp**2)
+            !              u(6,i,j,k) = 3.*ypl*xpl*cpi
+            !              u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
+            !              u(8,i,j,k) = 3.*ypl*zpl*cpi
+            u(6,i,j,k) = 0.
+            u(7,i,j,k) = 0.
+            u(8,i,j,k) = 0.
+
+            !   energy
+            u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2)              &
+            + cv*dens*Tpw                                     &
+            + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
+
+            !  density of neutrals
+            u(neqdyn+1,i,j,k)=1.*dens
+            !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
+            u(neqdyn+2,i,j,k)= -dens   ! passive scalar
+
+          end if
+
+        end do
+      end do
+    end do
+
+  end subroutine impose_exo
+
+  !=======================================================================
 
 end module exoplanet
 
