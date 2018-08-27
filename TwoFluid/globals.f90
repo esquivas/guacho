@@ -51,7 +51,7 @@ module globals
     real, allocatable ::   Tempn  (:,:,:) !< Temperature array [K]
 #endif
 
-! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT  
+! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT
   real, allocatable ::    primit0(:,:,:,:)  !< primit zeros
   real, allocatable ::    primitn0(:,:,:,:) !< primit zeros
 
