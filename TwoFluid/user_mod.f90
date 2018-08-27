@@ -34,15 +34,15 @@ module user_mod
   use exoplanet
 
   implicit none
- 
+
 contains
 
 !> @brief Initializes variables in the module, as well as other
 !! modules loaded by user.
-!! @n It has to be present, even if empty 
+!! @n It has to be present, even if empty
 subroutine init_user_mod()
 
-  implicit none      
+  implicit none
   !  initialize modules loaded by user
   call init_exo()
 
@@ -51,7 +51,7 @@ end subroutine init_user_mod
 !=====================================================================
 
 !> @brief Here the domain is initialized at t=0
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
@@ -69,7 +69,7 @@ subroutine initial_conditions(u)
   integer :: i,j,k
   real :: x,y,z, rads, velx, vely, velz, dens,cpi,xpl,ypl,zpl,radp
 
-  !  the star wind does not cover the entire domain, we fill here 
+  !  the star wind does not cover the entire domain, we fill here
   !  as if the exoplanet is absent
   ! if twofluids, u (prim) is used for ions an un (primn) for neutrals
 
@@ -78,12 +78,12 @@ subroutine initial_conditions(u)
       do i=nxmin,nxmax
 
         ! Position measured from the centre of the grid (planet)
-        xpl=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        ypl=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        zpl=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+        ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+        zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
         ! Distance from the centre of the planet (centred)
-        radp=sqrt(xpl**2+ypl**2+zpl**2)     
+        radp=sqrt(xpl**2+ypl**2+zpl**2)
 
         if(radp > Rpw) then
 
@@ -95,7 +95,7 @@ subroutine initial_conditions(u)
           u(7,i,j,k) = Bsw
           u(8,i,j,k) = 0.
           u(5,i,j,k) = cv*(dsw/0.63)*Tsw  + 0.5*Bsw**2 ! &
-                       !  + 0.5*dsw*vsw**2 
+                       !  + 0.5*dsw*vsw**2
 
         else
           u(1,i,j,k) = 1E-5*dsw
@@ -105,7 +105,7 @@ subroutine initial_conditions(u)
           u(6,i,j,k) = 0.
           u(7,i,j,k) = 0.
           u(8,i,j,k) = 0.
-          u(5,i,j,k) = cv*(1e-5*dsw/0.63)*Tsw 
+          u(5,i,j,k) = cv*(1e-5*dsw/0.63)*Tsw
 
         end if
       end do
@@ -117,7 +117,7 @@ end subroutine initial_conditions
 !=====================================================================
 
 !> @brief Here the domain is initialized at t=0
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
@@ -144,7 +144,7 @@ end subroutine initial_conditionsN
 !=====================================================================
 
 !> @brief User Defined Boundary conditions
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 !> @param integer [in] order : order (mum of cells to be filled in case
@@ -190,7 +190,7 @@ subroutine impose_user_bc(u,order,neutral)
           do i=0,nx+1
 
              if(flagP(i,j,k)) then
-              
+
               u(1,i,j,k) = 1E-5*dsw
               u(2:8,i,j,k) = 0.
 
@@ -214,7 +214,7 @@ subroutine impose_user_bc(u,order,neutral)
                u(1,i,j,k) = u(1,i,j-1,k)
                u(3,i,j,k) =-u(3,i,j-1,k)
              endif
-             
+
              !   reflect z
              if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>0)) then
                u(1,i,j,k) = u(1,i,j,k+1)
@@ -222,7 +222,7 @@ subroutine impose_user_bc(u,order,neutral)
              endif
              if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+1)) then
                u(1,i,j,k) = u(1,i,j,k-1)
-               u(4,i,j,k) =-u(4,i,j,k-1) 
+               u(4,i,j,k) =-u(4,i,j,k-1)
              endif
 
               u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
@@ -235,7 +235,7 @@ subroutine impose_user_bc(u,order,neutral)
         end do
       end do
 
-    end if 
+    end if
 
   case(2)
     ! segundo orden
@@ -261,7 +261,7 @@ subroutine impose_user_bc(u,order,neutral)
           do i=-1,nx+2
 
             if(flagP(i,j,k)) then
-              
+
               u(1,i,j,k) = 1E-5*dsw
               u(2:8,i,j,k) = 0.
 
@@ -270,13 +270,13 @@ subroutine impose_user_bc(u,order,neutral)
                 u(1,i  ,j,k) = u(1,i+1,j,k)
                 u(2,i  ,j,k) =-u(2,i+1,j,k)
                 !u(1,i-1,j,k) = u(1,i+2,j,k)
-                !u(2,i-1,j,k) =-u(2,i+2,j,k) 
+                !u(2,i-1,j,k) =-u(2,i+2,j,k)
               endif
               if (flagP(i+1,j,k).and.(.not.flagP(i-1,j,k)).and.(i<nx+2)) then
                 u(1,i  ,j,k) = u(1,i-1,j,k)
                 u(2,i  ,j,k) =-u(2,i-1,j,k)
                 !u(1,i+1,j,k) = u(1,i-2,j,k)
-                !u(2,i+1,j,k) =-u(2,i-2,j,k) 
+                !u(2,i+1,j,k) =-u(2,i-2,j,k)
               endif
 
               !   reflect y
@@ -284,7 +284,7 @@ subroutine impose_user_bc(u,order,neutral)
                 u(1,i,j  ,k) = u(1,i,j+1,k)
                 u(3,i,j  ,k) =-u(3,i,j+1,k)
                 !u(1,i,j-1,k) = u(1,i,j+2,k)
-                !u(3,i,j-1,k) =-u(3,i,j+2,k)              
+                !u(3,i,j-1,k) =-u(3,i,j+2,k)
               endif
               if (flagP(i,j+1,k).and.(.not.flagP(i,j-1,k)).and.(j<ny+2)) then
                 u(1,i,j  ,k) = u(1,i,j-1,k)
@@ -292,23 +292,23 @@ subroutine impose_user_bc(u,order,neutral)
                 !u(1,i,j+1,k) = u(1,i,j-2,k)
                 !u(3,i,j+1,k) =-u(3,i,j-2,k)
               endif
-              
+
               !   reflect z
               if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>-1)) then
                 u(1,i,j,k  ) = u(1,i,j,k+1)
                 u(4,i,j,k  ) =-u(4,i,j,k+1)
                 !u(1,i,j,k-1) = u(1,i,j,k+2)
-                !u(4,i,j,k-1) =-u(4,i,j,k+2)             
+                !u(4,i,j,k-1) =-u(4,i,j,k+2)
               endif
               if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+2)) then
                 u(1,i,j,k  ) = u(1,i,j,k-1)
                 u(4,i,j,k  ) =-u(4,i,j,k-1)
                 !u(1,i,j,k+1) = u(1,i,j,k-2)
                 !u(4,i,j,k+1) =-u(4,i,j,k-2)
-              endif              
+              endif
               u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &                             cv*(u(1,i,j,k)/0.63)*Tsw     +  &
                              + 0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
-            end if 
+            end if
 
           end do
         end do
@@ -317,7 +317,7 @@ subroutine impose_user_bc(u,order,neutral)
     end if
 
   end select
- 
+
 end subroutine impose_user_bc
 
 !=======================================================================
@@ -375,7 +375,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
      ! energy
      s(5)= s(5)-pp(1)*GM(1)*( pp(2)*x(1) +pp(3)*y(1) +pp(4)*z(1) )  &
           /(rad2(1)**1.5 )
-  
+
 end subroutine get_user_source_terms
 
 !=======================================================================
