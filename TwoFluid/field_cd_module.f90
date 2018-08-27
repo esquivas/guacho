@@ -24,7 +24,7 @@
 
 !> @brief Module to computes field CD div B correction
 !> @details This module corrects the div B with a field interpolated
-!> central difference scheme 
+!> central difference scheme
 !> See. Sect. 4.5 of Toth 2000, Journal of Computational Physics 161, 605
 
 module field_cd_module
@@ -138,7 +138,7 @@ subroutine boundaryI_ct()
     end if
   end if
 
-#endif  
+#endif
 
   !   Reflecting BCs (not tested)
   !     left
@@ -261,20 +261,20 @@ subroutine get_current()
                        -h(6,i,j,k-1) - h(6,i,j,k) )
 
      e(3,i,j,k)=0.25*( -f(7,i-1,j,k) -f(7,i,j,k) &
-                       +g(6,i,j-1,k) +g(6,i,j,k) ) 
+                       +g(6,i,j-1,k) +g(6,i,j,k) )
 
     end do
    end do
   end do
 
-  call boundaryI_ct()  
+  call boundaryI_ct()
 
 end subroutine get_current
 
 
 !=======================================================================
 
-!> @brief Upper level wrapper for field-CD update 
+!> @brief Upper level wrapper for field-CD update
 !> @details Upper level wrapper for field-CD, updates the
 !> hydro variables with upwind scheme and the field as field-CD
 !> @param integer [in] i : cell index in the X direction
@@ -314,11 +314,11 @@ subroutine field_cd_update(u,up,i,j,k,dt)
   up(6,i,j,k)=u(6,i,j,k)                                    &
               -0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))         &
               +0.5*dtdz*(e(2,i,j,k+1)-e(2,i,j,k-1))
-   
+
    up(7,i,j,k)=u(7,i,j,k)                                   &
               +0.5*dtdx*(e(3,i+1,j,k)-e(3,i-1,j,k))         &
               -0.5*dtdz*(e(1,i,j,k+1)-e(1,i,j,k-1))
-   
+
    up(8,i,j,k)=u(8,i,j,k)                                   &
               -0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))         &
               +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
