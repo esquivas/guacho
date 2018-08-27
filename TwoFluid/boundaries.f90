@@ -39,7 +39,7 @@ contains
 
 !>@brief Boundary conditions for 1st order half timestep
 !>@details Boundary conditions for 1st order half timestep
-!! @n The conditions only are imposed at the innermost ghost cell, 
+!! @n The conditions only are imposed at the innermost ghost cell,
 !! on the u (unstepped) variables
 
 subroutine boundaryI(u,neutral)
@@ -142,7 +142,7 @@ subroutine boundaryI(u,neutral)
     end if
   end if
 
-#endif  
+#endif
 
   !   Reflecting BCs
   !     left
@@ -262,7 +262,7 @@ end subroutine boundaryI
 
 subroutine boundaryII(u,neutral)
   implicit none
-  real, intent(inout) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) 
+  real, intent(inout) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   logical, optional, intent(in) :: neutral
 #ifdef MPIP
   include "mpif.h"
@@ -283,7 +283,7 @@ subroutine boundaryII(u,neutral)
 #endif
 
 #ifdef MPIP
- 
+
   !   Exchange boundaries between processors
   !   -------------------------------------------------------------
 
@@ -519,9 +519,9 @@ subroutine boundaryII(u,neutral)
       call impose_user_bc(u,2)
     end if
   end if
-  
+
   return
-  
+
 end subroutine boundaryII
 
 !=======================================================================
