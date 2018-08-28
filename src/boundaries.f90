@@ -38,7 +38,7 @@ contains
 
 !>@brief Boundary conditions for 1st order half timestep
 !>@details Boundary conditions for 1st order half timestep
-!! @n The conditions only are imposed at the innermost ghost cell, 
+!! @n The conditions only are imposed at the innermost ghost cell,
 !! on the u (unstepped) variables
 
 subroutine boundaryI()
@@ -53,12 +53,12 @@ subroutine boundaryI()
   integer, parameter :: nzm1=nz-1, nzp1=nz+1
 #ifdef MPIP
   integer:: status(MPI_STATUS_SIZE), err
-  real, dimension(neq,1    ,1:ny, 1:nz) :: sendr,recvr,sendl,recvl
-  real, dimension(neq,1:nx ,1   , 1:nz) :: sendt,recvt,sendb,recvb
-  real, dimension(neq,1:nx ,1:ny, 1   ) :: sendi,recvi,sendo,recvo
-  integer, parameter :: bxsize=neq*ny*nz
-  integer, parameter :: bysize=neq*nx*nz
-  integer, parameter :: bzsize=neq*nx*ny
+  real, dimension(neq,1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
+  real, dimension(neq,0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
+  real, dimension(neq,0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
+  integer, parameter :: bxsize=neq*(ny+2)*(nz+2)
+  integer, parameter :: bysize=neq*(nx+2)*(nz+2)
+  integer, parameter :: bzsize=neq*(nx+2)*(ny+2)
 #endif
 
 #ifdef MPIP
@@ -67,43 +67,43 @@ subroutine boundaryI()
   !   -------------------------------------------------------------
 
   !   boundaries to procs: right, left, top, bottom, in and out
-  sendr(:,1,:,:)=u(:,nx  ,1:ny ,1:nz)
-  sendl(:,1,:,:)=u(:,1   ,1:ny ,1:nz)
-  sendt(:,:,1,:)=u(:,1:nx,ny   ,1:nz)
-  sendb(:,:,1,:)=u(:,1:nx,1    ,1:nz)
-  sendi(:,:,:,1)=u(:,1:nx,1:ny,nz  )
-  sendo(:,:,:,1)=u(:,1:nx,1:ny,1   )
+  sendr(:,1,:,:)=u(:,nx    ,0:nyp1,0:nzp1)
+  sendl(:,1,:,:)=u(:,1     ,0:nyp1,0:nzp1)
+  sendt(:,:,1,:)=u(:,0:nxp1,ny    ,0:nzp1)
+  sendb(:,:,1,:)=u(:,0:nxp1,1     ,0:nzp1)
+  sendi(:,:,:,1)=u(:,0:nxp1,0:nyp1,nz    )
+  sendo(:,:,:,1)=u(:,0:nxp1,0:nyp1,1     )
 
-  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  , 0,           &
-                   recvl, bxsize, mpi_real_kind, left    , 0,           &
+  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  ,0,           &
+                   recvl, bxsize, mpi_real_kind, left   ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top    , 0,           &
-                   recvb, bysize, mpi_real_kind, bottom  , 0,           &
+  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top    ,0,           &
+                   recvb, bysize, mpi_real_kind, bottom ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in     , 0,           &
-                   recvo, bzsize, mpi_real_kind, out     , 0,           &
+  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in     ,0,           &
+                   recvo, bzsize, mpi_real_kind, out    ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left   , 0,           &
-                   recvr, bxsize, mpi_real_kind, right   , 0,           &
+  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left  , 0,           &
+                   recvr, bxsize, mpi_real_kind, right , 0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom , 0,           &
-                   recvt, bysize, mpi_real_kind, top     , 0,           &
+  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,           &
+                   recvt, bysize, mpi_real_kind, top   , 0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out    , 0,           &
-                   recvi, bzsize, mpi_real_kind, in      , 0,           &
+  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out   , 0,           &
+                   recvi, bzsize, mpi_real_kind, in    , 0,            &
                    comm3d, status , err)
 
-  if (left  .ne. -1) u(:,0   ,1:ny,1:nz) = recvl(:,1,:,:)
-  if (right .ne. -1) u(:,nxp1,1:ny,1:nz) = recvr(:,1,:,:)
-  if (bottom.ne. -1) u(:,1:nx,0   ,1:nz) = recvb(:,:,1,:)
-  if (top   .ne. -1) u(:,1:nx,nyp1,1:nz) = recvt(:,:,1,:)
-  if (out   .ne. -1) u(:,1:nx,1:ny,0   ) = recvo(:,:,:,1)
-  if (in    .ne. -1) u(:,1:nx,1:ny,nzp1) = recvi(:,:,:,1)
+  if (left  .ne. -1) u(:,0     ,0:nyp1,0:nzp1)=recvl(:,1,:,:)
+  if (right .ne. -1) u(:,nxp1  ,0:nyp1,0:nzp1)=recvr(:,1,:,:)
+  if (bottom.ne. -1) u(:,0:nxp1,0     ,0:nzp1)=recvb(:,:,1,:)
+  if (top   .ne. -1) u(:,0:nxp1,nyp1  ,0:nzp1)=recvt(:,:,1,:)
+  if (out   .ne. -1) u(:,0:nxp1,0:nyp1,0     )=recvo(:,:,:,1)
+  if (in    .ne. -1) u(:,0:nxp1,0:nyp1,nzp1  )=recvi(:,:,:,1)
 
 #else
 
@@ -141,7 +141,7 @@ subroutine boundaryI()
     end if
   end if
 
-#endif  
+#endif
 
   !   Reflecting BCs
   !     left
@@ -254,7 +254,7 @@ end subroutine boundaryI
 !! on the up (stepped) variables
 
 subroutine boundaryII()
- 
+
   implicit none
 
 #ifdef MPIP
@@ -267,57 +267,57 @@ subroutine boundaryII()
 
 #ifdef MPIP
   integer:: status(MPI_STATUS_SIZE), err
-  real, dimension(neq,nghost,1:ny  ,1:nz  ) :: sendr,recvr,sendl,recvl
-  real, dimension(neq,1:nx  ,nghost,1:nz  ) :: sendt,recvt,sendb,recvb
-  real, dimension(neq,1:nx  , 1:ny ,nghost) :: sendi,recvi,sendo,recvo
-  integer, parameter :: bxsize=neq*nghost*ny*nz
-  integer, parameter :: bysize=neq*nghost*nx*nz
-  integer, parameter :: bzsize=neq*nghost*nx*ny
+  real, dimension(neq,nghost,nymin:nymax,nzmin:nzmax)::sendr,recvr,sendl,recvl
+  real, dimension(neq,nxmin:nxmax,nghost,nzmin:nzmax)::sendt,recvt,sendb,recvb
+  real, dimension(neq,nxmin:nxmax,nymin:nymax,nghost)::sendi,recvi,sendo,recvo
+  integer, parameter :: bxsize=neq*nghost*(nymax-nymin+1)*(nzmax-nzmin+1)
+  integer, parameter :: bysize=neq*(nxmax-nxmin+1)*nghost*(nzmax-nzmin+1)
+  integer, parameter :: bzsize=neq*(nxmax-nxmin+1)*(nymax-nymin+1)*nghost
 #endif
 
 #ifdef MPIP
- 
+
   !   Exchange boundaries between processors
   !   -------------------------------------------------------------
 
   !   boundaries to processors to the right, left, top, and bottom
-  sendr(:,1:nghost,1:ny    ,1:nz    ) = up(:,nxmg:nx ,1:ny    ,1:nz    )
-  sendl(:,1:nghost,1:ny    ,1:nz    ) = up(:,1:nghost,1:ny    ,1:nz    )
-  sendt(:,1:nx    ,1:nghost,1:nz    ) = up(:,1:nx    ,nymg:ny ,1:nz    )
-  sendb(:,1:nx    ,1:nghost,1:nz    ) = up(:,1:nx    ,1:nghost,1:nz    )
-  sendi(:,1:nx    ,1:ny    ,1:nghost) = up(:,1:nx    ,1:ny    ,nzmg:nz )
-  sendo(:,1:nx    ,1:ny    ,1:nghost) = up(:,1:nx    ,1:ny    ,1:nghost)
+  sendr(:,1:nghost,:,:)=up(:,nxmg:nx ,:,:)
+  sendl(:,1:nghost,:,:)=up(:,1:nghost,:,:)
+  sendt(:,:,1:nghost,:)=up(:,:,nymg:ny ,:)
+  sendb(:,:,1:nghost,:)=up(:,:,1:nghost,:)
+  sendi(:,:,:,1:nghost)=up(:,:,:,nzmg:nz )
+  sendo(:,:,:,1:nghost)=up(:,:,:,1:nghost)
 
-  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right , 0,            &
-                   recvl, bxsize, mpi_real_kind, left   , 0,            &
+  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  ,0,           &
+                   recvl, bxsize, mpi_real_kind, left   ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top   , 0,            &
-                   recvb, bysize, mpi_real_kind, bottom , 0,            &
+  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top    ,0,           &
+                   recvb, bysize, mpi_real_kind, bottom ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in    , 0,            &
-                   recvo, bzsize, mpi_real_kind, out    , 0,            &
+  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in     ,0,           &
+                   recvo, bzsize, mpi_real_kind, out    ,0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left  , 0,            &
-                   recvr, bxsize, mpi_real_kind, right  , 0,            &
+  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left  , 0,           &
+                   recvr, bxsize, mpi_real_kind, right , 0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,            &
-                   recvt, bysize, mpi_real_kind, top    , 0,            &
+  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,           &
+                   recvt, bysize, mpi_real_kind, top   , 0,            &
                    comm3d, status , err)
 
-  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out   , 0,            &
-                   recvi, bzsize, mpi_real_kind, in     , 0,            &
+  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out   , 0,           &
+                   recvi, bzsize, mpi_real_kind, in    , 0,            &
                    comm3d, status , err)
 
-  if (left  .ne. -1) up(:,nxmin:0  ,1:ny     ,1:nz     ) = recvl(:,1:nghost,1:ny    ,1:nz    )
-  if (right .ne. -1) up(:,nxp:nxmax,1:ny     ,1:nz     ) = recvr(:,1:nghost,1:ny    ,1:nz    )
-  if (bottom.ne. -1) up(:,1:nx     ,nymin:0  ,1:nz     ) = recvb(:,1:nx    ,1:nghost,1:nz    )
-  if (top   .ne. -1) up(:,1:nx     ,nyp:nymax,1:nz     ) = recvt(:,1:nx    ,1:nghost,1:nz    )
-  if (out   .ne. -1) up(:,1:nx     ,1:ny     ,nzmin:0  ) = recvo(:,1:nx    ,1:ny    ,1:nghost)
-  if (in    .ne. -1) up(:,1:nx     ,1:ny     ,nzp:nzmax) = recvi(:,1:nx    ,1:ny    ,1:nghost)
+  if (left  .ne. -1) up(:,nxmin:0  ,:,:)=recvl(:,1:nghost,:,:)
+  if (right .ne. -1) up(:,nxp:nxmax,:,:)=recvr(:,1:nghost,:,:)
+  if (bottom.ne. -1) up(:,:,nymin:0  ,:)=recvb(:,:,1:nghost,:)
+  if (top   .ne. -1) up(:,:,nyp:nymax,:)=recvt(:,:,1:nghost,:)
+  if (out   .ne. -1) up(:,:,:,nzmin:0  )=recvo(:,:,:,1:nghost)
+  if (in    .ne. -1) up(:,:,:,nzp:nzmax)=recvi(:,:,:,1:nghost)
 
 #else
 
@@ -505,9 +505,9 @@ subroutine boundaryII()
 
   !   other type of bounadries  <e.g. winds jets outflows>
   if (bc_user) call impose_user_bc(up,2)
-  
+
   return
-  
+
 end subroutine boundaryII
 
 !=======================================================================
