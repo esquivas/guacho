@@ -66,13 +66,13 @@ implicit none
   dims(0)  =MPI_NBX
   dims(1)  =MPI_NBY
   dims(2)  =MPI_NBZ
-
+  
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
   if (nps.ne.np) then
      print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
-     call mpi_finalize(err)
+     call mpi_finalize(err) 
      stop
   endif
 #else
@@ -99,11 +99,11 @@ implicit none
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
   print '(a,i3,a,3i4)', 'processor ', rank                              &
-       ,' ready w/coords',coords(0),coords(1),coords(2)
+       ,' ready w/coords',coords(0),coords(1),coords(2)   
   call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
   call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
   call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
-  call mpi_barrier(mpi_comm_world, err)
+  call mpi_barrier(mpi_comm_world, err)   
   !
 #else
   print '(a)' ,'*******************************************'
@@ -143,10 +143,10 @@ subroutine read_data(u,itprint,filepath)
   integer :: unitin, ip, err
   character (len=128) file1
   character           :: byte_read
-  character, parameter  :: lf = char(10)
+  character, parameter  :: lf = char(10) 
   integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
   real :: dxp, dyp, dzp, scal(3), cvp
-
+  
   take_turns : do ip=0,np-1
     if (rank == ip) then
 
@@ -162,7 +162,7 @@ subroutine read_data(u,itprint,filepath)
 #endif
       open(unit=unitin,file=file1,status='old', access='stream', &
             convert='LITTLE_ENDIAN')
-
+   
       !   discard the ascii header
       do while (byte_read /= achar(255) )
         read(unitin) byte_read
@@ -183,7 +183,7 @@ subroutine read_data(u,itprint,filepath)
       close(unitin)
 
       print'(i3,a,a)',rank,' read: ',trim(file1)
-
+        
 #ifdef MPIP
       call mpi_barrier(comm3d,err)
 #endif
@@ -201,9 +201,9 @@ end subroutine read_data
 !> @param integer [in] i : cell index in the x direction
 !> @param integer [in] j : cell index in the y direction
 !> @param integer [in] k : cell index in the z direction
-!> @param real    [in] x : x position in the grid
-!> @param real    [in] y : y position in the grid
-!> @param real    [in] z : z position in the grid
+!> @param real    [in] x : x position in the grid 
+!> @param real    [in] y : y position in the grid 
+!> @param real    [in] z : z position in the grid 
 
   subroutine getXYZ(i,j,k,x,y,z)
 
@@ -212,11 +212,11 @@ end subroutine read_data
     implicit none
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
-
-    x=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-    y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-    z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
-
+ 
+    x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
+    y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
+    z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        
   end subroutine getXYZ
 
 !=======================================================================
@@ -293,7 +293,7 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @details Fills the target map of one MPI block
 !> @param integer [in] nxmap : Number of X cells in target
 !> @param integer [in] nymap : Number of Y cells in target
-!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
+!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) : 
 !! conserved variables
 !> @param real [out] map(nxmap,mymap) : Target map
 !> @param real [in] dxT : target pixel width
@@ -318,14 +318,14 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
   real, intent(out) :: map(nxmap,nymap)
   integer :: i,j,k, iobs, jobs
   real :: x,y,z,xn,yn,zn
-
+  
   do k=1,nz
      do j=1,ny
         do i=1,nx
 
           !  obtain original position
           call getXYZ(i,j,k, x,y,z)
-
+          
           !  do the rotation of the coordinates
           call rotation_x(theta_x,x,y,z,xn,yn,zn)
           call rotation_y(theta_y,xn,yn,zn,x,y,z)
@@ -342,7 +342,7 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
             if (u(7,i,j,k) <= 0. ) then
               map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
             end if
-
+          
           end if
       end do
     end do
@@ -351,8 +351,8 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
 end subroutine fill_map
 
 !=======================================================================
-!> @brief Writes header
-!> @details Writes header for binary input
+!> @brief Writes header 
+!> @details Writes header for binary input 
 !> @param integer [in] unit : number of logical unit
 
 subroutine write_header(unit, nx, ny)
@@ -360,7 +360,7 @@ subroutine write_header(unit, nx, ny)
   use parameters,  only : rsc, vsc, rhosc, cv
   implicit none
   integer, intent(in) :: unit, nx, ny
-  character, parameter  :: lf = char(10)
+  character, parameter  :: lf = char(10) 
   character (len=128) :: cbuffer
 
   !  Write ASCII header
@@ -368,7 +368,7 @@ subroutine write_header(unit, nx, ny)
 
   write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, 1
   write(unit) trim(cbuffer), lf
-
+  
   write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
   write(unit) trim(cbuffer), lf
 
@@ -386,7 +386,7 @@ subroutine write_header(unit, nx, ny)
 
   write(cbuffer,'("Scalings ", a )')
   write(unit) trim(cbuffer), lf
-
+ 
   write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
     rsc, vsc, rhosc
   write(unit) trim(cbuffer), lf
@@ -399,7 +399,7 @@ subroutine write_header(unit, nx, ny)
 #else
   write(unit) "Double precision 4 byte floats",lf
 #endif
-
+ 
   write(unit) "*******************************************************",lf
   write(unit) achar(255),lf
 #ifdef DOUBLEP
@@ -445,9 +445,9 @@ subroutine  write_map(fileout,nxmap,nymap,map)
 
   write (unitout) map(:,:)
   close(unitout)
-
+  
   print'(a,a)'," wrote file:",trim(fileout)
-
+  
 end subroutine write_map
 
 !=======================================================================
@@ -510,7 +510,7 @@ program coldens
   !  broadcasts user input to the rest of the processors
 #ifdef MPIP
   call mpi_bcast(pathin ,128,mpi_character,0,mpi_comm_world,err)
-
+  
   call mpi_bcast(itprint,  1,mpi_integer  ,0,mpi_comm_world,err)
 
   call mpi_bcast(theta_x,  1,mpi_real_kind,0,mpi_comm_world,err)
@@ -523,7 +523,7 @@ program coldens
 
   !  read u from file
   call read_data(u,itprint,pathin)
-
+  
   !  resets map
   map(:,:)=0.
   map1(:,:)=0.
@@ -534,14 +534,14 @@ program coldens
                                   ,theta_y*180./pi,'° around Y, '&
                                   ,theta_z*180./pi,'° around Z, '
   end if
-
+  
   !  add info to the map
   call fill_map(nxmap,nymap,u,map,dxT,dyT, theta_x, theta_y, theta_z)
   !  sum all the partial sums
   call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master, comm3d, err)
-
+  
   !  write result
-  if (rank == master) then
+  if (rank == master) then 
     call write_map(fileout,nxmap,nymap,map1)
   end if
 
@@ -555,3 +555,4 @@ program coldens
 end program coldens
 
 !=======================================================================
+
