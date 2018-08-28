@@ -33,14 +33,14 @@ module  Out_BIN_Module
 contains
 
 !=======================================================================
-!> @brief Writes header 
-!> @details Writes header for binary input 
+!> @brief Writes header
+!> @details Writes header for binary input
 !> @param integer [in] unit : number of logical unit
 
 subroutine write_header(unit, neq_out, nghost_out)
   implicit none
   integer, intent(in) :: unit, neq_out, nghost_out
-  character, parameter  :: lf = char(10) 
+  character, parameter  :: lf = char(10)
   character (len=128) :: cbuffer
 
   !  Write ASCII header
@@ -48,7 +48,7 @@ subroutine write_header(unit, neq_out, nghost_out)
 
   write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
   write(unit) trim(cbuffer), lf
-  
+
   write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
   write(unit) trim(cbuffer), lf
 
@@ -56,7 +56,7 @@ subroutine write_header(unit, neq_out, nghost_out)
         coords(0)*nx, coords(1)*ny, coords(2)*nz
   write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') & 
+  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') &
         MPI_NBX, MPI_NBY, MPI_NBZ
   write(unit) trim(cbuffer), lf
 
@@ -69,7 +69,7 @@ subroutine write_header(unit, neq_out, nghost_out)
 
   write(cbuffer,'("Scalings ", a )')
   write(unit) trim(cbuffer), lf
- 
+
   write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
     rsc, vsc, rhosc
   write(unit) trim(cbuffer), lf
@@ -82,7 +82,7 @@ subroutine write_header(unit, neq_out, nghost_out)
 #else
   write(unit) "Double precision 4 byte floats",lf
 #endif
- 
+
   write(unit) "*******************************************************",lf
   write(unit) achar(255),lf
 #ifdef DOUBLEP
@@ -109,7 +109,7 @@ end subroutine write_header
 
 
 subroutine write_BIN(itprint)
-  
+
   use difrad
   implicit none
   integer, intent(in) :: itprint
@@ -121,7 +121,9 @@ subroutine write_BIN(itprint)
   integer :: unitout
   integer :: ip
   integer ::  i, j, k
+#ifdef BFIELD
   real, allocatable :: divB(:,:,:)
+#ENDIF
 
 #ifdef MPIP
   write(file1,'(a,i3.3,a,i3.3,a)')  &
@@ -155,7 +157,7 @@ subroutine write_BIN(itprint)
              end do
           end do
        end do
-                
+
     else
        write(unitout) u(:,:,:,:)
     endif
@@ -194,13 +196,13 @@ subroutine write_BIN(itprint)
         write (unitout) ph(:,:,:)
         close(unitout)
         print'(i3,a,a)',rank," wrote file:",trim(file1)
-        
+
       end if
-#ifdef MPIP   
+#ifdef MPIP
         call mpi_barrier(mpi_comm_world, err)
 #endif
     end do
-             
+
   end if
 
 #ifdef BFIELD
@@ -227,13 +229,13 @@ subroutine write_BIN(itprint)
         unitout=10+rank
 
         open(unit=unitout,file=file1,status='replace',access='stream')
-        
+
         call write_header(unitout,1,0)
         write (unitout) divB(:,:,:)
         close(unitout)
-        
+
       end if
-#ifdef MPIP   
+#ifdef MPIP
         call mpi_barrier(mpi_comm_world, err)
 #endif
     end do
