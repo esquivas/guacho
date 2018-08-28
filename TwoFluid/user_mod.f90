@@ -227,7 +227,7 @@ subroutine impose_user_bc(u,order,neutral)
 
               u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
                            cv*(u(1,i,j,k)/0.63)*Tsw     +  &
-                            + 0.5*bsw**2
+                             0.5*bsw**2
 
             end if
 
@@ -306,8 +306,9 @@ subroutine impose_user_bc(u,order,neutral)
                 !u(1,i,j,k+1) = u(1,i,j,k-2)
                 !u(4,i,j,k+1) =-u(4,i,j,k-2)
               endif
-              u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &                             cv*(u(1,i,j,k)/0.63)*Tsw     +  &
-                             + 0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
+              u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
+                   cv*(u(1,i,j,k)/0.63)*Tsw     +  &
+                   0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
             end if
 
           end do

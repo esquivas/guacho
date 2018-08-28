@@ -177,9 +177,7 @@ contains
     real, intent (in) :: time
     real :: x, y, z, xpl, ypl, zpl
     real :: velx, vely, velz, rads, dens, radp, phi
-    #ifdef BFIELD
     real :: cpi
-    #endif
     integer ::  i,j,k
 
     do k=nzmin,nzmax

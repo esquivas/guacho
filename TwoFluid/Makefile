@@ -10,8 +10,8 @@ VPATH = . : ../src
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
-#COMPILER= gfortran
-COMPILER= ifort
+COMPILER= gfortran
+#COMPILER= ifort
 
 #   Compiler flags, make sure they are compatible with the previous selection 
 ### ifortran ###

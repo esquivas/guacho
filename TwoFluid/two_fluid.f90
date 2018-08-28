@@ -5,7 +5,7 @@ module two_fluid
 
   implicit none
 
-  real :: alpha = 1e-2
+  real :: alpha = 5e-2
 
 
 contains
