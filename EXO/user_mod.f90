@@ -34,15 +34,15 @@ module user_mod
   use exoplanet
 
   implicit none
- 
+
 contains
 
 !> @brief Initializes variables in the module, as well as other
 !! modules loaded by user.
-!! @n It has to be present, even if empty 
+!! @n It has to be present, even if empty
 subroutine init_user_mod()
 
-  implicit none      
+  implicit none
   !  initialize modules loaded by user
   call init_exo()
 
@@ -51,7 +51,7 @@ end subroutine init_user_mod
 !=====================================================================
 
 !> @brief Here the domain is initialized at t=0
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 
@@ -66,7 +66,7 @@ subroutine initial_conditions(u)
 
   integer :: i,j,k
   real :: x,y,z, rads, velx, vely, velz, dens,cpi
-  !  the star wind does not cover the entire domain, we fill here 
+  !  the star wind does not cover the entire domain, we fill here
   !  as if the exoplanet is absent
   do i=nxmin,nxmax
     do j=nymin,nymax
@@ -98,7 +98,7 @@ subroutine initial_conditions(u)
         if (mhd) then
           ! total energy
           u(5,i,j,k)=0.5*dens*vsw**2         &
-               + cv*dens*Tsw       & 
+               + cv*dens*Tsw       &
                + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
         else
                 ! total energy
@@ -118,11 +118,11 @@ subroutine initial_conditions(u)
   call impose_exo(u,0.)
 
 end subroutine initial_conditions
-  
+
 !=====================================================================
 
 !> @brief User Defined Boundary conditions
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) : 
+!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
 !> @param integer [in] order : order (mum of cells to be filled in case
@@ -137,10 +137,10 @@ subroutine impose_user_bc(u,order)
   integer, intent(in) :: order
 
   !  In this case the boundary is the same for 1st and second order)
-  if (order >= 1) then 
+  if (order >= 1) then
     call impose_exo(u,time)
   end if
- 
+
 end subroutine impose_user_bc
 
 !=======================================================================
@@ -171,14 +171,14 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   integer :: l
   real    :: xc ,yc, zc
 
-  GM(1)=0.3*Ggrav*MassS/rsc/vsc2
-  GM(2)=    Ggrav*MassP/rsc/vsc2
+  GM(1)=0.3*Ggrav*MassS /rsc/vsc2
+  GM(2)=    Ggrav*MassP /rsc/vsc2
 
 
   !   get cell position
-  xc=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  yc=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-  zc=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+  xc=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+  yc=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
+  zc=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
   ! calculate distance from the sources
   ! star
