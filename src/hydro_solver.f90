@@ -196,7 +196,7 @@ subroutine tstep()
 
   ! update the chemistry network
   ! at this point is in cgs
-  !  the primitives in the physical cell are upated
+  !  the primitives in the physical domain are upated
   if (eq_of_state == EOS_CHEM) call update_chem()
 
   !-------------------------
@@ -205,8 +205,6 @@ subroutine tstep()
   !   add cooling (H rat e)to the conserved variables
   if (cooling == COOL_H) then
     call coolingh()
-    !  update the primitives with u
-    call calcprim(u, primit)
   end if
 
   ! DMC cooling (the primitives are updated in the cooling routine)
