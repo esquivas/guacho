@@ -87,7 +87,7 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False
   if (conserved):
     primit = data[equation,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)]
   else :
-    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy, scale=scale, conserved=conserved)
+    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy, scale=scale)
   return primit
 
 '''
