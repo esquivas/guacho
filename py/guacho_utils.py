@@ -11,8 +11,8 @@ def read_header(file_in, verbose=True):
       s = f.readline().rstrip()
       if s == '\xff' :
         break
-      if (verbose) : 
-        print s  
+      if (verbose) :
+        print s
   f_kind = struct.unpack('s',f.read(1))[0]
   nx, ny, nz = struct.unpack('3i',f.read(12))
   if (f_kind == 'd'):
@@ -36,9 +36,12 @@ def read_header(file_in, verbose=True):
   '''
     converts conserved variables to primitives (and de-scales to cgs)
   '''
-def u2prim(file_in, ublock, equation, mhd = False) :
+def u2prim(file_in, ublock, equation, mhd = False, entropy=False, scale=True) :
   head_info = read_header(file_in,verbose=False)
-  rsc, vsc, rhosc = head_info[9]
+  if scale:
+      rsc, vsc, rhosc = head_info[9]
+  else:
+       rsc, vsc, rhosc = 1., 1., 1.
   cv              = head_info[10]
   pblock = ublock
   if equation == 0 :
@@ -58,17 +61,19 @@ def u2prim(file_in, ublock, equation, mhd = False) :
                                           +pblock[6,::]**2
                                           +pblock[7,::]**2 )  /cv
     pblock[4,::] = pblock[4,::] * rhosc * vsc**2
-  if ( mhd and (equation >= 5) and (equation <= 7) ) :
+  if (mhd and equation >= 5 and equation <= 7) :
     Bsc = np.sqrt(4.*np.pi*rhosc*vsc**2)
     pblock[equation,::] = pblock[equation,::] * Bsc
+  if (entropy and equation == 9):
+    pblock[equation,::] = ublock[9,::] * (pblock[0,::]**(1/cv[0]))* rhosc * vsc**2
   return pblock[equation,::]
-  
+
 '''
   Returns a 3D array of a single block for the selected equation
-  consider that the index in python is that used in fortran -1 
+  consider that the index in python is that used in fortran -1
   e.g. density corresponds to equation 0
 '''
-def readbin3d_block(file_in, equation, verbose=False, mhd = False):
+def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False, scale=True, conserved = False):
   head_info = read_header(file_in,verbose=verbose)
   f                   = head_info[0]
   f_kind              = head_info[1]
@@ -79,21 +84,24 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False):
     count=(nx+2*nghost)*(ny+2*nghost)*(nz+2*nghost)*neqs)\
     .reshape(neqs,nx+2*nghost,ny+2*nghost,nz+2*nghost,order='F')
   f.close()
-  primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd)
+  if (conserved):
+    primit = data[equation,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)]
+  else :
+    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy, scale=scale)
   return primit
 
 '''
   Returns the 3D array for equation neq in all the domain
 '''
-def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False):
-  
+def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entropy=False, scale=True, conserved = False):
+
   print 'Retrieving 3D map for eqn',neq
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   f                   = head_info[0]
   mpi_x, mpi_y, mpi_z = head_info[5]
   f.close()
-  proc= 0 
+  proc= 0
   for ip in range(mpi_x) :
     for jp in range(mpi_y) :
       for kp in range(mpi_z) :
@@ -107,14 +115,14 @@ def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False):
         if proc ==0 :
           map3d=np.zeros(shape=(nx*mpi_x,ny*mpi_y,nz*mpi_z))
         proc = proc+1
-        map3d[x0:x0+nx,y0:y0+ny,z0:z0+nz] = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd)
+        map3d[x0:x0+nx,y0:y0+ny,z0:z0+nz] = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, scale=scale, conserved=conserved)
   return map3d.T
 
 '''
   Returns the axis of the simulation box
 '''
 def get_axis(nout,path='',base='points',verbose=False):
-  
+
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   f                   = head_info[0]
@@ -133,7 +141,7 @@ def get_axis(nout,path='',base='points',verbose=False):
   Returns the extent of the computational box
 '''
 def get_extent(nout,path='',base='points',verbose=False):
-  
+
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   f                   = head_info[0]
@@ -152,18 +160,17 @@ def get_extent(nout,path='',base='points',verbose=False):
   Returns the box size
 '''
 def get_boxsize(nout,path='',base='points',verbose=False):
-  
+
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   nx, ny, nz          = head_info[2]
-  mpi_x, mpi_y, mpi_z = head_info[5]
-  return (nx*mpi_x, ny*mpi_y, nz*mpi_z)
+  return (nx, ny, nz)
 
 '''
   Returns the basic scalings
 '''
 def get_scalings(nout,path='',base='points',verbose=False):
-  
+
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   rsc, vsc, rhosc = head_info[9]
@@ -175,7 +182,7 @@ def get_scalings(nout,path='',base='points',verbose=False):
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
  pos denotes the position of the cut in cells, neq the equation to be retrieved
 '''
-def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False):
+def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, entropy=False, scale=True, conserved = False):
 
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
@@ -193,14 +200,14 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False):
   elif cut == 2 :
       map2d=np.zeros(shape=(nxtot,nztot))
       print 'XZ cut, equation: ', neq
-  elif cut == 3 : 
+  elif cut == 3 :
       map2d=np.zeros(shape=(nxtot,nytot))
       print 'XY cut, equation: ', neq
   proc=0
   for ip in range(mpi_x) :
     for jp in range(mpi_y) :
       for kp in range(mpi_z) :
-        
+
         if cut == 1 :
           if ( (pos >= ip*nx) and (pos <= (ip+1)*nx-1)) :
             file_in = path+base+str(proc).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
@@ -211,7 +218,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False):
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-ip*nx
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd)
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, scale = scale, conserved=conserved )
             map2d[y0:y0+ny,z0:z0+nz]= block[offset,::,::]
 
         elif cut == 2:
@@ -224,7 +231,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False):
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-jp*ny
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd)
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, scale = scale, conserved=conserved )
             map2d[x0:x0+nx,z0:z0+nz]= block[::,offset,::]
 
         elif cut == 3:
@@ -237,10 +244,15 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False):
             x0, y0, z0          = head_info[4]
             f.close()
             offset=pos-kp*nz
-            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd)
+            block = readbin3d_block(file_in, neq, verbose=verbose, mhd= mhd, entropy = entropy, scale = scale, conserved=conserved )
             map2d[x0:x0+nx,y0:y0+ny]= block[::,::,offset]
-   
-        proc = proc +1 
+
+        proc = proc +1
 
   return  map2d.T
 
+'''
+   prints minumum and maximum from numpy array
+'''
+def minmax(q):
+    print('min=',q.min(),' max=', q.max())
