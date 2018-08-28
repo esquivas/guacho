@@ -35,20 +35,20 @@ module difrad
   real, allocatable  :: ph(:,:,:)     !< Photoionizing rate
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
-  real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI
-  real, allocatable  :: photR(:,:,:)  !< Auxiliary buffer for MPI
-  real, allocatable  :: photB(:,:,:)  !< Auxiliary buffer for MPI
-  real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI
-  real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI
-  real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI
-  integer            :: buffersize(6) !< Auxiliary buffer for MPI
+  real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photR(:,:,:)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photB(:,:,:)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photT(:,:,:)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photO(:,:,:)  !< Auxiliary buffer for MPI 
+  real, allocatable  :: photI(:,:,:)  !< Auxiliary buffer for MPI 
+  integer            :: buffersize(6) !< Auxiliary buffer for MPI 
 
 contains
 
 !=======================================================================
 
-!> @brief initializes random number generation
-!> @details initializes random number generation
+!> @brief initializes random number generation 
+!> @details initializes random number generation 
 
 subroutine init_rand()
   implicit none
@@ -80,7 +80,7 @@ subroutine init_rand()
 #ifdef MPIP
   rand_seed=rand_seed*rank
 #endif
-  call random_seed(put=rand_seed)
+  call random_seed(put=rand_seed)    
   deallocate(rand_seed)
 
 end subroutine init_rand
@@ -93,14 +93,14 @@ end subroutine init_rand
 !> @param real [out] emax : maximum emissivity in the entire grid
 
 subroutine emdiff(emax)
-
+  
   use hydro_core, only : u2prim
   implicit none
   real, intent(out) :: emax
   real :: prim(neq)
   real :: T, emaxp, de, emLym, emHeII
   integer :: i ,j , k, err
-  !
+  ! 
  !real :: x,y,z,rad,rstar,vol,emstar
   !
   !   clear  variables
@@ -235,8 +235,8 @@ end subroutine starsource
 !=======================================================================
 
 !> @brief Photon trajectories
-!> @details Launches a photon from cell (xc,yc,zc) in the (xd,yd,zd)
-!! direction, with f and ionizing photons, and updates the
+!> @details Launches a photon from cell (xc,yc,zc) in the (xd,yd,zd) 
+!! direction, with f and ionizing photons, and updates the 
 !! photoionizing rate
 !> @param real [in] xl0 : Initial X position
 !> @param real [in] yl0 : Initial Y position
@@ -253,7 +253,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   real, intent(inout) :: f
   real :: dl, dxl, dyl, dzl, xl, yl, zl, dtau
   real :: fmin
-  integer :: i, j ,k
+  integer :: i, j ,k 
 
   !     photon trajectory
 
@@ -267,11 +267,10 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   yl=yl0+dyl
   zl=zl0+dzl
 
-  !   Warning: check here
   i=int(xl+0.5)
   j=int(yl+0.5)
-  k=int(zl+0.5)
-
+  k=int(zl+0.5)  
+  
   if (i < 1) then
     buffersize(1)=buffersize(1)+1
     photL(1,1, buffersize(1))= xl0+float(nx)
@@ -366,7 +365,6 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
      yl=yl+dyl
      zl=zl+dzl
 
-!   Warning: check here
      i=int(xl+0.5)
      j=int(yl+0.5)
      k=int(zl+0.5)
@@ -448,8 +446,8 @@ end subroutine photons
 
 !=======================================================================
 
-!> @brief follows the rays across MPI boundaries
-!> @details follows the rays across MPI boundaries
+!> @brief follows the rays across MPI boundaries    
+!> @details follows the rays across MPI boundaries    
 
 subroutine radbounds()
 #ifdef MPIP
@@ -459,14 +457,14 @@ subroutine radbounds()
   integer,  parameter :: length=np*6
   integer:: status(MPI_STATUS_SIZE), err
 
-  !   loop over MPI blocks to ensure the rays are followed to the
+  !   loop over MPI blocks to ensure the rays are followed to the 
   !   entire domain
   do ip=1,int( sqrt(float(MPI_NBX)**2+float(MPI_NBY)**2+float(MPI_NBZ)**2) )
 
     !print'(a,2i3, 6i7)','**',rank,np,buffersize
     call mpi_allgather(buffersize(:)   , 6, mpi_integer, &
         Allbuffersize(:), 6, mpi_integer, comm3d ,err)
-
+  
     !  to and from the left
     if (left /= -1) then
       sizeSend=Allbuffersize(6*rank+1)
@@ -614,7 +612,7 @@ subroutine radbounds()
            photI(2,4,niter),photI(2,5,niter),photI(2,6,niter),photI(2,7,niter) )
     end do
     end if
-
+  
     !  reset the remaining out buffers
     allBuffersize(:)=0
 
@@ -650,11 +648,11 @@ end subroutine progress
 !=======================================================================
 
 !> @brief  Diffuse radiation driver
-!> @details Upper level wrapper to compute the diffuse photoionization
+!> @details Upper level wrapper to compute the diffuse photoionization 
 !!rate
 
 subroutine diffuse_rad()
-
+  
   use constants, only : Rsun
   implicit none
   real :: f, dirx,diry,dirz
@@ -678,9 +676,9 @@ subroutine diffuse_rad()
 !    zc=float(nztot/2)*dz
 
   !   posicion de la fuente ionizante
-  xc=real(nxtot/2)*dx
-  yc=real(nytot/2)*dy
-  zc=real(nztot/2)*dz
+  xc=float(nxtot/2)*dx
+  yc=float(nytot/2)*dy
+  zc=float(nztot/2)*dz
 
   ! To  impose the photoionizing field of a star
   ! this is the radius of the actual star [cm]
@@ -697,9 +695,9 @@ subroutine diffuse_rad()
 !       f=nphot
 !       f=5.E48  !  Iliev 2009 Test 5
 
-     i=int(xp/dx - 0.5)
-     j=int(yp/dy - 0.5)
-     k=int(zp/dz - 0.5)
+     i=int(xp/dx-0.5)
+     j=int(yp/dy-0.5)
+     k=int(zp/dz-0.5)
      !
      ii=i/nx
      jj=j/ny
@@ -708,12 +706,11 @@ subroutine diffuse_rad()
      if( (ii==coords(0)).and.(jj==coords(1)).and.(kk==coords(2))) then
         in=in+1
         ! trace the photon
-        !  Warning: check 0.5 below
-        call photons(float(i-coords(0)*nx) + 0.5, &
-                     float(j-coords(1)*ny) + 0.5, &
-                     float(k-coords(2)*nz) + 0.5, &
+        call photons(float(i-coords(0)*nx)+0.5, &
+                     float(j-coords(1)*ny)+0.5, &
+                     float(k-coords(2)*nz)+0.5, &
                      dirx,diry,dirz,f)
-        !call progress(niter,nrays)
+        !call progress(niter,nrays)      
      end if
      !
   end do
