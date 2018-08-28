@@ -10,19 +10,12 @@ VPATH = . : ../src
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
-COMPILER= gfortran
-#COMPILER= ifort
+#COMPILER= gfortran
+COMPILER= ifort
 
 #   Compiler flags, make sure they are compatible with the previous selection 
 ### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
-#FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
-#FLAGS= -O3 -cpp -vec-report0
-#FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
-
-#   Compiler flags, make sure they are compatible with the previous selection 
-### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
+FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
