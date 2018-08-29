@@ -51,7 +51,7 @@ contains
   real,  intent (inout) :: up(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
   integer :: i, j, k
-  
+
   do k=1,nz
      do j=1,ny
         do i=1,nx
@@ -62,14 +62,14 @@ contains
         end do
      end do
   end do
-  
+
 end subroutine viscosity
 
 !=======================================================================
 
 !> @brief Upwind timestep
 !> @details Performs the upwind timestep according to
-!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x} 
+!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x}
 !!\left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] @f]
 !! (in 3D), it takes @f$ U^{n+1} @f$=up from the global variables
 !! and @f$ U^{n} @f$=u
@@ -105,7 +105,7 @@ subroutine step(u,up,primit,dt)
   do k=1,nz
     do j=1,ny
       do i=1,nx
-        
+
         if (.not.enable_field_cd) then
           !  upwind step for all variables
           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
@@ -153,14 +153,14 @@ subroutine tstep()
   use two_fluid
   implicit none
   real :: dtm
-   
-  !  1st half timestep ========================   
+
+  !  1st half timestep ========================
   dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
   if (riemann_solver == SOLVER_HLL ) call hllfluxes (1)
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(primit,1)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primit,1)
   !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
@@ -169,10 +169,11 @@ subroutine tstep()
 
   !   upwind timestep
   call step(u,up,primit,dtm)
-  
+
 #ifdef TWOFLUID
   !  repeat for the second fluid if necessary
   if (twofluid) then
+    if (riemann_solver == SOLVER_HLLD) call hllefluxes(primitn,1)
     if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primitn,1)
     call step(un,upn,primitn,dtm)
     !   Add sources to both fluids
@@ -185,7 +186,7 @@ subroutine tstep()
 
   !   add viscosity
   !call viscosity()
-  
+
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
   call boundaryII(up,neutral=.false.)
@@ -202,7 +203,7 @@ subroutine tstep()
   !   with linear reconstruction (piecewise linear)
   if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
   if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLE) call hllefluxes(primit,2)
   if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primit,2)
   !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
@@ -215,6 +216,7 @@ subroutine tstep()
 #ifdef TWOFLUID
   !  repeat for the second fluid if necessary
   if (twofluid) then
+    if (riemann_solver == SOLVER_HLLD) call hllefluxes(primitn,2)
     if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primitn,2)
     call step(un, upn, primitn, dt_CFL)
     ! add sources
@@ -248,7 +250,7 @@ subroutine tstep()
   !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
-  if (cooling == COOL_H) then 
+  if (cooling == COOL_H) then
     call coolingh()
     !  update the primitives with u
     call calcprim(u, primit)
@@ -256,7 +258,7 @@ subroutine tstep()
 
   ! DMC cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_DMC) call coolingdmc()
-  
+
   ! Chianti cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_CHI) call coolingchi()
 
