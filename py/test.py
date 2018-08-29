@@ -7,26 +7,30 @@ from matplotlib.colors import LogNorm
 
 plt.ion()
 
-path = '/datos_diable/esquivel/Guacho-1.2/chemH-M2/BIN/'
-nout = 0
+path = '../TwoFluid/BIN/'
+nout = 3
 
-# this reads the 3D data for the first equation (1 in fortran 0 here)
 rho = readbin3d_all(nout=nout,neq=0,path=path,verbose=False)
-plt.figure(1)
-plt.clf()
-#  plots the 2D cut at midplane of a 256^3 sim (y=128)
-plt.imshow(rho[::,128,::], norm=LogNorm(), origin='lower', cmap='Blues' )
+plt.figure(1) ;plt.clf()
+plt.imshow(rho[::,25,::], norm=LogNorm(), origin='lower', cmap='viridis' )
 plt.colorbar()
-print '****'
+plt.title("Density of Ions")
 
-#  alternatively we can extract the 2D cut with this, without storing the
-#  entire 3D data
-cut= get_2d_cut(2,128,nout=nout,neq=0,path=path,verbose=False)
-plt.figure(2)
-plt.clf()
-plt.imshow(cut, norm=LogNorm(),  origin='lower', cmap='Blues' )
+rhoN = readbin3d_all(nout=nout,neq=0,path=path,base='pointsN',verbose=False)
+plt.figure(2) ;plt.clf()
+plt.imshow(rhoN[::,25,::], norm=LogNorm(), origin='lower', cmap='viridis' )
 plt.colorbar()
+plt.title("Density of Neutrals")
 
-#  for a component of the velocity and thermal pressure one can use
-vz = readbin3d_all(nout=nout,neq=3,path=path,verbose=False)
-Pgas = readbin3d_all(nout=nout,neq=4,path=path,verbose=False)
+Pi = readbin3d_all(nout=nout,neq=4,path=path,verbose=False)
+plt.figure(3) ;plt.clf()
+plt.imshow(Pi[::,25,::], norm=LogNorm(), origin='lower', cmap='Spectral' )
+plt.colorbar()
+plt.title("Pressure of Ions")
+
+
+Pn = readbin3d_all(nout=nout,neq=4,path=path,base='pointsN',verbose=False)
+plt.figure(4) ;plt.clf()
+plt.imshow(Pn[::,25,::], norm=LogNorm(), origin='lower', cmap='Spectral' )
+plt.colorbar()
+plt.title("Pressure of Neutrals")
