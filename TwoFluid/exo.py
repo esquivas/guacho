@@ -35,9 +35,8 @@ bx  = readbin3d_all(nout=nout,neq=5,path=path,verbose=False)
 by  = readbin3d_all(nout=nout,neq=6,path=path,verbose=False)
 bz  = readbin3d_all(nout=nout,neq=7,path=path,verbose=False)
 
-bt  = np.sqrt(bx*bx+by*by+bz*bz) 
-vt  = np.sqrt(vx*vx+vy*vy+vz*vz) 
-
+bt  = np.sqrt(bx*bx+by*by+bz*bz)
+vt  = np.sqrt(vx*vx+vy*vy+vz*vz)
 
 #calculates mins and max
 rmin  = np.min(rho)
@@ -95,4 +94,3 @@ a   = fig.add_subplot(2,3,6)
 plt.imshow(vt[nh,::,::], origin='lower', cmap='Blues' )
 a.set_title("V tot")
 plt.colorbar(orientation = "horizontal")
-
