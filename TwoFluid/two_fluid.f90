@@ -5,7 +5,7 @@ module two_fluid
 
   implicit none
 
-  real :: alpha = 5e-2
+  real :: alpha = 1e-2
 
 
 contains
@@ -43,9 +43,9 @@ contains
     real, intent(in)  :: pp(neq), pn(neq), dt
     real, intent(out) :: R(3)
 
-    R(1) = alpha * dt * pp(1) * pn(1) *( pn(2)-pp(2) )/(1+alpha*dt*(pp(1)+pn(1)))
-    R(2) = alpha * dt * pp(1) * pn(1) *( pn(3)-pp(3) )/(1+alpha*dt*(pp(1)+pn(1)))
-    R(3) = alpha * dt * pp(1) * pn(1) *( pn(4)-pp(4) )/(1+alpha*dt*(pp(1)+pn(1)))
+    R(1) = alpha*dt * pp(1)*pn(1) *( pn(2)-pp(2) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
+    R(2) = alpha*dt * pp(1)*pn(1) *( pn(3)-pp(3) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
+    R(3) = alpha*dt * pp(1)*pn(1) *( pn(4)-pp(4) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
 
   end subroutine get_TF_R
 
