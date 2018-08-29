@@ -29,7 +29,7 @@
 
 module hlld
 
-  #ifdef BFIELD
+#ifdef BFIELD
 
 contains
 
@@ -146,11 +146,11 @@ contains
       ff(7) = bystl*sM-bx*vstl
       ff(8) = bzstl*sM-bx*wstl
 
-      #ifdef PASSIVES
+#ifdef PASSIVES
       if (passives) then
         ff(neqdyn+1:neq)=sM*priml(neqdyn+1:neq)*slmul/slmsM
       end if
-      #endif
+#endif
 
       return
     endif
