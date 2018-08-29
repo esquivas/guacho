@@ -42,19 +42,18 @@ module globals
   ! if you have doubts, don't ask me, ask someone that knows what
   ! he/she is doing
 #ifdef TWOFLUID
-    real, allocatable ::      un(:,:,:,:) !< conserved varibles
-    real, allocatable ::     upn(:,:,:,:) !< conserved varibles after 1/2 timestep
-    real, allocatable :: primitn(:,:,:,:) !< primitive varibles
-!    real, allocatable ::      fn(:,:,:,:) !< X fluxes
-!    real, allocatable ::      gn(:,:,:,:) !< Y fluxes
-!    real, allocatable ::      hn(:,:,:,:) !< Z fluxes
-    real, allocatable ::   Tempn  (:,:,:) !< Temperature array [K]
+  real, allocatable ::      un(:,:,:,:) !< conserved varibles
+  real, allocatable ::     upn(:,:,:,:) !< conserved varibles after 1/2 timestep
+  real, allocatable :: primitn(:,:,:,:) !< primitive varibles
+  !    real, allocatable ::      fn(:,:,:,:) !< X fluxes
+  !    real, allocatable ::      gn(:,:,:,:) !< Y fluxes
+  !    real, allocatable ::      hn(:,:,:,:) !< Z fluxes
+  real, allocatable ::   Tempn  (:,:,:) !< Temperature array [K]
 #endif
 
-! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT
+  ! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT
   real, allocatable ::    primit0(:,:,:,:)  !< primit zeros
   real, allocatable ::    primitn0(:,:,:,:) !< primit zeros
-
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y
