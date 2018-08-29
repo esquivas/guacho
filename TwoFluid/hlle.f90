@@ -92,7 +92,7 @@ contains
   !! (first order)
   !!                  @n 2 uses primit for second order timestep
 
-  subroutine hllEfluxes(choice)
+  subroutine hllEfluxes(primit,choice)
 
     use parameters, only : neq, nx, ny, nz, &
     nxmin, nxmax, nymin, nymax, nzmin, nzmax
