@@ -173,7 +173,7 @@ subroutine tstep()
 #ifdef TWOFLUID
   !  repeat for the second fluid if necessary
   if (twofluid) then
-    if (riemann_solver == SOLVER_HLLD) call hllefluxes(primitn,1)
+    if (riemann_solver == SOLVER_HLLE) call hllefluxes(primitn,1)
     if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primitn,1)
     call step(un,upn,primitn,dtm)
     !   Add sources to both fluids
@@ -216,7 +216,7 @@ subroutine tstep()
 #ifdef TWOFLUID
   !  repeat for the second fluid if necessary
   if (twofluid) then
-    if (riemann_solver == SOLVER_HLLD) call hllefluxes(primitn,2)
+    if (riemann_solver == SOLVER_HLLE) call hllefluxes(primitn,2)
     if (riemann_solver == SOLVER_HLLD) call hlldfluxes(primitn,2)
     call step(un, upn, primitn, dt_CFL)
     ! add sources
