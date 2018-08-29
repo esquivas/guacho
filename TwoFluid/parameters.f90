@@ -173,8 +173,8 @@ module parameters
   !> Maximum integration time
   real, parameter :: tmax    = 1e5/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 10e2/tsc!0.025 *day/tsc
-  real, parameter :: cfl=0.15        !< Courant-Friedrichs-Lewy number
+  real, parameter :: dtprint = 1e4/tsc!0.025 *day/tsc
+  real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
