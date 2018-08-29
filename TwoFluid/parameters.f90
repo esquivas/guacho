@@ -56,10 +56,10 @@ module parameters
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLLD
+  integer, parameter :: riemann_solver = SOLVER_HLLE
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
-  logical, parameter :: eight_wave = .false.
+  logical, parameter :: eight_wave = .true.
   !>  Enable field-CD cleaning of div B
   logical, parameter :: enable_field_cd = .true.
   !>  Enable writting of divB to disk
@@ -174,7 +174,7 @@ module parameters
   real, parameter :: tmax    = 1e5/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 10e2/tsc!0.025 *day/tsc
-  real, parameter :: cfl=0.3        !< Courant-Friedrichs-Lewy number
+  real, parameter :: cfl=0.15        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
