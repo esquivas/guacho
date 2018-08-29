@@ -186,7 +186,7 @@ module parameters
   !  some derived parameters (no need of user's input below this line)
   !*********************************************************************
 
-  !this is a new option for using twofluid
+  ! this is a new option for using twofluid
   ! ask matias, but do not expect any wise answer
 #ifdef TWOFLUID
   logical, parameter :: twofluid = .true.   !< enable twofluid
