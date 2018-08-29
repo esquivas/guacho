@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=guacho
+PROGRAM=Guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
