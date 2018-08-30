@@ -1,11 +1,11 @@
 module two_fluid
 
   use parameters,  only : neq,  nxmin, nymin, nzmin, &
-  nxmax, nymax, nzmax, nx, ny, nz
+  nxmax, nymax, nzmax, nx, ny, nz , tsc, rhosc
 
   implicit none
 
-  real :: alpha = 1e-2
+  real,parameter :: alpha = 6.02e14*rhosc*tsc! 5e-2
 
 
 contains
@@ -46,6 +46,7 @@ contains
     R(1) = alpha*dt * pp(1)*pn(1) *( pn(2)-pp(2) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
     R(2) = alpha*dt * pp(1)*pn(1) *( pn(3)-pp(3) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
     R(3) = alpha*dt * pp(1)*pn(1) *( pn(4)-pp(4) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
+
 
   end subroutine get_TF_R
 
