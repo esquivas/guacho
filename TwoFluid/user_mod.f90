@@ -88,14 +88,14 @@ subroutine initial_conditions(u)
         if(radp > Rpw) then
 
           u(1,i,j,k) = dsw
-          u(2,i,j,k) = 0.!dsw*vsw
+          u(2,i,j,k) = dsw*vsw
           u(3,i,j,k) = 0.
           u(4,i,j,k) = 0.
           u(6,i,j,k) = 0.
           u(7,i,j,k) = Bsw
           u(8,i,j,k) = 0.
-          u(5,i,j,k) = cv*(dsw/0.63)*Tsw  + 0.5*Bsw**2 ! &
-                       !  + 0.5*dsw*vsw**2
+          u(5,i,j,k) = cv*(dsw/0.63)*Tsw  + 0.5*Bsw**2  &
+                         + 0.5*dsw*vsw**2
 
         else
           u(1,i,j,k) = 1E-5*dsw
