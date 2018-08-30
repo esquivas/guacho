@@ -135,14 +135,14 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=50      !< Total grid size in X
-  integer, parameter :: nytot=50      !< Total grid size in Y
-  integer, parameter :: nztot=50      !< Total grid size in Z
+  integer, parameter :: nxtot=100      !< Total grid size in X
+  integer, parameter :: nytot=100      !< Total grid size in Y
+  integer, parameter :: nztot=100      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
@@ -171,9 +171,9 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1e5/tsc
+  real, parameter :: tmax    = 100*1e5/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1e4/tsc!0.025 *day/tsc
+  real, parameter :: dtprint = 20*1e4/tsc!0.025 *day/tsc
   real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
