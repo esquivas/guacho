@@ -130,7 +130,7 @@ contains
     bsw=bsw/bsc
     bpw=bpw/bsc
     dpw=dpw/rhosc
-    vpw=vpw/vsc2
+    vpw=vpw/vsc
     Tpw=Tpw/Tempsc
     Rpw=Rpw/rsc
 
