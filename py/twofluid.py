@@ -8,7 +8,7 @@ from matplotlib.colors import LogNorm
 plt.ion()
 
 path = '../TwoFluid/BIN/'
-nout = 4
+nout = 10
 
 rho = readbin3d_all(nout=nout,neq=0,path=path,verbose=False)
 vx =  readbin3d_all(nout=nout,neq=1,path=path,verbose=False)/1e5
