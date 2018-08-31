@@ -98,6 +98,7 @@ contains
     nxmin, nxmax, nymin, nymax, nzmin, nzmax
     use globals, only : f, g, h
     use hydro_core, only : swapy, swapz, limiter
+    use exoplanet, only : flagP
     implicit none
     real, intent (in)   :: primit(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     integer, intent(in) :: choice
@@ -112,32 +113,50 @@ contains
         do j=0,ny
           do i=0,nx
 
-            !------- x direction -------------------------------------
-            priml(:)=primit(:,i  ,j ,k )
-            primr(:)=primit(:,i+1,j ,k )
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i+1,j,k)) then
+              f(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- x direction -------------------------------------
+              priml(:)=primit(:,i  ,j ,k )
+              primr(:)=primit(:,i+1,j ,k )
 
-            call prim2fhlle(priml,primr,ff)
-            f(:,i,j,k)=ff(:)
+              call prim2fhlle(priml,primr,ff)
+              f(:,i,j,k)=ff(:)
+            end if
 
-            !------- y direction -------------------------------------
-            priml(:)=primit(:,i ,j  ,k )
-            primr(:)=primit(:,i, j+1,k )
-            call swapy(priml,neq)
-            call swapy(primr,neq)
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i,j+1,k)) then
+              g(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- y direction -------------------------------------
+              priml(:)=primit(:,i ,j  ,k )
+              primr(:)=primit(:,i, j+1,k )
+              call swapy(priml,neq)
+              call swapy(primr,neq)
 
-            call prim2fhlle(priml,primr,ff)
-            call swapy(ff,neq)
-            g(:,i,j,k)=ff(:)
+              call prim2fhlle(priml,primr,ff)
+              call swapy(ff,neq)
+              g(:,i,j,k)=ff(:)
+            end if
 
-            !------- z direction -------------------------------------
-            priml(:)=primit(:,i ,j ,k  )
-            primr(:)=primit(:,i, j, k+1)
-            call swapz(priml,neq)
-            call swapz(primr,neq)
-            !
-            call prim2fhlle(priml,primr,ff)
-            call swapz(ff,neq)
-            h(:,i,j,k)=ff(:)
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i,j,k+1)) then
+              h(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- z direction -------------------------------------
+              priml(:)=primit(:,i ,j ,k  )
+              primr(:)=primit(:,i, j, k+1)
+              call swapz(priml,neq)
+              call swapz(primr,neq)
+
+              call prim2fhlle(priml,primr,ff)
+              call swapz(ff,neq)
+              h(:,i,j,k)=ff(:)
+            end if
 
           end do
         end do
@@ -149,46 +168,63 @@ contains
         do j=0,ny
           do i=0,nx
 
-            !------- x direction ------------------------------------
-            priml (:)=primit(:,i,  j,k )
-            primr (:)=primit(:,i+1,j,k )
-            primll(:)=primit(:,i-1,j,k )
-            primrr(:)=primit(:,i+2,j,k )
-            call limiter(primll,priml,primr,primrr,neq)
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i+1,j,k)) then
+              f(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- x direction ------------------------------------
+              priml (:)=primit(:,i,  j,k )
+              primr (:)=primit(:,i+1,j,k )
+              primll(:)=primit(:,i-1,j,k )
+              primrr(:)=primit(:,i+2,j,k )
+              call limiter(primll,priml,primr,primrr,neq)
 
-            call prim2fhlle(priml,primr,ff)
-            f(:,i,j,k)=ff(:)
+              call prim2fhlle(priml,primr,ff)
+              f(:,i,j,k)=ff(:)
+            end if
 
-            !------- y direction ------------------------------------
-            priml (:)=primit(:,i,j  ,k )
-            primr (:)=primit(:,i,j+1,k )
-            primll(:)=primit(:,i,j-1,k )
-            primrr(:)=primit(:,i,j+2,k )
-            call swapy(priml,neq)
-            call swapy(primr,neq)
-            call swapy(primll,neq)
-            call swapy(primrr,neq)
-            call limiter(primll,priml,primr,primrr,neq)
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i,j+1,k)) then
+              g(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- y direction ------------------------------------
+              priml (:)=primit(:,i,j  ,k )
+              primr (:)=primit(:,i,j+1,k )
+              primll(:)=primit(:,i,j-1,k )
+              primrr(:)=primit(:,i,j+2,k )
+              call swapy(priml,neq)
+              call swapy(primr,neq)
+              call swapy(primll,neq)
+              call swapy(primrr,neq)
+              call limiter(primll,priml,primr,primrr,neq)
 
-            call prim2fhlle(priml,primr,ff)
-            call swapy(ff,neq)
-            g(:,i,j,k)=ff(:)
+              call prim2fhlle(priml,primr,ff)
+              call swapy(ff,neq)
+              g(:,i,j,k)=ff(:)
+            end if
 
-            !------- z direction ------------------------------------
-            priml (:)=primit(:,i,j,k  )
-            primr (:)=primit(:,i,j,k+1)
-            primll(:)=primit(:,i,j,k-1)
-            primrr(:)=primit(:,i,j,k+2)
-            call swapz(priml,neq)
-            call swapz(primr,neq)
-            call swapz(primll,neq)
-            call swapz(primrr,neq)
-            call limiter(primll,priml,primr,primrr,neq)
+            !  Only compute fluxes outside planet
+            if(flagP(i,j,k).or.flagP(i,j,k+1)) then
+              h(:,i,j,k) = 0.
+              !cycle
+            else
+              !------- z direction ------------------------------------
+              priml (:)=primit(:,i,j,k  )
+              primr (:)=primit(:,i,j,k+1)
+              primll(:)=primit(:,i,j,k-1)
+              primrr(:)=primit(:,i,j,k+2)
+              call swapz(priml,neq)
+              call swapz(primr,neq)
+              call swapz(primll,neq)
+              call swapz(primrr,neq)
+              call limiter(primll,priml,primr,primrr,neq)
 
-            call prim2fhlle(priml,primr,ff)
-            call swapz(ff,neq)
-            h(:,i,j,k)=ff(:)
-
+              call prim2fhlle(priml,primr,ff)
+              call swapz(ff,neq)
+              h(:,i,j,k)=ff(:)
+            endif
           end do
         end do
       end do
