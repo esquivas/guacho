@@ -71,20 +71,20 @@ contains
           call get_TF_R(pp(:,i,j,k), pn(:,i,j,k),dt,R )
 
           !  update momenta
-          up(2,i,j,k) = u(2,i,j,k) + R(1)
-          up(3,i,j,k) = u(3,i,j,k) + R(2)
-          up(4,i,j,k) = u(4,i,j,k) + R(3)
+          up(2,i,j,k) = up(2,i,j,k) + R(1)
+          up(3,i,j,k) = up(3,i,j,k) + R(2)
+          up(4,i,j,k) = up(4,i,j,k) + R(3)
 
-          upn(2,i,j,k) = un(2,i,j,k) - R(1)
-          upn(3,i,j,k) = un(3,i,j,k) - R(2)
-          upn(4,i,j,k) = un(4,i,j,k) - R(3)
+          upn(2,i,j,k) = upn(2,i,j,k) - R(1)
+          upn(3,i,j,k) = upn(3,i,j,k) - R(2)
+          upn(4,i,j,k) = upn(4,i,j,k) - R(3)
 
           !  update enery
-          up(5,i,j,k) = u(5,i,j,k)   + pp(2,i,j,k)*R(1) &
+          up(5,i,j,k) = up(5,i,j,k)   + pp(2,i,j,k)*R(1) &
                                      + pp(3,i,j,k)*R(2) &
                                      + pp(4,i,j,k)*R(3)
 
-          upn(5,i,j,k) = un(5,i,j,k) - pn(2,i,j,k)*R(1) &
+          upn(5,i,j,k) = upn(5,i,j,k) - pn(2,i,j,k)*R(1) &
                                      - pn(3,i,j,k)*R(2) &
                                      - pn(4,i,j,k)*R(3)
 
