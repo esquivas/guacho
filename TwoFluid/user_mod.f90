@@ -87,25 +87,25 @@ subroutine initial_conditions(u)
 
         if(radp > Rpw) then
 
-          u(1,i,j,k) = dsw
-          u(2,i,j,k) = dsw*vsw
+          u(1,i,j,k) = 0.1*dsw
+          u(2,i,j,k) = 0.1*dsw*vsw
           u(3,i,j,k) = 0.
           u(4,i,j,k) = 0.
           u(6,i,j,k) = 0.
           u(7,i,j,k) = Bsw
           u(8,i,j,k) = 0.
-          u(5,i,j,k) = cv*(dsw/0.63)*Tsw  + 0.5*Bsw**2  &
-                         + 0.5*dsw*vsw**2
+          u(5,i,j,k) = cv*(0.1*dsw/0.63)*Tsw  + 0.5*Bsw**2  &
+                         + 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k)
 
         else
-          u(1,i,j,k) = 1E-5*dsw
+          u(1,i,j,k) = 1E-5*dpw
           u(2,i,j,k) = 0.
           u(3,i,j,k) = 0.
           u(4,i,j,k) = 0.
           u(6,i,j,k) = 0.
           u(7,i,j,k) = 0.
           u(8,i,j,k) = 0.
-          u(5,i,j,k) = cv*(1e-5*dsw/0.63)*Tsw
+          u(5,i,j,k) = cv*(1e-5*dpw/0.63)*Tpw
 
         end if
       end do
@@ -189,47 +189,46 @@ subroutine impose_user_bc(u,order,neutral)
 
           do i=0,nx+1
 
-             if(flagP(i,j,k)) then
-
-              u(1,i,j,k) = 1E-5*dsw
-              u(2:8,i,j,k) = 0.
+             !if(flagP(i,j,k)) then
+              !u(1,i,j,k) = 1E-5*dsw
+              !u(2:8,i,j,k) = 0.
 
               !   reflect x
               if ( flagP(i-1,j,k).and.(.not.flagP(i+1,j,k)).and.(i>0)) then
-                u(1,i,j,k) =  u(1,i+1,j,k)
+                u(:,i,j,k) =  u(:,i+1,j,k)
                 u(2,i,j,k) = -u(2,i+1,j,k)
               endif
 
               if (flagP(i+1,j,k).and.(.not.flagP(i-1,j,k)).and.(i<nx+1)) then
-                u(1,i,j,k) =  u(1,i-1,j,k)
+                u(:,i,j,k) =  u(:,i-1,j,k)
                 u(2,i,j,k) = -u(2,i-1,j,k)
               endif
 
              !   reflect y
              if (flagP(i,j-1,k).and.(.not.flagP(i,j+1,k)).and.(j>0)) then
-               u(1,i,j,k) = u(1,i,j+1,k)
+               u(:,i,j,k) = u(:,i,j+1,k)
                u(3,i,j,k) =-u(3,i,j+1,k)
              endif
              if (flagP(i,j+1,k).and.(.not.flagP(i,j-1,k)).and.(j<ny+1)) then
-               u(1,i,j,k) = u(1,i,j-1,k)
+               u(:,i,j,k) = u(:,i,j-1,k)
                u(3,i,j,k) =-u(3,i,j-1,k)
              endif
 
              !   reflect z
              if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>0)) then
-               u(1,i,j,k) = u(1,i,j,k+1)
+               u(:,i,j,k) = u(:,i,j,k+1)
                u(4,i,j,k) =-u(4,i,j,k+1)
              endif
              if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+1)) then
-               u(1,i,j,k) = u(1,i,j,k-1)
+               u(:,i,j,k) = u(:,i,j,k-1)
                u(4,i,j,k) =-u(4,i,j,k-1)
              endif
 
-              u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
-                           cv*(u(1,i,j,k)/0.63)*Tsw     +  &
-                             0.5*bsw**2
+              !u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
+              !             cv*(u(1,i,j,k)/0.63)*Tsw     +  &
+              !               0.5*bsw**2
 
-            end if
+            !end if
 
           end do
         end do
@@ -260,20 +259,20 @@ subroutine impose_user_bc(u,order,neutral)
 
           do i=-1,nx+2
 
-            if(flagP(i,j,k)) then
+            !if(flagP(i,j,k)) then
 
-              u(1,i,j,k) = 1E-5*dsw
-              u(2:8,i,j,k) = 0.
+              !u(1,i,j,k) = 1E-5*dsw
+              !u(2:8,i,j,k) = 0.
 
               !   reflect x
               if (flagP(i-1,j,k).and.(.not.flagP(i+1,j,k)).and.(i>-1)) then
-                u(1,i  ,j,k) = u(1,i+1,j,k)
+                u(:,i  ,j,k) = u(:,i+1,j,k)
                 u(2,i  ,j,k) =-u(2,i+1,j,k)
                 !u(1,i-1,j,k) = u(1,i+2,j,k)
                 !u(2,i-1,j,k) =-u(2,i+2,j,k)
               endif
               if (flagP(i+1,j,k).and.(.not.flagP(i-1,j,k)).and.(i<nx+2)) then
-                u(1,i  ,j,k) = u(1,i-1,j,k)
+                u(:,i  ,j,k) = u(:,i-1,j,k)
                 u(2,i  ,j,k) =-u(2,i-1,j,k)
                 !u(1,i+1,j,k) = u(1,i-2,j,k)
                 !u(2,i+1,j,k) =-u(2,i-2,j,k)
@@ -281,13 +280,13 @@ subroutine impose_user_bc(u,order,neutral)
 
               !   reflect y
               if (flagP(i,j-1,k).and.(.not.flagP(i,j+1,k)).and.(j>-1)) then
-                u(1,i,j  ,k) = u(1,i,j+1,k)
+                u(:,i,j  ,k) = u(:,i,j+1,k)
                 u(3,i,j  ,k) =-u(3,i,j+1,k)
                 !u(1,i,j-1,k) = u(1,i,j+2,k)
                 !u(3,i,j-1,k) =-u(3,i,j+2,k)
               endif
               if (flagP(i,j+1,k).and.(.not.flagP(i,j-1,k)).and.(j<ny+2)) then
-                u(1,i,j  ,k) = u(1,i,j-1,k)
+                u(:,i,j  ,k) = u(:,i,j-1,k)
                 u(3,i,j  ,k) =-u(3,i,j-1,k)
                 !u(1,i,j+1,k) = u(1,i,j-2,k)
                 !u(3,i,j+1,k) =-u(3,i,j-2,k)
@@ -295,21 +294,21 @@ subroutine impose_user_bc(u,order,neutral)
 
               !   reflect z
               if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>-1)) then
-                u(1,i,j,k  ) = u(1,i,j,k+1)
+                u(:,i,j,k  ) = u(:,i,j,k+1)
                 u(4,i,j,k  ) =-u(4,i,j,k+1)
                 !u(1,i,j,k-1) = u(1,i,j,k+2)
                 !u(4,i,j,k-1) =-u(4,i,j,k+2)
               endif
               if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+2)) then
-                u(1,i,j,k  ) = u(1,i,j,k-1)
+                u(:,i,j,k  ) = u(:,i,j,k-1)
                 u(4,i,j,k  ) =-u(4,i,j,k-1)
                 !u(1,i,j,k+1) = u(1,i,j,k-2)
                 !u(4,i,j,k+1) =-u(4,i,j,k-2)
               endif
-              u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
-                   cv*(u(1,i,j,k)/0.63)*Tsw     +  &
-                   0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
-            end if
+              !u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
+              !     cv*(u(1,i,j,k)/0.63)*Tsw     +  &
+              !     0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
+            !end if
 
           end do
         end do
@@ -356,9 +355,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
 
 
   !   get cell position
-  xc=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-  yc=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-  zc=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+  xc=(real(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+  yc=(real(j+coords(1)*ny-nytot/2) - 0.5)*dy
+  zc=(real(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
   ! calculate distance from the sources
   ! planet
