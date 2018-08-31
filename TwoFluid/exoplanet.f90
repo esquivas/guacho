@@ -118,8 +118,7 @@ contains
     rhoP  = MassP/VolP                   ! Planets density
     vpw   = 60.e5 !Ves at 1R_e =42 km/s  ! Planets wind velocity (cm/s)
     dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))    ! Planetary wind density
-    bpw   = 0.04                         ! Planetary magnetic field (g)
-
+    bpw   = 0.!0.04                         ! Planetary magnetic field (g)
 
     ! change to code units
     dsw=dsw/rhosc
@@ -142,9 +141,9 @@ contains
         do i=nxmin,nxmax
 
           ! Position measured from the centre of the grid (planet)
-          xpl=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-          ypl=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-          zpl=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+          xpl=(real(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+          ypl=(real(j+coords(1)*ny-nytot/2) - 0.5)*dy
+          zpl=(real(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
           ! Distance from the centre of the planet (centred)
           radp=sqrt(xpl**2+ypl**2+zpl**2)
@@ -154,7 +153,6 @@ contains
         end do
       end do
     end do
-
 
   end subroutine init_exo
 
@@ -215,10 +213,10 @@ contains
             u(4,i,j,k) = dens*velz
 
             !  Magnetic fields (IF MHD or PMHD)
-            !              cpi = bpw*(rpw/radp)**3/(2.*radp**2)
-            !              u(6,i,j,k) = 3.*ypl*xpl*cpi
-            !              u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
-            !              u(8,i,j,k) = 3.*ypl*zpl*cpi
+            !  cpi = bpw*(rpw/radp)**3/(2.*radp**2)
+            !  u(6,i,j,k) = 3.*ypl*xpl*cpi
+            !  u(7,i,j,k) = (3.*ypl**2-radp**2)*cpi
+            !  u(8,i,j,k) = 3.*ypl*zpl*cpi
             u(6,i,j,k) = 0.
             u(7,i,j,k) = 0.
             u(8,i,j,k) = 0.
