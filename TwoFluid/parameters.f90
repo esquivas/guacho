@@ -143,7 +143,7 @@ module parameters
   !   mpi array of processors
   integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
+  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
@@ -152,7 +152,7 @@ module parameters
   real, parameter :: xmax=1.           !< grid extent in X (code units)
   real, parameter :: ymax=1.           !< grid extent in Y (code units)
   real, parameter :: zmax=1.           !< grid extent in Z (code units)
-  real, parameter :: xphys=16.*Rjup     !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=32.*Rjup     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -171,10 +171,10 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 100*1e5/tsc
+  real, parameter :: tmax    = 1e6/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 20*1e4/tsc!0.025 *day/tsc
-  real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
+  real, parameter :: dtprint = 0.1e4/tsc!0.025 *day/tsc
+  real, parameter :: cfl=0.15        !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
