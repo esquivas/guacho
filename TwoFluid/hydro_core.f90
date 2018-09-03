@@ -601,12 +601,14 @@ subroutine cfastX(prim,cfX)
   implicit none
   real, intent(in) :: prim(neq)
   real, intent(out) ::cfX
-  real :: b2, cs2va2
+  real :: b2, cs2va2, det
 
   b2=prim(6)**2+prim(7)**2+prim(8)**2
   cs2va2 = (gamma*prim(5)+b2)/prim(1)   ! cs^2 + ca^2
 
-  cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
+  det = cs2va2**2-4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1)
+  det = max(det,0.)
+  cfx=sqrt(0.5*( cs2va2+sqrt( det ) ) )
 
 end subroutine cfastX
 
