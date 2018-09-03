@@ -165,8 +165,8 @@ contains
       denr=primr(1)*srmur*sRmsM-bx**2
 
       if(denr == 0) then
-        vstl = primL(3)
-        wstl = primL(4)
+        vstr = primR(3)
+        wstr = primR(4)
         bystl= 0.!primL(7)
         bzstl= 0.!primL(8)
         !print*,'stopped @ HLLD'
