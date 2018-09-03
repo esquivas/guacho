@@ -37,7 +37,7 @@ contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
 !! using the HLLD solver
-!> @details Solves the Riemann problem at the interface betweem 
+!> @details Solves the Riemann problem at the interface betweem
 !! PL and PR using the HLLD solver
 !> @n The fluxes are computed in the X direction, to obtain the
 !! y ans z directions a swap is performed
@@ -50,7 +50,7 @@ subroutine prim2fhlld(priml,primr,ff)
   use parameters, only : neq, cv, passives, neqdyn
   use hydro_core, only : cfastX, prim2f
   implicit none
-  real, dimension(neq),intent(in   ) :: priml, primr   
+  real, dimension(neq),intent(in   ) :: priml, primr
   real, dimension(neq),intent(inout) :: ff
   real :: csl, csr, sl, sr, slmul, srmur, rholul, rhorur, sM
   real :: pTL, pTR, Bx, signBx
@@ -103,7 +103,7 @@ subroutine prim2fhlld(priml,primr,ff)
   sstl=sM - abs(bx)/sqrt(rhostl)  !SL*
   sstr=sM + abs(bx)/sqrt(rhostr)  !SR*
 
-  pst= (srmur*primr(1)*pTL - slmul*priml(1)*pTR               & 
+  pst= (srmur*primr(1)*pTL - slmul*priml(1)*pTR               &
         + priml(1)*primr(1)*srmur*slmul*(primr(2)-priml(2)) ) &
         /( srmur*primr(1)-slmul*priml(1) )
 
@@ -133,7 +133,7 @@ subroutine prim2fhlld(priml,primr,ff)
     end if
 
     vdotbl    = priml(2)*bx + priml(3)*priml(7) + priml(4)*priml(8) !vL dot BL
-    vstdotbstl= sM*bx + vstl*bystl + wstl*bzstl                     !vL* dot BL*  
+    vstdotbstl= sM*bx + vstl*bystl + wstl*bzstl                     !vL* dot BL*
 
     estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM !eL*
 
@@ -165,8 +165,8 @@ subroutine prim2fhlld(priml,primr,ff)
     denr=primr(1)*srmur*sRmsM-bx**2
 
     if(denr == 0) then
-      vstl = primL(3)
-      wstl = primL(4)
+      vstl = primR(3)
+      wstl = primR(4)
       bystl= 0.!primL(7)
       bzstl= 0.!primL(8)
       !print*,'stopped @ HLLD'
@@ -181,7 +181,7 @@ subroutine prim2fhlld(priml,primr,ff)
     end if
 
     vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8) !vR dot BR
-    vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                     !vR* dot BR*  
+    vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                     !vR* dot BR*
 
     estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM !eR*
 
@@ -225,8 +225,8 @@ subroutine prim2fhlld(priml,primr,ff)
   endif
 
   if(denr == 0) then
-    vstr =primr(3)
-    wstr =primr(4)
+    vstr =primR(3)
+    wstr =primR(4)
     bystr=0.!primr(7)
     bzstr=0.!primr(8)
     !print*,'stopped @ HLLD'
@@ -240,12 +240,12 @@ subroutine prim2fhlld(priml,primr,ff)
 
   dd=sqrt(rhostl)+sqrt(rhostr)
 
-  vstst =(sqrt(rhostl)*vstl + sqrt(rhostr)*vstr + (bystr-bystl)*signBx )/dd  !v** 
+  vstst =(sqrt(rhostl)*vstl + sqrt(rhostr)*vstr + (bystr-bystl)*signBx )/dd  !v**
   wstst =(sqrt(rhostl)*wstl + sqrt(rhostr)*wstr + (bzstr-bzstl)*signBx )/dd  !w**
 
   bystst=(sqrt(rhostl)*bystr + sqrt(rhostr)*bystl +  &      !by**
-          sqrt(rhostl*rhostr)*(vstr-vstl)*signBx )/dd                            
- 
+          sqrt(rhostl*rhostr)*(vstr-vstl)*signBx )/dd
+
   bzstst=(sqrt(rhostl)*bzstr + sqrt(rhostr)*bzstl +  &      !bz**
           sqrt(rhostl*rhostr)*(wstr-wstl)*signBx )/dd
 
@@ -258,7 +258,7 @@ subroutine prim2fhlld(priml,primr,ff)
                 +0.5*(bx**2+priml(7)**2+priml(8)**2)
 
     vdotbl    = priml(2)*bx + priml(3)*priml(7) + priml(4)*priml(8) !vL dot BL
-    vstdotbstl= sM*bx+ vstl*bystl + wstl*bzstl                      !vL* dot BL*  
+    vstdotbstl= sM*bx+ vstl*bystl + wstl*bzstl                      !vL* dot BL*
 
     estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM !eL*
 
@@ -289,7 +289,7 @@ subroutine prim2fhlld(priml,primr,ff)
                 +0.5*(bx**2+primr(7)**2+primr(8)**2)
 
     vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8) !vR dot BR
-    vstdotbstr= sM*bx+ vstr*bystr + wstr*bzstr                      !vR* dot BR*  
+    vstdotbstr= sM*bx+ vstr*bystr + wstr*bzstr                      !vR* dot BR*
 
     estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM !eR*
 
@@ -320,9 +320,9 @@ end subroutine prim2fhlld
 
 !=======================================================================
 
-!> @brief Calculates HLLD fluxes from the primitive variables 
+!> @brief Calculates HLLD fluxes from the primitive variables
 !!   on all the domain
-!> @details Calculates HLLD fluxes from the primitive variables 
+!> @details Calculates HLLD fluxes from the primitive variables
 !!   on all the domain
 !> @param integer [in] choice : 1, uses primit for the 1st half of timestep
 !! (first order)
@@ -357,7 +357,7 @@ subroutine hlldfluxes(choice)
               priml(:)=primit(:,i ,j  ,k )
               primr(:)=primit(:,i, j+1,k )
               call swapy(priml,neq)          !swaps primL for L state
-              call swapy(primr,neq)          !swaps primR for R state 
+              call swapy(primr,neq)          !swaps primR for R state
               !
               call prim2fhlld(priml,primr,ff)  !gets fluxes (swapped)
               call swapy(ff,neq)             !swaps back the fluxes
