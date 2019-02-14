@@ -9,25 +9,25 @@ def read_header(file_in, verbose=True):
   f = open(file_in,'rb')
   while 1==1 :
       s = f.readline().rstrip()
-      if s == '\xff' :
+      if s == b'\xff' :
         break
       if (verbose) :
-        print s
+        print (s)
   f_kind = struct.unpack('s',f.read(1))[0]
   nx, ny, nz = struct.unpack('3i',f.read(12))
-  if (f_kind == 'd'):
+  if (f_kind == b'd'):
     dx, dy, dz = struct.unpack('3d',f.read(24))
-  if (f_kind == 'f'):
+  if (f_kind == b'f'):
     dx, dy, dz = struct.unpack('3f',f.read(12))
   x0, y0, z0 = struct.unpack('3i',f.read(12))
   mpi_x, mpi_y, mpi_z = struct.unpack('3i',f.read(12))
   neqs   = struct.unpack('1i',f.read(4))[0]
   neqdyn = struct.unpack('1i',f.read(4))[0]
   nghost = struct.unpack('1i',f.read(4))[0]
-  if (f_kind == 'd'):
+  if (f_kind == b'd'):
     rsc, vsc, rhosc = struct.unpack('3d',f.read(24))
     cv              = struct.unpack( 'd',f.read(8))
-  if (f_kind == 'f'):
+  if (f_kind == b'f'):
     rsc, vsc, rhosc = struct.unpack('3f',f.read(12))
     cv              = struct.unpack( 'f',f.read(4))
   return (f,f_kind,(nx,ny,nz),(dx,dy,dz),(x0,y0,z0),\
@@ -36,7 +36,7 @@ def read_header(file_in, verbose=True):
   '''
     converts conserved variables to primitives (and de-scales to cgs)
   '''
-def u2prim(file_in, ublock, equation, mhd = False, entropy=False, scale=True) :
+def u2prim(file_in, ublock, equation, mhd = False, entropy=False, scale=True, conserved=False) :
   head_info = read_header(file_in,verbose=False)
   if scale:
       rsc, vsc, rhosc = head_info[9]
@@ -87,7 +87,7 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False
   if (conserved):
     primit = data[equation,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)]
   else :
-    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy, scale=scale)
+    primit = u2prim(file_in,data[::,nghost:(nx+nghost),nghost:(ny+nghost),nghost:(nz+nghost)],equation, mhd = mhd, entropy = entropy, scale=scale, conserved=conserved)
   return primit
 
 '''
@@ -95,7 +95,7 @@ def readbin3d_block(file_in, equation, verbose=False, mhd = False, entropy=False
 '''
 def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entropy=False, scale=True, conserved = False):
 
-  print 'Retrieving 3D map for eqn',neq
+  print ('Retrieving 3D map for eqn',neq)
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   f                   = head_info[0]
@@ -106,7 +106,7 @@ def readbin3d_all(nout,neq,path='',base='points',verbose=False, mhd=False, entro
     for jp in range(mpi_y) :
       for kp in range(mpi_z) :
         file_in = path+base+str(proc).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
-        print file_in
+        print (file_in)
         head_info = read_header(file_in,verbose=False)
         f                   = head_info[0]
         nx, ny, nz          = head_info[2]
@@ -196,13 +196,13 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
   nztot = nz * mpi_z
   if cut == 1 :
       map2d=np.zeros(shape=(nytot,nztot))
-      print 'YZ cut, equation: ', neq
+      print ('YZ cut, equation: ', neq)
   elif cut == 2 :
       map2d=np.zeros(shape=(nxtot,nztot))
-      print 'XZ cut, equation: ', neq
+      print ('XZ cut, equation: ', neq)
   elif cut == 3 :
       map2d=np.zeros(shape=(nxtot,nytot))
-      print 'XY cut, equation: ', neq
+      print ('XY cut, equation: ', neq)
   proc=0
   for ip in range(mpi_x) :
     for jp in range(mpi_y) :
@@ -211,7 +211,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
         if cut == 1 :
           if ( (pos >= ip*nx) and (pos <= (ip+1)*nx-1)) :
             file_in = path+base+str(proc).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
-            print file_in
+            print (file_in)
             head_info = read_header(file_in,verbose=False)
             f                   = head_info[0]
             nx, ny, nz          = head_info[2]
@@ -224,7 +224,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
         elif cut == 2:
           if ( (pos >= jp*ny) and (pos <= (jp+1)*ny-1)) :
             file_in = path+base+str(proc).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
-            print file_in
+            print (file_in)
             head_info = read_header(file_in,verbose=False)
             f                   = head_info[0]
             nx, ny, nz          = head_info[2]
@@ -237,7 +237,7 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
         elif cut == 3:
           if ( (pos >= kp*nz) and (pos <= (kp+1)*nz-1)) :
             file_in = path+base+str(proc).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
-            print file_in
+            print (file_in)
             head_info = read_header(file_in,verbose=False)
             f                   = head_info[0]
             nx, ny, nz          = head_info[2]
