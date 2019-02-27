@@ -161,10 +161,8 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
 
-
   !   upwind timestep
   call step(dtm)
-
 
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
