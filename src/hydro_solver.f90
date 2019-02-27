@@ -39,10 +39,12 @@ contains
 
 !> @brief Adds artificial viscosity to the conserved variables
 !> @details Adds artificial viscosity to the conserved variables
+!> using the advanced solution and copying the result in the U array
 !! @n Takes the variables from the globals module and it assumes
 !! that the up are the stepped variables, while u are unstepped
+!! It only performs the copy in the physical domain
 
-  subroutine viscosity()
+  subroutine viscous_copy()
 
   use parameters, only : nx, ny, nz, eta
   use globals, only: u, up
@@ -52,15 +54,15 @@ contains
   do k=1,nz
      do j=1,ny
         do i=1,nx
-           up(:,i,j,k)=up(:,i,j,k)+eta*( u(:,i+1,j,k)+u(:,i-1,j,k)       &
-                                        +u(:,i,j+1,k)+u(:,i,j-1,k)       &
-                                        +u(:,i,j,k+1)+u(:,i,j,k-1)       &
-                                     -6.*u(:,i,j,k) )
+           u(:,i,j,k)=up(:,i,j,k)+eta*(  up(:,i+1,j,k)+up(:,i-1,j,k)       &
+                                        +up(:,i,j+1,k)+up(:,i,j-1,k)       &
+                                        +up(:,i,j,k+1)+up(:,i,j,k-1)       &
+                                     -6.*up(:,i,j,k) )
         end do
      end do
   end do
 
-end subroutine viscosity
+end subroutine viscous_copy
 
 !=======================================================================
 
@@ -159,12 +161,8 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
 
-
   !   upwind timestep
   call step(dtm)
-
-  !   add viscosity
-  !call viscosity()
 
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
@@ -185,11 +183,9 @@ subroutine tstep()
   !  upwind timestep
   call step(dt_CFL)
 
-  !  add viscosity
-  call viscosity()
-
-  !  copy the up's on the u's
-  u=up
+  !  copy the up's on the u's and include viscosity
+  !  warning: The copy does not do the ghost cells
+  call viscous_copy()
 
   !  Do the Radiation transfer (Monte Carlo type)
   if (dif_rad) call diffuse_rad()
