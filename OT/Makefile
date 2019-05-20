@@ -13,7 +13,7 @@ VPATH = . : ../src
 COMPILER= gfortran
 #COMPILER= ifort
 
-#   Compiler flags, make sure they are compatible with the previous selection 
+#   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
 #FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
@@ -22,7 +22,7 @@ COMPILER= gfortran
 
 ### gfortran ###
 FLAGS = -cpp -O3
-# For DEBUG, suggestions: 
+# For DEBUG, suggestions:
 #FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
 #        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
 #        -fbounds-check -fimplicit-none -fstack-protector-all
@@ -49,9 +49,9 @@ SILO = N
 #   adjust the following line for that purpose
 #FLAGS += -I/usr/local/silo/include -I/usr/local/szip/include -I/usr/local/hdf5/include/
 #LINKFLAGS = -L/usr/local/szip/lib -L/usr/local/hdf5/lib/ -L/usr/local/silo/lib/
-#LINKFLAGS += -lsiloh5  -lhdf5_fortran -lsz -lz -lstdc++ 
+#LINKFLAGS += -lsiloh5  -lhdf5_fortran -lsz -lz -lstdc++
 
-# Additional USER modules to compile (they can only call constants, 
+# Additional USER modules to compile (they can only call constants,
 # parameters and globals)
 MODULES_USER= \
 orzag_tang.o
@@ -69,7 +69,7 @@ globals.o
 OBJECTS_MAIN=\
 user_mod.o \
 network.o \
-field_cd_module.o \
+flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
 chemistry.o \
@@ -91,7 +91,7 @@ hlld.o 	\
 hlle_split_all.o \
 sources.o \
 hydro_solver.o \
-main.o 
+main.o
 
 #  for projection alog a LOS
 COLDENS = \
@@ -107,12 +107,12 @@ hydro_core.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
 # Join object lists
-OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN} 
+OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
 #---------------------------------------------------
 # Set flags
-ifeq ($(DOUBLEP),Y) 
+ifeq ($(DOUBLEP),Y)
 FLAGS += -DDOUBLEP
 ifeq ($(COMPILER),ifort)
 FLAGS += -r8
@@ -170,7 +170,7 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 
 prebuild :
 	@echo "Guacho build started `date`"
-	@echo Compiling flags used: $(FLAGS) 
+	@echo Compiling flags used: $(FLAGS)
 %.o:%.f95
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
@@ -215,7 +215,7 @@ clean :
 	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.mod
 	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err 
+	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
 
 cleanall :
 	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
