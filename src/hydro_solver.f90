@@ -108,7 +108,7 @@ subroutine step(dt)
         else
 
 #ifdef BFIELD
-          call field_cd_update(i,j,k,dt)
+          call flux_cd_update(i,j,k,dt)
 #endif
         endif
 

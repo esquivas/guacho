@@ -282,7 +282,7 @@ end subroutine get_efield
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] dt : timestep
 
-subroutine field_cd_update(i,j,k,dt)
+subroutine flux_cd_update(i,j,k,dt)
 
   use parameters, only : passives, neqdyn
   use globals, only : dx, dy, dz, up, u, f, g, h
@@ -320,7 +320,7 @@ subroutine field_cd_update(i,j,k,dt)
               -0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))         &
               +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
 
-end subroutine field_cd_update
+end subroutine flux_cd_update
 
 #endif
 

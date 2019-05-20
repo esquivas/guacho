@@ -57,7 +57,7 @@ jet.o \
 corona.o \
 user_mod.o \
 network.o \
-field_cd_module.o \
+flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
 chemistry.o \
