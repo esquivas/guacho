@@ -123,7 +123,7 @@ module parameters
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_field_cd = .false.
+  logical, parameter :: enable_flux_cd = .false.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
   
