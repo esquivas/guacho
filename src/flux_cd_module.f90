@@ -23,7 +23,7 @@
 !=======================================================================
 
 !> @brief Module to computes the flux-CD div B correction
-!> @details This module corrects the div B with a field interpolated
+!> @details This module corrects the div B with a flux interpolated
 !> central difference scheme
 !> See. Sect. 4.5 of Toth 2000, Journal of Computational Physics 161, 605
 
@@ -274,9 +274,9 @@ end subroutine get_efield
 
 !=======================================================================
 
-!> @brief Upper level wrapper for field-CD update
-!> @details Upper level wrapper for field-CD, updates the
-!> hydro variables with upwind scheme and the field as field-CD
+!> @brief Upper level wrapper for flux-CD update
+!> @details Upper level wrapper for flux-CD, updates the
+!> hydro variables with upwind scheme and the field as flux-CD
 !> @param integer [in] i : cell index in the X direction
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
@@ -307,7 +307,7 @@ subroutine flux_cd_update(i,j,k,dt)
             -dtdy*(g(neqdyn+1:,i,j,k)-g(neqdyn+1:,i,j-1,k)) &
             -dtdz*(h(neqdyn+1:,i,j,k)-h(neqdyn+1:,i,j,k-1))
 #endif
-  ! evolution of B with field-CD
+  ! evolution of B with flux-CD
   up(6,i,j,k)=u(6,i,j,k)                                    &
               -0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))         &
               +0.5*dtdz*(e(2,i,j,k+1)-e(2,i,j,k-1))
