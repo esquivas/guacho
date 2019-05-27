@@ -14,7 +14,7 @@ nout = 5 ; figN = 1
 
 #models = ('HLLE-CD','HLLE-8W','HLLE-NC','HLLD-CD','HLLD-8W','HLLD-NC',)
 
-models = ['hlle-nc','hlle-8w','hlle-fcd']#,'hlle-nc','hlle-fcd')
+models = ['hlle-nc','hlle-8w','hlle-fcd','hlld-fcd']#,'hlle-nc','hlle-fcd')
 
 for model in models:
 
