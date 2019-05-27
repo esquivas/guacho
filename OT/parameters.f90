@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./hlle-fcd/'
+  character (len=128),parameter ::  outputpath='./hlld-fcd/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -55,7 +55,7 @@ module parameters
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLLE
+  integer, parameter :: riemann_solver = SOLVER_HLLD
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
