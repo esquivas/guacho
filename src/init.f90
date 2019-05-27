@@ -213,6 +213,7 @@ subroutine initmain(tprint, itprint)
     print'(a)',''
 #endif
     print'(a,i0,a)', 'Running with ',neq,' total equations'
+    print'(a,i0,a,i0,a)', '(',neqdyn,' dynamical, and ',npas,' passives)'
     print'(a,i0,a,i0,a,i0)','Resolution is (nxtot, nytot, nztot) ', nxtot,' ',nytot,' ',nztot
     print'(a)',''
 
