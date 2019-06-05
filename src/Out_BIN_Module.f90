@@ -123,7 +123,7 @@ subroutine write_BIN(itprint)
   integer ::  i, j, k
 #ifdef BFIELD
   real, allocatable :: divB(:,:,:)
-#ENDIF
+#endif
 
 #ifdef MPIP
   write(file1,'(a,i3.3,a,i3.3,a)')  &
