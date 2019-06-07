@@ -30,12 +30,12 @@ module cooling_H
 #ifdef PASSIVES
 
   implicit none
- 
+
 contains
 
 !> @brief High level wrapper to apply cooling
 !> @details High level wrapper to apply cooling
-!! @n  parametrized cooling curve, uses the ionization state of 
+!! @n  parametrized cooling curve, uses the ionization state of
 !! hydrogen and ties the O I and II to it
 
 subroutine coolingh()
@@ -111,7 +111,7 @@ function colf(T)
 
   real (kind=8) :: colf
   real (kind=8), intent(in) :: T
-  
+
   colf=5.83d-11*sqrt(T)*exp(-157828./T)
 
 end function colf
@@ -222,7 +222,7 @@ FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
   EOI=MAX(EOI,0.)
   EOII=MAX(EOII,0.)
 
-  !   free-free cooling    
+  !   free-free cooling
 
   BETAF=1.3*1.42E-27*TE**0.5
   HIICOOL=DE*DHP*BETAF
@@ -284,7 +284,7 @@ subroutine atomic(dt,uu,tau,radphi)
   !
   !  real (kind=8), parameter ::  xi=1.d-4,boltzm=1.3807d-16,AMASS=2.158d-24
   real (kind=8), parameter ::  xi=1.d-4,boltzm=1.3807d-16,AMASS=2.158d-24
-  
+
   !  the following is not used, and kept only to avoid compiler warnings
   !ph0=0.
   !psi0=0.
@@ -296,9 +296,9 @@ subroutine atomic(dt,uu,tau,radphi)
   !   solve for the ionization fraction and the internal energy
 
   call u2prim(uu,prim,T)            !# temperature
-  col=colf(real(t,8))                 !# collisional ionization rate 
+  col=colf(real(t,8))                 !# collisional ionization rate
   rec=alpha(real(t,8))                !# rad. recombination rate
-  y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction  
+  y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction
   dh=real( uu(1), 8 )                  !# H density
   fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus
   !print*,fpn
@@ -325,7 +325,7 @@ subroutine atomic(dt,uu,tau,radphi)
   y1=max(y1,0.)
 
   !    find the new total energy using the cooling and heating rates
-  !    and assuming that the cooling goes approximately linear with 
+  !    and assuming that the cooling goes approximately linear with
   !    temperature
 
   dh0=real( uu(neqdyn+1), 8 )
@@ -337,7 +337,7 @@ subroutine atomic(dt,uu,tau,radphi)
   !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
 
   if (dif_rad) then
-    gain=real(radphi,8)*dh0*boltzm*1.E4 !3.14d5
+    gain=real(radphi,8)*dh0*boltzm*4.E4
     tprime=max( gain*real(T,8)/(dh**2*al),1000.)
   else
     tprime=10.
