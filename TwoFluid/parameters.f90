@@ -135,14 +135,14 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=100      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=100      !< Total grid size in Z
+  integer, parameter :: nxtot=512      !< Total grid size in X
+  integer, parameter :: nytot=512      !< Total grid size in Y
+  integer, parameter :: nztot=512      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
@@ -152,7 +152,7 @@ module parameters
   real, parameter :: xmax=1.           !< grid extent in X (code units)
   real, parameter :: ymax=1.           !< grid extent in Y (code units)
   real, parameter :: zmax=1.           !< grid extent in Z (code units)
-  real, parameter :: xphys=32.*Rjup     !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=64.*Rjup     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
