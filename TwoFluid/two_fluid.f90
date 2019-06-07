@@ -81,12 +81,12 @@ contains
 
           !  update enery
           up(5,i,j,k) = up(5,i,j,k)   + pp(2,i,j,k)*R(1) &
-                                      + pp(3,i,j,k)*R(2) &
-                                      + pp(4,i,j,k)*R(3)
+                                     + pp(3,i,j,k)*R(2) &
+                                     + pp(4,i,j,k)*R(3)
 
           upn(5,i,j,k) = upn(5,i,j,k) - pn(2,i,j,k)*R(1) &
-                                      - pn(3,i,j,k)*R(2) &
-                                      - pn(4,i,j,k)*R(3)
+                                     - pn(3,i,j,k)*R(2) &
+                                     - pn(4,i,j,k)*R(3)
 
         end do
       end do
