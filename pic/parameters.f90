@@ -60,9 +60,9 @@ module parameters
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_flux_cd = .true.
+  logical, parameter :: enable_flux_cd = .false.
   !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .true.
+  logical, parameter :: dump_divb = .false.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
