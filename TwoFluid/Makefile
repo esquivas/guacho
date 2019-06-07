@@ -30,8 +30,8 @@ COMPILER= ifort
 ### gfortran ###
 FLAGS = -cpp -O3
 # For DEBUG, suggestions:
-#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow #\
+FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
+        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow #\
 #        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
