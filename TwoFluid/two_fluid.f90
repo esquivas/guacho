@@ -5,22 +5,26 @@ module two_fluid
 
   implicit none
 
-  real,parameter :: alpha = 6.02e14*rhosc*tsc! 5e-2
-
+  ! Look for the value of alpha (where did we take this from?)
+  real,parameter :: alphac = 6.02e14*rhosc*tsc! 5e-2
 
 contains
 
   !> @brief Twofluid interaction term
   !> @brief from Smith & Sakai (2008)
 
-  subroutine get_TF_sources(pp, pn,s)
+  subroutine get_TF_sources(pp, pn, tp, tn, s)
 
+    use cooling_H, only: alpha, colf
     implicit none
-    real, intent(in)  :: pp(neq), pn(neq)
+    real, intent(in)  :: pp(neq), pn(neq), tp, tn
     real, intent(out) :: s(neq)
-    real :: driftx, drifty, driftz
+    real :: driftx, drifty, driftz,ci,ar
     !  update the source terms
 
+    ci=colf(tn)
+    ar=alpha(tp)
+    
     driftx = pn(2)-pp(2)
     drifty = pn(3)-pp(3)
     driftz = pn(4)-pp(4)
@@ -28,30 +32,42 @@ contains
     ! reset sources
     s(:) = 0.
 
+    !  mass 14/06/2019
+    s(1) = - pp(1)* (ar * pp(1) - ci * pn(1) )
+    
     !  momenta
-    s(2) = alpha * pp(1)*pn(1)*driftx
-    s(3) = alpha * pp(1)*pn(1)*drifty
-    s(4) = alpha * pp(1)*pn(1)*driftz
-    s(5) = alpha * pp(1)*pn(2)* (driftx*pp(2)+drifty*pp(3)+driftz*pp(4) )
+    s(2) = alphac * pp(1)*pn(1)*driftx - pp(1)*(ar*pp(1)*pp(2)-ci*pn(1)*pn(2))
+    s(3) = alphac * pp(1)*pn(1)*drifty - pp(1)*(ar*pp(1)*pp(3)-ci*pn(1)*pn(3))
+    s(4) = alphac * pp(1)*pn(1)*driftz - pp(1)*(ar*pp(1)*pp(4)-ci*pn(1)*pn(4))
+    s(5) = alphac * pp(1)*pn(2)* (driftx*pp(2)+drifty*pp(3)+driftz*pp(4) )
 
   end subroutine get_TF_sources
 
   ! obtains R
-  subroutine get_TF_R(pp, pn,dt, R)
-
+  subroutine get_TF_R(pp, pn,tp,tn,dt, R)
+    use cooling_H, only : alpha, colf
     implicit none
-    real, intent(in)  :: pp(neq), pn(neq), dt
+    real, intent(in)  :: pp(neq), pn(neq), tp, tn, dt
     real, intent(out) :: R(3)
+    real :: den, ci, ar
 
-    R(1) = alpha*dt * pp(1)*pn(1) *( pn(2)-pp(2) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
-    R(2) = alpha*dt * pp(1)*pn(1) *( pn(3)-pp(3) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
-    R(3) = alpha*dt * pp(1)*pn(1) *( pn(4)-pp(4) ) / ( 1+alpha*dt*(pp(1)+pn(1)) )
+    ci=colf(tn)
+    ar=alpha(tp)
+    
+    den =  1+pp(1)*(ar*dt+ci*dt) +alphac*dt*(pp(1)+pn(1)) 
+    
+    R(1) =(pp(1)*(ci*dt*pn(1)*pn(2)-ar*dt*pp(1)*pp(2) ) + alphac*dt * pp(1)*pn(1) * ( pn(2)-pp(2) )) / den
+    R(2) =(pp(1)*(ci*dt*pn(1)*pn(3)-ar*dt*pp(1)*pp(3) ) + alphac*dt * pp(1)*pn(1) * ( pn(3)-pp(3) )) / den
+    R(3) =(pp(1)*(ci*dt*pn(1)*pn(4)-ar*dt*pp(1)*pp(4) ) + alphac*dt * pp(1)*pn(1) * ( pn(4)-pp(4) )) / den
 
 
   end subroutine get_TF_R
 
 
   subroutine update_TF(u,un,up,upn,pp,pn,dt)
+
+    use globals, only : temp, tempn
+
     implicit none
     real, intent(in)     :: u  (neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent(in)     :: un (neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
@@ -68,7 +84,7 @@ contains
         do i=1,nx
 
           !  Gets the source terms
-          call get_TF_R(pp(:,i,j,k), pn(:,i,j,k),dt,R )
+          call get_TF_R(pp(:,i,j,k), pn(:,i,j,k),temp(i,j,k), tempn(i,j,k),dt,R )
 
           !  update momenta
           up(2,i,j,k) = up(2,i,j,k) + R(1)
@@ -81,12 +97,12 @@ contains
 
           !  update enery
           up(5,i,j,k) = up(5,i,j,k)   + pp(2,i,j,k)*R(1) &
-                                     + pp(3,i,j,k)*R(2) &
-                                     + pp(4,i,j,k)*R(3)
+                                      + pp(3,i,j,k)*R(2) &
+                                      + pp(4,i,j,k)*R(3)
 
           upn(5,i,j,k) = upn(5,i,j,k) - pn(2,i,j,k)*R(1) &
-                                     - pn(3,i,j,k)*R(2) &
-                                     - pn(4,i,j,k)*R(3)
+                                      - pn(3,i,j,k)*R(2) &
+                                      - pn(4,i,j,k)*R(3)
 
         end do
       end do
@@ -98,6 +114,7 @@ contains
 
   !  Add sources to fluids
   subroutine add_TF_sources(upp,upn,primp,primn,dt)
+    use globals, only: Temp, Tempn
     implicit none
     real, intent(inout)  ::   upp(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent(inout)  ::   upn(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
@@ -112,7 +129,7 @@ contains
         do i=1,nx
 
           !  Gets the source terms
-          call get_TF_sources(primp(:,i,j,k), primn(:,i,j,k),s )
+          call get_TF_sources(primp(:,i,j,k), primn(:,i,j,k),temp(i,j,k), tempn(i,j,k),s )
 
           !  Add the sources
           upp(:,i,j,k)=upp(:,i,j,k) + dt* s(:)
