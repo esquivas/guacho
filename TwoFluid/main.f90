@@ -79,9 +79,9 @@ program guacho
 #endif
 
   !   update primitives with u
-  call calcprim(u,primit)
+  call calcprim(u,primit,temp)
 #ifdef TWOFLUID
-  if (twofluid) call calcprim(un,primitn)
+  if (twofluid) call calcprim(un,primitn,tempn)
 #endif
 
   if (dif_rad) call diffuse_rad()
