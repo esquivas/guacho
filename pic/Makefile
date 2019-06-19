@@ -38,7 +38,7 @@ MPIP = Y
 BFIELD = N
 
 #   Include passive scalars (Y/N)
-PASSIVES = Y
+PASSIVES = N
 
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
@@ -54,8 +54,8 @@ SILO = N
 # Additional USER modules to compile (they can only call constants,
 # parameters and globals)
 MODULES_USER= \
-nbody_mod2.o \
-starwind.o
+#nbody_mod2.o \
+#starwind.o
 
 #####################################################
 # There should be no need to modify below this line #
