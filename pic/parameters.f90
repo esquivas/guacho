@@ -91,13 +91,13 @@ module parameters
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
   !! are set
-  integer, parameter :: bc_left   = BC_outflow
-  integer, parameter :: bc_right  = BC_outflow
-  integer, parameter :: bc_bottom = BC_outflow
-  integer, parameter :: bc_top    = BC_outflow
-  integer, parameter :: bc_out    = BC_outflow
-  integer, parameter :: bc_in     = BC_outflow
-  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
+  integer, parameter :: bc_left   = BC_PERIODIC
+  integer, parameter :: bc_right  = BC_PERIODIC
+  integer, parameter :: bc_bottom = BC_PERIODIC
+  integer, parameter :: bc_top    = BC_PERIODIC
+  integer, parameter :: bc_out    = BC_PERIODIC
+  integer, parameter :: bc_in     = BC_PERIODIC
+  logical, parameter :: bc_user   = .false. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -122,21 +122,21 @@ module parameters
   logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .true.
+  logical, parameter :: user_source_terms = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
 
 #ifdef PASSIVES
-  integer, parameter :: npas=2        !< num. of passive scalars
+  integer, parameter :: npas=0        !< num. of passive scalars
 #else
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
-  integer, parameter :: nytot=400      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nxtot=64      !< Total grid size in X
+  integer, parameter :: nytot=64      !< Total grid size in Y
+  integer, parameter :: nztot=2      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -148,35 +148,35 @@ module parameters
 #endif
 
   !  set box size
-  real, parameter :: xmax=1.          !< grid extent in X (code units)
-  real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=1.          !< grid extent in Z (code units)
-!  real, parameter :: xphys=0.3*au     !< grid extent in X (physical units, cgs)
+  real, parameter :: xmax=10.          !< grid extent in X (code units)
+  real, parameter :: ymax=10.          !< grid extent in Y (code units)
+  real, parameter :: zmax=20./64       !< grid extent in Z (code units)
+!  real, parameter :: xphys=0.3*au    !< grid extent in X (physical units, cgs)
 
-  real, parameter :: xphys=1.e18     !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=10.        !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
+  real, parameter :: cv=2.5 !gamma=1.4 !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
 
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0=1.e4                                       !<  reference temperature (for cs)
-  real, parameter :: rsc=xphys/xmax                     !<  distance scaling
-  real, parameter :: rhosc= amh*mu                      !<  mass density scaling
-  real, parameter :: Tempsc=T0*gamma             !<  Temperature scaling
-  real, parameter :: vsc2 = gamma*Rg*T0/mu  !<  Velocity scaling squared
-  real, parameter :: vsc = sqrt(vsc2)                        !<  Velocity scaling
-  real, parameter :: Psc = rhosc*vsc2                      !<  Pressure scaling
-  real, parameter :: tsc =rsc/sqrt(vsc2)                  !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc)            !< magnetic field scaling
+  real, parameter :: T0 = 1.                !<  reference temperature (for cs)
+  real, parameter :: rsc =xphys/xmax        !<  distance scaling
+  real, parameter :: rhosc= 1.              !<  mass density scaling
+  real, parameter :: Tempsc=1.              !<  Temperature scaling
+  real, parameter :: vsc2 = 1.              !<  Velocity scaling squared
+  real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
+  real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
+  real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 3.15e10/tsc
+  real, parameter :: tmax    = 20./tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 3.15e7*10.*3./tsc   !3.15e7*10.*5/tsc
-  real, parameter :: cfl=0.4        !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.01      !< artificial viscosity
+  real, parameter :: dtprint = .2/tsc   !3.15e7*10.*5/tsc
+  real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.00               !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
@@ -192,14 +192,14 @@ module parameters
 #else
   logical, parameter :: passives = .false.  !<  enable passive scalars
 #endif
- integer, parameter :: ndim=3         !< num. of dimensions
-  integer, parameter :: nghost=2      !< num. of ghost cells
-
-  !> number of dynamical equations
-#ifdef BFIELD
-  integer, parameter :: neqdyn=8      !< num. of eqs  (+scal)
-#else
-  integer, parameter :: neqdyn=5      !< num. of eqs  (+scal)
+  integer, parameter :: ndim=3              !< num. of dimensions
+  integer, parameter :: nghost=2            !< num. of ghost cells
+                                          
+  !> number of dynamical equations        
+#ifdef BFIELD                             
+  integer, parameter :: neqdyn=8            !< num. of eqs  (+scal)
+#else                                     
+  integer, parameter :: neqdyn=5            !< num. of eqs  (+scal)
 #endif
 
   integer, parameter :: neq=neqdyn + npas  !< number of equations
