@@ -4,10 +4,10 @@ module pic_module
   use constants
   implicit none
   integer, parameter :: N_MP = 512  !< # of macro particles
-  real               :: posMP0(N_MP, 3) !< Particles positions
-  real               :: posMP1(N_MP, 3) !< Positions after predictor
-  real               :: velMP (N_MP, 3) !< Particles velocities
-
+  real, allocatable  :: posMP0(:,:) !< Particles positions
+  real, allocatable  :: posMP1(:,:) !< Positions after predictor
+  real, allocatable  :: velMP (:,:) !< Particles velocities
+  integer            :: n_active
 contains
 
   !================================================================
@@ -19,6 +19,10 @@ contains
     use globals,    only : dz
     implicit none
     integer :: ir , ith, i_mp
+
+    allocate( posMP0(N_MP,3) )
+    allocate( posMP0(N_MP,3) )
+    allocate( posMP0(N_MP,3) )
 
     i_mp = 1
     !Stationary vortex setup
@@ -192,6 +196,28 @@ contains
   end subroutine interpBD
 
   !================================================================
+  ! @brief Writes pic output
+  ! @details Writes position and particles velocities in a single file
+  !> format is binary, one integer with the number of points in domain, and then
+  !> all the positions and velocities ( in the default real precision)
+  subroutine write(pic)
+
+    use parameters, only : outputpath
+    implicit none
+    character(len = 128) :: fileout
+    integer              :: n_active
+
+#ifdef MPIP
+    write(file1,'(a,i3.3,a,i3.3,a)')  &
+        trim(outputpath)//'BIN/pic',rank,'.',itprint,'.bin'
+    unitout=rank+10
+#else
+    write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/pic',itprint,'.bin'
+    unitout=10
+#endif
+
+
+  end subroutine pic
 
 end module pic_module
 
