@@ -21,8 +21,8 @@ contains
     integer :: ir , ith, i_mp
 
     allocate( posMP0(N_MP,3) )
-    allocate( posMP0(N_MP,3) )
-    allocate( posMP0(N_MP,3) )
+    allocate( posMP1(N_MP,3) )
+    allocate( velMP(N_MP,3) )
 
     i_mp = 1
     !Stationary vortex setup
@@ -30,7 +30,8 @@ contains
       do ith=1,64
         posMP0(i_mp,1) = real(ir)*cos( real(ith)*64./(2.*pi) )/rsc
         posMP0(i_mp,2) = real(ir)*sin( real(ith)*64./(2.*pi) )/rsc
-        posMP0(i_mp,3) = dz
+        posMP00(i_mp,3) = dz
+        i_mp = i_mp + 1
       end do
     end do
 
@@ -43,17 +44,17 @@ contains
   ! @param real [in] : 3D position with respect to a cornet of the domain
   function isInDomain(pos)
 
-    use parameters, only : nx, ny, nz, nxtot, nytot, nztot
-    use globals,    only : coords
+    use parameters, only : nx, ny, nz
+    use globals,    only : coords, dx, dy, dz
     implicit none
     logical  isInDomain
     real, intent(in) :: pos(3)
     integer          :: ind(3)
 
     ! shift to the local processor
-    ind(1) = int(pos(1)/nxtot) - coords(0)*nx
-    ind(2) = int(pos(2)/nytot) - coords(1)*ny
-    ind(3) = int(pos(3)/nztot) - coords(2)*nz
+    ind(1) = int(pos(1)/dx) - coords(0)*nx
+    ind(2) = int(pos(2)/dy) - coords(1)*ny
+    ind(3) = int(pos(3)/dz) - coords(2)*nz
 
     if ( ind(1)<0  .or. ind(2)<0  .or. ind(3)<0 .or. &
          ind(1)>nx .or. ind(2)>ny .or. ind(3)>nz ) then
@@ -159,8 +160,8 @@ contains
   !> 2-> i1,j0,k0,  4-> i1,j1,k0,  6-> i1,j0,k1,  8-> i1,j1,k1
     subroutine interpBD(pos,ind,weights)
 
-    use parameters, only : nxtot, nytot, nztot, nx, ny, nz
-    use globals,    only : coords
+    use parameters, only : nx, ny, nz
+    use globals,    only : coords, dx, dy, dz
     implicit none
     real,    intent(in)  :: pos(3)
     integer, intent(out) :: ind(3)
@@ -168,9 +169,9 @@ contains
     real                 :: x0, y0, z0
 
     ! get the index in the whole domain (integer part)
-    x0 = pos(1)/nxtot
-    y0 = pos(2)/nytot
-    z0 = pos(3)/nztot
+    x0 = pos(1)/dx
+    y0 = pos(2)/dy
+    z0 = pos(3)/dz
 
     ! shift to the local processor
     ind(1) = int(x0) - coords(0)*nx
