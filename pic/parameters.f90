@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> CHEM              : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_H_RATE
+  integer, parameter :: eq_of_state = EOS_ADIABATIC
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -127,6 +127,8 @@ module parameters
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
+  !> Include particles tracers or pic (under construction)
+  logical, parameter :: enable_pic = .false.
 
 #ifdef PASSIVES
   integer, parameter :: npas=0        !< num. of passive scalars
@@ -140,9 +142,9 @@ module parameters
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=1     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
+  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
@@ -150,7 +152,7 @@ module parameters
   !  set box size
   real, parameter :: xmax=10.          !< grid extent in X (code units)
   real, parameter :: ymax=10.          !< grid extent in Y (code units)
-  real, parameter :: zmax=20./64       !< grid extent in Z (code units)
+  real, parameter :: zmax=20./64.      !< grid extent in Z (code units)
 !  real, parameter :: xphys=0.3*au    !< grid extent in X (physical units, cgs)
 
   real, parameter :: xphys=10.        !< grid extent in X (physical units, cgs)
@@ -172,9 +174,9 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 20./tsc
+  real, parameter :: tmax    = 50./tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = .2/tsc   !3.15e7*10.*5/tsc
+  real, parameter :: dtprint = 1./tsc   !3.15e7*10.*5/tsc
   real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.00               !< artificial viscosity
 
@@ -194,11 +196,11 @@ module parameters
 #endif
   integer, parameter :: ndim=3              !< num. of dimensions
   integer, parameter :: nghost=2            !< num. of ghost cells
-                                          
-  !> number of dynamical equations        
-#ifdef BFIELD                             
+
+  !> number of dynamical equations
+#ifdef BFIELD
   integer, parameter :: neqdyn=8            !< num. of eqs  (+scal)
-#else                                     
+#else
   integer, parameter :: neqdyn=5            !< num. of eqs  (+scal)
 #endif
 
