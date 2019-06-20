@@ -53,7 +53,7 @@ program guacho
   use parameters
   use globals
   use init
-  use pic
+  use pic_module
   use hydro_core, only : calcprim, get_timestep
   use output
   use hydro_solver
