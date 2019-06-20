@@ -44,7 +44,7 @@ subroutine init_user_mod()
   implicit none
   !  initialize modules loaded by user
 !  call init_vortex()
-  
+
 end subroutine init_user_mod
 
 !=====================================================================
@@ -57,12 +57,12 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-       pmhd, mhd, passives, rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
+       pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
        gamma, nx, ny, nz, nxtot, nytot, nztot
-  
+
   use globals,    only: coords, dx ,dy ,dz
   use constants,  only: pi
-  
+
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
@@ -78,35 +78,36 @@ subroutine initial_conditions(u)
 
   eps  = 5.  ! se normaliza????
   s    = 1.
-  
-  do i=nxmin,nxmax
-     do j=nymin,nymax
-        do k=nzmin,nzmax
-           x=((float(i+coords(0)*nx-nxtot/2) - 0.5))*dx
-           y=((float(j+coords(1)*ny-nytot/2) - 0.5))*dy
-           z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
-           rad=sqrt(x**2+y**2)
 
+  do k=nzmin,nzmax
+    do j=nymin,nymax
+      do i=nxmin,nxmax
 
-           !calculates the velocity according to the vortex problem
-           !see Chi-Wang Shu 
-           velx =  1 + x * eps * exp(0.5*(1-rad**2))/2./pi
-           vely =  1 - y * eps * exp(0.5*(1-rad**2))/2./pi
-           velz = 0.
-           
-           temp = 1-(gamma-1)*eps**2*exp(1-rad**2)/8./gamma/pi**2
-           dens = temp**(1/(gamma-1))
-           
-           !   total density and momenta
-           u(1,i,j,k) = dens
-           u(2,i,j,k) = dens*velx
-           u(3,i,j,k) = dens*vely
-           u(4,i,j,k) = dens*velz
+        !  this is the position with respect of the grid center
+        x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx /rsc
+        y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy /rsc
+        z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz /rsc
+        rad=sqrt(x**2+y**2)
+
+        !calculates the velocity according to the vortex problem
+        !see Chi-Wang Shu
+        velx = 1. - y * eps * exp(0.5*(1.-rad**2))/2./pi
+        vely = 1. + x * eps * exp(0.5*(1.-rad**2))/2./pi
+        velz = 0.
+
+        temp = 1.-(gamma-1.)*eps**2*exp(1.-rad**2)/8./gamma/pi**2
+        dens = temp**(1./(gamma-1.))
+
+        !   total density and momenta
+        u(1,i,j,k) = dens
+        u(2,i,j,k) = dens*velx
+        u(3,i,j,k) = dens*vely
+        u(4,i,j,k) = dens*velz
 
         !  total energy (kinetic + thermal)
-           u(5,i,j,k) = 0.5*dens*(velx**2+vely**2+velz**2) + cv*dens**gamma
+        u(5,i,j,k) = 0.5*dens*(velx**2+vely**2+velz**2) + cv*dens**gamma
 
-        end do
+      end do
     end do
   end do
 
@@ -148,12 +149,12 @@ end subroutine impose_user_bc
 subroutine get_user_source_terms(pp,s, i, j , k)
 
   use parameters, only : neq
-  
+
   implicit none
   real, intent(in)   :: pp(neq)
   real, intent(out)  :: s(neq)
   integer :: i, j, k
-  
+
 end subroutine get_user_source_terms
 
 
