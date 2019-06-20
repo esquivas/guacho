@@ -84,9 +84,9 @@ subroutine initial_conditions(u)
       do i=nxmin,nxmax
 
         !  this is the position with respect of the grid center
-        x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx /rsc
-        y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy /rsc
-        z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz /rsc
+        x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx
+        y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy
+        z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz
         rad=sqrt(x**2+y**2)
 
         !calculates the velocity according to the vortex problem
