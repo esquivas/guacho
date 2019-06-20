@@ -43,14 +43,14 @@ subroutine write_output(itprint)
   use Out_BIN_Module
   use Out_Silo_Module
   use Out_VTK_Module
-  use pic
+  use pic_module
   implicit none
   integer, intent(in) :: itprint
 
   if (out_bin ) call write_BIN(itprint)
   if (out_vtk ) call write_VTK(itprint)
   if (out_silo) call write_silo(itprint)
-  if (pic_enable) call write_pic(itprint)
+  if (enable_pic) call write_pic(itprint)
 
 end subroutine write_output
 
