@@ -70,10 +70,9 @@ subroutine initial_conditions(u)
   real :: velx, vely, velz, eps, s, dens, temp, rad, x, y, z
 
   !--------------------------------------------------------------------------------------------
-  !             MEDIO AMBIENTE
-  !             VORTEX PROBLEM (high Order Finite Difference and Finite Volume WENO Schemes
-  !             and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
-  !             con dos zonas: (dens,Temp) para r<rc y (densa,Tempa) para r>rc
+  !       MEDIO AMBIENTE
+  !       VORTEX PROBLEM (high Order Finite Difference and Finite Volume WENO Schemes
+  !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
   !--------------------------------------------------------------------------------------------
 
   eps  = 5.  ! se normaliza????
