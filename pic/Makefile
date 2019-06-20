@@ -67,6 +67,7 @@ parameters.o \
 globals.o
 
 OBJECTS_MAIN=\
+pic_module.o \
 user_mod.o \
 network.o \
 flux_cd_module.o \
