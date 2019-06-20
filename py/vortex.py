@@ -6,15 +6,21 @@ from guacho_utils import *
 from matplotlib.colors import LogNorm
 
 plt.ion()
-rmin=100.
-rmax=1e6
+rmin=.5
+rmax=1.
 
 path = '../pic/BIN/'
-nout = 0
+nout = 50
 
-rho = readbin3d_all(nout=nout,neq=0,path=path,verbose=False)
+rho = get_2d_cut(3,1,nout=nout,neq=0,path=path,verbose=False)
+vx  = get_2d_cut(3,1,nout=nout,neq=1,path=path,verbose=False)
+vy  = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
+
+X,Y = np.meshgrid( np.linspace(-5.,5.,num=64),np.linspace(-5.,5.,num=64) )
+
 plt.figure(1)
 plt.clf()
-plt.imshow(rho[1,:,:], norm=LogNorm(), origin='lower', cmap='Blues' )
+plt.imshow(rho, extent=[-5,5,-5,5], origin='lower', cmap='Spectral', vmin=rmin, vmax=rmax )
 plt.colorbar()
 
+Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid')
