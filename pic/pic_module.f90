@@ -18,19 +18,19 @@ contains
     use parameters, only : rsc
     use globals,    only : dz
     implicit none
-    integer :: ir , ith, i_mp
+    integer :: ir , ith, i_mp, x, y, z
 
     allocate( posMP0(N_MP,3) )
     allocate( posMP1(N_MP,3) )
-    allocate( velMP(N_MP,3) )
+    allocate( velMP (N_MP,3) )
 
     i_mp = 1
     !Stationary vortex setup
     do ir=1,8
       do ith=1,64
-        posMP0(i_mp,1) = real(ir)*cos( real(ith)*64./(2.*pi) )/rsc
-        posMP0(i_mp,2) = real(ir)*sin( real(ith)*64./(2.*pi) )/rsc
-        posMP00(i_mp,3) = dz
+        x= real(ir)*cos( real(ith)*64./(2.*pi) )/rsc
+        y= real(ir)*sin( real(ith)*64./(2.*pi) )/rsc
+        z= dz
         i_mp = i_mp + 1
       end do
     end do
@@ -201,24 +201,26 @@ contains
   ! @details Writes position and particles velocities in a single file
   !> format is binary, one integer with the number of points in domain, and then
   !> all the positions and velocities ( in the default real precision)
-  subroutine write(pic)
+  subroutine write_pic(itprint)
 
     use parameters, only : outputpath
+    use globals,    only : rank
     implicit none
+    integer, intent(in) :: itprint
     character(len = 128) :: fileout
-    integer              :: n_active
+    integer              :: unitout, n_active
 
 #ifdef MPIP
-    write(file1,'(a,i3.3,a,i3.3,a)')  &
+    write(fileout,'(a,i3.3,a,i3.3,a)')  &
         trim(outputpath)//'BIN/pic',rank,'.',itprint,'.bin'
     unitout=rank+10
 #else
-    write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/pic',itprint,'.bin'
+    write(fileout,'(a,i3.3,a)')  trim(outputpath)//'BIN/pic',itprint,'.bin'
     unitout=10
 #endif
 
 
-  end subroutine pic
+end subroutine write_pic
 
 end module pic_module
 
