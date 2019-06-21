@@ -106,11 +106,11 @@ program guacho
     !  if pic enabled compute predictor for particle positions
     if(enable_pic) call predictor()
 
-    !   advances the solution
+    !   advances the HD/MHD solution
     call tstep()
 
     !  if pic enabled compute corrector for particle positions
-    if(enable_pic) call predictor()
+    if(enable_pic) call corrector()
 
     time = time + dt_CFL
       !   output at intervals tprint
