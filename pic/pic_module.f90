@@ -3,11 +3,12 @@ module pic_module
   use parameters
   use constants
   implicit none
-  integer, parameter :: N_MP = 512  !< # of macro particles
-  real, allocatable  :: posMP0(:,:) !< Particles positions
-  real, allocatable  :: posMP1(:,:) !< Positions after predictor
-  real, allocatable  :: velMP (:,:) !< Particles velocities
-  integer            :: n_active
+  integer, parameter   :: N_MP = 512    !< # of macro particles
+  real, allocatable    :: posMP0(:,:)   !< Particles positions
+  real, allocatable    :: posMP1(:,:)   !< Positions after predictor
+  real, allocatable    :: velMP (:,:)   !< Particles velocities
+  integer, allocatable :: partOwner(:)  !< Particle Owner (rank)
+  integer              :: n_active
 contains
 
   !================================================================
@@ -16,22 +17,37 @@ contains
 
     use constants,  only : pi
     use parameters, only : rsc
-    use globals,    only : dz
+    use globals,    only : dz, rank
     implicit none
     integer :: ir , ith, i_mp, x, y, z
+    real    :: pos(3)
 
     allocate( posMP0(N_MP,3) )
     allocate( posMP1(N_MP,3) )
     allocate( velMP (N_MP,3) )
+    allocate( partOwner(N_MP))
+
+    !  initialize Owners (-1 means no body has claimed the particle)
+    partOwner(:) = -1
+    n_active     =  0
 
     i_mp = 1
     !Stationary vortex setup
     do ir=1,8
       do ith=1,64
-        x= real(ir)*cos( real(ith)*64./(2.*pi) )/rsc
-        y= real(ir)*sin( real(ith)*64./(2.*pi) )/rsc
-        z= dz
+
+        pos(1)= 0.5*real(ir)*cos( real(ith)*(2.*pi)/64. ) + 5.
+        pos(2)= 0.5*real(ir)*sin( real(ith)*(2.*pi)/64. ) + 5.
+        pos(3)= 0.
+
+        if(isInDomain(pos) ) then
+          partOwner(i_mp) = rank
+          posMP0(i_mp,:)  = pos(:)
+          n_active        = n_active + 1
+        endif
+
         i_mp = i_mp + 1
+
       end do
     end do
 
@@ -57,7 +73,7 @@ contains
     ind(3) = int(pos(3)/dz) - coords(2)*nz
 
     if ( ind(1)<0  .or. ind(2)<0  .or. ind(3)<0 .or. &
-         ind(1)>nx .or. ind(2)>ny .or. ind(3)>nz ) then
+         ind(1)>=nx .or. ind(2)>=ny .or. ind(3)>=nz ) then
 
       isInDomain = .false.
 
@@ -72,7 +88,7 @@ contains
   !================================================================
   subroutine predictor
 
-    use globals, only : primit, dt_CFL
+    use globals, only : primit, dt_CFL, rank
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
@@ -83,7 +99,9 @@ contains
       if ( isInDomain( posMP0(i_mp,:) ) ) then
 
         ! Calculate interpolation reference and weights
-        call interpBD(posMP0,ind,weights)
+        call interpBD(posMP0(i_mp,:),ind,weights)
+        !print*,rank,posMP0(i_mp,:)
+        !print*, rank,ind(:)
         !  Interpolate the velocity field to particle position
         l=1
         velMP(i_mp,:) = 0
@@ -122,7 +140,7 @@ contains
       if ( isInDomain( posMP1(i_mp,:) ) ) then
 
         ! Calculate interpolation reference and weights
-        call interpBD(posMP1,ind,weights)
+        call interpBD(posMP1(i_mp,:),ind,weights)
         !  Interpolate the velocity field to particle position, and add
         !  to the velocity from the corrector step
         l=1
@@ -208,7 +226,7 @@ contains
     implicit none
     integer, intent(in) :: itprint
     character(len = 128) :: fileout
-    integer              :: unitout, n_active
+    integer              :: unitout, i_mp
 
 #ifdef MPIP
     write(fileout,'(a,i3.3,a,i3.3,a)')  &
@@ -219,6 +237,20 @@ contains
     unitout=10
 #endif
 
+  open(unit=unitout,file=fileout,status='unknown',access='stream')
+
+  !  write how many particles are in rank domain
+  write(unitout) n_active
+
+  !  loop over particles owned by processor and write the active ones
+  do i_mp=1,N_MP
+    if (partOwner(i_mp)==rank) then
+
+      write(unitout) posMP0(i_mp,:)
+      write(unitout) velMP (i_mp,:)
+
+    endif
+  end do
 
 end subroutine write_pic
 
