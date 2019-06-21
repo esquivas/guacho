@@ -19,7 +19,7 @@ contains
     use parameters, only : rsc
     use globals,    only : dz, rank
     implicit none
-    integer :: ir , ith, i_mp, x, y, z
+    integer :: ir , ith, i_mp
     real    :: pos(3)
 
     allocate( posMP0(N_MP,3) )
@@ -88,7 +88,7 @@ contains
   !================================================================
   subroutine predictor
 
-    use globals, only : primit, dt_CFL, rank
+    use globals, only : primit, dt_CFL
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
@@ -100,8 +100,7 @@ contains
 
         ! Calculate interpolation reference and weights
         call interpBD(posMP0(i_mp,:),ind,weights)
-        !print*,rank,posMP0(i_mp,:)
-        !print*, rank,ind(:)
+
         !  Interpolate the velocity field to particle position
         l=1
         velMP(i_mp,:) = 0
@@ -246,6 +245,7 @@ contains
   do i_mp=1,N_MP
     if (partOwner(i_mp)==rank) then
 
+      write(unitout) i_mp
       write(unitout) posMP0(i_mp,:)
       write(unitout) velMP (i_mp,:)
 
