@@ -6,3 +6,4 @@ nfs*
 *.pyc
 .DS_store
 Icon*
+*~
