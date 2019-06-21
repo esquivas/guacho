@@ -90,8 +90,8 @@ subroutine initial_conditions(u)
 
         !calculates the velocity according to the vortex problem
         !see Chi-Wang Shu
-        velx = 1. - y * eps * exp(0.5*(1.-rad**2))/2./pi
-        vely = 1. + x * eps * exp(0.5*(1.-rad**2))/2./pi
+        velx = 0. - y * eps * exp(0.5*(1.-rad**2))/2./pi
+        vely = 0. + x * eps * exp(0.5*(1.-rad**2))/2./pi
         velz = 0.
 
         temp = 1.-(gamma-1.)*eps**2*exp(1.-rad**2)/8./gamma/pi**2
