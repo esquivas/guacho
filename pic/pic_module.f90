@@ -1,94 +1,27 @@
 module pic_module
-
-  use parameters
-  use constants
+  use parameters, only : N_MP
+  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP
   implicit none
-  integer, parameter   :: N_MP = 512    !< # of macro particles
-  real, allocatable    :: posMP0(:,:)   !< Particles positions
-  real, allocatable    :: posMP1(:,:)   !< Positions after predictor
-  real, allocatable    :: velMP (:,:)   !< Particles velocities
-  integer, allocatable :: partOwner(:)  !< Particle Owner (rank)
-  integer              :: n_active
+
 contains
 
   !================================================================
   ! @brief initialization of module
   subroutine init_pic()
 
-    use constants,  only : pi
-    use parameters, only : rsc
-    use globals,    only : dz, rank
     implicit none
-    integer :: ir , ith, i_mp
-    real    :: pos(3)
 
-    allocate( posMP0(N_MP,3) )
-    allocate( posMP1(N_MP,3) )
-    allocate( velMP (N_MP,3) )
+    allocate( Q_MP0(N_MP,6) )
+    allocate( Q_MP1(N_MP,3) )
     allocate( partOwner(N_MP))
-
-    !  initialize Owners (-1 means no body has claimed the particle)
-    partOwner(:) = -1
-    n_active     =  0
-
-    i_mp = 1
-    !Stationary vortex setup
-    do ir=1,8
-      do ith=1,64
-
-        pos(1)= 0.5*real(ir)*cos( real(ith)*(2.*pi)/64. ) + 5.
-        pos(2)= 0.5*real(ir)*sin( real(ith)*(2.*pi)/64. ) + 5.
-        pos(3)= 0.
-
-        if(isInDomain(pos) ) then
-          partOwner(i_mp) = rank
-          posMP0(i_mp,:)  = pos(:)
-          n_active        = n_active + 1
-        endif
-
-        i_mp = i_mp + 1
-
-      end do
-    end do
 
   end subroutine init_pic
 
   !================================================================
-  ! @brief In domain function (logical)
-  ! @details Determines if the position of a given point lies within the
-  !> procesor domain, returns true if it is, false if it isn't
-  ! @param real [in] : 3D position with respect to a cornet of the domain
-  function isInDomain(pos)
+  subroutine PICpredictor
 
-    use parameters, only : nx, ny, nz
-    use globals,    only : coords, dx, dy, dz
-    implicit none
-    logical  isInDomain
-    real, intent(in) :: pos(3)
-    integer          :: ind(3)
-
-    ! shift to the local processor
-    ind(1) = int(pos(1)/dx) - coords(0)*nx
-    ind(2) = int(pos(2)/dy) - coords(1)*ny
-    ind(3) = int(pos(3)/dz) - coords(2)*nz
-
-    if ( ind(1)<0  .or. ind(2)<0  .or. ind(3)<0 .or. &
-         ind(1)>=nx .or. ind(2)>=ny .or. ind(3)>=nz ) then
-
-      isInDomain = .false.
-
-    else
-
-      isInDomain = .true.
-
-    end if
-
-  end function isInDomain
-
-  !================================================================
-  subroutine predictor
-
-    use globals, only : primit, dt_CFL
+    use globals,   only : primit, dt_CFL
+    use utilities, only : isInDomain
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
@@ -96,73 +29,75 @@ contains
     do i_mp=1, N_MP
 
       ! exetute only if particle i_mp is in processor domain
-      if ( isInDomain( posMP0(i_mp,:) ) ) then
+      if ( isInDomain( Q_MP0(i_mp,1:3) ) ) then
 
         ! Calculate interpolation reference and weights
-        call interpBD(posMP0(i_mp,:),ind,weights)
+        call interpBD(Q_MP0(i_mp,1:3),ind,weights)
 
         !  Interpolate the velocity field to particle position
         l=1
-        velMP(i_mp,:) = 0
+        Q_MP0(i_mp,4:6) = 0
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
-              velMP(i_mp,1) = velMP(i_mp,1) + primit(2,i,j,k)*weights(l)
-              velMP(i_mp,2) = velMP(i_mp,2) + primit(3,i,j,k)*weights(l)
-              velMP(i_mp,3) = velMP(i_mp,3) + primit(4,i,j,k)*weights(l)
+              Q_MP0(i_mp,4) = Q_MP0(i_mp,4) + primit(2,i,j,k)*weights(l)
+              Q_MP0(i_mp,5) = Q_MP0(i_mp,5) + primit(3,i,j,k)*weights(l)
+              Q_MP0(i_mp,6) = Q_MP0(i_mp,6) + primit(4,i,j,k)*weights(l)
               l = l + 1
             end do
           end do
         end do
 
         !  predictor step
-        posMP1(i_mp,:) = posMP0(i_mp,:)+ dt_CFL*velMP(i_mp,:)
+        Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
       end if
 
     end do
 
-  end subroutine predictor
+  end subroutine PICpredictor
 
   !================================================================
-  subroutine corrector
+  subroutine PICcorrector
 
-    use globals, only : primit, dt_CFL
+    use globals,   only : primit, dt_CFL
+    use utilities, only : isInDomain
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
-    real    :: weights(8)
+    real    :: weights(8), vel1(3)
 
 
     do i_mp=1, N_MP
 
       ! exetute only if particle i_mp is in processor domain
-      if ( isInDomain( posMP1(i_mp,:) ) ) then
+      if ( isInDomain( Q_MP1(i_mp,1:3) ) ) then
 
         ! Calculate interpolation reference and weights
-        call interpBD(posMP1(i_mp,:),ind,weights)
+        call interpBD(Q_MP1(i_mp,1:3),ind,weights)
         !  Interpolate the velocity field to particle position, and add
         !  to the velocity from the corrector step
         l=1
-        !velMP(i_mp,:) = 0
+        vel1(:) = 0
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
-              velMP(i_mp,1) = velMP(i_mp,1) + primit(2,i,j,k)*weights(l)
-              velMP(i_mp,2) = velMP(i_mp,2) + primit(3,i,j,k)*weights(l)
-              velMP(i_mp,3) = velMP(i_mp,3) + primit(4,i,j,k)*weights(l)
+              vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
+              vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
+              vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
               l = l + 1
             end do
           end do
         end do
 
-        !  predictor step
-        posMP0(i_mp,:) = posMP0(i_mp,:)+ 0.5*dt_CFL*velMP(i_mp,:)
+        !  corrector step
+        Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
+                        + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
       end if
 
     end do
 
-  end subroutine corrector
+  end subroutine PICcorrector
 
   !================================================================
   !  @brief bilineal interpolator
@@ -239,15 +174,14 @@ contains
   open(unit=unitout,file=fileout,status='unknown',access='stream')
 
   !  write how many particles are in rank domain
-  write(unitout) n_active
+  write(unitout) n_activeMP
 
   !  loop over particles owned by processor and write the active ones
   do i_mp=1,N_MP
     if (partOwner(i_mp)==rank) then
 
       write(unitout) i_mp
-      write(unitout) posMP0(i_mp,:)
-      write(unitout) velMP (i_mp,:)
+      write(unitout) Q_MP0(i_mp,1:6)
 
     endif
   end do
