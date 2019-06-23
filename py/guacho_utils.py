@@ -177,6 +177,16 @@ def get_scalings(nout,path='',base='points',verbose=False):
   Bsc = np.sqrt(4.*np.pi*rhosc*vsc**2)
   return (rsc, vsc, rhosc, Bsc)
 
+'''
+  Returns the number of cores read from HD output
+'''
+def get_Nproc(nout,path='',base='points',verbose=False):
+
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  n_proc = mpi_x*mpi_y*mpi_z
+  return n_proc
 
 '''
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
