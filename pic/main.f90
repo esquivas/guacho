@@ -72,7 +72,7 @@ program guacho
 
   !   initialize u's
   call initflow(itprint)
-
+  
   !   impose  boundaries (needed if imposing special BCs)
   call boundaryI()
 
@@ -104,13 +104,13 @@ program guacho
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
-    if(enable_pic) call predictor()
+    if(enable_pic) call PICpredictor()
 
     !   advances the HD/MHD solution
     call tstep()
 
     !  if pic enabled compute corrector for particle positions
-    if(enable_pic) call corrector()
+    if(enable_pic) call PICcorrector()
 
     time = time + dt_CFL
       !   output at intervals tprint
