@@ -60,17 +60,21 @@ subroutine initial_conditions(u)
        pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
        gamma, nx, ny, nz, nxtot, nytot, nztot
 
-  use globals,    only: coords, dx ,dy ,dz
-  use constants,  only: pi
+  use globals,    only : coords, dx ,dy ,dz, rank, Q_MP0, partOwner, n_activeMP
+  use constants,  only : pi
+  use utilities,  only : isInDomain
 
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-
+  !logical ::  isInDomain
   integer :: i,j,k
   real :: velx, vely, velz, eps, s, dens, temp, rad, x, y, z
+  integer :: ir, ith, i_mp
+  real    :: pos(3)
+
 
   !--------------------------------------------------------------------------------------------
-  !       MEDIO AMBIENTE
+  !       HIDRODINAMICA : MEDIO AMBIENTE
   !       VORTEX PROBLEM (high Order Finite Difference and Finite Volume WENO Schemes
   !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
   !--------------------------------------------------------------------------------------------
@@ -107,6 +111,32 @@ subroutine initial_conditions(u)
         u(5,i,j,k) = 0.5*dens*(velx**2+vely**2+velz**2) + cv*dens**gamma
 
       end do
+    end do
+  end do
+
+  !  TRACER PARTICLES
+  !  initialize Owners (-1 means no body has claimed the particle)
+  !print*, rank,size(partOwner)
+  partOwner(:) = -1
+  n_activeMP   =  0
+
+  i_mp = 1
+  !Stationary vortex setup
+  do ir=1,8
+    do ith=1,64
+
+      pos(1)= 0.5*real(ir)*cos( real(ith)*(2.*pi)/64. ) + 5.
+      pos(2)= 0.5*real(ir)*sin( real(ith)*(2.*pi)/64. ) + 5.
+      pos(3)= 0.
+
+      if(isInDomain(pos) ) then
+        partOwner(i_mp) = rank
+        Q_MP0(i_mp,1:3) = pos(:)
+        n_activeMP      = n_activeMP + 1
+      endif
+
+      i_mp = i_mp + 1
+
     end do
   end do
 
