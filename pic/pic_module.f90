@@ -1,6 +1,6 @@
 module pic_module
   use parameters, only : N_MP
-  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP
+  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP, partID
   implicit none
 
 contains
@@ -13,7 +13,8 @@ contains
 
     allocate( Q_MP0(N_MP,6) )
     allocate( Q_MP1(N_MP,3) )
-    allocate( partOwner(N_MP))
+    allocate( partID   (N_MP) )
+    allocate( partOwner(N_MP) )
 
   end subroutine init_pic
 
@@ -26,33 +27,42 @@ contains
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
 
-    do i_mp=1, N_MP
+    do i_mp=1, n_activeMP
+      ! execute only if particle i_mp is in the active list
+      if (partID(i_mp)/=0) then
 
-      ! exetute only if particle i_mp is in processor domain
-      if ( isInDomain( Q_MP0(i_mp,1:3) ) ) then
+        ! proceed further only if paricle is in domain
+        if ( isInDomain( Q_MP0(i_mp,1:3) ) ) then
 
-        ! Calculate interpolation reference and weights
-        call interpBD(Q_MP0(i_mp,1:3),ind,weights)
+          ! Calculate interpolation reference and weights
+          call interpBD(Q_MP0(i_mp,1:3),ind,weights)
 
-        !  Interpolate the velocity field to particle position
-        l=1
-        Q_MP0(i_mp,4:6) = 0
-        do k= ind(3),ind(3)+1
-          do j=ind(2),ind(2)+1
-            do i=ind(1),ind(1)+1
-              Q_MP0(i_mp,4) = Q_MP0(i_mp,4) + primit(2,i,j,k)*weights(l)
-              Q_MP0(i_mp,5) = Q_MP0(i_mp,5) + primit(3,i,j,k)*weights(l)
-              Q_MP0(i_mp,6) = Q_MP0(i_mp,6) + primit(4,i,j,k)*weights(l)
-              l = l + 1
+          !  Interpolate the velocity field to particle position
+          l=1
+          Q_MP0(i_mp,4:6) = 0
+          do k= ind(3),ind(3)+1
+            do j=ind(2),ind(2)+1
+              do i=ind(1),ind(1)+1
+                Q_MP0(i_mp,4) = Q_MP0(i_mp,4) + primit(2,i,j,k)*weights(l)
+                Q_MP0(i_mp,5) = Q_MP0(i_mp,5) + primit(3,i,j,k)*weights(l)
+                Q_MP0(i_mp,6) = Q_MP0(i_mp,6) + primit(4,i,j,k)*weights(l)
+                l = l + 1
+              end do
             end do
           end do
-        end do
 
-        !  predictor step
-        Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
+          !  predictor step
+          Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
+
+        else
+
+          !  particle has left domain, deactivate it
+          partID(i_mp) = 0
+          print*, 'particle', i_mp, ' is no longer with us pred'
+
+        end if
 
       end if
-
     end do
 
   end subroutine PICpredictor
@@ -60,41 +70,50 @@ contains
   !================================================================
   subroutine PICcorrector
 
-    use globals,   only : primit, dt_CFL
+    use globals,   only : primit, dt_CFL, rank
     use utilities, only : isInDomain
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8), vel1(3)
 
 
-    do i_mp=1, N_MP
+    do i_mp=1, n_activeMP
+      ! execute only if particle i_mp is in the active list
+      if (partID(i_mp)/=0) then
 
-      ! exetute only if particle i_mp is in processor domain
-      if ( isInDomain( Q_MP1(i_mp,1:3) ) ) then
+        ! proceed further only if paricle is in domain
+        if ( isInDomain( Q_MP1(i_mp,1:3) ) ) then
 
-        ! Calculate interpolation reference and weights
-        call interpBD(Q_MP1(i_mp,1:3),ind,weights)
-        !  Interpolate the velocity field to particle position, and add
-        !  to the velocity from the corrector step
-        l=1
-        vel1(:) = 0
-        do k= ind(3),ind(3)+1
-          do j=ind(2),ind(2)+1
-            do i=ind(1),ind(1)+1
-              vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
-              vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
-              vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
-              l = l + 1
+          ! Calculate interpolation reference and weights
+          call interpBD(Q_MP1(i_mp,1:3),ind,weights)
+          !  Interpolate the velocity field to particle position, and add
+          !  to the velocity from the corrector step
+          l=1
+          vel1(:) = 0
+          do k= ind(3),ind(3)+1
+            do j=ind(2),ind(2)+1
+              do i=ind(1),ind(1)+1
+                vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
+                vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
+                vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
+                l = l + 1
+              end do
             end do
           end do
-        end do
 
-        !  corrector step
-        Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
-                        + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
+          !  corrector step
+          Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
+                          + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
+
+        else
+
+          !  particle has left domain, deactivate it
+          print*, rank,i_mp,'particle', partID(i_mp), ' is no longer with us corr'
+          partID(i_mp) = 0
+
+        end if
 
       end if
-
     end do
 
   end subroutine PICcorrector
@@ -155,7 +174,7 @@ contains
   !> all the positions and velocities ( in the default real precision)
   subroutine write_pic(itprint)
 
-    use parameters, only : outputpath
+    use parameters, only : outputpath, np
     use globals,    only : rank
     implicit none
     integer, intent(in) :: itprint
@@ -174,13 +193,13 @@ contains
   open(unit=unitout,file=fileout,status='unknown',access='stream')
 
   !  write how many particles are in rank domain
-  write(unitout) n_activeMP
+  write(unitout) np, N_MP, n_activeMP
 
   !  loop over particles owned by processor and write the active ones
-  do i_mp=1,N_MP
-    if (partOwner(i_mp)==rank) then
-
-      write(unitout) i_mp
+  do i_mp=1,n_activeMP
+    !if (partOwner(i_mp)==rank) then
+    if (partID(i_mp) /=0) then
+      write(unitout) partID(i_mp)
       write(unitout) Q_MP0(i_mp,1:6)
 
     endif
