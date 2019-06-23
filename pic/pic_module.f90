@@ -27,7 +27,7 @@ contains
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
 
-    do i_mp=1, n_activeMP
+    do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
       if (partID(i_mp)/=0) then
 
@@ -77,7 +77,7 @@ contains
     real    :: weights(8), vel1(3)
 
 
-    do i_mp=1, n_activeMP
+    do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
       if (partID(i_mp)/=0) then
 
@@ -110,6 +110,7 @@ contains
           !  particle has left domain, deactivate it
           print*, rank,i_mp,'particle', partID(i_mp), ' is no longer with us corr'
           partID(i_mp) = 0
+          n_activeMP   = n_activeMP - 1
 
         end if
 
@@ -196,7 +197,7 @@ contains
   write(unitout) np, N_MP, n_activeMP
 
   !  loop over particles owned by processor and write the active ones
-  do i_mp=1,n_activeMP
+  do i_mp=1,N_MP
     !if (partOwner(i_mp)==rank) then
     if (partID(i_mp) /=0) then
       write(unitout) partID(i_mp)
