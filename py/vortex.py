@@ -28,13 +28,14 @@ plt.colorbar()
 Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 
 
-part = np.zeros(shape=(50,512,2) )
-for (nout) in range(50):
-    npart, xp, yp, zp, vxp, vyp, vzp = readpic(nout,nproc,path=path)
+part = np.zeros(shape=(50,1024,2) )
+for (nout) in range(1):
+    id,xp, yp, zp, vxp, vyp, vzp = readpic(nout,path=path)
     part[nout,:,0] = xp[:]
     part[nout,:,1] = yp[:]
 
-for ip in range(npart):
-    plt.plot(part[:,ip,0]-5,part[:,ip,1]-5,'-o',markersize= 2)
+
+for ip in range(1024):
+    plt.plot(part[:,ip,0]-5,part[:,ip,1]-5,'o',markersize= 2)
     plt.xlim([-5,5])
     plt.ylim([-5,5])
