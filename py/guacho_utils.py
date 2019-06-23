@@ -271,32 +271,29 @@ def minmax(q):
 '''
    reads tracer particles
 '''
-def readpic(nout,nproc,path='', base='pic'):
-    #  first loop over processors to determine N_MP
-    npart = 0
-    for ip in range(nproc):
-        file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
-        f = open(file_in,'rb')
-        npart_loc = struct.unpack('1i',f.read(4))[0]
-        npart += npart_loc
-        f.close()
-    x  = np.zeros(npart)
-    y  = np.zeros(npart)
-    z  = np.zeros(npart)
-    vx = np.zeros(npart)
-    vy = np.zeros(npart)
-    vz = np.zeros(npart)
-    id = np.zeros(npart, dtype = 'i4')
+def readpic(nout,path='', base='pic'):
+    #  read first output to determine N_MP and NP
+    file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+    f = open(file_in,'rb')
+    nproc, n_mp = struct.unpack('2i',f.read(8))
+    x  = np.zeros(nproc*n_mp)
+    y  = np.zeros(nproc*n_mp)
+    z  = np.zeros(nproc*n_mp)
+    vx = np.zeros(nproc*n_mp)
+    vy = np.zeros(nproc*n_mp)
+    vz = np.zeros(nproc*n_mp)
+    id = np.zeros(nproc*n_mp, dtype = 'i4')
+    f.close()
     #  now reopen files one by one and read data onto the arrays
     for ip in range(nproc):
         file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
         f = open(file_in,'rb')
-        npart_loc = struct.unpack('1i',f.read(4))[0]
-        for i in range(npart_loc):
-            ii   = struct.unpack('1i',f.read(4))[0]
-            #  shift one to start from 0
-            ii -= 1
+        nproc,n_mp,n_activeMP, = struct.unpack('3i',f.read(12))
+        for i in range(n_activeMP):
+            ii = struct.unpack('1i',f.read(4))[0]
+            id[i] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
         f.close()
-    return npart, x, y, z, vx, vy, vz
+    return id,x, y, z, vx, vy, vz
+    
