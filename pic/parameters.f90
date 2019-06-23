@@ -130,7 +130,7 @@ module parameters
   !> Include particles tracers or pic (under construction)
   logical, parameter :: enable_pic = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP = 512
+  integer, parameter :: N_MP = 256
 
 #ifdef PASSIVES
   integer, parameter :: npas=0        !< num. of passive scalars
