@@ -42,6 +42,7 @@ subroutine initmain(tprint, itprint)
   use constants
   use parameters
   use globals
+  use pic_module
   use cooling_dmc
   use cooling_chi
   use difrad
@@ -158,6 +159,8 @@ subroutine initmain(tprint, itprint)
   if (enable_flux_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 #endif
+
+  if (enable_pic) call init_pic()
 
   !   DMC cooling
   if (cooling == COOL_DMC) call init_cooling_dmc()
@@ -419,9 +422,8 @@ end subroutine initmain
 
 subroutine initflow(itprint)
 
-  use parameters, only : outputpath, iwarm, enable_pic !, itprint0
+  use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
-  use pic_module, only : init_pic
   use user_mod, only : initial_conditions
   implicit none
 
@@ -440,8 +442,6 @@ subroutine initflow(itprint)
   if (.not.iwarm) then
 
     call initial_conditions(u)
-
-    if(enable_pic) call init_pic()
 
   else
 
