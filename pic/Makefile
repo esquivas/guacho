@@ -103,10 +103,6 @@ hydro_core.o \
 difrad.o \
 coldens.o
 
-#  For Nbody Test
-NBODY = nbody_mod2.o \
-testNB.o
-
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 hydro_core.o \
