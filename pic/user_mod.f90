@@ -58,9 +58,10 @@ subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
        pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-       gamma, nx, ny, nz, nxtot, nytot, nztot
+       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP
 
-  use globals,    only : coords, dx ,dy ,dz, rank, Q_MP0, partOwner, n_activeMP
+  use globals,    only : coords, dx ,dy ,dz, rank,                          &
+                         Q_MP0, partID, partOwner, n_activeMP
   use constants,  only : pi
   use utilities,  only : isInDomain
 
@@ -69,7 +70,7 @@ subroutine initial_conditions(u)
   !logical ::  isInDomain
   integer :: i,j,k
   real :: velx, vely, velz, eps, s, dens, temp, rad, x, y, z
-  integer :: ir, ith, i_mp
+  integer :: ir, ith
   real    :: pos(3)
 
 
@@ -118,9 +119,10 @@ subroutine initial_conditions(u)
   !  initialize Owners (-1 means no body has claimed the particle)
   !print*, rank,size(partOwner)
   partOwner(:) = -1
+  !  initialize Particles ID, not active is ID 0
+  partID(:)    =  0
   n_activeMP   =  0
 
-  i_mp = 1
   !Stationary vortex setup
   do ir=1,8
     do ith=1,64
@@ -130,15 +132,16 @@ subroutine initial_conditions(u)
       pos(3)= 0.
 
       if(isInDomain(pos) ) then
-        partOwner(i_mp) = rank
-        Q_MP0(i_mp,1:3) = pos(:)
-        n_activeMP      = n_activeMP + 1
-      endif
+        n_activeMP            = n_activeMP + 1
+        partOwner(n_activeMP) = rank
+        partID   (n_activeMP) = n_activeMP + rank*N_MP
+        Q_MP0(n_activeMP,1:3) = pos(:)
 
-      i_mp = i_mp + 1
+      endif
 
     end do
   end do
+  print*, rank, 'has ', n_activeMP, ' active MPs'
 
 end subroutine initial_conditions
 
