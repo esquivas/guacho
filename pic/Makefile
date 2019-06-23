@@ -64,7 +64,8 @@ MODULES_USER= \
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o
+globals.o \
+utils.o
 
 OBJECTS_MAIN=\
 pic_module.o \
