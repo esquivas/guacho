@@ -41,8 +41,9 @@ module globals
   ! for the tracer particles and PIC module
   real, allocatable    :: Q_MP0(:,:)   !< Particles  positions and velocities
   real, allocatable    :: Q_MP1(:,:)   !< Positions after predictor
-  integer, allocatable :: partOwner(:)   !< Particle Owner (rank)
-  integer              :: n_activeMP     !< Number of active macro particles
+  integer, allocatable :: partOwner(:) !< Particle Owner (rank)
+  integer, allocatable :: partID(:)    !< Particle Identifier
+  integer              :: n_activeMP   !< Number of active macro particles
 
   ! For the split methods
   real, allocatable ::    primit0(:,:,:,:) !< primit zeros
