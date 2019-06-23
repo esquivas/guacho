@@ -129,6 +129,8 @@ module parameters
 
   !> Include particles tracers or pic (under construction)
   logical, parameter :: enable_pic = .true.
+  !> Max number of macro particles followed by each processor
+  integer, parameter :: N_MP = 512
 
 #ifdef PASSIVES
   integer, parameter :: npas=0        !< num. of passive scalars
@@ -136,14 +138,14 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=128      !< Total grid size in X
-  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nxtot=64      !< Total grid size in X
+  integer, parameter :: nytot=64      !< Total grid size in Y
   integer, parameter :: nztot=2      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
   integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
