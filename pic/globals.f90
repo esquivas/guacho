@@ -39,10 +39,10 @@ module globals
   real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
 
   ! for the tracer particles and PIC module
-  real, allocatable    :: PosVel0(:,:)   !< Particles  positions and velocities
-  real, allocatable    :: PosP_MP(:,:)   !< Positions after predictor
+  real, allocatable    :: Q_MP0(:,:)   !< Particles  positions and velocities
+  real, allocatable    :: Q_MP1(:,:)   !< Positions after predictor
   integer, allocatable :: partOwner(:)   !< Particle Owner (rank)
-  integer              :: n_active       !< Number of active macro particles
+  integer              :: n_activeMP     !< Number of active macro particles
 
   ! For the split methods
   real, allocatable ::    primit0(:,:,:,:) !< primit zeros
