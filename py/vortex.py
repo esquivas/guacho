@@ -12,6 +12,8 @@ rmax=1.
 path = '../pic/BIN/'
 nout = 0
 
+nproc = get_Nproc(nout,path=path)
+
 rho = get_2d_cut(3,1,nout=nout,neq=0,path=path,verbose=False)
 vx  = get_2d_cut(3,1,nout=nout,neq=1,path=path,verbose=False)
 vy  = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
@@ -28,11 +30,11 @@ Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 
 part = np.zeros(shape=(50,512,2) )
 for (nout) in range(50):
-    npart, xp, yp, zp, vxp, vyp, vzp = readpic(nout,2,path=path)
+    npart, xp, yp, zp, vxp, vyp, vzp = readpic(nout,nproc,path=path)
     part[nout,:,0] = xp[:]
     part[nout,:,1] = yp[:]
 
 for ip in range(npart):
-    plt.plot(part[:,ip,0]-5,part[:,ip,1]-5,'o',markersize= 2)
+    plt.plot(part[:,ip,0]-5,part[:,ip,1]-5,'-o',markersize= 2)
     plt.xlim([-5,5])
     plt.ylim([-5,5])
