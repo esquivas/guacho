@@ -289,11 +289,11 @@ def readpic(nout,path='', base='pic'):
         file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
         f = open(file_in,'rb')
         nproc,n_mp,n_activeMP, = struct.unpack('3i',f.read(12))
-        for i in range(n_activeMP):
+        for i_mp in range(n_activeMP):
             ii = struct.unpack('1i',f.read(4))[0]
-            id[i] = ii
+            ii -= 1
+            id[i_mp] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
         f.close()
     return id,x, y, z, vx, vy, vz
-    
