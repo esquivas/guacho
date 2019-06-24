@@ -24,7 +24,7 @@
 
 !> @brief Cooling module with Dalgarno McCray coronal cooling curve
 !> @details Cooling module with Dalgarno McCray coronal cooling curve
-!> @n The location of the tables is assumed to be in 
+!> @n The location of the tables is assumed to be in
 !! src/DMClib/coolingDMC.tab, it is read by init subroutine
 
 module cooling_dmc
@@ -51,17 +51,17 @@ end subroutine init_cooling_dmc
 
 !> @brief Reads the cooling curve table
 !> @details Reads the Dalgarno McCray cooling courve
-!! the location is assumed in src/DMClib/coolingDMC.tab, 
+!! the location is assumed in src/DMClib/coolingDMC.tab,
 !! it is read by init subroutine
 
 subroutine read_table_dmc()
 
   use parameters, only : workdir, master
   use globals, only : rank
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
   integer :: i, err
   real (kind=8) :: a, b
 
@@ -87,7 +87,7 @@ end subroutine read_table_dmc
 !> @param real [in] T : Temperature K
 
 function cooldmc(T)
-  
+
   real , intent(in) :: T
   integer           :: if1
   real (kind=8)     :: cooldmc, T0, T1, C0, C1
@@ -109,7 +109,7 @@ end function cooldmc
 
 !> @brief High level wrapper to apply cooling with DMC table
 !> @details High level wrapper to apply cooling with DMC table
-!> @n cooling is applied in the entire domain and updates both the 
+!> @n cooling is applied in the entire domain and updates both the
 !! conserved and primitive variables
 
 subroutine coolingdmc()

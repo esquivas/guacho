@@ -62,18 +62,18 @@ subroutine initmain(tprint, itprint)
   !initializes MPI
 
 #ifdef MPIP
-    
+
   if (bc_left   == BC_PERIODIC .and. bc_right == BC_PERIODIC) perx=.true.
   if (bc_bottom == BC_PERIODIC .and. bc_top   == BC_PERIODIC) pery=.true.
   if (bc_out    == BC_PERIODIC .and. bc_in    == BC_PERIODIC) perz=.true.
- 
+
   period(0)=perx
   period(1)=pery
   period(2)=perz
   dims(0)  =MPI_NBX
   dims(1)  =MPI_NBY
   dims(2)  =MPI_NBZ
-  
+
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
@@ -116,12 +116,12 @@ subroutine initmain(tprint, itprint)
   print '(a)' ,'*     running on a single processor       *'
   print '(a)' ,'*******************************************'
 #endif
-  
+
   !   grid spacing
   dx=xmax/nxtot
   dy=ymax/nytot
   dz=zmax/nztot
-  
+
   !   initialize time integration
    currentIteration = 1
   if (.not.iwarm) then
@@ -141,7 +141,7 @@ subroutine initmain(tprint, itprint)
      end if
      tprint=time+dtprint
   end if
-  
+
   !   allocate big arrays in memory
   allocate (     u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (    up(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -181,7 +181,7 @@ subroutine initmain(tprint, itprint)
 
   !  Thermal conduction
   if (th_cond /= TC_OFF) call init_thermal_cond()
-  
+
   !  Diffuse radiation transfer module required random numbers
   if (dif_rad) call init_rand()
 
@@ -204,7 +204,7 @@ subroutine initmain(tprint, itprint)
   !  User input initialization, it is called always,
   !  it has to be there, even if empty
   call init_user_mod()
-  
+
   !   write report of compilation parameters
 
 #ifdef MPIP
@@ -417,11 +417,10 @@ subroutine initflow(itprint)
   use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
-  implicit none
-
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
 
   integer , intent(inout) :: itprint
   integer ::  unitin,err
@@ -449,7 +448,7 @@ subroutine initflow(itprint)
 #endif
     open(unit=unitin,file=file1,status='old', access='stream' )
     !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
- 
+
     !   discard the ascii header
     do while (byte_read /= achar(255) )
       read(unitin) byte_read
@@ -471,7 +470,7 @@ subroutine initflow(itprint)
 
     print'(i3,a,a)',rank,' read: ',trim(file1)
     itprint=itprint+1
-        
+
 #ifdef MPIP
     call mpi_barrier(mpi_comm_world,err)
 #endif
