@@ -37,6 +37,9 @@ MPIP = Y
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
 BFIELD = N
 
+#   Include PIC (Y/N) , (Particles, is this necessary?)
+PIC = Y
+
 #   Include passive scalars (Y/N)
 PASSIVES = N
 
@@ -137,6 +140,10 @@ endif
 
 ifeq ($(BFIELD),Y)
 FLAGS += -DBFIELD
+endif
+
+ifeq ($(PIC),Y)
+FLAGS += -DPIC
 endif
 
 ifeq ($(SILO),Y)
