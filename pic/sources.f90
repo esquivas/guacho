@@ -229,7 +229,7 @@ subroutine source(i,j,k,prim,s)
   real, intent(in)     :: prim(neq)
   real, intent(out)    :: s(neq)
   real :: x, y, z, r
-
+  real :: dv
   ! resets the source terms
   s(:) = 0.
 
@@ -253,7 +253,7 @@ subroutine source(i,j,k,prim,s)
 
 #ifdef PIC
   !  pic
-  if (enable_pic) call divergence_V(i,j,k,x,y,z,r,prim,s)
+  if (enable_pic) call divergence_V(i,j,k,dv)
 #endif
   
 end subroutine source
