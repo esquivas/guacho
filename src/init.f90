@@ -46,7 +46,7 @@ subroutine initmain(tprint, itprint)
   use cooling_chi
   use difrad
   use thermal_cond
-  use field_cd_module
+  use flux_cd_module
   use user_mod
 
   implicit none
@@ -57,29 +57,29 @@ subroutine initmain(tprint, itprint)
   integer :: err, nps
   integer, dimension(0:ndim-1) :: dims
   logical, dimension(0:ndim-1) :: period
-  logical :: perx=.false., pery=.false., perz=.false.  
-#endif  
+  logical :: perx=.false., pery=.false., perz=.false.
+#endif
   !initializes MPI
 
 #ifdef MPIP
-    
+
   if (bc_left   == BC_PERIODIC .and. bc_right == BC_PERIODIC) perx=.true.
   if (bc_bottom == BC_PERIODIC .and. bc_top   == BC_PERIODIC) pery=.true.
   if (bc_out    == BC_PERIODIC .and. bc_in    == BC_PERIODIC) perz=.true.
- 
+
   period(0)=perx
   period(1)=pery
   period(2)=perz
   dims(0)  =MPI_NBX
   dims(1)  =MPI_NBY
   dims(2)  =MPI_NBZ
-  
+
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
   if (nps.ne.np) then
      print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
-     call mpi_finalize(err) 
+     call mpi_finalize(err)
      stop
   endif
 #else
@@ -105,29 +105,29 @@ subroutine initmain(tprint, itprint)
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
   print '(a,i3,a,3i4)', 'processor ', rank                              &
-       ,' ready w/coords',coords(0),coords(1),coords(2)   
+       ,' ready w/coords',coords(0),coords(1),coords(2)
   call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
   call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
   call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
-  call mpi_barrier(mpi_comm_world, err)   
+  call mpi_barrier(mpi_comm_world, err)
   !
 #else
   print '(a)' ,'*******************************************'
   print '(a)' ,'*     running on a single processor       *'
   print '(a)' ,'*******************************************'
 #endif
-  
+
   !   grid spacing
   dx=xmax/nxtot
   dy=ymax/nytot
   dz=zmax/nztot
-  
+
   !   initialize time integration
    currentIteration = 1
   if (.not.iwarm) then
      if(rank.eq.master) then
         print'(a)', 'Starting cold'
-        print'(a)',' ' 
+        print'(a)',' '
      endif
      itprint=0
      time=0.
@@ -137,11 +137,11 @@ subroutine initmain(tprint, itprint)
      time=real(itprint)*dtprint
      if(rank == master) then
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,' at a time ',time*tsc/yr,' yr'
-        print'(a)',' ' 
+        print'(a)',' '
      end if
      tprint=time+dtprint
   end if
-  
+
   !   allocate big arrays in memory
   allocate (     u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
   allocate (    up(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -155,7 +155,7 @@ subroutine initmain(tprint, itprint)
   allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
 
 #ifdef BFIELD
-  if (enable_field_cd) &
+  if (enable_flux_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 #endif
 
@@ -181,7 +181,7 @@ subroutine initmain(tprint, itprint)
 
   !  Thermal conduction
   if (th_cond /= TC_OFF) call init_thermal_cond()
-  
+
   !  Diffuse radiation transfer module required random numbers
   if (dif_rad) call init_rand()
 
@@ -201,10 +201,10 @@ subroutine initmain(tprint, itprint)
     end if
   end if
 
-  !  User input initialization, it is called always, 
+  !  User input initialization, it is called always,
   !  it has to be there, even if empty
   call init_user_mod()
-  
+
   !   write report of compilation parameters
 
 #ifdef MPIP
@@ -212,7 +212,8 @@ subroutine initmain(tprint, itprint)
   if(rank.eq.master) then
     print'(a)',''
 #endif
-    print'(a,i0,a)', 'Running with ',neq,' total equations' 
+    print'(a,i0,a)', 'Running with ',neq,' total equations'
+    print'(a,i0,a,i0,a)', '(',neqdyn,' dynamical, and ',npas,' passives)'
     print'(a,i0,a,i0,a,i0)','Resolution is (nxtot, nytot, nztot) ', nxtot,' ',nytot,' ',nztot
     print'(a)',''
 
@@ -268,8 +269,8 @@ subroutine initmain(tprint, itprint)
     stop
   end if
 
-  if (enable_field_cd) then
-    print'(a)', 'div(B) constrained with field-CD method'
+  if (enable_flux_cd) then
+    print'(a)', 'div(B) constrained with flux-CD method'
     print'(a)', ''
   end if
 
@@ -416,17 +417,16 @@ subroutine initflow(itprint)
   use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
-  implicit none
-
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
 
   integer , intent(inout) :: itprint
   integer ::  unitin,err
   character (len=128) :: file1
   character           :: byte_read
-  character, parameter  :: lf = char(10) 
+  character, parameter  :: lf = char(10)
   integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
   real :: dxp, dyp, dzp, scal(3), cvp
 
@@ -448,7 +448,7 @@ subroutine initflow(itprint)
 #endif
     open(unit=unitin,file=file1,status='old', access='stream' )
     !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
- 
+
     !   discard the ascii header
     do while (byte_read /= achar(255) )
       read(unitin) byte_read
@@ -470,7 +470,7 @@ subroutine initflow(itprint)
 
     print'(i3,a,a)',rank,' read: ',trim(file1)
     itprint=itprint+1
-        
+
 #ifdef MPIP
     call mpi_barrier(mpi_comm_world,err)
 #endif
@@ -484,8 +484,3 @@ end subroutine initflow
 end module init
 
 !====================================================================
-
-
-
-
-
