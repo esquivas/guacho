@@ -54,6 +54,7 @@ contains
           !  predictor step
           Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
+       !   n_dist(i_mp) = n_dist(i_mp)*
         else
 
           !  particle has left domain, deactivate it
