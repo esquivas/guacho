@@ -65,13 +65,13 @@ implicit none
   dims(0)  =MPI_NBX
   dims(1)  =MPI_NBY
   dims(2)  =MPI_NBZ
-  
+
   call mpi_init (err)
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
   if (nps.ne.np) then
      print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
-     call mpi_finalize(err) 
+     call mpi_finalize(err)
      stop
   endif
 #else
@@ -98,11 +98,11 @@ implicit none
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
   print '(a,i3,a,3i4)', 'processor ', rank                              &
-       ,' ready w/coords',coords(0),coords(1),coords(2)   
+       ,' ready w/coords',coords(0),coords(1),coords(2)
   call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
   call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
   call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
-  call mpi_barrier(mpi_comm_world, err)   
+  call mpi_barrier(mpi_comm_world, err)
   !
 #else
   print '(a)' ,'*******************************************'
@@ -141,7 +141,7 @@ subroutine read_data(u,itprint,filepath)
   character (len=128), intent(in) :: filepath
   integer :: unitin, ip, err
   character (len=128) file1
-  
+
   take_turns : do ip=0,np-1
     if (rank == ip) then
 
@@ -150,7 +150,7 @@ subroutine read_data(u,itprint,filepath)
              trim(filepath)//'/BIN/points',rank,'.',itprint,'.bin'
         unitin=rank+10
 #else
-  
+
   print'(i3,a,a)',rank,' wants to read file:',trim(file1)
 
          write(file1,'(a,i3.3,a)')         &
@@ -179,9 +179,9 @@ end subroutine read_data
 !> @param integer [in] i : cell index in the x direction
 !> @param integer [in] j : cell index in the y direction
 !> @param integer [in] k : cell index in the z direction
-!> @param real    [in] x : x position in the grid 
-!> @param real    [in] y : y position in the grid 
-!> @param real    [in] z : z position in the grid 
+!> @param real    [in] x : x position in the grid
+!> @param real    [in] y : y position in the grid
+!> @param real    [in] z : z position in the grid
 
   subroutine getXYZ(i,j,k,x,y,z)
 
@@ -190,11 +190,11 @@ end subroutine read_data
     implicit none
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
- 
+
     x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
     y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
     z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
-        
+
   end subroutine getXYZ
 
 !=======================================================================
@@ -271,7 +271,7 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @details Fills the target map of one MPI block
 !> @param integer [in] nxmap : Number of X cells in target
 !> @param integer [in] nymap : Number of Y cells in target
-!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) : 
+!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
 !! conserved variables
 !> @param real [out] map(nxmap,mymap) : Target map
 !> @param real [in] dxT : target pixel width
@@ -299,14 +299,14 @@ subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
   real :: T, prim(neq),T4, erec, omega, qha, ecoll, halpha
   real, parameter ::  c0=0.1934, c1=-4.698E-7, c2=8.352E-11,c3=-5.576E-16, &
                       en=3.028E-12, enk=140336., branch=0.0858
-  
+
   do k=1,nz
      do j=1,ny
         do i=1,nx
 
           !  obtain original position
           call getXYZ(i,j,k, x,y,z)
-          
+
           !  do the rotation of the coordinates
           call rotation_x(theta_x,x,y,z,xn,yn,zn)
           call rotation_y(theta_y,xn,yn,zn,x,y,z)
@@ -372,9 +372,9 @@ subroutine  write_HA(fileout,nxmap,nymap,map)
 
   write (unitout) map(:,:)
   close(unitout)
-  
+
   print'(a,a)'," wrote file:",trim(fileout)
-  
+
 end subroutine write_HA
 
 !=======================================================================
@@ -408,9 +408,9 @@ subroutine  write_RG(fileout,nxmap,nymap,map)
 
   write (unitout,'(10z8.8)') mapsp
   close(unitout)
-  
+
   print'(a,a)'," wrote file:",trim(fileout)
-  
+
 end subroutine write_RG
 
 !=======================================================================
@@ -431,10 +431,11 @@ program h_alpha_proj
   use parameters, only : xmax,master, mpi_real_kind
   use globals, only : u, dx, dy, rank, comm3d
   use h_alpha_utilities
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
+
   character (len=128) :: pathin, fileout, fileout_rg
   character :: rg_flag
   integer :: err
@@ -492,7 +493,7 @@ program h_alpha_proj
 
   !  read u from file
   call read_data(u,itprint,pathin)
-  
+
   !  resets map
   map(:,:)=0.
   map1(:,:)=0.
@@ -503,14 +504,14 @@ program h_alpha_proj
                                   ,theta_y*180./pi,'° around Y, '&
                                   ,theta_z*180./pi,'° around Z, '
   end if
-  
+
   !  add info to the map
   call fill_map(nxmap,nymap,u,map,dxT,dyT, theta_x, theta_y, theta_z)
   !  sum all the partial sums
   call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master, comm3d, err)
-  
+
   !  write result
-  if (rank == master) then 
+  if (rank == master) then
     call write_HA(fileout,nxmap,nymap,map1)
     if (rg_flag == 'Y' .or. rg_flag =='y') &
         call write_RG(fileout_rg,nxmap,nymap,map1)
@@ -527,4 +528,3 @@ program h_alpha_proj
 end program h_alpha_proj
 
 !=======================================================================
-

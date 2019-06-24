@@ -43,11 +43,11 @@ contains
 
 subroutine boundaryI()
 
+#ifdef MPIP
+  use mpi
+#endif
   implicit none
 
-#ifdef MPIP
-  include "mpif.h"
-#endif
   integer, parameter :: nxm1=nx-1 ,nxp1=nx+1
   integer, parameter :: nym1=ny-1, nyp1=ny+1
   integer, parameter :: nzm1=nz-1, nzp1=nz+1
@@ -255,11 +255,12 @@ end subroutine boundaryI
 
 subroutine boundaryII()
 
+#ifdef MPIP
+  use mpi
+#endif
+
   implicit none
 
-#ifdef MPIP
-  include "mpif.h"
-#endif
   integer, parameter :: nxmg=nx-nghost+1 ,nxp=nx+1
   integer, parameter :: nymg=ny-nghost+1, nyp=ny+1
   integer, parameter :: nzmg=nz-nghost+1, nzp=nz+1

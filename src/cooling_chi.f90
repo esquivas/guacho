@@ -57,10 +57,10 @@ subroutine read_table_chianti()
 
   use parameters, only : workdir, master
   use globals, only : rank
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
   integer :: i, err
   real (kind=8) :: a, b
 

@@ -425,11 +425,10 @@ subroutine initflow(itprint)
   use parameters, only : outputpath, iwarm !, itprint0
   use globals, only : u, rank
   use user_mod, only : initial_conditions
-  implicit none
-
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
 
   integer , intent(inout) :: itprint
   integer ::  unitin,err
