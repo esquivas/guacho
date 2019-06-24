@@ -190,12 +190,12 @@ subroutine tstep()
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
   call boundaryII(up,neutral=.false.)
-  call calcprim(up,primit)
+  call calcprim(up,primit,temp)
 
 #ifdef TWOFLUID
   if (twofluid) then
     call boundaryII(upn, neutral=.true.)
-    call calcprim(upn,primitn)
+    call calcprim(upn,primitn,tempn)
   end if
 #endif
 
@@ -253,7 +253,7 @@ subroutine tstep()
   if (cooling == COOL_H) then
     call coolingh()
     !  update the primitives with u
-    call calcprim(u, primit)
+    call calcprim(u, primit,temp)
   end if
 
   ! DMC cooling (the primitives are updated in the cooling routine)
@@ -269,7 +269,7 @@ subroutine tstep()
   call boundaryI(u,neutral=.false.)
 
   !  update primitives on the boundaries
-  call calcprim(u,primit,only_ghost=.true.)
+  call calcprim(u,primit,temp,only_ghost=.true.)
 
 #ifdef TWOFLUID
   if(twofluid) then
@@ -277,7 +277,7 @@ subroutine tstep()
     call boundaryI(un, neutral=.true.)
 
     !  update primitives on the boundaries
-    call calcprim(un,primitn,only_ghost=.true.)
+    call calcprim(un,primitn,tempn,only_ghost=.true.)
   end if
 #endif
 

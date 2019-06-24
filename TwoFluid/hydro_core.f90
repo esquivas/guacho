@@ -243,16 +243,17 @@ end subroutine u2primSplitAll
 !> @param logical [in] only_ghost : if set to true then updates the primitives
 !! only on the ghost cells, it defaults to false (the entire domain is updated)
 
-subroutine calcprim(u,primit, only_ghost)
+subroutine calcprim(u,primit,temp, only_ghost)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
                          nx, ny, nz, riemann_solver
   use constants
 
-  use globals, only : Temp, primit0
+  use globals, only : primit0
   implicit none
   real,intent(in), dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: u
   real,intent(out),dimension(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: primit
+  real,intent(out),dimension(nxmin:nxmax,nymin:nymax,nzmin:nzmax) :: temp
   logical, optional, intent(in) :: only_ghost
   integer :: i,j,k
 

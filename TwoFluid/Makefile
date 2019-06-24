@@ -10,8 +10,8 @@ VPATH = . : ../src
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
-#COMPILER= gfortran
-COMPILER= ifort
+COMPILER= gfortran
+#COMPILER= ifort
 
 #   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
@@ -22,17 +22,17 @@ COMPILER= ifort
 
 #   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
-FLAGS= -O3 -cpp -mcmodel=large # -i_dynamic
+#FLAGS= -O3 -cpp -mcmodel=large # -i_dynamic
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-#FLAGS = -cpp -O3
+FLAGS = -cpp -O3
 # For DEBUG, suggestions:
-#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow #\
-#        -fbounds-check -fimplicit-none -fstack-protector-all
+FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
+        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -76,18 +76,18 @@ parameters.o \
 globals.o
 
 OBJECTS_MAIN=\
-user_mod.o \
-two_fluid.o \
 network.o \
 field_cd_module.o \
 hydro_core.o \
+difrad.o \
 linear_system.o \
 chemistry.o \
-difrad.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
 thermal_cond.o \
+two_fluid.o \
+user_mod.o \
 init.o \
 Out_Silo_Module.o \
 Out_VTK_Module.o \

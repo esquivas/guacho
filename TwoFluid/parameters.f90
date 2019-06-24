@@ -135,14 +135,14 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=512      !< Total grid size in X
-  integer, parameter :: nytot=512      !< Total grid size in Y
-  integer, parameter :: nztot=512      !< Total grid size in Z
+  integer, parameter :: nxtot=64      !< Total grid size in X
+  integer, parameter :: nytot=64      !< Total grid size in Y
+  integer, parameter :: nztot=64      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBX=1     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ

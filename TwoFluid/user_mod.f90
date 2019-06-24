@@ -265,46 +265,51 @@ subroutine impose_user_bc(u,order,neutral)
               !u(2:8,i,j,k) = 0.
 
               !   reflect x
-              if (flagP(i-1,j,k).and.(.not.flagP(i+1,j,k)).and.(i>-1)) then
-                u(:,i  ,j,k) = u(:,i+1,j,k)
-                u(2,i  ,j,k) =-u(2,i+1,j,k)
-                !u(1,i-1,j,k) = u(1,i+2,j,k)
-                !u(2,i-1,j,k) =-u(2,i+2,j,k)
-              endif
-              if (flagP(i+1,j,k).and.(.not.flagP(i-1,j,k)).and.(i<nx+2)) then
-                u(:,i  ,j,k) = u(:,i-1,j,k)
-                u(2,i  ,j,k) =-u(2,i-1,j,k)
-                !u(1,i+1,j,k) = u(1,i-2,j,k)
-                !u(2,i+1,j,k) =-u(2,i-2,j,k)
-              endif
-
-              !   reflect y
-              if (flagP(i,j-1,k).and.(.not.flagP(i,j+1,k)).and.(j>-1)) then
-                u(:,i,j  ,k) = u(:,i,j+1,k)
-                u(3,i,j  ,k) =-u(3,i,j+1,k)
-                !u(1,i,j-1,k) = u(1,i,j+2,k)
-                !u(3,i,j-1,k) =-u(3,i,j+2,k)
-              endif
-              if (flagP(i,j+1,k).and.(.not.flagP(i,j-1,k)).and.(j<ny+2)) then
-                u(:,i,j  ,k) = u(:,i,j-1,k)
-                u(3,i,j  ,k) =-u(3,i,j-1,k)
-                !u(1,i,j+1,k) = u(1,i,j-2,k)
-                !u(3,i,j+1,k) =-u(3,i,j-2,k)
-              endif
-
-              !   reflect z
-              if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>-1)) then
-                u(:,i,j,k  ) = u(:,i,j,k+1)
-                u(4,i,j,k  ) =-u(4,i,j,k+1)
-                !u(1,i,j,k-1) = u(1,i,j,k+2)
-                !u(4,i,j,k-1) =-u(4,i,j,k+2)
-              endif
-              if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+2)) then
-                u(:,i,j,k  ) = u(:,i,j,k-1)
-                u(4,i,j,k  ) =-u(4,i,j,k-1)
-                !u(1,i,j,k+1) = u(1,i,j,k-2)
-                !u(4,i,j,k+1) =-u(4,i,j,k-2)
-              endif
+     !         if (flagP(i-1,j,k).and.(.not.flagP(i+1,j,k)).and.(i>-1)) then
+     !           u(:,i  ,j,k) = u(:,i+1,j,k)
+     !           u(2,i  ,j,k) =-u(2,i+1,j,k)
+     !           !u(1,i-1,j,k) = u(1,i+2,j,k)
+     !           !u(2,i-1,j,k) =-u(2,i+2,j,k)
+     !         endif
+     !         if (flagP(i+1,j,k).and.(.not.flagP(i-1,j,k)).and.(i<nx+2)) then
+     !           u(:,i  ,j,k) = u(:,i-1,j,k)
+     !           u(2,i  ,j,k) =-u(2,i-1,j,k)
+     !           !u(1,i+1,j,k) = u(1,i-2,j,k)
+     !           !u(2,i+1,j,k) =-u(2,i-2,j,k)
+     !         endif
+     !
+     !         !   reflect y
+     !         !   print*,'i',i,'j',j,'k',k, i,'j+1',j+1,k
+     !            !stop
+     !         !ALEEEEE, NO ENTIENDO PORQUE SALTA AQUI?????
+     !         if (flagP(i,j-1,k).and.(.not.flagP(i,j+1,k)).and.(j>-1)) then
+     !
+!    !            u(:,i,j  ,k) = u(:,i,j+1,k)
+!    !            u(3,i,j  ,k) =-u(3,i,j+1,k)
+     !           !u(1,i,j-1,k) = u(1,i,j+2,k)
+     !           !u(3,i,j-1,k) =-u(3,i,j+2,k)
+     !         endif
+                            !ALEEEEE, NO ENTIENDO PORQUE SALTA AQUI????? PORQUE ESTE SI ANDA?
+     !         if (flagP(i,j+1,k).and.(.not.flagP(i,j-1,k)).and.(j<ny+2)) then
+     !           u(:,i,j  ,k) = u(:,i,j-1,k)
+     !           u(3,i,j  ,k) =-u(3,i,j-1,k)
+     !           !u(1,i,j+1,k) = u(1,i,j-2,k)
+     !           !u(3,i,j+1,k) =-u(3,i,j-2,k)
+     !         endif
+     !
+     !         !   reflect z
+     !         if (flagP(i,j,k-1).and.(.not.flagP(i,j,k+1)).and.(k>-1)) then
+     !   !        u(:,i,j,k  ) = u(:,i,j,k+1)
+     !   !        u(4,i,j,k  ) =-u(4,i,j,k+1)
+     !   !        !u(1,i,j,k-1) = u(1,i,j,k+2)
+     !   !        !u(4,i,j,k-1) =-u(4,i,j,k+2)
+     !         endif
+     !         if (flagP(i,j,k+1).and.(.not.flagP(i,j,k-1)).and.(k<nz+2)) then
+     !   !        u(:,i,j,k  ) = u(:,i,j,k-1)
+     !   !        u(4,i,j,k  ) =-u(4,i,j,k-1)
+     !   !        !u(1,i,j,k+1) = u(1,i,j,k-2)
+     !   !        !u(4,i,j,k+1) =-u(4,i,j,k-2)
+     !         endif
               !u(5,i,j,k) = 0.5*(u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) + &
               !     cv*(u(1,i,j,k)/0.63)*Tsw     +  &
               !     0.5*bsw**2 + cv*(u(1,i,j,k)/0.63)*Tsw
