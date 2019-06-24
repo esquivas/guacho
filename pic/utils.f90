@@ -42,7 +42,7 @@ contains
     use parameters, only : nx, ny, nz
     use globals,    only : coords, dx, dy, dz
     implicit none
-    logical  isInDomain
+    logical          :: isInDomain
     real, intent(in) :: pos(3)
     integer          :: ind(3)
 
@@ -63,6 +63,37 @@ contains
     end if
 
   end function isInDomain
+
+    !================================================================
+  ! @brief In Which domain function
+  ! @details Determines if the rank that has the position of a given point,
+  !> return -1 if point lies outside domain
+  ! @param real [in] : 3D position with respect to a cornet of the domain
+  function inWhichDomain(pos)
+
+    use parameters, only : nx, ny, nz
+    use globals,    only : dx, dy, dz, comm3d
+#ifdef MPIP
+    use mpi
+#endif
+    implicit none
+    integer          :: inWhichDomain
+    real, intent(in) :: pos(3)
+    integer          :: ind(0:2),err
+
+    ! get coord of rank
+    ind(0) = int(pos(1)/dx)/nx
+    ind(1) = int(pos(2)/dy)/ny
+    ind(2) = int(pos(3)/dz)/nz
+
+#ifdef MPIP
+    call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+#else
+     if(.not.isInDomain(pos)) inWhichDomain = -1
+#endif
+
+  end function inWhichDomain
+
 
 end module utilities
 
