@@ -21,11 +21,21 @@ contains
   !================================================================
   subroutine PICpredictor
 
-    use globals,   only : primit, dt_CFL
-    use utilities, only : isInDomain
+    use globals,   only : primit, dt_CFL, rank, dx, dy, dz,comm3d
+    use parameters
+    use utilities, only : isInDomain, inWhichDomain
     implicit none
-    integer :: i_mp, i, j, k, l, ind(3)
-    real    :: weights(8)
+    integer :: i_mp, i, j, k, l, ind(3), dest, nLocSend, &
+               sendLoc(0:np-1), sendList(0:np-1,0:np-1), &
+               dataLoc(N_MP), iS, iR
+    real    :: weights(8), SingleRec(6)
+    integer:: status(MPI_STATUS_SIZE), err
+
+    ! initialize send and recv lists
+    dataLoc(:)    =  0
+    sendLoc(:)    =  0
+    sendlist(:,:) =  0
+    nLocSend      =  0
 
     do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
@@ -54,15 +64,52 @@ contains
           !  predictor step
           Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
-        else
+        end if
 
-          !  particle has left domain, deactivate it
-          partID(i_mp) = 0
-          print*, 'particle', i_mp, ' is no longer with us pred'
-
+        !  check if particle is leaving the domain
+        dest = inWhichDomain(Q_MP1(i_mp,1:3))
+        if( dest /= rank ) then
+          !  count for MPI exchange
+          sendLoc(dest) = sendLoc(dest) + 1
+          nLocSend      = nLocSend      + 1
+          dataLoc(nLocSend) = i_mp
+          print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp), ' is going to ',DEST
         end if
 
       end if
+    end do
+
+    !   consolidate list to have info of all send/receive operations
+    call mpi_allgather(sendLoc(:),  np, mpi_integer, &
+                       sendList, np, mpi_integer, comm3d,err)
+
+    !  exchange particles
+    do iS=0,np-1
+      do iR=0,np-1
+
+        if(sendList(iR,iS) /= 0) then
+          if(iS == rank) then
+            print'(i0,a,i0,a,i0)', rank,'-->', IR, ':',sendList(iR,iS)
+            do i=1,nLocSend
+              print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
+              call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
+                            partID(dataLoc(i)), comm3d,status,err)
+            end do
+
+          endif
+          if(iR == rank) then
+            print'(i0,a,i0,a,i0)', rank,'<--', IS, ':',sendList(iR,iS)
+            do i=1,sendList(iR,iS)
+              print*,'<<<',rank,' will recv here from ',IS
+
+              call mpi_recv(SingleRec(1:6), 6, mpi_real_kind, IS, mpi_any_tag, &
+                            comm3d, status, err)
+              print*,'received successfuly', status(MPI_TAG)
+
+            end do
+          end if
+        end if
+      end do
     end do
 
   end subroutine PICpredictor
@@ -108,7 +155,7 @@ contains
         else
 
           !  particle has left domain, deactivate it
-          print*, rank,i_mp,'particle', partID(i_mp), ' is no longer with us corr'
+          !print'(a,i3,a,i4,a)','---', rank,' particle ', partID(i_mp), ' is no longer with us corr'
           partID(i_mp) = 0
           n_activeMP   = n_activeMP - 1
 
