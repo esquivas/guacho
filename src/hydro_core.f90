@@ -624,10 +624,10 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
   use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
   use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd, riemann_solver
   use globals, only : primit, dx, dy, dz, primit0
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
   integer, intent(in)  :: current_iter, n_iter
   real,    intent(in)  :: current_time, tprint
   real,    intent(out) :: dt
