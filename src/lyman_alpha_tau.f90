@@ -441,11 +441,11 @@ program lyman_alpha_tau
                          outputpath, nxtot, nytot
   use globals, only : u, rank, comm3d
   use lyman_alpha_utilities
-
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
+
   character (len=128) :: filepath
   integer :: err
   integer :: itprint
