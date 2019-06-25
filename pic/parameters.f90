@@ -133,6 +133,11 @@ module parameters
   logical, parameter :: enable_pic = .true.
   !> Max number of macro particles followed by each processor
   integer, parameter :: N_MP = 256
+  !>  Enable followind SED of MP
+  logical, parameter :: pic_distF  = .true.
+  !>  Number of bins for SED
+  integer, parameter :: NBinsSEDMP = 100
+
 
 #ifdef PASSIVES
   integer, parameter :: npas=0        !< num. of passive scalars
