@@ -1,6 +1,7 @@
 module pic_module
-  use parameters, only : N_MP
-  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP, partID
+  use parameters, only : N_MP, pic_distF, NBinsSEDMP
+  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP, partID, &
+                         divV, MP_SED
   implicit none
 
 contains
@@ -8,13 +9,21 @@ contains
   !================================================================
   ! @brief initialization of module
   subroutine init_pic()
-
+    use parameters, only : nx, ny, nz
     implicit none
 
-    allocate( Q_MP0(N_MP,6) )
+    if(pic_distF) then
+      allocate( Q_MP0(N_MP,8) )
+    else
+      allocate( Q_MP0(N_MP,6) )
+    end if
     allocate( Q_MP1(N_MP,3) )
     allocate( partID   (N_MP) )
     allocate( partOwner(N_MP) )
+    if (pic_distF) then
+      allocate( divV(0:nx+1,0:ny+1,0:nz+1) )
+      allocate( MP_SED(N_MP, NBinsSEDMP) )
+    endif
 
   end subroutine init_pic
 
