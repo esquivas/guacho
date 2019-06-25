@@ -2,6 +2,7 @@ BIN
 *.mod
 *.o
 Guacho
+guacho
 nfs*
 *.pyc
 .DS_store
