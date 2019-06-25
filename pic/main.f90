@@ -52,6 +52,7 @@ program guacho
   use constants, only : day
   use parameters
   use globals
+  use utilities
   use init
   use pic_module
   use hydro_core, only : calcprim, get_timestep
@@ -72,7 +73,7 @@ program guacho
 
   !   initialize u's
   call initflow(itprint)
-  
+
   !   impose  boundaries (needed if imposing special BCs)
   call boundaryI()
 
@@ -104,7 +105,10 @@ program guacho
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
-    if(enable_pic) call PICpredictor()
+    if(enable_pic) then
+      if (pic_distF) call divergence_V()
+      call PICpredictor()
+    end if
 
     !   advances the HD/MHD solution
     call tstep()
