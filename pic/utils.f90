@@ -112,9 +112,9 @@ contains
     real, dimension(1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
     real, dimension(0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
     real, dimension(0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
-    integer, parameter :: bxsize=3*(ny+2)*(nz+2)
-    integer, parameter :: bysize=3*(nx+2)*(nz+2)
-    integer, parameter :: bzsize=3*(nx+2)*(ny+2)
+    integer, parameter :: bxsize=(ny+2)*(nz+2)
+    integer, parameter :: bysize=(nx+2)*(nz+2)
+    integer, parameter :: bzsize=(nx+2)*(ny+2)
 
     do k =1,nz
       do j =1,ny
@@ -140,29 +140,29 @@ contains
   sendi(:,:,1)=divV(0:nxp1,0:nyp1,nz    )
   sendo(:,:,1)=divV(0:nxp1,0:nyp1,1     )
 
-!  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right, 0,           &
-!                   recvl, bxsize, mpi_real_kind, left,   0,           &
-!                   comm3d, status , err)
-!
-!  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top,   0,           &
-!                   recvb, bysize, mpi_real_kind, bottom ,0,           &
-!                   comm3d, status , err)
-!
-!  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in,    0,           &
-!                   recvo, bzsize, mpi_real_kind, out,    0,           &
-!                   comm3d, status , err)
-!
-!  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left,  0,           &
-!                   recvr, bxsize, mpi_real_kind, right,  0,           &
-!                   comm3d, status , err)
-!
-!  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,           &
-!                   recvt, bysize, mpi_real_kind, top,     0,           &
-!                   comm3d, status , err)
-!
-!  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out,    0,           &
-!                   recvi, bzsize, mpi_real_kind, in,      0,           &
-!                   comm3d, status , err)
+  call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right, 0,           &
+                   recvl, bxsize, mpi_real_kind, left,   0,           &
+                   comm3d, status , err)
+
+  call mpi_sendrecv(sendt, bysize, mpi_real_kind, top,   0,           &
+                   recvb, bysize, mpi_real_kind, bottom ,0,           &
+                   comm3d, status , err)
+
+  call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in,    0,           &
+                   recvo, bzsize, mpi_real_kind, out,    0,           &
+                   comm3d, status , err)
+
+  call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left,  0,           &
+                   recvr, bxsize, mpi_real_kind, right,  0,           &
+                   comm3d, status , err)
+
+  call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,           &
+                   recvt, bysize, mpi_real_kind, top,     0,           &
+                   comm3d, status , err)
+
+  call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out,    0,           &
+                   recvi, bzsize, mpi_real_kind, in,      0,           &
+                   comm3d, status , err)
 
   if (left  .ne. -1) divV(0,     0:nyp1,0:nzp1)=recvl(1,:,:)
   if (right .ne. -1) divV(nxp1,  0:nyp1,0:nzp1)=recvr(1,:,:)
