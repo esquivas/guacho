@@ -282,7 +282,7 @@ def readpic(nout,path='', base='pic'):
     vx = np.zeros(nproc*n_mp)
     vy = np.zeros(nproc*n_mp)
     vz = np.zeros(nproc*n_mp)
-    id = np.zeros(nproc*n_mp, dtype = 'i4')
+    id = np.zeros(nproc*n_mp, dtype = 'i4')-1
     f.close()
     #  now reopen files one by one and read data onto the arrays
     for ip in range(nproc):
@@ -292,8 +292,12 @@ def readpic(nout,path='', base='pic'):
         for i_mp in range(n_activeMP):
             ii = struct.unpack('1i',f.read(4))[0]
             ii -= 1
-            id[i_mp] = ii
+            id[ii] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
         f.close()
-    return id,x, y, z, vx, vy, vz
+        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+        #  trim
+        n_mp = np.size(np.where(array[:,0] < 0 ))
+        array = array[n_mp::,:]
+    return array
