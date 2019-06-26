@@ -271,7 +271,7 @@ def minmax(q):
 '''
    reads tracer particles
 '''
-def readpic(nout,path='', base='pic'):
+def readpic(nout,path='', base='pic',trim=True):
     #  read first output to determine N_MP and NP
     file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
     f = open(file_in,'rb')
@@ -297,7 +297,8 @@ def readpic(nout,path='', base='pic'):
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
         f.close()
         array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
-        #  trim
-        n_mp = np.size(np.where(array[:,0] < 0 ))
-        array = array[n_mp::,:]
+        if (trim) :
+            #  trim
+            n_mp = np.size(np.where(array[:,0] < 0 ))
+            array = array[n_mp::,:]
     return array
