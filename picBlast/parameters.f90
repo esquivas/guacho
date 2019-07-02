@@ -65,6 +65,8 @@ module parameters
   logical, parameter :: enable_flux_cd = .false.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
+  !>  Enable writting of divV to disk
+  logical, parameter :: dump_divv = .true.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
