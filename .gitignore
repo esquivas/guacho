@@ -8,3 +8,6 @@ nfs*
 .DS_store
 Icon*
 *~
+#*
+.#*
+\#*
