@@ -35,7 +35,7 @@ FLAGS = -cpp -Og -ggdb -pedantic -Wall -Waliasing -fbacktrace \
 MPIP = Y
 
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
-BFIELD = N
+BFIELD = Y
 
 #   Include PIC (Y/N) , (Particles, is this necessary?)
 PIC = Y
