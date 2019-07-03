@@ -22,7 +22,7 @@ contains
     allocate( partOwner(N_MP) )
     if (pic_distF) then
       allocate( divV(0:nx+1,0:ny+1,0:nz+1) )
-      allocate( MP_SED(N_MP, NBinsSEDMP) )
+      allocate( MP_SED(2,NBinsSEDMP,N_MP) )
     endif
 
   end subroutine init_pic
@@ -64,7 +64,8 @@ contains
   !================================================================
   subroutine PICpredictor
 
-    use globals,   only : primit, dt_CFL, rank, dx, dy, dz,comm3d
+    use globals,   only : primit, dt_CFL, rank, dx, dy, dz,comm3d, &
+                          divV
     use parameters
     use utilities, only : isInDomain, inWhichDomain
     implicit none
@@ -73,7 +74,7 @@ contains
                dataLoc(N_MP), iS, iR
     real    :: weights(8), SingleRec(6)
     integer:: status(MPI_STATUS_SIZE), err
-
+    real :: bx,by,bz
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -92,13 +93,22 @@ contains
 
           !  Interpolate the velocity field to particle position
           l=1
-          Q_MP0(i_mp,4:6) = 0
+          Q_MP0(i_mp,4:8) = 0
+          bx = 0. ; by = 0. ; bz = 0.
           do k= ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
               do i=ind(1),ind(1)+1
                 Q_MP0(i_mp,4) = Q_MP0(i_mp,4) + primit(2,i,j,k)*weights(l)
                 Q_MP0(i_mp,5) = Q_MP0(i_mp,5) + primit(3,i,j,k)*weights(l)
                 Q_MP0(i_mp,6) = Q_MP0(i_mp,6) + primit(4,i,j,k)*weights(l)
+                if(pic_distF) then
+                  Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + divV(i,j,k)*weights(l)/3.
+
+                  bx = bx + primit(6,i,j,k)*weights(l)
+                  by = by + primit(7,i,j,k)*weights(l)
+                  bz = bz + primit(8,i,j,k)*weights(l)
+                  Q_MP0(i_mp,8) = bx**2 + by**2 + bz**2
+                endif
                 l = l + 1
               end do
             end do
@@ -168,7 +178,7 @@ contains
   !================================================================
   subroutine PICcorrector
 
-    use globals,   only : primit, dt_CFL, rank, comm3d
+    use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED
     use parameters
     use utilities, only : inWhichDomain
     implicit none
@@ -176,7 +186,8 @@ contains
     real    :: weights(8), vel1(3), SingleRec(3)
     integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1), &
                sendList(0:np-1,0:np-1)
-    integer :: status(MPI_STATUS_SIZE), err, iR, iS
+    integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
+    real    :: adist, cdist, bx, by, bz
 
     ! initialize send and recv lists
     dataLoc(:)    =  0
@@ -194,12 +205,26 @@ contains
         !  to the velocity from the corrector step
         l=1
         vel1(:) = 0
+        adist = 0.
+        cdist = 0.
+        bx = 0.  ; by = 0.;  bz = 0.
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
               vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
               vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
               vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
+              if (pic_distF) then
+                Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + divV(i,j,k)*weights(l)/3.
+
+                bx = bx + primit(6,i,j,k)*weights(l)
+                by = by + primit(7,i,j,k)*weights(l)
+                bz = bz + primit(8,i,j,k)*weights(l)
+                Q_MP0(i_mp,8) = bx**2 + by**2 + bz**2
+
+                adist=adist + divV(i,j,k)*weights(l)/3.
+                cdist=cdist! + divV(i,j,k)*weights(l)/3.
+              endif
               l = l + 1
             end do
           end do
@@ -208,6 +233,17 @@ contains
         !  corrector step
         Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
         + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
+
+        if (pic_distF) then
+          adist=0.5*dt_CFL*(adist+Q_MP0(i_mp,7))
+          do ib=1,NBinsSEDMP
+            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp(adist)*&
+            (1.+cdist*MP_SED(1,ib,i_mp))**2
+            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
+            (1.+cdist*MP_SED(1,ib,i_mp))
+
+          end do
+        endif
 
         !  check if particle is leaving the domain
         dest = inWhichDomain( Q_MP0(i_mp,1:3) )
@@ -246,6 +282,21 @@ contains
                             comm3d, status, err)
               !  add current particle in list and data in new processor
               call addMP( status(MPI_TAG), 3, SingleRec(1:3), i_mp )
+
+              !  corrector step
+              Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
+              + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
+
+              if (pic_distF) then
+                adist=0.5*dt_CFL*(adist+Q_MP0(i_mp,7))
+                do ib=1,NBinsSEDMP
+                  MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp(adist)*&
+                  (1.+cdist*MP_SED(1,ib,i_mp))**2
+                  MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
+                  (1.+cdist*MP_SED(1,ib,i_mp))
+
+                end do
+              endif
 
             end do
           end if
@@ -311,7 +362,7 @@ contains
   !> all the positions and velocities ( in the default real precision)
   subroutine write_pic(itprint)
 
-    use parameters, only : outputpath, np
+    use parameters, only : outputpath, np, pic_distF
     use globals,    only : rank
     implicit none
     integer, intent(in) :: itprint
@@ -335,8 +386,11 @@ contains
   end do
 
   !  write how many particles are in rank domain
-  write(unitout) np, N_MP, i_active !n_activeMP
-
+  if (.not.pic_distF) then
+    write(unitout) np, N_MP, i_active, 0  !n_activeMP
+  else
+    write(unitout) np, N_MP, i_active, NBinsSEDMP
+  end if
 
   !  loop over particles owned by processor and write the active ones
   do i_mp=1,N_MP
@@ -344,7 +398,7 @@ contains
     if (partID(i_mp) /=0) then
       write(unitout) partID(i_mp)
       write(unitout) Q_MP0(i_mp,1:6)
-
+      if(pic_distF) write(unitout) MP_SED(1:2,1:100,i_mp)
     endif
   end do
 
