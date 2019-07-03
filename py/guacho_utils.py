@@ -275,7 +275,7 @@ def readpic(nout,path='', base='pic'):
     #  read first output to determine N_MP and NP
     file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
     f = open(file_in,'rb')
-    nproc, n_mp = struct.unpack('2i',f.read(8))
+    nproc, n_mp, n_act, n_bins = struct.unpack('4i',f.read(16))
     x  = np.zeros(nproc*n_mp)
     y  = np.zeros(nproc*n_mp)
     z  = np.zeros(nproc*n_mp)
@@ -283,17 +283,23 @@ def readpic(nout,path='', base='pic'):
     vy = np.zeros(nproc*n_mp)
     vz = np.zeros(nproc*n_mp)
     id = np.zeros(nproc*n_mp, dtype = 'i4')
+    if (n_bins > 0) :
+      SED = np.zeros(shape=(nproc*n_mp,n_bins,2))
     f.close()
     #  now reopen files one by one and read data onto the arrays
     for ip in range(nproc):
         file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
         f = open(file_in,'rb')
-        nproc,n_mp,n_activeMP, = struct.unpack('3i',f.read(12))
+        nproc,n_mp,n_activeMP, n_bins = struct.unpack('4i',f.read(16))
         for i_mp in range(n_activeMP):
             ii = struct.unpack('1i',f.read(4))[0]
             ii -= 1
             id[i_mp] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
+            if (n_bins  > 0):
+              for i_bin in range (n_bins):
+                SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
+                SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
         f.close()
-    return id,x, y, z, vx, vy, vz
+    return id,x, y, z, vx, vy, vz,SED
