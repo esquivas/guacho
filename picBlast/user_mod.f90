@@ -58,10 +58,10 @@ subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
        pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP
+       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP
 
   use globals,    only : coords, dx ,dy ,dz, rank,                          &
-                         Q_MP0, partID, partOwner, n_activeMP
+                         Q_MP0, partID, partOwner, n_activeMP, MP_SED
   use constants,  only : pi
   use utilities,  only : isInDomain
 
@@ -72,6 +72,7 @@ subroutine initial_conditions(u)
   real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
   integer :: yj,xi
   real    :: pos(3)
+  real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
 
 
   !--------------------------------------------------------------------------------------------
@@ -87,6 +88,7 @@ subroutine initial_conditions(u)
   u(3,:,:,:) = 0.
   u(4,:,:,:) = 0.
   u(5,:,:,:) = cv*1e-5
+  u(6:8,:,:,:) = 0.
 
   !We have to impose the blast according to .....FLASH CODE?
   eSN = 1. !energy of the SN
@@ -127,12 +129,12 @@ subroutine initial_conditions(u)
   n_activeMP   =  0
 
   !Insert homogenously distributed particles
-  do xi=1,64
-    do yj=1,64
+  do xi=1,64,2
+    do yj=1,64,2
 
         !  position of particles
-        pos(1)= real(xi)*1./64.
-        pos(2)= real(yj)*1./64.
+        pos(1)= real(xi)*1./64.+0.5*dx
+        pos(2)= real(yj)*1./64.+0.5*dy
         pos(3)= 0.
 
         if(isInDomain(pos) ) then
@@ -140,9 +142,12 @@ subroutine initial_conditions(u)
           partOwner(n_activeMP) = rank
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,1:3) = pos(:)
+
+          do i = 1,NBinsSEDMP
+            MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
+            MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)
+          end do
         endif
-
-
 
       end do
     end do
@@ -186,7 +191,7 @@ end subroutine impose_user_bc
 
 subroutine get_user_source_terms(pp,s, i, j , k)
 
-  use parameters, only : neq
+  use parameters, only : neq, NBinsSEDMP
 
   implicit none
   real, intent(in)   :: pp(neq)
