@@ -48,7 +48,7 @@ module parameters
   !----------------------------------------
 
   logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
-  logical, parameter :: mhd      = .false.   !<  Enable full MHD
+  logical, parameter :: mhd      = .true.   !<  Enable full MHD
 
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
@@ -57,12 +57,12 @@ module parameters
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLLC
+  integer, parameter :: riemann_solver = SOLVER_HLLD
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_flux_cd = .false.
+  logical, parameter :: enable_flux_cd = .true.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
   !>  Enable writting of divV to disk
@@ -134,10 +134,10 @@ module parameters
   !> Include particles tracers or pic (under construction)
   logical, parameter :: enable_pic = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =1024
+  integer, parameter :: N_MP =256
   !>  Enable followind SED of MP
   logical, parameter :: pic_distF  = .true.
-  !>  Number of bins for SED
+  !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
 
 
