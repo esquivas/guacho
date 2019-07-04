@@ -10,7 +10,7 @@ rmin=.5
 rmax=1.
 
 path = '../picBlast/BIN/'
-nout = 8
+nout = 10
 
 nproc = get_Nproc(nout,path=path)
 
@@ -38,18 +38,16 @@ plt.colorbar()
 #plt.colorbar()
 
 #Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
+plt.figure(3) ; plt.clf()
 
-npart = 190
-part = np.zeros(shape=(10,1024,2) )
+npart = 53
 for (nout) in range(0,nout):
-    id,xp, yp, zp, vxp, vyp, vzp, SED = readpic(nout,path=path)
-    part[nout,:,0] = xp[:]
-    part[nout,:,1] = yp[:]
+    picData, SED = readpic(nout,path=path)
     plt.figure(1)
-    plt.plot(xp,yp,'o',markersize= 1)
-    plt.plot(xp[npart],yp[npart],'*',markersize=8, color='green')
+    plt.plot(picData[:,1],picData[:,2],'o',markersize= 1)
+    plt.plot(picData[npart,1],picData[npart,2],'*',markersize=8, color='green')
     plt.figure(3)
-    plt.loglog(SED[npart,:,0],SED[npart,:,1],'.',label=str(nout))
+    plt.loglog(SED[npart,:,0],SED[npart,:,1],label=str(nout))
 
 plt.legend()
 
