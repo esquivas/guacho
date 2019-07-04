@@ -302,12 +302,19 @@ def readpic(nout,path='', base='pic',trim=True):
                 SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
                 SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
         f.close()
+    if (n_bins > 0):
+        indices = np.argsort(id)
+        SED   = np.array(SED[indices,:,:])
+        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    else:
+        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    if (trim) :
+        #  trim
+        n_mp = np.size(np.where(array[:,0] < 0 ))
+        array = array[n_mp::,:]
         if (n_bins > 0):
-            array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz,SED)) )
-        else:
-            array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
-        if (trim) :
-            #  trim
-            n_mp = np.size(np.where(array[:,0] < 0 ))
-            array = array[n_mp::,:]
-    return array
+            SED   = SED  [n_mp::,:]
+    if (n_bins > 0):
+        return array, SED
+    else:
+        return array
