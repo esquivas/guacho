@@ -259,10 +259,6 @@ contains
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
           dataLoc(nLocSend) = i_mp
-          !  keep the a and c value in Q_MP0(i_mp,7:8) to use in the
-          !  corrector in the other processor
-          Q_MP0(i_mp,7) = adist
-          Q_MP0(i_mp,8) = cdist
         end if
 
       end if
@@ -278,6 +274,7 @@ contains
       do iS=0,np-1
 
         if(sendList(iR,iS) /= 0) then
+
           if(iS == rank) then
             do i=1,sendlist(iR,iS)
               call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
@@ -285,8 +282,8 @@ contains
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
             end do
-
           end if
+
           if(iR == rank) then
             do i=1,sendList(iR,iS)
               call mpi_recv(SingleRec(1:3), 3, mpi_real_kind, IS, mpi_any_tag, &
@@ -294,27 +291,9 @@ contains
               !  add current particle in list and data in new processor
               call addMP( status(MPI_TAG), 3, SingleRec(1:3), i_mp )
 
-              !  corrector step
-              Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
-              + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
-
-              if (pic_distF) then
-                !  a and c ()
-                adist= Q_MP0(i_mp,7)
-                cdist= Q_MP0(i_mp,8)
-                do ib=1,NBinsSEDMP
-
-                  MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp( adist)*&
-                                    (1.+cdist*MP_SED(1,ib,i_mp))**2
-
-                  MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
-                                    (1.+cdist*MP_SED(1,ib,i_mp))
-                end do
-
-              end if
-
             end do
           end if
+          
         end if
       end do
     end do
