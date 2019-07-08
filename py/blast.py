@@ -40,15 +40,17 @@ plt.colorbar()
 #Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 plt.figure(3) ; plt.clf()
 
-npart = 53
-for (nout) in range(0,nout):
-    picData, SED = readpic(nout,path=path)
+npart = 153
+for (noutp) in range(0,nout):
+    picData, SED= readpic(noutp,path=path)
+    print(picData.shape)
     plt.figure(1)
     plt.plot(picData[:,1],picData[:,2],'o',markersize= 1)
     plt.plot(picData[npart,1],picData[npart,2],'*',markersize=8, color='green')
     plt.figure(3)
-    plt.loglog(SED[npart,:,0],SED[npart,:,1],label=str(nout))
-
+    #plt.loglog(SED[npart,:,0],SED[npart,:,1],label=str(noutp))
+    for ip in range(256):
+      plt.loglog(SED[ip,:,0],SED[ip,:,1])
 plt.legend()
 
 #    plt.clf()
