@@ -71,7 +71,8 @@ contains
     integer :: i_mp, i, j, k, l, ind(3), dest, nLocSend, &
                sendLoc(0:np-1), sendList(0:np-1,0:np-1), &
                dataLoc(N_MP), iS, iR
-    real    :: weights(8), SingleRec(6)
+    real    :: weights(8)
+    real    :: fullSend(2*NBinsSEDMP+8), fullRecv(2*NBinsSEDMP+8)
     integer:: status(MPI_STATUS_SIZE), err
     ! initialize send and recv lists
     dataLoc(:)    =  0
@@ -91,7 +92,11 @@ contains
 
           !  Interpolate the velocity field to particle position
           l=1
-          Q_MP0(i_mp,4:8) = 0
+          if (pic_distF) then
+            Q_MP0(i_mp,4:8) = 0
+          else
+            Q_MP0(i_mp,4:6) = 0
+          end if
           do k= ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
               do i=ind(1),ind(1)+1
@@ -138,36 +143,74 @@ contains
     !  exchange particles
     do iR=0,np-1
       do iS=0,np-1
-
         if(sendList(iR,iS) /= 0) then
+
           if(iS == rank) then
             !print'(i0,a,i0,a,i0)', rank,'-->', IR, ':',sendList(iR,iS)
             do i=1,sendlist(iR,iS)
-              !print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
-              call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
-                            partID(dataLoc(i)), comm3d,err)
+
+              if (pic_distF) then
+                !print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
+                !  pack info if we are solving the SED
+                fullSend(1:8) = Q_MP0(dataLoc(i),1:8)
+                fullSend(9:             8+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                fullSend(9+NBinsSEDMP:8+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                !  send the whole thing
+                call mpi_send( fullSend ,8+2*NBinsSEDMP, mpi_real_kind ,IR, &
+                              partID(dataLoc(i)), comm3d,err)
+
+              else
+
+                !  in case we are only passing the particles and not their SED
+                call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
+                              partID(dataLoc(i)), comm3d,err)
+
+
+              endif
+
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
+
             end do
 
           end if
+
           if(iR == rank) then
+
             !print'(i0,a,i0,a,i0)', rank,'<--', IS, ':',sendList(iR,iS)
             do i=1,sendList(iR,iS)
-              !print*,'<<<',rank,' will recv here from ',IS
 
-              call mpi_recv(SingleRec(1:6), 6, mpi_real_kind, IS, mpi_any_tag, &
-                            comm3d, status, err)
-              !print*,'received successfuly', status(MPI_TAG)
+              if (pic_distF) then
+                !print*,'<<<',rank,' will recv here from ',IS
+                !  in case we are only the particles w/their SED
+                call mpi_recv(fullRecv,8+2*NBinsSEDMP, mpi_real_kind, IS, &
+                                       mpi_any_tag,comm3d, status, err)
 
-              !  add current particle in list and data in new processor
-              call addMP( status(MPI_TAG), 6, SingleRec(1:6), i_mp )
+                !  add current particle in list and data in new processor
+                call addMP( status(MPI_TAG), 8, fullRecv(1:8), i_mp )
+
+                ! unpack the SED
+                MP_SED(1,1:100,i_mp) = fullRecv(9:             8+NBinsSEDMP)
+                MP_SED(2,1:100,i_mp) = fullRecv(9+NBinsSEDMP:8+2*NBinsSEDMP)
+              else
+
+                !  in case we are only passing the particles and not their SED
+                call mpi_recv(fullRecv(1:6), 6, mpi_real_kind, IS, mpi_any_tag, &
+                              comm3d, status, err)
+                !print*,'received successfuly', status(MPI_TAG)
+
+                !  add current particle in list and data in new processor
+                call addMP( status(MPI_TAG), 6, fullRecv(1:6), i_mp )
+
+              end if
 
               !  recalculate predictor step for newcomer
               Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
             end do
+
           end if
+
         end if
       end do
     end do
@@ -182,9 +225,10 @@ contains
     use utilities, only : inWhichDomain
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
-    real    :: weights(8), vel1(3), SingleRec(3)
+    real    :: weights(8), vel1(3)
     integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1), &
                sendList(0:np-1,0:np-1)
+    real    :: fullSend(2*NBinsSEDMP+3), fullRecv(2*NBinsSEDMP+3)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
     real    :: adist, cdist, alphaNP1, betaNP1
 
@@ -272,13 +316,28 @@ contains
     !  exchange particles
     do iR=0,np-1
       do iS=0,np-1
-
         if(sendList(iR,iS) /= 0) then
 
           if(iS == rank) then
             do i=1,sendlist(iR,iS)
-              call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
-                            partID(dataLoc(i)), comm3d,err)
+
+              if (pic_distF) then
+
+                !  pack info if we are solving the SED
+                fullSend(1:3) = Q_MP0(dataLoc(i),1:3)
+                fullSend(4:             3+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                !  send the whole thing
+                call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR, &
+                              partID(dataLoc(i)), comm3d,err)
+
+              else
+
+                !   if not solving the SED, send only X
+                call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
+                              partID(dataLoc(i)), comm3d,err)
+
+              end if
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
             end do
@@ -286,14 +345,30 @@ contains
 
           if(iR == rank) then
             do i=1,sendList(iR,iS)
-              call mpi_recv(SingleRec(1:3), 3, mpi_real_kind, IS, mpi_any_tag, &
-                            comm3d, status, err)
-              !  add current particle in list and data in new processor
-              call addMP( status(MPI_TAG), 3, SingleRec(1:3), i_mp )
+
+              if (pic_distF) then
+                !  in case we are only the particles w/their SED
+                call mpi_recv(fullRecv,3+2*NBinsSEDMP, mpi_real_kind, IS, &
+                                       mpi_any_tag,comm3d, status, err)
+
+                 !  add current particle in list and data in new processor
+                 call addMP( status(MPI_TAG), 3, fullRecv(1:3), i_mp )
+
+                 ! unpack the SED
+                 MP_SED(1,1:100,i_mp) = fullRecv(4:             3+NBinsSEDMP)
+                 MP_SED(2,1:100,i_mp) = fullRecv(4+NBinsSEDMP:3+2*NBinsSEDMP)
+              else
+
+                call mpi_recv(fullRecv(1:3), 3, mpi_real_kind, IS, mpi_any_tag, &
+                              comm3d, status, err)
+                !  add current particle in list and data in new processor
+                call addMP( status(MPI_TAG), 3, fullRecv(1:3), i_mp )
+
+              end if
 
             end do
           end if
-          
+
         end if
       end do
     end do
