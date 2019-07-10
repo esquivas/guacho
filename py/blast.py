@@ -10,7 +10,7 @@ rmin=.5
 rmax=1.
 
 path = '../picBlast/BIN/'
-nout = 8
+nout = 10
 
 nproc = get_Nproc(nout,path=path)
 
@@ -38,22 +38,20 @@ plt.colorbar()
 #plt.colorbar()
 
 #Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
+plt.figure(3) ; plt.clf()
 
-npart = 190
-part = np.zeros(shape=(10,1024,2) )
-#plt.clf()
-for (nout) in range(0,nout):
-    id,xp, yp, zp, vxp, vyp, vzp, SED = readpic(nout,path=path)
-    part[nout,:,0] = xp[:]
-    part[nout,:,1] = yp[:]
+npart = 153
+for (noutp) in range(0,nout):
+    picData, SED= readpic(noutp,path=path)
+    print(picData.shape)
     plt.figure(1)
-    plt.plot(xp,yp,'o',markersize= 1)
-    plt.plot(xp[npart],yp[npart],'*',markersize=8, color='green')
+    plt.plot(picData[:,1],picData[:,2],'o',markersize= 1)
+    plt.plot(picData[npart,1],picData[npart,2],'*',markersize=8, color='green')
     plt.figure(3)
-#    plt.clf()  
-    plt.loglog(SED[npart,:,0],SED[npart,:,1],'.',label=str(nout))
-   # plt.pause()
-#plt.legend()
+    #plt.loglog(SED[npart,:,0],SED[npart,:,1],label=str(noutp))
+    for ip in range(256):
+      plt.loglog(SED[ip,:,0],SED[ip,:,1])
+plt.legend()
 
 #    plt.clf()
 

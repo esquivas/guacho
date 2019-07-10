@@ -71,7 +71,7 @@ subroutine initial_conditions(u)
   integer :: i,j,k
   real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
   integer :: yj,xi
-  real    :: pos(3)
+  real    :: pos(3), E0
   real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
 
 
@@ -131,8 +131,8 @@ subroutine initial_conditions(u)
   n_activeMP   =  0
 
   !Insert homogenously distributed particles
-  do xi=1,64,2
-    do yj=1,64,2
+  do xi=1,64,4
+    do yj=1,64,4
 
         !  position of particles
         pos(1)= real(xi)*1./64.+0.5*dx
@@ -144,10 +144,10 @@ subroutine initial_conditions(u)
           partOwner(n_activeMP) = rank
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,1:3) = pos(:)
-
+          E0 =  10**( -gamma_pic*(-4 + 1.5*de) )
           do i = 1,NBinsSEDMP
             MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
-            MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)
+            MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)/E0
           end do
         endif
 

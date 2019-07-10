@@ -271,7 +271,7 @@ def minmax(q):
 '''
    reads tracer particles
 '''
-def readpic(nout,path='', base='pic'):
+def readpic(nout,path='', base='pic',trim=True):
     #  read first output to determine N_MP and NP
     file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
     f = open(file_in,'rb')
@@ -282,7 +282,7 @@ def readpic(nout,path='', base='pic'):
     vx = np.zeros(nproc*n_mp)
     vy = np.zeros(nproc*n_mp)
     vz = np.zeros(nproc*n_mp)
-    id = np.zeros(nproc*n_mp, dtype = 'i4')
+    id = np.zeros(nproc*n_mp, dtype = 'i4')-1
     if (n_bins > 0) :
       SED = np.zeros(shape=(nproc*n_mp,n_bins,2))
     f.close()
@@ -294,7 +294,7 @@ def readpic(nout,path='', base='pic'):
         for i_mp in range(n_activeMP):
             ii = struct.unpack('1i',f.read(4))[0]
             ii -= 1
-            id[i_mp] = ii
+            id[ii] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
             if (n_bins  > 0):
@@ -302,4 +302,19 @@ def readpic(nout,path='', base='pic'):
                 SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
                 SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
         f.close()
-    return id,x, y, z, vx, vy, vz,SED
+    if (n_bins > 0):
+        indices = np.argsort(id)
+        SED   = np.array(SED[indices,:,:])
+        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    else:
+        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    if (trim) :
+        #  trim
+        n_mp = np.size(np.where(array[:,0] < 0 ))
+        array = array[n_mp::,:]
+        if (n_bins > 0):
+            SED   = SED  [n_mp::,:]
+    if (n_bins > 0):
+        return array, SED
+    else:
+        return array
