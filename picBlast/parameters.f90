@@ -134,7 +134,7 @@ module parameters
   !> Include particles tracers or pic (under construction)
   logical, parameter :: enable_pic = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =256
+  integer, parameter :: N_MP =512
   !>  Enable followind SED of MP
   logical, parameter :: pic_distF  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)

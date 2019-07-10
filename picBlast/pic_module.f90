@@ -125,7 +125,7 @@ contains
 
         !  check if particle is leaving the domain
         dest = inWhichDomain(Q_MP1(i_mp,1:3))
-        if( dest /= rank ) then
+        if( dest /= rank .and. dest > -1 ) then
           !  count for MPI exchange
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
@@ -148,25 +148,26 @@ contains
           if(iS == rank) then
             !print'(i0,a,i0,a,i0)', rank,'-->', IR, ':',sendList(iR,iS)
             do i=1,sendlist(iR,iS)
+          !    if (iR /= -1) then
+                if (pic_distF) then
+                  !print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
+                  !  pack info if we are solving the SED
+                  fullSend(1:8) = Q_MP0(dataLoc(i),1:8)
+                  fullSend(9:             8+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                  fullSend(9+NBinsSEDMP:8+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                  !  send the whole thing
+                  call mpi_send( fullSend ,8+2*NBinsSEDMP, mpi_real_kind ,IR, &
+                  partID(dataLoc(i)), comm3d,err)
 
-              if (pic_distF) then
-                !print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
-                !  pack info if we are solving the SED
-                fullSend(1:8) = Q_MP0(dataLoc(i),1:8)
-                fullSend(9:             8+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
-                fullSend(9+NBinsSEDMP:8+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
-                !  send the whole thing
-                call mpi_send( fullSend ,8+2*NBinsSEDMP, mpi_real_kind ,IR, &
-                              partID(dataLoc(i)), comm3d,err)
+                else
 
-              else
-
-                !  in case we are only passing the particles and not their SED
-                call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
-                              partID(dataLoc(i)), comm3d,err)
+                  !  in case we are only passing the particles and not their SED
+                  call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
+                  partID(dataLoc(i)), comm3d,err)
 
 
-              endif
+                endif
+          !    endif
 
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
@@ -222,7 +223,7 @@ contains
 
     use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED
     use parameters
-    use utilities, only : inWhichDomain
+    use utilities, only : inWhichDomain, isInDomain
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8), vel1(3)
@@ -241,9 +242,9 @@ contains
 
     do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
-      if (partID(i_mp)/=0) then
         ! Calculate interpolation reference and weights
         call interpBD(Q_MP1(i_mp,1:3),ind,weights)
+        if (partID(i_mp)/=0 .and. isInDomain(Q_MP1(i_mp,1:3)) ) then
         !  Interpolate the velocity field to particle position, and add
         !  to the velocity from the corrector step
         !  Interpolates the magnetic field to calculate beta.
@@ -261,6 +262,10 @@ contains
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
               !  interpolate velocity
+              if ((i < 0) .or. (j < 0) .or. k < 0) then
+                print*, i, j, k,Q_MP0(i_mp,1:3)
+              endif
+
               vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
               vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
               vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
@@ -299,7 +304,7 @@ contains
 
         !  check if particle is leaving the domain
         dest = inWhichDomain( Q_MP0(i_mp,1:3) )
-        if (dest /= rank) then
+        if (dest /= rank .and. dest > -1) then
           !  count for MPI exchange
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
@@ -322,23 +327,25 @@ contains
           if(iS == rank) then
             do i=1,sendlist(iR,iS)
 
-              if (pic_distF) then
+        !      if (iR /= -1) then
+                if (pic_distF) then
 
-                !  pack info if we are solving the SED
-                fullSend(1:3) = Q_MP0(dataLoc(i),1:3)
-                fullSend(4:             3+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
-                fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
-                !  send the whole thing
-                call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR, &
-                              partID(dataLoc(i)), comm3d,err)
+                  !  pack info if we are solving the SED
+                  fullSend(1:3) = Q_MP0(dataLoc(i),1:3)
+                  fullSend(4:             3+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                  fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                  !  send the whole thing
+                  call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR, &
+                  partID(dataLoc(i)), comm3d,err)
 
-              else
+                else
 
-                !   if not solving the SED, send only X
-                call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
-                              partID(dataLoc(i)), comm3d,err)
+                  !   if not solving the SED, send only X
+                  call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
+                  partID(dataLoc(i)), comm3d,err)
 
-              end if
+                end if
+        !      endif
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
             end do

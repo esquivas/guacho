@@ -28,7 +28,7 @@ plt.colorbar()
 #X,Y = np.meshgrid( np.linspace(-1.,1.,num=rho.shape[0]),np.linspace(-1.,1.,num=rho.shape[1]) )
 
 plt.figure(1)
-#plt.clf()
+plt.clf()
 plt.imshow(rho, extent=[0,1,0,1], origin='lower', cmap='Spectral' )
 plt.colorbar()
 
@@ -40,7 +40,7 @@ plt.colorbar()
 #Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 plt.figure(3) ; plt.clf()
 
-npart = 153
+npart = 255
 for (noutp) in range(0,nout):
     picData, SED= readpic(noutp,path=path)
     print(picData.shape)
@@ -48,9 +48,9 @@ for (noutp) in range(0,nout):
     plt.plot(picData[:,1],picData[:,2],'o',markersize= 1)
     plt.plot(picData[npart,1],picData[npart,2],'*',markersize=8, color='green')
     plt.figure(3)
-    #plt.loglog(SED[npart,:,0],SED[npart,:,1],label=str(noutp))
-    for ip in range(256):
-      plt.loglog(SED[ip,:,0],SED[ip,:,1])
+    plt.loglog(SED[npart,:,0],SED[npart,:,1]*SED[npart,:,0]**2,label=str(noutp))
+#    for ip in range(256):
+#      plt.loglog(SED[ip,:,0],SED[ip,:,1])
 plt.legend()
 
 #    plt.clf()

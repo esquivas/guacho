@@ -86,10 +86,20 @@ contains
     ind(1) = int(pos(2)/dy)/ny
     ind(2) = int(pos(3)/dz)/nz
 
+!    #ifdef MPIP
+!        call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+!    #else
+!         if(.not.isInDomain(pos)) inWhichDomain = -1
+!    #endif
+
 #ifdef MPIP
-    call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+    if(isInDomain(pos)) then
+      call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+    else
+      inWhichDomain = -1
+    endif
 #else
-     if(.not.isInDomain(pos)) inWhichDomain = -1
+    if(.not.isInDomain(pos)) inWhichDomain = -1
 #endif
 
   end function inWhichDomain

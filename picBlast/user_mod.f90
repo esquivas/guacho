@@ -89,11 +89,11 @@ subroutine initial_conditions(u)
   u(4,:,:,:) = 0.
   u(5,:,:,:) = cv*1e-5
   u(6,:,:,:) = 0.
-  u(7,:,:,:) = 0.1
+  u(7,:,:,:) = 0.0
   u(8,:,:,:) = 0.
 
   !We have to impose the blast according to .....FLASH CODE?
-  eSN = 1. !energy of the SN
+  eSN = 2. !energy of the SN
   nu  = 3. !3 is for spherical and 2 for cylindrical
 
 !blast
@@ -131,8 +131,8 @@ subroutine initial_conditions(u)
   n_activeMP   =  0
 
   !Insert homogenously distributed particles
-  do xi=1,64,4
-    do yj=1,64,4
+  do xi=1,64,2
+    do yj=1,64,2
 
         !  position of particles
         pos(1)= real(xi)*1./64.+0.5*dx
