@@ -88,7 +88,9 @@ subroutine initial_conditions(u)
   u(3,:,:,:) = 0.
   u(4,:,:,:) = 0.
   u(5,:,:,:) = cv*1e-5
-  u(6:8,:,:,:) = 0.
+  u(6,:,:,:) = 0.
+  u(7,:,:,:) = 0.1
+  u(8,:,:,:) = 0.
 
   !We have to impose the blast according to .....FLASH CODE?
   eSN = 1. !energy of the SN

@@ -91,7 +91,7 @@ contains
           ! Calculate interpolation reference and weights
           call interpBD(Q_MP0(i_mp,1:3),ind,weights)
 
-          !  Interpolate the velocity field to particle position
+          !  Interpolate the velocity and magnetic field to particle position
           l=1
           Q_MP0(i_mp,4:8) = 0
           bx = 0. ; by = 0. ; bz = 0.
@@ -103,7 +103,6 @@ contains
                 Q_MP0(i_mp,6) = Q_MP0(i_mp,6) + primit(4,i,j,k)*weights(l)
                 if(pic_distF) then
                   Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + divV(i,j,k)*weights(l)/3.
-
                   bx = bx + primit(6,i,j,k)*weights(l)
                   by = by + primit(7,i,j,k)*weights(l)
                   bz = bz + primit(8,i,j,k)*weights(l)
@@ -187,7 +186,7 @@ contains
     integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1), &
                sendList(0:np-1,0:np-1)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
-    real    :: adist, cdist, bx, by, bz
+    real    :: adist, cdist, bx, by, bz, betaNP1, alphaNP1
 
     ! initialize send and recv lists
     dataLoc(:)    =  0
@@ -203,10 +202,13 @@ contains
         call interpBD(Q_MP1(i_mp,1:3),ind,weights)
         !  Interpolate the velocity field to particle position, and add
         !  to the velocity from the corrector step
+        !  Interpolates the magnetic field to calculate beta.
         l=1
         vel1(:) = 0
         adist = 0.
         cdist = 0.
+        alphaNP1 = 0.
+        betaNP1  = 0.
         bx = 0.  ; by = 0.;  bz = 0.
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
@@ -215,15 +217,11 @@ contains
               vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
               vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
               if (pic_distF) then
-                Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + divV(i,j,k)*weights(l)/3.
-
-                bx = bx + primit(6,i,j,k)*weights(l)
-                by = by + primit(7,i,j,k)*weights(l)
-                bz = bz + primit(8,i,j,k)*weights(l)
-                Q_MP0(i_mp,8) = bx**2 + by**2 + bz**2
-
-                adist=adist + divV(i,j,k)*weights(l)/3.
-                cdist=cdist! + divV(i,j,k)*weights(l)/3.
+                alphaNP1 = alphaNP1 + divV(i,j,k)    *weights(l)/3.
+                bx       = bx       + primit(6,i,j,k)*weights(l)
+                by       = by       + primit(7,i,j,k)*weights(l)
+                bz       = bz       + primit(8,i,j,k)*weights(l)
+                betaNP1  = betaNP1  + bx**2 + by**2 + bz**2
               endif
               l = l + 1
             end do
@@ -235,12 +233,14 @@ contains
         + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
         if (pic_distF) then
-          adist=0.5*dt_CFL*(adist+Q_MP0(i_mp,7))
+          adist=0.5*dt_CFL*(Q_MP0(i_mp,7)+alphaNP1)
+          cdist=0.5*dt_CFL*(betaNP1*exp(-adist)+Q_MP0(i_mp,8))
+
           do ib=1,NBinsSEDMP
-            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp(adist)*&
-            (1.+cdist*MP_SED(1,ib,i_mp))**2
-            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
-            (1.+cdist*MP_SED(1,ib,i_mp))
+            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp(adist)* &
+                              (1. + cdist*MP_SED(1,ib,i_mp) )**2
+            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/ &
+                              (1. + cdist*MP_SED(1,ib,i_mp) )
 
           end do
         endif
@@ -287,12 +287,14 @@ contains
               Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
               + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
+              ! Sets de distribution fuction if enabled
+              !equation 3 in Vaidya et al. 2016.
               if (pic_distF) then
                 adist=0.5*dt_CFL*(adist+Q_MP0(i_mp,7))
                 do ib=1,NBinsSEDMP
-                  MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp(adist)*&
+                  MP_SED(2,ib,i_mp) = MP_SED(2,ib,i_mp)*exp(adist)*&
                   (1.+cdist*MP_SED(1,ib,i_mp))**2
-                  MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
+                  MP_SED(1,ib,i_mp) = MP_SED(1,ib,i_mp)*exp(-adist)/&
                   (1.+cdist*MP_SED(1,ib,i_mp))
 
                 end do

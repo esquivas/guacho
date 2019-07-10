@@ -21,14 +21,14 @@ vy   = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
 divV = get_2d_cut(3,1,nout=nout,neq=0,path=path,base='divV-',verbose=False)
 plt.figure(2)
 plt.clf()
-plt.imshow(divV, extent=[0,1,0,1], origin='lower', cmap='seismic_r',vmin=-14,vmax=14 )
+plt.imshow(divV, extent=[0,1,0,1], origin='lower', cmap='seismic_r' )
 plt.colorbar()
 #divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 
 #X,Y = np.meshgrid( np.linspace(-1.,1.,num=rho.shape[0]),np.linspace(-1.,1.,num=rho.shape[1]) )
 
 plt.figure(1)
-plt.clf()
+#plt.clf()
 plt.imshow(rho, extent=[0,1,0,1], origin='lower', cmap='Spectral' )
 plt.colorbar()
 
@@ -41,6 +41,7 @@ plt.colorbar()
 
 npart = 190
 part = np.zeros(shape=(10,1024,2) )
+#plt.clf()
 for (nout) in range(0,nout):
     id,xp, yp, zp, vxp, vyp, vzp, SED = readpic(nout,path=path)
     part[nout,:,0] = xp[:]
@@ -49,9 +50,10 @@ for (nout) in range(0,nout):
     plt.plot(xp,yp,'o',markersize= 1)
     plt.plot(xp[npart],yp[npart],'*',markersize=8, color='green')
     plt.figure(3)
+#    plt.clf()  
     plt.loglog(SED[npart,:,0],SED[npart,:,1],'.',label=str(nout))
-
-plt.legend()
+   # plt.pause()
+#plt.legend()
 
 #    plt.clf()
 

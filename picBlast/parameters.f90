@@ -163,7 +163,7 @@ module parameters
   !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=2./100.      !< grid extent in Z (code units)
+  real, parameter :: zmax=2./128.      !< grid extent in Z (code units)
 !  real, parameter :: xphys=0.3*au    !< grid extent in X (physical units, cgs)
 
   real, parameter :: xphys=1.        !< grid extent in X (physical units, cgs)
@@ -188,8 +188,8 @@ module parameters
   real, parameter :: tmax    = 1./tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 0.1/tsc   !3.15e7*10.*5/tsc
-  real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.00               !< artificial viscosity
+  real, parameter :: cfl=0.05                !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.1              !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
