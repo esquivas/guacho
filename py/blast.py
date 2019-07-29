@@ -6,8 +6,8 @@ from guacho_utils import *
 from matplotlib.colors import LogNorm
 
 plt.ion()
-rmin=.5
-rmax=1.
+#rmin=.5
+#rmax=1.
 
 path = '../picBlast/BIN/'
 nout = 10
@@ -18,10 +18,10 @@ rho  = get_2d_cut(3,1,nout=nout,neq=0,path=path,verbose=False)
 vx   = get_2d_cut(3,1,nout=nout,neq=1,path=path,verbose=False)
 vy   = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
 
-divV = get_2d_cut(3,1,nout=nout,neq=0,path=path,base='divV-',verbose=False)
+shockF = get_2d_cut(3,1,nout=nout,neq=0,path=path,base='shock-',verbose=False)
 plt.figure(2)
 plt.clf()
-plt.imshow(divV, extent=[0,1,0,1], origin='lower', cmap='seismic_r' )
+plt.imshow(shockF, extent=[0,1,0,1], origin='lower', cmap='seismic_r' )
 plt.colorbar()
 #divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 
@@ -52,6 +52,9 @@ for (noutp) in range(0,nout):
 #    for ip in range(256):
 #      plt.loglog(SED[ip,:,0],SED[ip,:,1])
 plt.legend()
+
+plt.figure(2)
+plt.plot(picData[:,1],picData[:,2],'o',markersize= 2,color="white")
 
 #    plt.clf()
 
