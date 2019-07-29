@@ -246,21 +246,20 @@ subroutine write_BIN(itprint)
 #endif
 
 #ifdef PIC
-  if (dump_divv) then
+  if (dump_shock) then
     !   This is a hack to write div V and alpha for now
-
 
     ! take turns to write to disk
     do ip=0, np-1
       if(rank == ip) then
         write(file1,'(a,i3.3,a,i3.3,a)') &
-              trim(outputpath)//'BIN/divV-',rank,'.',itprint,'.bin'
+              trim(outputpath)//'BIN/shock-',rank,'.',itprint,'.bin'
         unitout=10+rank
 
         open(unit=unitout,file=file1,status='replace',access='stream')
 
         call write_header(unitout,1,0)
-        write (unitout) divV(1:nx,1:ny,1:nz)
+        write (unitout) real(shockF(1:nx,1:ny,1:nz))
         close(unitout)
 
       end if
