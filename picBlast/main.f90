@@ -106,7 +106,7 @@ program guacho
 
     !  if pic enabled compute predictor for particle positions
     if(enable_pic) then
-      if (pic_distF) call divergence_V()
+      if (pic_distF) call flag_shock()
       call PICpredictor()
     end if
 
