@@ -44,9 +44,8 @@ module globals
   integer, allocatable :: partOwner(:)   !< Particle Owner (rank)
   integer, allocatable :: partID(:)      !< Particle Identifier
   integer              :: n_activeMP     !< Number of active macro particles
-  real, allocatable    :: divV(:,:,:)    !< Velocity divergence
+  integer, allocatable :: shockF(:,:,:)  !< Shock detection flag (one is shock)
   real, allocatable    :: MP_SED(:,:,:)  !< Energy distribution of MP particles
-
   ! For the split methods
   real, allocatable ::    primit0(:,:,:,:) !< primit zeros
 
