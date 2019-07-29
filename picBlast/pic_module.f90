@@ -1,7 +1,7 @@
 module pic_module
   use parameters, only : N_MP, pic_distF, NBinsSEDMP
   use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP, partID, &
-                         divV, MP_SED
+                         shockF, MP_SED
   implicit none
 
 contains
@@ -21,7 +21,7 @@ contains
     allocate( partID   (N_MP) )
     allocate( partOwner(N_MP) )
     if (pic_distF) then
-      allocate( divV(0:nx+1,0:ny+1,0:nz+1) )
+      allocate( shockF(0:nx+1,0:ny+1,0:nz+1) )
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
     end if
 
@@ -64,9 +64,9 @@ contains
   !================================================================
   subroutine PICpredictor
 
-    use globals,   only : primit, dt_CFL, rank, comm3d,divV
+    use globals,   only : primit, dt_CFL, rank, comm3d
     use parameters
-    use utilities, only : isInDomain, inWhichDomain
+    use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
     integer :: i_mp, i, j, k, l, ind(3), dest, nLocSend, &
                sendLoc(0:np-1), sendList(0:np-1,0:np-1), &
@@ -87,15 +87,20 @@ contains
         ! proceed further only if paricle is in domain
         if ( isInDomain( Q_MP0(i_mp,1:3) ) ) then
 
+          !if (isInShock( Q_MP0(i_mp,1:3) ) ) then
+          !  print*, "particle", i_mp, "inside shocked region"
+          !  print*, Q_MP0(i_mp,1:3)
+          !end if
+
           ! Calculate interpolation reference and weights
           call interpBD(Q_MP0(i_mp,1:3),ind,weights)
 
           !  Interpolate the velocity and magnetic field to particle position
           l=1
           if (pic_distF) then
-            Q_MP0(i_mp,4:8) = 0
+            Q_MP0(i_mp,4:8) = 0.
           else
-            Q_MP0(i_mp,4:6) = 0
+            Q_MP0(i_mp,4:6) = 0.
           end if
           do k= ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
@@ -107,11 +112,13 @@ contains
 
                 !  if we're following the MP SED, interpolate alpha and beta
                 if(pic_distF) then
-                  !  alpha
-                  Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + divV(i,j,k)*weights(l)/3.
-                  !  beta
+                  !  computed following Vaidya et al, 2018 ApJ
+                  !  adiabatic expansion term rho^n
+                  Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + primit(1,i,j,k)*weights(l)/3.
+                  !  c_r  (synchrotron losses)
                   Q_MP0(i_mp,8) =  Q_MP0(i_mp,8) + weights(l)**2 *      &
                    ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
+
                 end if
                 l = l + 1
               end do
@@ -223,7 +230,7 @@ contains
 
     use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED
     use parameters
-    use utilities, only : inWhichDomain, isInDomain
+    use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8), vel1(3)
@@ -231,8 +238,7 @@ contains
                sendList(0:np-1,0:np-1)
     real    :: fullSend(2*NBinsSEDMP+3), fullRecv(2*NBinsSEDMP+3)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
-    real    :: adist, cdist, alphaNP1, betaNP1
-
+    real    :: ema, bdist, rhoNP1, crNP1
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -249,19 +255,20 @@ contains
         !  to the velocity from the corrector step
         !  Interpolates the magnetic field to calculate beta.
         l=1
-        vel1(:) = 0
+        vel1(:) = 0.
 
         if(pic_distF) then
-          adist = 0.
-          cdist = 0.
-          alphaNP1 = 0.
-          betaNP1  = 0.
+          ema = 0.
+          bdist = 0.
+          rhoNP1 = 0.
+          crNP1  = 0.
         end if
 
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
               !  interpolate velocity
+              !  interpolates density (to replace divV in future!!)
               if ((i < 0) .or. (j < 0) .or. k < 0) then
                 print*, i, j, k,Q_MP0(i_mp,1:3)
               endif
@@ -272,10 +279,11 @@ contains
 
               !  if we're following the MP SED, interpolate alpha and beta
               if (pic_distF) then
-                !   alpha
-                alphaNP1 = alphaNP1 + divV(i,j,k)*weights(l)/3.
-                betaNP1  = betaNP1  + weights(l)**2 *   &
+                !   source terms
+                rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)/3.
+                crNP1  = crNP1  + weights(l)**2 *   &
                  ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
+
               end if
               l = l + 1
             end do
@@ -286,18 +294,23 @@ contains
         Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
         + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
+        if (isInShock(Q_MP0(i_mp,1:3))) then
+          print*, "particle ", i_mp, "inside shocked region"
+          print*, Q_MP0(i_mp,1:3)
+        end if
         if (pic_distF) then
-          !  a and c ()
-          adist=0.5*dt_CFL*( alphaNP1           + Q_MP0(i_mp,7) )
-          cdist=0.5*dt_CFL*( betaNP1*exp(-adist)+ Q_MP0(i_mp,8) )
+          !  exp(-a) and cr
+          ema    = (rhoNP1/Q_MP0(i_mp,7))**(1./3.)
+          bdist  = 0.5*dt_CFL*( crNP1*ema+ Q_MP0(i_mp,8) )
 
           do ib=1,NBinsSEDMP
 
-            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*exp( adist)*&
-                              (1.+cdist*MP_SED(1,ib,i_mp))**2
+            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*ema*&
+                              (1.+bdist*MP_SED(1,ib,i_mp))**2
 
-            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*exp(-adist)/&
-                              (1.+cdist*MP_SED(1,ib,i_mp))
+            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*ema/&
+                              (1.+bdist*MP_SED(1,ib,i_mp))
+
           end do
 
         end if
