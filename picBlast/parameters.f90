@@ -65,8 +65,8 @@ module parameters
   logical, parameter :: enable_flux_cd = .true.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
-  !>  Enable writting of divV to disk
-  logical, parameter :: dump_divv = .true.
+  !>  Enable writting of shock flag to disk
+  logical, parameter :: dump_shock = .true.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -169,7 +169,7 @@ module parameters
   real, parameter :: xphys=1.        !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv=2. !gamma=1.5 !< Specific heat at constant volume (/R)
+  real, parameter :: cv=1.5 !gamma=1.5 !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
 
@@ -185,11 +185,11 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1./tsc
+  real, parameter :: tmax    = 0.5/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.1/tsc   !3.15e7*10.*5/tsc
+  real, parameter :: dtprint = 0.05/tsc   !3.15e7*10.*5/tsc
   real, parameter :: cfl=0.05                !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.1              !< artificial viscosity
+  real, parameter :: eta=0.0              !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
