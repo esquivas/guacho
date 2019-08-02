@@ -1,10 +1,10 @@
 !=======================================================================
-!> @file globals.f90
+!> @file utils.f90
 !> @brief Utilities module
 !> @author Alejandro Esquivel
-!> @date 4/May/2016
+!> @date 1/jul/2019
 
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2019 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -24,7 +24,7 @@
 
 !> @brief Module containing general purpose utilities
 !> @details This module contains utilities that could be called from then
-!> user module (and any other as well)
+!> user module as they are compiled before it
 
 module utilities
 
@@ -33,10 +33,10 @@ module utilities
 contains
 
   !================================================================
-  ! @brief In domain function (logical)
+  ! @brief Is in domain? function (logical)
   ! @details Determines if the position of a given point lies within the
   !> procesor domain, returns true if it is, false if it isn't
-  ! @param real [in] : 3D position with respect to a cornet of the domain
+  ! @param real [in] : 3D position WITH RESPECT TO A CORNER of the domain
   function isInDomain(pos)
 
     use parameters, only : nx, ny, nz
@@ -65,9 +65,10 @@ contains
   end function isInDomain
 
   !================================================================
-  ! @brief In domain function (logical)
-  ! @details Determines if the position of a given point lies within the
-  !> procesor domain, returns true if it is, false if it isn't
+  ! @brief is in shock? function (logical)
+  ! @details Determines if the position of a given point is inside a
+  !> shocked region (as tracked by the global array 'shockF', see also
+  !> flag_shock subroutine). Returns 'true' if it is, 'false' if it isn't
   ! @param real [in] : 3D position with respect to a cornet of the domain
   function isInShock(pos)
 
@@ -79,21 +80,22 @@ contains
     integer          :: i, j, k
 
     ! shift to the local processor
-    i = int(pos(1)/dx) - coords(0)*nx
-    j = int(pos(2)/dy) - coords(1)*ny
-    k = int(pos(3)/dz) - coords(2)*nz
-
-    i = min(nx+1,i)
-    j = min(ny+1,j)
-    k = min(nz+1,k)
-    i = max(  0 ,i)
-    j = max(  0 ,j)
-    k = max(  0 ,k)
+    i = int( pos(1)/dx ) - coords(0)*nx + 1
+    j = int( pos(2)/dy ) - coords(1)*ny + 1
+    k = int( pos(3)/dz ) - coords(2)*nz + 1
 
     isInShock = .false.
 
-    if( shockF(i,j,k) /= 0 ) then
+    if ( i < 1  .or. j < 1  .or. k < 1 .or. &
+         i > nx .or. j > ny .or. k > nz  ) then
+
+      return
+
+    elseif ( shockF(i,j,k) == 1 ) then
+
       isInShock = .true.
+      return
+
     end if
 
   end function isInShock
@@ -101,7 +103,7 @@ contains
   !================================================================
   ! @brief In Which domain function
   ! @details Determines if the rank that has the position of a given point,
-  !> return -1 if point lies outside domain
+  !> returns -1 if point lies outside domain
   ! @param real [in] : 3D position with respect to a cornet of the domain
   function inWhichDomain(pos)
 
@@ -115,16 +117,10 @@ contains
     real, intent(in) :: pos(3)
     integer          :: ind(0:2),err
 
-    ! get coord of rank
+    ! get coords of rank
     ind(0) = int(pos(1)/dx)/nx
     ind(1) = int(pos(2)/dy)/ny
     ind(2) = int(pos(3)/dz)/nz
-
-!    #ifdef MPIP
-!        call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
-!    #else
-!         if(.not.isInDomain(pos)) inWhichDomain = -1
-!    #endif
 
 #ifdef MPIP
     if(isInDomain(pos)) then
@@ -142,7 +138,6 @@ contains
   !> @brief shock detector
   !> @details Schock detection, similar to Mignone et al 2012
   !> @param integer [out] shock :: shock (one if shocked material)
-
   subroutine flag_shock()
     use parameters
     use globals,    only : dx, dy, dz, primit, coords, shockF
@@ -177,8 +172,6 @@ contains
         end do
       end do
     end do
-
-
 
 end subroutine flag_shock
 
