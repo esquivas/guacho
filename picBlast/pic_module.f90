@@ -14,16 +14,15 @@ contains
 
     if(pic_distF) then
       allocate( Q_MP0(N_MP,8) )
+      allocate( shockF(nx,ny,nz) )
+      allocate( MP_SED(2,NBinsSEDMP,N_MP) )
     else
       allocate( Q_MP0(N_MP,6) )
     end if
+
     allocate( Q_MP1(N_MP,3) )
     allocate( partID   (N_MP) )
     allocate( partOwner(N_MP) )
-    if (pic_distF) then
-      allocate( shockF(0:nx+1,0:ny+1,0:nz+1) )
-      allocate( MP_SED(2,NBinsSEDMP,N_MP) )
-    end if
 
   end subroutine init_pic
 
@@ -64,7 +63,7 @@ contains
   !================================================================
   subroutine PICpredictor
 
-    use globals,   only : primit, dt_CFL, rank, comm3d
+    use globals,   only : primit, dt_CFL, rank, comm3d, Q_MP0, Q_MP1
     use parameters
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
@@ -86,11 +85,6 @@ contains
 
         ! proceed further only if paricle is in domain
         if ( isInDomain( Q_MP0(i_mp,1:3) ) ) then
-
-          !if (isInShock( Q_MP0(i_mp,1:3) ) ) then
-          !  print*, "particle", i_mp, "inside shocked region"
-          !  print*, Q_MP0(i_mp,1:3)
-          !end if
 
           ! Calculate interpolation reference and weights
           call interpBD(Q_MP0(i_mp,1:3),ind,weights)
@@ -228,7 +222,7 @@ contains
   !================================================================
   subroutine PICcorrector
 
-    use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED
+    use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED, Q_MP0, Q_MP1
     use parameters
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
@@ -267,12 +261,7 @@ contains
         do k= ind(3),ind(3)+1
           do j=ind(2),ind(2)+1
             do i=ind(1),ind(1)+1
-              !  interpolate velocity
-              !  interpolates density (to replace divV in future!!)
-              if ((i < 0) .or. (j < 0) .or. k < 0) then
-                print*, i, j, k,Q_MP0(i_mp,1:3)
-              endif
-
+              !  interpolate velocity / density and B**2
               vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
               vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
               vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
@@ -280,7 +269,7 @@ contains
               !  if we're following the MP SED, interpolate alpha and beta
               if (pic_distF) then
                 !   source terms
-                rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)/3.
+                rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
                 crNP1  = crNP1  + weights(l)**2 *   &
                  ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
 
@@ -290,14 +279,10 @@ contains
           end do
         end do
 
-        !  corrector step
-        Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3) &
+        !  corrector step (only position is updated)
+        Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3)            &
         + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
-        if (isInShock(Q_MP0(i_mp,1:3))) then
-          print*, "particle ", i_mp, "inside shocked region"
-          print*, Q_MP0(i_mp,1:3)
-        end if
         if (pic_distF) then
           !  exp(-a) and cr
           ema    = (rhoNP1/Q_MP0(i_mp,7))**(1./3.)
@@ -455,7 +440,8 @@ contains
   subroutine write_pic(itprint)
 
     use parameters, only : outputpath, np, pic_distF
-    use globals,    only : rank
+    use utilities
+    use globals,    only : rank, Q_MP0
     implicit none
     integer, intent(in) :: itprint
     character(len = 128) :: fileout
@@ -486,11 +472,18 @@ contains
 
   !  loop over particles owned by processor and write the active ones
   do i_mp=1,N_MP
-    !if (partOwner(i_mp)==rank) then
     if (partID(i_mp) /=0) then
+
       write(unitout) partID(i_mp)
       write(unitout) Q_MP0(i_mp,1:6)
       if(pic_distF) write(unitout) MP_SED(1:2,1:100,i_mp)
+
+      if (isInShock(Q_MP0(i_mp,1:3))) then
+          print'(2f20.17)', Q_MP0(i_mp,1:2)
+      else
+          print'(2f20.17)', Q_MP0(i_mp,1:2)
+      end if
+
     end if
   end do
 
