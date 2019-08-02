@@ -58,7 +58,7 @@ subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
        pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP
+       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np
 
   use globals,    only : coords, dx ,dy ,dz, rank,                          &
                          Q_MP0, partID, partOwner, n_activeMP, MP_SED
@@ -75,11 +75,12 @@ subroutine initial_conditions(u)
   real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
 
 
-  !--------------------------------------------------------------------------------------------
+  !-----------------------------------------------------------------------------
   !       HIDRODINAMICA : MEDIO AMBIENTE
-  !       BLAST PROBLEM (high Order Finite Difference and Finite Volume WENO Schemes
+  !       BLAST PROBLEM
+  !       (high Order Finite Difference and Finite Volume WENO Schemes
   !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
-  !--------------------------------------------------------------------------------------------
+  !-----------------------------------------------------------------------------
 
 !ENVIRONMENT
 
@@ -114,41 +115,39 @@ subroutine initial_conditions(u)
           u(5,i,j,k) = cv*pressSN
         endif
 
-
-
-
-
       end do
     end do
   end do
 
   !  TRACER PARTICLES
   !  initialize Owners (-1 means no body has claimed the particle)
-  !print*, rank,size(partOwner)
   partOwner(:) = -1
   !  initialize Particles ID, not active is ID 0
   partID(:)    =  0
   n_activeMP   =  0
 
   !Insert homogenously distributed particles
-  do xi=1,64,2
-    do yj=1,64,2
+  do yj=2,ny,8
+    do xi=2,nx,8
 
-        !  position of particles
-        pos(1)= real(xi)*1./64.+0.5*dx
-        pos(2)= real(yj)*1./64.+0.5*dy
-        pos(3)= 0.
+        !  position of particles (respect to a corner --needed by isInDomain--)
+        pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
+        pos(2)= real(yj+ coords(1)*ny + 0.5) * dy
+        pos(3)= real( 1+ coords(2)*nz + 0.5) * dz
 
         if(isInDomain(pos) ) then
+
           n_activeMP            = n_activeMP + 1
           partOwner(n_activeMP) = rank
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,1:3) = pos(:)
           E0 =  10**( -gamma_pic*(-4 + 1.5*de) )
+
           do i = 1,NBinsSEDMP
             MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
             MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)/E0
           end do
+
         endif
 
       end do
