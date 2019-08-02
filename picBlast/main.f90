@@ -82,6 +82,8 @@ program guacho
 
   if (dif_rad) call diffuse_rad()
 
+  if (enable_pic .and. pic_distF) call flag_shock()
+
   !  writes the initial conditions
   if (.not.iwarm) then
     call write_output(itprint)
@@ -93,7 +95,7 @@ program guacho
 #endif
 
   !   time integration
-  do while (time <= tmax)
+  do while (time < tmax)
 
     !   computes the timestep
     call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
@@ -105,16 +107,16 @@ program guacho
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
-    if(enable_pic) then
-      if (pic_distF) call flag_shock()
-      call PICpredictor()
-    end if
+    if(enable_pic) call PICpredictor()
 
     !   advances the HD/MHD solution
     call tstep()
 
     !  if pic enabled compute corrector for particle positions
-    if(enable_pic) call PICcorrector()
+    if(enable_pic) then
+      if (pic_distF) call flag_shock()
+      call PICcorrector()
+    end if
 
     time = time + dt_CFL
       !   output at intervals tprint
