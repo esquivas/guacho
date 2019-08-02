@@ -21,15 +21,20 @@ vy   = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
 shockF = get_2d_cut(3,1,nout=nout,neq=0,path=path,base='shock-',verbose=False)
 plt.figure(2)
 plt.clf()
-plt.imshow(shockF, extent=[0,1,0,1], origin='lower', cmap='seismic_r' )
+#plt.imshow(shockF, extent=[0,1,0,1], origin='lower', cmap='viridis',interpolation = 'none' )
+plt.imshow(shockF.T, extent=[0,1,0,1], cmap='viridis',interpolation = 'none' )
 plt.colorbar()
-#divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 
+#divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 #X,Y = np.meshgrid( np.linspace(-1.,1.,num=rho.shape[0]),np.linspace(-1.,1.,num=rho.shape[1]) )
+
+dx = 1./128
+extent =  [0.5*dx,128.5*dx,0,1]
+extent =  [0,1,0,1]
 
 plt.figure(1)
 plt.clf()
-plt.imshow(rho, extent=[0,1,0,1], origin='lower', cmap='Spectral' )
+plt.imshow(rho, extent=extent, origin='lower', cmap='Spectral' )
 plt.colorbar()
 
 #plt.figure(2)
@@ -54,7 +59,7 @@ for (noutp) in range(0,nout):
 plt.legend()
 
 plt.figure(2)
-plt.plot(picData[:,1],picData[:,2],'o',markersize= 2,color="white")
+plt.plot(picData[:,1],picData[:,2],'o',markersize= 10,color="red",alpha=0.5)
 
 #    plt.clf()
 
@@ -62,3 +67,7 @@ plt.plot(picData[:,1],picData[:,2],'o',markersize= 2,color="white")
 #    plt.plot(part[:,ip,0],part[:,ip,1],'-o',markersize= 1)
 #    plt.xlim([0,1])
 #    plt.ylim([0,1])
+
+sp = np.genfromtxt('../picBlast/pic.out')
+plt.figure(2)
+plt.plot(sp[:,0], sp[:,1], 'o', markersize=10, color='blue',alpha=0.5)
