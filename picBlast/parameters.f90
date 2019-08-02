@@ -188,7 +188,7 @@ module parameters
   real, parameter :: tmax    = 0.5/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 0.05/tsc   !3.15e7*10.*5/tsc
-  real, parameter :: cfl=0.05                !< Courant-Friedrichs-Lewy number
+  real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.0              !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
