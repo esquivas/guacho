@@ -259,7 +259,7 @@ subroutine write_BIN(itprint)
         open(unit=unitout,file=file1,status='replace',access='stream')
 
         call write_header(unitout,1,0)
-        write (unitout) real(shockF(1:nx,1:ny,1:nz))
+        write (unitout) real(shockF)
         close(unitout)
 
       end if
