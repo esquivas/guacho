@@ -140,7 +140,7 @@ contains
   !> @param integer [out] shock :: shock (one if shocked material)
   subroutine flag_shock()
     use parameters
-    use globals,    only : dx, dy, dz, primit, coords, shockF
+    use globals,    only : dx, dy, dz, primit, shockF
     implicit none
     integer :: i,j,k
     !>  threshold for shock detection in thermal pressure gradient
