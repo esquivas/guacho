@@ -1,7 +1,5 @@
 module pic_module
-  use parameters, only : N_MP, pic_distF, NBinsSEDMP
-  use globals   , only : Q_MP0, Q_MP1, partOwner, n_activeMP, partID, &
-                         shockF, MP_SED
+
   implicit none
 
 contains
@@ -9,7 +7,8 @@ contains
   !================================================================
   ! @brief initialization of module
   subroutine init_pic()
-    use parameters, only : nx, ny, nz
+    use parameters, only : nx, ny, nz, pic_distF, N_MP, NBinsSEDMP
+    use globals, only : Q_MP0, Q_MP1, MP_SED, shockF, partID, partOwner
     implicit none
 
     if(pic_distF) then
@@ -43,7 +42,7 @@ contains
   !================================================================
   subroutine addMP(ID, ndata, Qdata, i_mp)
     use parameters, only : N_MP
-    use globals,    only : partID,Q_MP0
+    use globals,    only : partID,Q_MP0, n_activeMP
     implicit none
     integer, intent(in)  :: ID,ndata
     real,    intent(in)  :: Qdata(ndata)
@@ -51,7 +50,7 @@ contains
 
     ! sweep list and add element in empty slot
     do i_mp=1, n_mp
-      if(partID(i_mp)==0) then
+      if(partID(i_mp) == 0) then
         partID(i_mp)  = ID
         Q_MP0(i_mp,1:ndata) = Qdata(1:ndata)
         if (i_mp > n_activeMP) n_activeMP = i_mp
@@ -63,7 +62,8 @@ contains
   !================================================================
   subroutine PICpredictor
 
-    use globals,   only : primit, dt_CFL, rank, comm3d, Q_MP0, Q_MP1
+    use globals,   only : primit, dt_CFL, rank, comm3d, &
+                          Q_MP0, Q_MP1, MP_SED, partID
     use parameters
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
@@ -108,7 +108,7 @@ contains
                 if(pic_distF) then
                   !  computed following Vaidya et al, 2018 ApJ
                   !  adiabatic expansion term rho^n
-                  Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + primit(1,i,j,k)*weights(l)/3.
+                  Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + primit(1,i,j,k)*weights(l)
                   !  c_r  (synchrotron losses)
                   Q_MP0(i_mp,8) =  Q_MP0(i_mp,8) + weights(l)**2 *      &
                    ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
@@ -222,7 +222,8 @@ contains
   !================================================================
   subroutine PICcorrector
 
-    use globals,   only : primit, dt_CFL, rank, comm3d, MP_SED, Q_MP0, Q_MP1
+    use globals,   only : primit, dt_CFL, rank, comm3d, &
+                          MP_SED, Q_MP0, Q_MP1, partID
     use parameters
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
@@ -238,7 +239,6 @@ contains
     sendLoc(:)    =  0
     sendlist(:,:) =  0
     nLocSend      =  0
-
 
     do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
@@ -315,7 +315,6 @@ contains
       !   consolidate list to have info of all send/receive operations
     call mpi_allgather(sendLoc(:),  np, mpi_integer, &
                        sendList, np, mpi_integer, comm3d,err)
-
 
     !  exchange particles
     do iR=0,np-1
@@ -439,9 +438,9 @@ contains
   !> all the positions and velocities ( in the default real precision)
   subroutine write_pic(itprint)
 
-    use parameters, only : outputpath, np, pic_distF
+    use parameters, only : outputpath, np, pic_distF, N_MP, NBinsSEDMP
     use utilities
-    use globals,    only : rank, Q_MP0
+    use globals,    only : rank, Q_MP0, MP_SED, partID
     implicit none
     integer, intent(in) :: itprint
     character(len = 128) :: fileout
@@ -475,17 +474,51 @@ contains
     if (partID(i_mp) /=0) then
 
       write(unitout) partID(i_mp)
-      write(unitout) Q_MP0(i_mp,1:6)
-      if(pic_distF) write(unitout) MP_SED(1:2,1:100,i_mp)
+      write(unitout) Q_MP0(i_mp,1:3)
+      if(pic_distF) write(unitout) MP_SED(1:2,:,i_mp)
 
       if (isInShock(Q_MP0(i_mp,1:3))) then
-          print'(2f20.17)', Q_MP0(i_mp,1:2)
-      else
-          print'(2f20.17)', Q_MP0(i_mp,1:2)
+        print'(2f20.17)', Q_MP0(i_mp,1:2)
+      endif
+
+    end if
+  end do
+
+  close(unitout)
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !  tHIS IS ONLY FOT DEBUGGING PURPOSES
+  !  repeat only for shocked PARTICLES
+  write(fileout,'(a,i3.3,a,i3.3,a)')  &
+        trim(outputpath)//'BIN/pic-shocked-',rank,'.',itprint,'.bin'
+    unitout=rank+10
+
+  open(unit=unitout,file=fileout,status='unknown',access='stream')
+
+  i_active = 0
+  do i_mp=1,N_MP
+    if (partID(i_mp)/=0) then
+      if(isInShock(Q_MP0(i_mp,1:3)) ) i_active = i_active + 1
+    endif
+  end do
+  print*, i_active, ' particles in shock'
+
+  write(unitout) np, N_MP, i_active, 0
+  do i_mp=1,N_MP
+    if (partID(i_mp) /=0) then
+
+      if (isInShock(Q_MP0(i_mp,1:3))) then
+        write(unitout) partID(i_mp)
+        write(unitout) Q_MP0(i_mp,1:3)
       end if
 
     end if
   end do
+
+close(unitout)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 end subroutine write_pic
 
