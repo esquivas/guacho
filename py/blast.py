@@ -28,8 +28,6 @@ plt.colorbar()
 #divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 #X,Y = np.meshgrid( np.linspace(-1.,1.,num=rho.shape[0]),np.linspace(-1.,1.,num=rho.shape[1]) )
 
-dx = 1./128
-extent =  [-0.5*dx,128.5*dx,0,1]
 extent =  [0,1,0,1]
 
 plt.figure(1)
