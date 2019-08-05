@@ -10,7 +10,7 @@ plt.ion()
 #rmax=1.
 
 path = '../picBlast/BIN/'
-nout = 10
+nout = 9
 
 nproc = get_Nproc(nout,path=path)
 
@@ -29,7 +29,7 @@ plt.colorbar()
 #X,Y = np.meshgrid( np.linspace(-1.,1.,num=rho.shape[0]),np.linspace(-1.,1.,num=rho.shape[1]) )
 
 dx = 1./128
-extent =  [0.5*dx,128.5*dx,0,1]
+extent =  [-0.5*dx,128.5*dx,0,1]
 extent =  [0,1,0,1]
 
 plt.figure(1)
@@ -39,14 +39,14 @@ plt.colorbar()
 
 #plt.figure(2)
 #plt.clf()
-#plt.imshow(divV, origin='lower', cmap='Spectral' )
+#plt.imshow(divV, oriin='lower', cmap='Spectral' )
 #plt.colorbar()
 
 #Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 plt.figure(3) ; plt.clf()
 
-npart = 255
-for (noutp) in range(0,nout):
+npart = 250
+for (noutp) in range(nout+1):
     picData, SED= readpic(noutp,path=path)
     print(picData.shape)
     plt.figure(1)
@@ -59,7 +59,7 @@ for (noutp) in range(0,nout):
 plt.legend()
 
 plt.figure(2)
-plt.plot(picData[:,1],picData[:,2],'o',markersize= 10,color="red",alpha=0.5)
+plt.plot(picData[:,1],picData[:,2],'o',markersize=5, color="red",alpha=0.5)
 
 #    plt.clf()
 
@@ -68,6 +68,6 @@ plt.plot(picData[:,1],picData[:,2],'o',markersize= 10,color="red",alpha=0.5)
 #    plt.xlim([0,1])
 #    plt.ylim([0,1])
 
-sp = np.genfromtxt('../picBlast/pic.out')
+picDataS = readpic(nout,path=path, base='pic-shocked-')
 plt.figure(2)
-plt.plot(sp[:,0], sp[:,1], 'o', markersize=10, color='blue',alpha=0.5)
+plt.plot(picDataS[:,1], picDataS[:,2], '*', markersize=5, color='blue',alpha=0.5)
