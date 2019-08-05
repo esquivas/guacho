@@ -127,8 +127,8 @@ subroutine initial_conditions(u)
   n_activeMP   =  0
 
   !Insert homogenously distributed particles
-  do yj=2,ny,8
-    do xi=2,nx,8
+  do yj=2,ny,4
+    do xi=2,nx,4
 
         !  position of particles (respect to a corner --needed by isInDomain--)
         pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
