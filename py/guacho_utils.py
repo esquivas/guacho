@@ -279,9 +279,9 @@ def readpic(nout,path='', base='pic',trim=True):
     x  = np.zeros(nproc*n_mp)
     y  = np.zeros(nproc*n_mp)
     z  = np.zeros(nproc*n_mp)
-    vx = np.zeros(nproc*n_mp)
-    vy = np.zeros(nproc*n_mp)
-    vz = np.zeros(nproc*n_mp)
+    #vx = np.zeros(nproc*n_mp)
+    #vy = np.zeros(nproc*n_mp)
+    #vz = np.zeros(nproc*n_mp)
     id = np.zeros(nproc*n_mp, dtype = 'i4')-1
     if (n_bins > 0) :
       SED = np.zeros(shape=(nproc*n_mp,n_bins,2))
@@ -296,7 +296,7 @@ def readpic(nout,path='', base='pic',trim=True):
             ii -= 1
             id[ii] = ii
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
-            vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
+            #vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
             if (n_bins  > 0):
               for i_bin in range (n_bins):
                 SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
@@ -305,9 +305,11 @@ def readpic(nout,path='', base='pic',trim=True):
     if (n_bins > 0):
         indices = np.argsort(id)
         SED   = np.array(SED[indices,:,:])
-        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+        array = np.array ( sorted(zip(id,x,y,z)) )
+        #array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
     else:
-        array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+        array = np.array ( sorted(zip(id,x,y,z)) )
+        #array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
     if (trim) :
         #  trim
         n_mp = np.size(np.where(array[:,0] < 0 ))
