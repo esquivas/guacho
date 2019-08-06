@@ -46,6 +46,7 @@ module globals
   integer              :: n_activeMP     !< Number of active macro particles
   integer, allocatable :: shockF(:,:,:)  !< Shock detection flag (one is shock)
   real, allocatable    :: MP_SED(:,:,:)  !< Energy distribution of MP particles
+  real, allocatable    :: P_DSA(:,:,: )  !< Pre and post shock, MHD states
   ! For the split methods
   real, allocatable ::    primit0(:,:,:,:) !< primit zeros
 
