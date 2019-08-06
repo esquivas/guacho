@@ -142,7 +142,7 @@ subroutine initial_conditions(u)
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,1:3) = pos(:)
           E0 =  10**( -gamma_pic*(-4 + 1.5*de) )
-
+          Q_MP0(n_activeMP,4:) = 0.
           do i = 1,NBinsSEDMP
             MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
             MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)/E0
