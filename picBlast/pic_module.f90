@@ -122,8 +122,8 @@ contains
   end subroutine addMP
 
   !================================================================
-  !> @brief Predictor subroutine
-  !> @details Advances the position of the particle for the predictor stepped
+  !> @brief Predictor step subroutine
+  !> @details Advances the position of the particle for the predictor step
   !> as described in Vaidya et. al (2018)
   !> It also implements the required update of the SED of each MP, including
   !> the Diffuse Shock Acceleration treatment
@@ -192,107 +192,34 @@ contains
           end do
 
           !   DSA calculation
-          if (isInShock(Q_MP0(i_mp,1:3)) ) then
+          !   If particle was already inside shock
+          if (Q_MP0(i_mp,10) /= 0.) then
 
-            !  Pressure interpolation
+            !print*, 'particle ', partID(i_mp), 'marked inside the shock region'
+            !  interpolate Pressure
+            Q_MP0(i_mp,9) = 0.
             l=1
             do k= ind(3),ind(3)+1
               do j=ind(2),ind(2)+1
                 do i=ind(1),ind(1)+1
-                  Q_MP0(i_mp,9) =  Q_MP0(i_mp,9) + weights(l)
+                  Q_MP0(i_mp,9) = Q_MP0(i_mp,9) + primit(5,i,j,k)*weights(l)
+                  l = l +1
                 end do
               end do
             end do
 
-            if (Q_MP0(i_mp,10) == 0.) then
-
-              !print*, 'particle ', partID(i_mp), ' has just entered shock'
-              ! interpolate primitives and load them into both P_DSA
-              P_DSA(i_mp,:,6:8) = 0.
-              l=1
-              do k= ind(3),ind(3)+1
-                do j=ind(2),ind(2)+1
-                  do i=ind(1),ind(1)+1
-                    !  Interpolate B field components
-                    P_DSA(i_mp,1,6) = P_DSA(i_mp,1,6) + primit(6,i,j,k)*weights(l)
-                    P_DSA(i_mp,1,7) = P_DSA(i_mp,1,7) + primit(7,i,j,k)*weights(l)
-                    P_DSA(i_mp,1,8) = P_DSA(i_mp,1,8) + primit(8,i,j,k)*weights(l)
-                    l = l + 1
-                  end do
-                end do
-              end do
-              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
-              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
-              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
-              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
-              P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
-
-              P_DSA(i_mp,2,:) = P_DSA(i_mp,1,:)
-
-            else
-
-              !print*,  'particle ',partID(i_mp), ' is still inside shock'
-              if(Q_MP0(i_mp,9) < P_DSA(i_mp,1,5)) then
-
-                ! P < Pmin interpolate primitives and load into P_DSA(i_mp,1,:)
-                P_DSA(i_mp,1,6:8) = 0.
-                l=1
-                do k= ind(3),ind(3)+1
-                  do j=ind(2),ind(2)+1
-                    do i=ind(1),ind(1)+1
-                      !  Interpolate B field components
-                      P_DSA(i_mp,1,6) = P_DSA(i_mp,1,6) + primit(6,i,j,k)*weights(l)
-                      P_DSA(i_mp,1,7) = P_DSA(i_mp,1,7) + primit(7,i,j,k)*weights(l)
-                      P_DSA(i_mp,1,8) = P_DSA(i_mp,1,8) + primit(8,i,j,k)*weights(l)
-                      l = l + 1
-                    end do
-                  end do
-                end do
-                P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
-                P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
-                P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
-                P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
-                P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
-
-              else if (Q_MP0(i_mp,9) > P_DSA(i_mp,2,5)) then
-
-                !P > Pmax interpolate primitives and load into P_DSA(i_mp,2,:)
-                P_DSA(i_mp,2,6:8) = 0.
-                l=1
-                do k= ind(3),ind(3)+1
-                  do j=ind(2),ind(2)+1
-                    do i=ind(1),ind(1)+1
-                      !  Interpolate B field components
-                      P_DSA(i_mp,2,6) = P_DSA(i_mp,2,6) + primit(6,i,j,k)*weights(l)
-                      P_DSA(i_mp,2,7) = P_DSA(i_mp,2,7) + primit(7,i,j,k)*weights(l)
-                      P_DSA(i_mp,2,8) = P_DSA(i_mp,2,8) + primit(8,i,j,k)*weights(l)
-                      l = l + 1
-                    end do
-                  end do
-                end do
-                P_DSA(i_mp,2,1) = Q_MP0(i_mp,8)  !  Density
-                P_DSA(i_mp,2,2) = Q_MP0(i_mp,4)  !  vx
-                P_DSA(i_mp,2,3) = Q_MP0(i_mp,5)  !  vy
-                P_DSA(i_mp,2,4) = Q_MP0(i_mp,6)  !  vz
-                P_DSA(i_mp,2,5) = Q_MP0(i_mp,9)  !  P
-
-              end if
-            end if
-
-          elseif (Q_MP0(i_mp,10) /= 0.) then
-            print*, 'particle ', partID(i_mp), 'has left the shock region'
-            Q_MP0(i_mp,10) = 0.
-
-            if(Q_MP0(i_mp,9) < P_DSA(i_mp,1,5)) then
+            if(Q_MP0(i_mp,9) < P_DSA(i_mp,1,5)) then  ! (P < Pmin)
+              ! interpolate primitives and load them to P_DSA(i_mp,1,:)
+              !print*, 'Set P1 of particle ', partID(i_mp)
               l=1
               P_DSA(i_mp,1,6:8) = 0.
               do k= ind(3),ind(3)+1
                 do j=ind(2),ind(2)+1
                   do i=ind(1),ind(1)+1
                     !  Interpolate B field components
-                    P_DSA(i_mp,1,6) = P_DSA(i_mp,1,6) + primit(6,i,j,k)*weights(l)
-                    P_DSA(i_mp,1,7) = P_DSA(i_mp,1,7) + primit(7,i,j,k)*weights(l)
-                    P_DSA(i_mp,1,8) = P_DSA(i_mp,1,8) + primit(8,i,j,k)*weights(l)
+                    P_DSA(i_mp,1,6)=P_DSA(i_mp,1,6) + primit(6,i,j,k)*weights(l)
+                    P_DSA(i_mp,1,7)=P_DSA(i_mp,1,7) + primit(7,i,j,k)*weights(l)
+                    P_DSA(i_mp,1,8)=P_DSA(i_mp,1,8) + primit(8,i,j,k)*weights(l)
                     l = l + 1
                   end do
                 end do
@@ -303,16 +230,18 @@ contains
               P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
               P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
 
-            else if (Q_MP0(i_mp,9) > P_DSA(i_mp,2,5)) then
+            else if (Q_MP0(i_mp,9) > P_DSA(i_mp,2,5)) then  ! (P > Pmax)
+              ! interpolate primitives and load them to P_DSA(i_mp,2,:)
+              !print*, 'Set P2 of particle ', partID(i_mp)
               P_DSA(i_mp,2,6:8) = 0.
               l=1
               do k= ind(3),ind(3)+1
                 do j=ind(2),ind(2)+1
                   do i=ind(1),ind(1)+1
                     !  Interpolate B field components
-                    P_DSA(i_mp,2,6) = P_DSA(i_mp,2,6) + primit(6,i,j,k)*weights(l)
-                    P_DSA(i_mp,2,7) = P_DSA(i_mp,2,7) + primit(7,i,j,k)*weights(l)
-                    P_DSA(i_mp,2,8) = P_DSA(i_mp,2,8) + primit(8,i,j,k)*weights(l)
+                    P_DSA(i_mp,2,6)=P_DSA(i_mp,2,6) + primit(6,i,j,k)*weights(l)
+                    P_DSA(i_mp,2,7)=P_DSA(i_mp,2,7) + primit(7,i,j,k)*weights(l)
+                    P_DSA(i_mp,2,8)=P_DSA(i_mp,2,8) + primit(8,i,j,k)*weights(l)
                     l = l + 1
                   end do
                 end do
@@ -324,6 +253,50 @@ contains
               P_DSA(i_mp,2,5) = Q_MP0(i_mp,9)  !  P
 
             end if
+
+            if (.not.isInShock(Q_MP0(i_mp,1:3))) then
+              !print*, 'particle ', partID(i_mp), 'has left the shock region'
+              !  Clear shock particle flag
+              Q_MP0(i_mp,10) = 0.
+            end if
+
+          else
+            !  particle not marked as in shock, it is either entering or
+            !  happily living its life
+            if (isInShock(Q_MP0(i_mp,1:3))) then
+
+              !print*, 'particle ', partID(i_mp), ' has just entered shock'
+
+              !  Mark it as shocked for future Reference
+              Q_MP0(i_mp,10) = 1.
+
+              !  interpolate primitives and load them to both P_DSA(i_mp,1:2,:)
+              l=1
+              P_DSA(i_mp,1,6:8) = 0.
+              Q_MP0(i_mp,9) = 0.
+              do k= ind(3),ind(3)+1
+                do j=ind(2),ind(2)+1
+                  do i=ind(1),ind(1)+1
+                    !  Interpolate Pressure
+                    Q_MP0(i_mp,9) = Q_MP0(i_mp,9) + primit(5,i,j,k)*weights(l)
+                    !  Interpolate B field components
+                    P_DSA(i_mp,1,6)=P_DSA(i_mp,1,6) + primit(6,i,j,k)*weights(l)
+                    P_DSA(i_mp,1,7)=P_DSA(i_mp,1,7) + primit(7,i,j,k)*weights(l)
+                    P_DSA(i_mp,1,8)=P_DSA(i_mp,1,8) + primit(8,i,j,k)*weights(l)
+                    l = l + 1
+                  end do
+                end do
+              end do
+              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
+              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
+              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
+              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
+              P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
+
+              !  Copy to P_DSA(i_mp,2,:)
+              P_DSA(i_mp,2,:) = P_DSA(i_mp,1,:)
+
+            endif
 
           end if
 
@@ -339,7 +312,8 @@ contains
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
           dataLoc(nLocSend) = i_mp
-          !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp), ' is going to ',DEST
+          !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp),  &
+          !                     ' is going to ',DEST
         end if
 
       end if
@@ -359,25 +333,27 @@ contains
             do i=1,sendlist(iR,iS)
               !    if (iR /= -1) then
               if (pic_distF) then
+
                 !print*,'>>>',rank,partID(dataLoc(i)),dataLoc(i)
                 !  pack info if we are solving the SED
                 fullSend(1:10)  = Q_MP0(dataLoc(i),1:10)
                 fullSend(11:18) = P_DSA(dataLoc(i),1,:)
                 fullSend(19:26) = P_DSA(dataLoc(i),2,:)
-                fullSend(27:           26  +NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
-                fullSend(27+NBinsSEDMP:26+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                fullSend(27:           26  +NBinsSEDMP)=                       &
+                                              MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                fullSend(27+NBinsSEDMP:26+2*NBinsSEDMP)=                       &
+                                              MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
                 !  send the whole thing
-                call mpi_send( fullSend ,26+2*NBinsSEDMP, mpi_real_kind ,IR, &
-                partID(dataLoc(i)), comm3d,err)
+                call mpi_send( fullSend ,26+2*NBinsSEDMP, mpi_real_kind ,IR,   &
+                              partID(dataLoc(i)), comm3d,err)
 
               else
 
                 !  in case we are only passing the particles and not their SED
-                call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR, &
-                partID(dataLoc(i)), comm3d,err)
+                call mpi_send( Q_MP0(dataLoc(i),1:6) , 6, mpi_real_kind ,IR,   &
+                              partID(dataLoc(i)), comm3d,err)
 
               endif
-              !    endif
 
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
@@ -392,10 +368,11 @@ contains
             do i=1,sendList(iR,iS)
 
               if (pic_distF) then
+
                 !print*,'<<<',rank,' will recv here from ',IS
                 !  in case we are only the particles w/their SED
-                call mpi_recv(fullRecv,26+2*NBinsSEDMP, mpi_real_kind, IS, &
-                mpi_any_tag,comm3d, status, err)
+                call mpi_recv(fullRecv,26+2*NBinsSEDMP, mpi_real_kind, IS,     &
+                              mpi_any_tag,comm3d, status, err)
 
                 !  add current particle in list and data in new processor
                 call addMP( status(MPI_TAG), 10, fullRecv(1:10), i_mp )
@@ -404,11 +381,12 @@ contains
                 ! unpack the SED
                 MP_SED(1,1:100,i_mp) = fullRecv(27:           26  +NBinsSEDMP)
                 MP_SED(2,1:100,i_mp) = fullRecv(27+NBinsSEDMP:26+2*NBinsSEDMP)
+
               else
 
                 !  in case we are only passing the particles and not their SED
-                call mpi_recv(fullRecv(1:6), 6, mpi_real_kind, IS, mpi_any_tag, &
-                comm3d, status, err)
+                call mpi_recv(fullRecv(1:6), 6, mpi_real_kind, IS, mpi_any_tag,&
+                              comm3d, status, err)
                 !print*,'received successfuly', status(MPI_TAG)
 
                 !  add current particle in list and data in new processor
@@ -430,16 +408,21 @@ contains
   end subroutine PICpredictor
 
   !================================================================
-  subroutine PICcorrector
+  !> @brief Corrector step subroutine
+  !> @details Advances the position of the particle for the corrector step
+  !> as described in Vaidya et. al (2018)
+  !> It also implements the required update of the SED of each MP, including
+  !> the Diffuse Shock Acceleration treatment
+  subroutine PICcorrector()
 
-    use globals,   only : primit, dt_CFL, rank, comm3d, &
+    use globals,   only : primit, dt_CFL, rank, comm3d,                        &
                           MP_SED, Q_MP0, Q_MP1, partID
     use parameters
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8), vel1(3)
-    integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1), &
+    integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1),                &
                sendList(0:np-1,0:np-1)
     real    :: fullSend(2*NBinsSEDMP+3), fullRecv(2*NBinsSEDMP+3)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
@@ -452,62 +435,63 @@ contains
 
     do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
-        ! Calculate interpolation reference and weights
-        call interpBD(Q_MP1(i_mp,1:3),ind,weights)
         if (partID(i_mp)/=0 .and. isInDomain(Q_MP1(i_mp,1:3)) ) then
-        !  Interpolate the velocity field to particle position, and add
-        !  to the velocity from the corrector step
-        !  Interpolates the magnetic field to calculate beta.
-        l=1
-        vel1(:) = 0.
 
-        if(pic_distF) then
-          ema = 0.
-          bdist = 0.
-          rhoNP1 = 0.
-          crNP1  = 0.
-        end if
+          !  clear come variables
+          if(pic_distF) then
+            ema = 0.
+            bdist = 0.
+            rhoNP1 = 0.
+            crNP1  = 0.
+          end if
 
-        do k= ind(3),ind(3)+1
-          do j=ind(2),ind(2)+1
-            do i=ind(1),ind(1)+1
-              !  interpolate velocity / density and B**2
-              vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
-              vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
-              vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
+          !  Interpolate the velocity field to particle position, and add
+          !  to the velocity from the corrector step
+          !  Calculate interpolation reference and weights
+          call interpBD(Q_MP1(i_mp,1:3),ind,weights)
+          !  Interpolates the magnetic field to calculate beta.
+          l=1
+          vel1(:) = 0.
+          do k= ind(3),ind(3)+1
+            do j=ind(2),ind(2)+1
+              do i=ind(1),ind(1)+1
+                !  interpolate velocity / density and B**2
+                vel1(1) = vel1(1) + primit(2,i,j,k)*weights(l)
+                vel1(2) = vel1(2) + primit(3,i,j,k)*weights(l)
+                vel1(3) = vel1(3) + primit(4,i,j,k)*weights(l)
 
-              !  if we're following the MP SED, interpolate alpha and beta
-              if (pic_distF) then
-                !   source terms
-                rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
-                crNP1  = crNP1  + weights(l)**2 *   &
-                 ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
+                !  if we're following the MP SED, interpolate alpha and beta
+                if (pic_distF) then
+                  !   source terms
+                  rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
+                  crNP1  = crNP1  + weights(l)**2 *                            &
+                   ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
 
-              end if
-              l = l + 1
+                end if
+                l = l + 1
+              end do
             end do
           end do
-        end do
 
-        !  corrector step (only position is updated)
-        Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3)            &
-        + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
+          !  corrector step (only position is updated)
+          Q_MP0(i_mp,1:3) = Q_MP0(i_mp,1:3)                                    &
+                          + 0.5*dt_CFL*( Q_MP0(i_mp,4:6) + vel1(1:3) )
 
-        if (pic_distF) then
-          !  exp(-a) and cr
-          ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
-          ! eq. (23) Vaidya et al. 2018
-          bdist  = 0.5*dt_CFL*( Q_MP0(i_mp,7) + ema*crNP1        )
+          if (pic_distF) then
+            !  exp(-a) and cr
+            ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
+            ! eq. (23) Vaidya et al. 2018
+            bdist  = 0.5*dt_CFL*( Q_MP0(i_mp,7) + ema*crNP1        )
 
-          do ib=1,NBinsSEDMP
+            do ib=1,NBinsSEDMP
 
-            MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*ema*&
-                              (1.+bdist*MP_SED(1,ib,i_mp))**2
+              MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*ema*                         &
+                                (1.+bdist*MP_SED(1,ib,i_mp))**2
 
-            MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*ema/&
-                              (1.+bdist*MP_SED(1,ib,i_mp))
+              MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*ema/                         &
+                                (1.+bdist*MP_SED(1,ib,i_mp))
 
-          end do
+            end do
 
         end if
 
@@ -523,8 +507,8 @@ contains
       end if
     end do
 
-      !   consolidate list to have info of all send/receive operations
-    call mpi_allgather(sendLoc(:),  np, mpi_integer, &
+    !   consolidate list to have info of all send/receive operations
+    call mpi_allgather(sendLoc(:),  np, mpi_integer,                           &
                        sendList, np, mpi_integer, comm3d,err)
 
     !  exchange particles
@@ -535,25 +519,27 @@ contains
           if(iS == rank) then
             do i=1,sendlist(iR,iS)
 
-        !      if (iR /= -1) then
+              !      if (iR /= -1) then
                 if (pic_distF) then
 
                   !  pack info if we are solving the SED
                   fullSend(1:3) = Q_MP0(dataLoc(i),1:3)
-                  fullSend(4:             3+NBinsSEDMP)=MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
-                  fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+                  fullSend(4:             3+NBinsSEDMP)=                       &
+                                              MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
+                  fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=                       &
+                                              MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
                   !  send the whole thing
-                  call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR, &
-                  partID(dataLoc(i)), comm3d,err)
+                  call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR,  &
+                                partID(dataLoc(i)), comm3d,err)
 
                 else
 
                   !   if not solving the SED, send only X
                   call mpi_send( Q_MP0(dataLoc(i),1:3) , 3, mpi_real_kind ,IR, &
-                  partID(dataLoc(i)), comm3d,err)
+                                partID(dataLoc(i)), comm3d,err)
 
                 end if
-        !      endif
+
               !  deactivate particle from current processor
               call deactivateMP(dataLoc(i))
             end do
@@ -594,8 +580,8 @@ contains
   end subroutine PICcorrector
 
   !================================================================
-  !  @brief bilineal interpolator
-  !  @ details: returns weights and indices corresponding to a bilineal
+  !> @brief bilineal interpolator
+  !> @ details: returns weights and indices corresponding to a bilineal
   !> interpolation at for the particle position.
   !> @param real [in] pos(3) : Three dimensional position of particle,
   !> @param integer   ind(3) : Reference corner i0,j0,k0 indices of the cube of
@@ -643,8 +629,8 @@ contains
   end subroutine interpBD
 
   !================================================================
-  ! @brief Writes pic output
-  ! @details Writes position and particles velocities in a single file
+  !> @brief Writes pic output
+  !> @details Writes position and particles velocities in a single file
   !> format is binary, one integer with the number of points in domain, and then
   !> all the positions and velocities ( in the default real precision)
   subroutine write_pic(itprint)
