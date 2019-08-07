@@ -1,3 +1,31 @@
+!=======================================================================
+!> @file pic_module.f90
+!> @brief PIC module
+!> @author Alejandro Esquivel & Matias Schneiter
+!> @date 7/Ago/2019
+
+! Copyright (c) 2016 Guacho Co-Op
+!
+! This file is part of Guacho-3D.
+!
+! Guacho-3D is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation; either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see http://www.gnu.org/licenses/.
+!=======================================================================
+
+!> @brief PIC module
+!> @details Implementation of a prticle module, based in
+!> Vaidya et al. 2918, ApJ, 865, 144
+
 module pic_module
 
   implicit none
@@ -5,7 +33,9 @@ module pic_module
 contains
 
   !================================================================
-  ! @brief initialization of module
+  !> @brief Initialization of module
+  !> @details Allocates memory for all global variables that correspond
+  !> to the particle module
   subroutine init_pic()
     use parameters, only : nx, ny, nz, pic_distF, N_MP, NBinsSEDMP
     use globals, only : Q_MP0, Q_MP1, MP_SED, P_DSA, shockF, partID, partOwner
@@ -20,22 +50,35 @@ contains
       ! eq = 8   : rho
       ! eq = 9   : P
       ! eq = 10  : Shock flag (1 if shocked)
+
       allocate( shockF(nx,ny,nz) )
+      !  used to mark in the MHD grid shocked regions (shockF(i,j,k)=1)
+
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
+      !MP_SED(1,:,i) :  Energy (Lagrangian) bins
+      !MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
+
       allocate( P_DSA(N_MP,2,8))
-      !  P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
-      !  P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
+      !P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
+      !P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
     else
       allocate( Q_MP0(N_MP,6) )
+      !Q_MP0(i, eq) has the following info:
+      ! eq = 1-3 : x, y, z
+      ! eq = 4-6 : vx, vy, vz
     end if
 
-    allocate( Q_MP1(N_MP,3) )
-    allocate( partID   (N_MP) )
-    allocate( partOwner(N_MP) )
+    allocate( Q_MP1(N_MP,3) )    ! x,y,z position advanced by the predictor
+    allocate( partID   (N_MP) )  ! Individual particle identifier
+    allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
 
   end subroutine init_pic
 
   !================================================================
+  !> @brief Deactivation of particle
+  !> @details Takes out particle from the active list, and modifies then
+  !> updates the n_activeMP variable if needed
+  !> @param integer [in] i_mp : local position of the particle to be deactivated
   subroutine deactivateMP(i_mp)
     use globals,    only : partID, n_activeMP
     implicit none
@@ -50,6 +93,14 @@ contains
   end subroutine deactivateMP
 
   !================================================================
+  !> @brief Insertion of of new particle
+  !> @details Add a new particle, and its data to the local arrays
+  !> partID(i_mp), Q_MP0(i_mp)
+  !> updates the n_activeMP variable if needed
+  !> @param integer [in ] ID    : ID of particle to be inserted
+  !> @param integer [in ] ndata : number of data fields to be inserted
+  !> @param integer [in ] Qdata(ndata) : Data to be loaded into Q_MP0
+  !> @param integer [out] i_mp  : local position of the particle added
   subroutine addMP(ID, ndata, Qdata, i_mp)
     use parameters, only : N_MP
     use globals,    only : partID,Q_MP0, n_activeMP
@@ -69,8 +120,14 @@ contains
     end do
 
   end subroutine addMP
+
   !================================================================
-  subroutine PICpredictor
+  !> @brief Predictor subroutine
+  !> @details Advances the position of the particle for the predictor stepped
+  !> as described in Vaidya et. al (2018)
+  !> It also implements the required update of the SED of each MP, including
+  !> the Diffuse Shock Acceleration treatment
+  subroutine PICpredictor()
 
     use globals,   only : primit, dt_CFL, rank, comm3d, &
                           Q_MP0, Q_MP1, P_DSA, MP_SED, partID
@@ -82,7 +139,7 @@ contains
                dataLoc(N_MP), iS, iR
     real    :: weights(8)
     real    :: fullSend(2*NBinsSEDMP+26), fullRecv(2*NBinsSEDMP+26)
-    !          that was 2*NBinsSEDMP of the SED, 10 of Q_MP0 and 2*8 from P_DSA
+    !          that is 2*NBinsSEDMP of the SED, 10 of Q_MP0 and 2*8 from P_DSA
     integer:: status(MPI_STATUS_SIZE), err
     ! initialize send and recv lists
     dataLoc(:)    =  0
@@ -100,12 +157,14 @@ contains
           ! Calculate interpolation reference and weights
           call interpBD(Q_MP0(i_mp,1:3),ind,weights)
 
-          !  Interpolate the velocity and magnetic field to particle position
+          !  Clear arrays for interpolation
           if (pic_distF) then
             Q_MP0(i_mp,4:9) = 0.
           else
             Q_MP0(i_mp,4:6) = 0.
           end if
+
+          !  Interpolate u, [B^2 & rho if needed] to particle position
           l=1
           do k= ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
@@ -126,6 +185,7 @@ contains
                   !  aiabatic expansion term rho^n
                   Q_MP0(i_mp,8) = Q_MP0(i_mp,8) + primit(1,i,j,k)*weights(l)
                 end if
+
                 l = l + 1
               end do
             end do
@@ -133,18 +193,21 @@ contains
 
           !   DSA calculation
           if (isInShock(Q_MP0(i_mp,1:3)) ) then
+
+            !  Pressure interpolation
             l=1
             do k= ind(3),ind(3)+1
               do j=ind(2),ind(2)+1
                 do i=ind(1),ind(1)+1
-                  !  Pressure
                   Q_MP0(i_mp,9) =  Q_MP0(i_mp,9) + weights(l)
                 end do
               end do
             end do
 
             if (Q_MP0(i_mp,10) == 0.) then
-              print*, 'particle ', partID(i_mp), ' has just entered shock'
+
+              !print*, 'particle ', partID(i_mp), ' has just entered shock'
+              ! interpolate primitives and load them into both P_DSA
               P_DSA(i_mp,:,6:8) = 0.
               l=1
               do k= ind(3),ind(3)+1
@@ -167,10 +230,13 @@ contains
               P_DSA(i_mp,2,:) = P_DSA(i_mp,1,:)
 
             else
-              print*,  'particle ',partID(i_mp), ' is still inside shock'
+
+              !print*,  'particle ',partID(i_mp), ' is still inside shock'
               if(Q_MP0(i_mp,9) < P_DSA(i_mp,1,5)) then
-                l=1
+
+                ! P < Pmin interpolate primitives and load into P_DSA(i_mp,1,:)
                 P_DSA(i_mp,1,6:8) = 0.
+                l=1
                 do k= ind(3),ind(3)+1
                   do j=ind(2),ind(2)+1
                     do i=ind(1),ind(1)+1
@@ -189,6 +255,8 @@ contains
                 P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
 
               else if (Q_MP0(i_mp,9) > P_DSA(i_mp,2,5)) then
+
+                !P > Pmax interpolate primitives and load into P_DSA(i_mp,2,:)
                 P_DSA(i_mp,2,6:8) = 0.
                 l=1
                 do k= ind(3),ind(3)+1
@@ -210,6 +278,7 @@ contains
 
               end if
             end if
+
           elseif (Q_MP0(i_mp,10) /= 0.) then
             print*, 'particle ', partID(i_mp), 'has left the shock region'
             Q_MP0(i_mp,10) = 0.
