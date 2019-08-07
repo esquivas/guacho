@@ -258,6 +258,7 @@ contains
               !print*, 'particle ', partID(i_mp), 'has left the shock region'
               !  Clear shock particle flag
               Q_MP0(i_mp,10) = 0.
+              !***  Here, the SED should be updated with te DSA prescription***
             end if
 
           else
@@ -563,7 +564,7 @@ contains
                  MP_SED(2,1:100,i_mp) = fullRecv(4+NBinsSEDMP:3+2*NBinsSEDMP)
               else
 
-                call mpi_recv(fullRecv(1:3), 3, mpi_real_kind, IS, mpi_any_tag, &
+                call mpi_recv(fullRecv(1:3), 3, mpi_real_kind, IS, mpi_any_tag,&
                               comm3d, status, err)
                 !  add current particle in list and data in new processor
                 call addMP( status(MPI_TAG), 3, fullRecv(1:3), i_mp )
@@ -632,7 +633,9 @@ contains
   !> @brief Writes pic output
   !> @details Writes position and particles velocities in a single file
   !> format is binary, one integer with the number of points in domain, and then
-  !> all the positions and velocities ( in the default real precision)
+  !> all the positions and velocities (in the default real precision)
+  !> param integer [in] itprint : number of itration (coincides with the [M]HD
+  !> output)
   subroutine write_pic(itprint)
 
     use parameters, only : outputpath, np, pic_distF, N_MP, NBinsSEDMP
