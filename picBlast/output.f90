@@ -30,31 +30,30 @@ module output
 
 contains
 
-!=======================================================================
-!> @brief Writes output
-!> @details Writes output, the format is chosen in makefile
-!! @n Supported formats are
-!! *.bin and VTK (both BINARY), Silo (+hdf5)
-!> @param integer [in] itprint : number of output
+  !=======================================================================
+  !> @brief Writes output
+  !> @details Writes output, the format is chosen in makefile
+  !! @n Supported formats are
+  !! *.bin and VTK (both BINARY), Silo (+hdf5)
+  !> @param integer [in] itprint : number of output
+  subroutine write_output(itprint)
 
-subroutine write_output(itprint)
+    use parameters !, only :: out_bin, out_vtk, out_silo
+    use Out_BIN_Module
+    use Out_Silo_Module
+    use Out_VTK_Module
+    use pic_module
+    implicit none
+    integer, intent(in) :: itprint
 
-  use parameters !, only :: out_bin, out_vtk, out_silo
-  use Out_BIN_Module
-  use Out_Silo_Module
-  use Out_VTK_Module
-  use pic_module
-  implicit none
-  integer, intent(in) :: itprint
+    if (out_bin ) call write_BIN(itprint)
+    if (out_vtk ) call write_VTK(itprint)
+    if (out_silo) call write_silo(itprint)
+    if (enable_pic) call write_pic(itprint)
 
-  if (out_bin ) call write_BIN(itprint)
-  if (out_vtk ) call write_VTK(itprint)
-  if (out_silo) call write_silo(itprint)
-  if (enable_pic) call write_pic(itprint)
+  end subroutine write_output
 
-end subroutine write_output
-
-!=======================================================================
+  !=======================================================================
 
 end module output
 
