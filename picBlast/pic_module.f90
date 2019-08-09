@@ -3,7 +3,7 @@
 !> @brief PIC module
 !> @author Alejandro Esquivel & Matias Schneiter
 !> @date 7/Ago/2019
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -591,7 +591,7 @@ contains
   !> interopolation in the following order
   !> 1-> i0,j0,k0,  3-> i0,j1,k0,  5-> i0,j0,k1,  7-> i0,j1,k1
   !> 2-> i1,j0,k0,  4-> i1,j1,k0,  6-> i1,j0,k1,  8-> i1,j1,k1
-    subroutine interpBD(pos,ind,weights)
+  subroutine interpBD(pos,ind,weights)
 
     use parameters, only : nx, ny, nz
     use globals,    only : coords, dx, dy, dz
@@ -655,68 +655,66 @@ contains
     unitout=10
 #endif
 
-  open(unit=unitout,file=fileout,status='unknown',access='stream')
+    open(unit=unitout,file=fileout,status='unknown',access='stream')
 
-  i_active = 0
-  do i_mp=1,N_MP
-    if(partID(i_mp)/=0) i_active = i_active + 1
-  end do
+    i_active = 0
+    do i_mp=1,N_MP
+      if(partID(i_mp)/=0) i_active = i_active + 1
+    end do
 
-  !  write how many particles are in rank domain
-  if (.not.pic_distF) then
-    write(unitout) np, N_MP, i_active, 0  !n_activeMP
-  else
-    write(unitout) np, N_MP, i_active, NBinsSEDMP
-  end if
-
-  !  loop over particles owned by processor and write the active ones
-  do i_mp=1,N_MP
-    if (partID(i_mp) /=0) then
-
-      write(unitout) partID(i_mp)
-      write(unitout) Q_MP0(i_mp,1:3)
-      if(pic_distF) write(unitout) MP_SED(1:2,:,i_mp)
-
+    !  write how many particles are in rank domain
+    if (.not.pic_distF) then
+      write(unitout) np, N_MP, i_active, 0  !n_activeMP
+    else
+      write(unitout) np, N_MP, i_active, NBinsSEDMP
     end if
-  end do
 
-  close(unitout)
+    !  loop over particles owned by processor and write the active ones
+    do i_mp=1,N_MP
+      if (partID(i_mp) /=0) then
 
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  !  tHIS IS ONLY FOR DEBUGGING PURPOSES
-  !  repeat only for shocked PARTICLES
-  write(fileout,'(a,i3.3,a,i3.3,a)')  &
-        trim(outputpath)//'BIN/pic-shocked-',rank,'.',itprint,'.bin'
-    unitout=rank+10
-
-  open(unit=unitout,file=fileout,status='unknown',access='stream')
-
-  i_active = 0
-  do i_mp=1,N_MP
-    if (partID(i_mp)/=0) then
-      if(isInShock(Q_MP0(i_mp,1:3)) ) i_active = i_active + 1
-    endif
-  end do
-  !print*, i_active, ' particles in shock'
-
-  write(unitout) np, N_MP, i_active, 0
-  do i_mp=1,N_MP
-    if (partID(i_mp) /=0) then
-
-      if (isInShock(Q_MP0(i_mp,1:3))) then
         write(unitout) partID(i_mp)
         write(unitout) Q_MP0(i_mp,1:3)
+        if(pic_distF) write(unitout) MP_SED(1:2,:,i_mp)
+
       end if
+    end do
 
-    end if
-  end do
+    close(unitout)
 
-close(unitout)
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !  tHIS IS ONLY FOR DEBUGGING PURPOSES
+    !  repeat only for shocked PARTICLES
+    write(fileout,'(a,i3.3,a,i3.3,a)')  &
+    trim(outputpath)//'BIN/pic-shocked-',rank,'.',itprint,'.bin'
+    unitout=rank+10
 
+    open(unit=unitout,file=fileout,status='unknown',access='stream')
 
-end subroutine write_pic
+    i_active = 0
+    do i_mp=1,N_MP
+      if (partID(i_mp)/=0) then
+        if(isInShock(Q_MP0(i_mp,1:3)) ) i_active = i_active + 1
+      endif
+    end do
+    !print*, i_active, ' particles in shock'
+
+    write(unitout) np, N_MP, i_active, 0
+    do i_mp=1,N_MP
+      if (partID(i_mp) /=0) then
+
+        if (isInShock(Q_MP0(i_mp,1:3))) then
+          write(unitout) partID(i_mp)
+          write(unitout) Q_MP0(i_mp,1:3)
+        end if
+
+      end if
+    end do
+
+    close(unitout)
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  end subroutine write_pic
 
 end module pic_module
 
