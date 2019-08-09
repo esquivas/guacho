@@ -3,7 +3,7 @@
 !> @brief User input module
 !> @author C. Villarreal, M. Schneiter, A. Esquivel
 !> @date 4/May/2016
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -24,9 +24,9 @@
 
 !> @brief User imput module
 !> @details  This is an attempt to have all input neede from user in a
-!! single file
-!!!  This module should load additional modules (i.e. star, jet, sn), to
-!!  impose initial and boundary conditions (such as sources)
+!> single file
+!> This module should load additional modules (i.e. star, jet, sn), to
+!> impose initial and boundary conditions (such as sources)
 
 module user_mod
 
@@ -36,99 +36,98 @@ module user_mod
 
 contains
 
-!> @brief Initializes variables in the module, as well as other
-!! modules loaded by user.
-!! @n It has to be present, even if empty
-subroutine init_user_mod()
+  !=====================================================================
+  !> @brief Initializes variables in the module, as well as other
+  !! modules loaded by user.
+  !! @n It has to be present, even if empty
+  subroutine init_user_mod()
 
-  implicit none
-  !  initialize modules loaded by user
-!  call init_vortex()
+    implicit none
+    !  initialize modules loaded by user
+    !  call init_vortex()
 
-end subroutine init_user_mod
+  end subroutine init_user_mod
 
-!=====================================================================
+  !=====================================================================
+  !> @brief Here the domain is initialized at t=0
+  !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+  !> conserved variables
+  !> @param real [in] time : time in the simulation (code units)
+  subroutine initial_conditions(u)
 
-!> @brief Here the domain is initialized at t=0
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-!> conserved variables
-!> @param real [in] time : time in the simulation (code units)
+    use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,      &
+          pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
+          gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np
 
-subroutine initial_conditions(u)
+    use globals,    only : coords, dx ,dy ,dz, rank,                           &
+                           Q_MP0, partID, partOwner, n_activeMP, MP_SED
+    use constants,  only : pi
+    use utilities,  only : isInDomain
 
-  use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-       pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-       gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np
-
-  use globals,    only : coords, dx ,dy ,dz, rank,                          &
-                         Q_MP0, partID, partOwner, n_activeMP, MP_SED
-  use constants,  only : pi
-  use utilities,  only : isInDomain
-
-  implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  !logical ::  isInDomain
-  integer :: i,j,k
-  real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
-  integer :: yj,xi
-  real    :: pos(3), E0
-  real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
-
-
-  !-----------------------------------------------------------------------------
-  !       HIDRODINAMICA : MEDIO AMBIENTE
-  !       BLAST PROBLEM
-  !       (high Order Finite Difference and Finite Volume WENO Schemes
-  !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
-  !-----------------------------------------------------------------------------
-
-!ENVIRONMENT
-
-  u(1,:,:,:) = 1.
-  u(2,:,:,:) = 0.
-  u(3,:,:,:) = 0.
-  u(4,:,:,:) = 0.
-  u(5,:,:,:) = cv*1e-5
-  u(6,:,:,:) = 0.
-  u(7,:,:,:) = 0.0
-  u(8,:,:,:) = 0.
-
-  !We have to impose the blast according to .....FLASH CODE?
-  eSN = 2. !energy of the SN
-  nu  = 3. !3 is for spherical and 2 for cylindrical
-
-!blast
-  do k=nzmin,nzmax
-    do j=nymin,nymax
-      do i=nxmin,nxmax
-
-        !  this is the position with respect of the grid center
-        x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx
-        y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy
-        z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz
-        rad=sqrt(x**2+y**2)
+    implicit none
+    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    !logical ::  isInDomain
+    integer :: i,j,k
+    real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
+    integer :: yj,xi
+    real    :: pos(3), E0
+    real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
 
 
-        if (rad.le.dx*4.) then
-          pressSN=3.*(gamma-1)*eSN/((nu+1)*3.14*rad)
-        !  total energy (kinetic + thermal)
-          u(5,i,j,k) = cv*pressSN
-        endif
+    !-----------------------------------------------------------------------------
+    !       HIDRODINAMICA : MEDIO AMBIENTE
+    !       BLAST PROBLEM
+    !       (high Order Finite Difference and Finite Volume WENO Schemes
+    !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
+    !-----------------------------------------------------------------------------
 
+    !ENVIRONMENT
+
+    u(1,:,:,:) = 1.
+    u(2,:,:,:) = 0.
+    u(3,:,:,:) = 0.
+    u(4,:,:,:) = 0.
+    u(5,:,:,:) = cv*1e-5
+    u(6,:,:,:) = 0.
+    u(7,:,:,:) = 0.0
+    u(8,:,:,:) = 0.
+
+    !We have to impose the blast according to .....FLASH CODE?
+    eSN = 2. !energy of the SN
+    nu  = 3. !3 is for spherical and 2 for cylindrical
+
+    !blast
+    do k=nzmin,nzmax
+      do j=nymin,nymax
+        do i=nxmin,nxmax
+
+          !  this is the position with respect of the grid center
+          x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx
+          y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy
+          z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz
+          rad=sqrt(x**2+y**2)
+
+
+          if (rad.le.dx*4.) then
+            pressSN=3.*(gamma-1)*eSN/((nu+1)*3.14*rad)
+            !  total energy (kinetic + thermal)
+            u(5,i,j,k) = cv*pressSN
+          endif
+
+        end do
       end do
     end do
-  end do
 
-  !  TRACER PARTICLES
-  !  initialize Owners (-1 means no body has claimed the particle)
-  partOwner(:) = -1
-  !  initialize Particles ID, not active is ID 0
-  partID(:)    =  0
-  n_activeMP   =  0
+    !  TRACER PARTICLES
+    !  initialize Owners (-1 means no body has claimed the particle)
+    partOwner(:) = -1
+    !  initialize Particles ID, not active is ID 0
+    partID(:)    =  0
+    n_activeMP   =  0
 
-  !Insert homogenously distributed particles
-  do yj=2,ny,4
-    do xi=2,nx,4
+    !Insert homogenously distributed particles
+    do yj=2,ny,4
+      do xi=2,nx,4
 
         !  position of particles (respect to a corner --needed by isInDomain--)
         pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
@@ -153,56 +152,48 @@ subroutine initial_conditions(u)
       end do
     end do
 
-  print*, rank, 'has ', n_activeMP, ' active MPs'
+    print*, rank, 'has ', n_activeMP, ' active MPs'
 
-end subroutine initial_conditions
+  end subroutine initial_conditions
 
-!=====================================================================
+  !=====================================================================
+  !> @brief User Defined Boundary conditions
+  !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+  !! conserved variables
+  !> @param real [in] time : time in the simulation (code units)
+  !> @param integer [in] order : order (mum of cells to be filled in case
+  !> domain boundaries are being set)
+  subroutine impose_user_bc(u,order)
+    use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, tsc
+    use globals,    only: time, dt_CFL
+    implicit none
+    real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    real, save           :: w(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    integer, intent(in)  :: order
+    integer              :: i, j, k
 
-!> @brief User Defined Boundary conditions
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-!! conserved variables
-!> @param real [in] time : time in the simulation (code units)
-!> @param integer [in] order : order (mum of cells to be filled in case
-!> domain boundaries are being set)
+  end subroutine impose_user_bc
 
-subroutine impose_user_bc(u,order)
+  !=======================================================================
+  !> @brief User Defined source terms
+  !> This is a generic interrface to add a source term S in the equation
+  !> of the form:  dU/dt+dF/dx+dG/dy+dH/dz=S
+  !> @param real [in] pp(neq) : vector of primitive variables
+  !> @param real [inout] s(neq) : vector with source terms, has to add to
+  !>  whatever is there, as other modules can add their own sources
+  !> @param integer [in] i : cell index in the X direction
+  !> @param integer [in] j : cell index in the Y direction
+  !> @param integer [in] k : cell index in the Z direction
+  subroutine get_user_source_terms(pp,s, i, j , k)
+    use parameters, only : neq, NBinsSEDMP
+    implicit none
+    real, intent(in)   :: pp(neq)
+    real, intent(out)  :: s(neq)
+    integer :: i, j, k
 
-  use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, tsc
-  use globals,    only: time, dt_CFL
-  implicit none
-  real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  real, save           :: w(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  integer, intent(in)  :: order
-  integer              :: i, j, k
+  end subroutine get_user_source_terms
 
-end subroutine impose_user_bc
-
-!=======================================================================
-
-!> @brief User Defined source terms
-!> This is a generic interrface to add a source term S in the equation
-!> of the form:  dU/dt+dF/dx+dG/dy+dH/dz=S
-!> @param real [in] pp(neq) : vector of primitive variables
-!> @param real [inout] s(neq) : vector with source terms, has to add to
-!>  whatever is there, as other modules can add their own sources
-!> @param integer [in] i : cell index in the X direction
-!> @param integer [in] j : cell index in the Y direction
-!> @param integer [in] k : cell index in the Z direction
-
-subroutine get_user_source_terms(pp,s, i, j , k)
-
-  use parameters, only : neq, NBinsSEDMP
-
-  implicit none
-  real, intent(in)   :: pp(neq)
-  real, intent(out)  :: s(neq)
-  integer :: i, j, k
-
-end subroutine get_user_source_terms
-
-
-!=======================================================================
+  !=======================================================================
 
 end module user_mod
 
