@@ -130,7 +130,7 @@ contains
   subroutine PICpredictor()
 
     use globals,   only : primit, dt_CFL, rank, comm3d, &
-                          Q_MP0, Q_MP1, P_DSA, MP_SED, partID
+                          Q_MP0, Q_MP1, P_DSA, MP_SED, partID, currentIteration
     use parameters
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
@@ -140,7 +140,8 @@ contains
     real    :: weights(8)
     real    :: fullSend(2*NBinsSEDMP+26), fullRecv(2*NBinsSEDMP+26)
     !          that is 2*NBinsSEDMP of the SED, 10 of Q_MP0 and 2*8 from P_DSA
-    integer:: status(MPI_STATUS_SIZE), err
+    integer :: status(MPI_STATUS_SIZE), err
+    real    :: normal(3), comp, thB1, thB2
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -195,7 +196,7 @@ contains
           !   If particle was already inside shock
           if (Q_MP0(i_mp,10) /= 0.) then
 
-            !print*, 'particle ', partID(i_mp), 'marked inside the shock region'
+            !print*, 'particle ', partID(i_mp), 'marked inside the shock region', currentIteration
             !  interpolate Pressure
             Q_MP0(i_mp,9) = 0.
             l=1
@@ -211,6 +212,12 @@ contains
             if(Q_MP0(i_mp,9) < P_DSA(i_mp,1,5)) then  ! (P < Pmin)
               ! interpolate primitives and load them to P_DSA(i_mp,1,:)
               !print*, 'Set P1 of particle ', partID(i_mp)
+
+              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
+              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
+              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
+              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
+              P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
               l=1
               P_DSA(i_mp,1,6:8) = 0.
               do k= ind(3),ind(3)+1
@@ -224,17 +231,18 @@ contains
                   end do
                 end do
               end do
-              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
-              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
-              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
-              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
-              P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
 
             else if (Q_MP0(i_mp,9) > P_DSA(i_mp,2,5)) then  ! (P > Pmax)
               ! interpolate primitives and load them to P_DSA(i_mp,2,:)
               !print*, 'Set P2 of particle ', partID(i_mp)
-              P_DSA(i_mp,2,6:8) = 0.
+
+              P_DSA(i_mp,2,1) = Q_MP0(i_mp,8)  !  Density
+              P_DSA(i_mp,2,2) = Q_MP0(i_mp,4)  !  vx
+              P_DSA(i_mp,2,3) = Q_MP0(i_mp,5)  !  vy
+              P_DSA(i_mp,2,4) = Q_MP0(i_mp,6)  !  vz
+              P_DSA(i_mp,2,5) = Q_MP0(i_mp,9)  !  P            .
               l=1
+              P_DSA(i_mp,2,6:8) = 0.
               do k= ind(3),ind(3)+1
                 do j=ind(2),ind(2)+1
                   do i=ind(1),ind(1)+1
@@ -246,19 +254,27 @@ contains
                   end do
                 end do
               end do
-              P_DSA(i_mp,2,1) = Q_MP0(i_mp,8)  !  Density
-              P_DSA(i_mp,2,2) = Q_MP0(i_mp,4)  !  vx
-              P_DSA(i_mp,2,3) = Q_MP0(i_mp,5)  !  vy
-              P_DSA(i_mp,2,4) = Q_MP0(i_mp,6)  !  vz
-              P_DSA(i_mp,2,5) = Q_MP0(i_mp,9)  !  P
 
             end if
 
             if (.not.isInShock(Q_MP0(i_mp,1:3))) then
-              !print*, 'particle ', partID(i_mp), 'has left the shock region'
-              !  Clear shock particle flag
-              Q_MP0(i_mp,10) = 0.
+              print*, 'particle ', partID(i_mp), 'has left the shock region', currentIteration
+
               !***  Here, the SED should be updated with te DSA prescription***
+              call get_NR(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:),normal, comp)
+
+              thB1=acos(normal(1)*P_DSA(i_mp,1,6)+normal(2)*P_DSA(i_mp,1,7) &
+              + normal(3)*P_DSA(i_mp,1,8))*(180./3.14159)
+
+              thB2=acos(normal(1)*P_DSA(i_mp,2,6)+normal(2)*P_DSA(i_mp,2,7) &
+              + normal(3)*P_DSA(i_mp,2,8))*(180./3.14159)
+              print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2, &
+                      (180./3.14159)*ATAN2(normal(2),normal(1))
+
+
+              !  Clear shock particle flag and primit P1/P2 arrays
+              Q_MP0(i_mp,10) = 0.
+              P_DSA(i_mp,:,:)= 0.
             end if
 
           else
@@ -266,12 +282,16 @@ contains
             !  happily living its life
             if (isInShock(Q_MP0(i_mp,1:3))) then
 
-              !print*, 'particle ', partID(i_mp), ' has just entered shock'
+              print*, 'particle ', partID(i_mp), ' has just entered shock', currentIteration
 
               !  Mark it as shocked for future Reference
               Q_MP0(i_mp,10) = 1.
 
               !  interpolate primitives and load them to both P_DSA(i_mp,1:2,:)
+              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
+              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
+              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
+              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
               l=1
               P_DSA(i_mp,1,6:8) = 0.
               Q_MP0(i_mp,9) = 0.
@@ -288,10 +308,6 @@ contains
                   end do
                 end do
               end do
-              P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
-              P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
-              P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
-              P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
               P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
 
               !  Copy to P_DSA(i_mp,2,:)
@@ -715,6 +731,49 @@ contains
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   end subroutine write_pic
+
+  subroutine get_NR(prim1,prim2,nsh, r)
+    !see equation 26 to 27 Vaidya 2018
+    implicit none
+    real, intent(in) :: prim1(8), prim2(8)
+    real, intent(out) :: nsh(3), r
+    real :: delu(3), delB(3), v2
+
+    delB(1)=prim2(6)-prim1(6)  ! deltaBx
+    delB(2)=prim2(7)-prim1(7)  ! deltaBy
+    delB(3)=prim2(8)-prim1(8)  ! deltaBz
+
+    delu(1)=prim2(2)-prim1(2)  ! deltaVx
+    delu(2)=prim2(3)-prim1(3)  ! deltaVy
+    delu(3)=prim2(4)-prim1(4)  ! deltaVz
+
+    if ((delB(1)**2 + delB(2)**2 + delB(3)**2) == 0.) then
+
+      nsh(1:3) = delu(1:3)
+
+      v2 = delu(1)**2 + delu(2)**2 + delu(3)**2
+      if (v2  == 0.) v2 = 1e-15
+      nsh(:)=nsh(:)/sqrt(v2)
+
+    else
+
+      nsh(1) = (prim1(8)*delu(1)-prim1(6)*delu(3))*delB(3) &
+             - (prim1(6)*delu(2)-prim1(7)*delu(1))*delB(2)
+
+      nsh(2) = (prim1(6)*delu(2)-prim1(7)*delu(1))*delB(1) &
+             - (prim1(7)*delu(3)-prim1(8)*delu(2))*delB(3)
+
+      nsh(3) = (prim1(7)*delu(3)-prim1(8)*delu(2))*delB(2) &
+             - (prim1(8)*delu(1)-prim1(6)*delu(3))*delB(1)
+
+      nsh(:) = nsh(:)/sqrt(nsh(1)**2+nsh(2)**2+nsh(3)**2)
+
+    endif
+
+    r = prim2(1)/prim1(1)
+
+
+  end subroutine get_NR
 
 end module pic_module
 

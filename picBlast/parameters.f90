@@ -147,8 +147,8 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=128    !< Total grid size in X
-  integer, parameter :: nytot=128    !< Total grid size in Y
+  integer, parameter :: nxtot=256    !< Total grid size in X
+  integer, parameter :: nytot=256    !< Total grid size in Y
   integer, parameter :: nztot=2      !< Total grid size in Z
 
 #ifdef MPIP
@@ -163,7 +163,7 @@ module parameters
   !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=2./128.      !< grid extent in Z (code units)
+  real, parameter :: zmax=2./256.      !< grid extent in Z (code units)
 !  real, parameter :: xphys=0.3*au    !< grid extent in X (physical units, cgs)
 
   real, parameter :: xphys=1.        !< grid extent in X (physical units, cgs)

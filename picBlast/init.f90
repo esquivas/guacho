@@ -421,9 +421,9 @@ contains
     use parameters, only : outputpath, iwarm !, itprint0
     use globals, only : u, rank
     use user_mod, only : initial_conditions
-    #ifdef MPIP
+#ifdef MPIP
     use mpi
-    #endif
+#endif
     implicit none
 
     integer , intent(inout) :: itprint

@@ -142,7 +142,7 @@ contains
     implicit none
     integer :: i,j,k
     !>  threshold for shock detection in thermal pressure gradient
-    real, parameter :: epsilon_sh = 3.
+    real, parameter :: epsilon_sh = 3.  !  changed from 3.
     real    :: gradP, divV
 
     do k =1,nz

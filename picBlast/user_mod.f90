@@ -89,7 +89,7 @@ contains
     u(4,:,:,:) = 0.
     u(5,:,:,:) = cv*1e-5
     u(6,:,:,:) = 0.
-    u(7,:,:,:) = 0.0
+    u(7,:,:,:) = .25
     u(8,:,:,:) = 0.
 
     !We have to impose the blast according to .....FLASH CODE?
@@ -126,8 +126,8 @@ contains
     n_activeMP   =  0
 
     !Insert homogenously distributed particles
-    do yj=2,ny,4
-      do xi=2,nx,4
+    do yj=2,ny,8
+      do xi=2,nx,8
 
         !  position of particles (respect to a corner --needed by isInDomain--)
         pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
@@ -141,7 +141,7 @@ contains
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,1:3) = pos(:)
           E0 =  10**( -gamma_pic*(-4 + 1.5*de) )
-          Q_MP0(n_activeMP,4:) = 0.
+          Q_MP0(n_activeMP,4:10) = 0.
           do i = 1,NBinsSEDMP
             MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
             MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)/E0
