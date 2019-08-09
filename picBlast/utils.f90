@@ -3,7 +3,7 @@
 !> @brief Utilities module
 !> @author Alejandro Esquivel
 !> @date 1/jul/2019
-
+!
 ! Copyright (c) 2019 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -33,10 +33,10 @@ module utilities
 contains
 
   !================================================================
-  ! @brief Is in domain? function (logical)
-  ! @details Determines if the position of a given point lies within the
+  !> @brief Is in domain? function (logical)
+  !> @details Determines if the position of a given point lies within the
   !> procesor domain, returns true if it is, false if it isn't
-  ! @param real [in] : 3D position WITH RESPECT TO A CORNER of the domain
+  !> @param real [in] : 3D position WITH RESPECT TO A CORNER of the domain
   function isInDomain(pos)
 
     use parameters, only : nx, ny, nz
@@ -65,13 +65,12 @@ contains
   end function isInDomain
 
   !================================================================
-  ! @brief is in shock? function (logical)
-  ! @details Determines if the position of a given point is inside a
+  !> @brief is in shock? function (logical)
+  !> @details Determines if the position of a given point is inside a
   !> shocked region (as tracked by the global array 'shockF', see also
   !> flag_shock subroutine). Returns 'true' if it is, 'false' if it isn't
-  ! @param real [in] : 3D position with respect to a cornet of the domain
+  !> @param real [in] : 3D position with respect to a cornet of the domain
   function isInShock(pos)
-
     use parameters, only : nx, ny, nz
     use globals,    only : coords, dx, dy, dz, shockF
     implicit none
@@ -101,12 +100,11 @@ contains
   end function isInShock
 
   !================================================================
-  ! @brief In Which domain function
-  ! @details Determines if the rank that has the position of a given point,
+  !> @brief In Which domain function
+  !> @details Determines if the rank that has the position of a given point,
   !> returns -1 if point lies outside domain
   ! @param real [in] : 3D position with respect to a cornet of the domain
   function inWhichDomain(pos)
-
     use parameters, only : nx, ny, nz
     use globals,    only : dx, dy, dz, comm3d
 #ifdef MPIP
@@ -153,16 +151,16 @@ contains
 
           shockF(i,j,k) = 0
 
-          gradP = abs(primit(5,i-1,j,k)-primit(5,i+1,j,k))/  &
-                  min(primit(5,i-1,j,k),primit(5,i+1,j,k)) + &
-                  abs(primit(5,i,j-1,k)-primit(5,i,j+1,k))/  &
-                  min(primit(5,i,j-1,k),primit(5,i,j+1,k)) + &
-                  abs(primit(5,i,j,k-1)-primit(5,i,j,k+1))/  &
+          gradP = abs(primit(5,i-1,j,k)-primit(5,i+1,j,k))/                    &
+                  min(primit(5,i-1,j,k),primit(5,i+1,j,k)) +                   &
+                  abs(primit(5,i,j-1,k)-primit(5,i,j+1,k))/                    &
+                  min(primit(5,i,j-1,k),primit(5,i,j+1,k)) +                   &
+                  abs(primit(5,i,j,k-1)-primit(5,i,j,k+1))/                    &
                   min(primit(5,i,j,k-1),primit(5,i,j,k+1))
 
           if (gradP >= epsilon_sh) then
-          divV =  (primit(2,i+1,j,k)-primit(2,i-1,j,k))/(2.*dx)  &
-                + (primit(3,i,j+1,k)-primit(3,i,j-1,k))/(2.*dy)  &
+          divV =  (primit(2,i+1,j,k)-primit(2,i-1,j,k))/(2.*dx)                &
+                + (primit(3,i,j+1,k)-primit(3,i,j-1,k))/(2.*dy)                &
                 + (primit(4,i,j,k+1)-primit(4,i,j,k-1))/(2.*dz)
 
           if (divV < 0.) shockF(i,j,k) = 1
