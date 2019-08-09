@@ -3,7 +3,7 @@
 !> @brief Global variables
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -50,8 +50,6 @@ module globals
   ! For the split methods
   real, allocatable ::    primit0(:,:,:,:) !< primit zeros
 
-
-
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y
   real :: dz  !< grid spacing in Z
@@ -66,15 +64,12 @@ module globals
   integer :: out    !< MPI neighbor in the -z direction
   integer :: in     !< MPI neighbor in the +z direction
 
-  integer :: rank     !< MPI rank
-  integer :: comm3d   !< Cartessian MPI comunicator
+  integer :: rank    !< MPI rank
+  integer :: comm3d  !< Cartessian MPI comunicator
 
-  !> Current time
-  real :: time
-  !> Current CFL $\Delta t$
-  real :: dt_CFL
-  !> Current iteration
-  integer :: currentIteration
+  real :: time                 !< Current time
+  real :: dt_CFL               !< Current CFL $\Delta t$
+  integer :: currentIteration  !< Current iteration
 
 end module globals
 
