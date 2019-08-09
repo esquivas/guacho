@@ -3,7 +3,7 @@
 !> @brief Guacho-3D main program
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -23,14 +23,14 @@
 !=======================================================================
 
 !> @brief Guacho-3D Main Program
-!! This is the main program unit of the Guacho-3D code.
-!! @n The code itegrates Euler equations in three dimensions,
-!! the choice of the integration method is set in the makefile.
-!! @n The flow (conserved) variables are taken to be:
-!! @n ieq=
-!! @n 1 : rho  (total)
-!! @n      2 : rho u
-!! @n      3 : rho v
+!> @details This is the main program unit of the Guacho-3D code.
+!> @n The code itegrates Euler equations in three dimensions,
+!> the choice of the integration method is set in the makefile.
+!> @n The flow (conserved) variables are taken to be:
+!> @n ieq=
+!> @n 1 : rho  (total)
+!> @n      2 : rho u
+!> @n      3 : rho v
 !> @n      4 : rho w
 !> @n      5 : Internal energy (thermal+kinetic)
 !> @n      6 : bx  (optional, if MHD or PMHD)
@@ -44,8 +44,8 @@
 !> @n      13  (10): n_HeIII
 !> @n      14  (11): rho*zbar
 !> @n      15  (12): ne
-!! @n     This can be changed bu the user according to cooling
-!! function for instance
+!> @n     This can be changed bu the user according to cooling
+!> function for instance
 
 program guacho
 
@@ -100,10 +100,10 @@ program guacho
     !   computes the timestep
     call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
 
-    if (rank == 0) print'(a,i0,a,es12.3,a,es12.3,a,es12.3,a)',         &
-      'Iteration ', currentIteration,                                 &
-      ' | time:', time*tsc         ,                                  &
-      ' | dt:', dt_CFL*tsc           ,                                &
+    if (rank == 0) print'(a,i0,a,es12.3,a,es12.3,a,es12.3,a)',                 &
+      'Iteration ', currentIteration,                                          &
+      ' | time:', time*tsc         ,                                           &
+      ' | dt:', dt_CFL*tsc           ,                                         &
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
@@ -125,8 +125,7 @@ program guacho
       call write_output(itprint)
       if (rank == 0) then
          print'(a,i4)', &
-         '****************** wrote output *************** &
-          & :' , itprint
+         '****************** wrote output ***************:' , itprint
       end if
       tprint=tprint+dtprint
       itprint=itprint+1
