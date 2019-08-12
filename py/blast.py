@@ -6,8 +6,6 @@ from guacho_utils import *
 from matplotlib.colors import LogNorm
 
 plt.ion()
-#rmin=.5
-#rmax=1.
 
 path = '../picBlast/BIN/'
 nout = 10
@@ -25,15 +23,11 @@ extent =  [0,1,0,1]
 
 plt.figure(2)
 plt.clf()
-#plt.imshow(shockF, extent=[0,1,0,1], origin='lower', cmap='viridis',interpolation = 'none' )
 plt.imshow(shockF, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
 plt.colorbar()
 plt.title('Shock detector (1 if shocked)')
 
-#divV = readbin3d_all(nout=nout,neq=0,path=path,base='divV-',verbose=False)
 X,Y = np.meshgrid( np.linspace(0.,1.,num=rho.shape[0]),np.linspace(0.,1.,num=rho.shape[1]) )
-
-
 
 plt.figure(1)
 plt.clf()
@@ -41,13 +35,6 @@ plt.imshow(rho, extent=extent, origin='lower', cmap='Spectral')
 plt.colorbar()
 plt.title('Density')
 
-
-#plt.figure(2)
-#plt.clf()
-#plt.imshow(divV, oriin='lower', cmap='Spectral' )
-#plt.colorbar()
-
-#Q= plt.quiver(X[::4],Y[::4],vx[::4],vy[::4], pivot='mid',scale=20)
 plt.figure(3) ; plt.clf()
 
 npart = 250
@@ -59,21 +46,16 @@ for (noutp) in range(nout+1):
     plt.plot(picData[npart,1],picData[npart,2],'*',markersize=15, color='green')
     plt.figure(3)
     plt.loglog(SED[npart,:,0],SED[npart,:,1]*SED[npart,:,0]**2,label=str(noutp))
-#    for ip in range(256):
-#      plt.loglog(SED[ip,:,0],SED[ip,:,1])
+
 plt.legend()
 
 plt.figure(2)
-plt.plot(picData[:,1],picData[:,2],'o',markersize=5, color="red",alpha=0.5)
-
-#    plt.clf()
-
-#for ip in range(4096):
-#    plt.plot(part[:,ip,0],part[:,ip,1],'-o',markersize= 1)
-#    plt.xlim([0,1])
-#    plt.ylim([0,1])
+plt.plot(picData[:,1],picData[:,2],'o',markersize=2, color="red",alpha=0.5)
 
 picDataS = readpic(nout,path=path, base='pic-shocked-')
-plt.figure(2)
+
+fig = plt.figure(2)
 plt.plot(picDataS[:,1], picDataS[:,2], '*', markersize=5, color='blue',alpha=0.5)
-Q= plt.quiver(X[::8],Y[::8],bx[::8],by[::8], pivot='mid', scale=40, color='w', alpha=0.5)
+
+#Q= plt.quiver(X[::8],Y[::8],bx[::8],by[::8], pivot='mid', scale=40, color='w', alpha=0.5)
+Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minlength=0.8)
