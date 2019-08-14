@@ -196,7 +196,8 @@ contains
           !   If particle was already inside shock
           if (Q_MP0(i_mp,10) /= 0.) then
 
-            !print*, 'particle ', partID(i_mp), 'marked inside the shock region', currentIteration
+            !print*, 'particle ', partID(i_mp),                                 &
+            !        'marked inside the shock region', currentIteration
             !  interpolate Pressure
             Q_MP0(i_mp,9) = 0.
             l=1
@@ -258,21 +259,22 @@ contains
             end if
 
             if (.not.isInShock(Q_MP0(i_mp,1:3))) then
-              print*, 'particle ', partID(i_mp), 'has left the shock region', currentIteration
+              !print*, 'particle ', partID(i_mp),                               &
+              !        'has left the shock region', currentIteration
 
               !***  Here, the SED should be updated with te DSA prescription***
               call get_NR(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:),normal, comp)
 
-              thB1=acos(normal(1)*P_DSA(i_mp,1,6)+normal(2)*P_DSA(i_mp,1,7) &
+              thB1=acos(normal(1)*P_DSA(i_mp,1,6)+normal(2)*P_DSA(i_mp,1,7)    &
               + normal(3)*P_DSA(i_mp,1,8))*(180./3.14159)
 
-              thB2=acos(normal(1)*P_DSA(i_mp,2,6)+normal(2)*P_DSA(i_mp,2,7) &
+              thB2=acos(normal(1)*P_DSA(i_mp,2,6)+normal(2)*P_DSA(i_mp,2,7)    &
               + normal(3)*P_DSA(i_mp,2,8))*(180./3.14159)
-              print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2, &
-                      (180./3.14159)*ATAN2(normal(2),normal(1))
 
+              !print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2,&
+              !        (180./3.14159)*ATAN2(normal(2),normal(1))
 
-              !  Clear shock particle flag and primit P1/P2 arrays
+            !  Clear shock particle flag and primit P1/P2 arrays
               Q_MP0(i_mp,10) = 0.
               P_DSA(i_mp,:,:)= 0.
             end if
@@ -282,7 +284,8 @@ contains
             !  happily living its life
             if (isInShock(Q_MP0(i_mp,1:3))) then
 
-              print*, 'particle ', partID(i_mp), ' has just entered shock', currentIteration
+              !print*, 'particle ', partID(i_mp),                               &
+              !        ' has just entered shock', currentIteration
 
               !  Mark it as shocked for future Reference
               Q_MP0(i_mp,10) = 1.
@@ -498,7 +501,7 @@ contains
             !  exp(-a) and cr
             ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
             ! eq. (23) Vaidya et al. 2018
-            bdist  = 0.5*dt_CFL*( Q_MP0(i_mp,7) + ema*crNP1        )
+            bdist  = 0.5*dt_CFL*( Q_MP0(i_mp,7) + ema*crNP1 )
 
             do ib=1,NBinsSEDMP
 
@@ -545,6 +548,7 @@ contains
                                               MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
                   fullSend(4+NBinsSEDMP:3+2*NBinsSEDMP)=                       &
                                               MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
+
                   !  send the whole thing
                   call mpi_send( fullSend ,3+2*NBinsSEDMP, mpi_real_kind ,IR,  &
                                 partID(dataLoc(i)), comm3d,err)
@@ -569,7 +573,7 @@ contains
               !equation 3 in Vaidya et al. 2016.
               if (pic_distF) then
                 !  in case we are only the particles w/their SED
-                call mpi_recv(fullRecv,3+2*NBinsSEDMP, mpi_real_kind, IS, &
+                call mpi_recv(fullRecv,3+2*NBinsSEDMP, mpi_real_kind, IS,      &
                                        mpi_any_tag,comm3d, status, err)
 
                  !  add current particle in list and data in new processor
@@ -601,10 +605,10 @@ contains
   !> @ details: returns weights and indices corresponding to a bilineal
   !> interpolation at for the particle position.
   !> @param real [in] pos(3) : Three dimensional position of particle,
-  !> @param integer   ind(3) : Reference corner i0,j0,k0 indices of the cube of
-  !> cells that are used in the interpolation
-  !> @param real [out] weights(8) : weights associated with each corner of the
-  !> interopolation in the following order
+  !> @param integer   ind(3) : Reference corner i0,j0,k0 indices of the
+  !> cube of cells that are used in the interpolation
+  !> @param real [out] weights(8) : weights associated with each corner
+  !> of the interopolation in the following order
   !> 1-> i0,j0,k0,  3-> i0,j1,k0,  5-> i0,j0,k1,  7-> i0,j1,k1
   !> 2-> i1,j0,k0,  4-> i1,j1,k0,  6-> i1,j0,k1,  8-> i1,j1,k1
   subroutine interpBD(pos,ind,weights)
@@ -648,8 +652,8 @@ contains
   !================================================================
   !> @brief Writes pic output
   !> @details Writes position and particles velocities in a single file
-  !> format is binary, one integer with the number of points in domain, and then
-  !> all the positions and velocities (in the default real precision)
+  !> format is binary, one integer with the number of points in domain,
+  !> and then all the positions and velocities (in the default real precision)
   !> param integer [in] itprint : number of itration (coincides with the [M]HD
   !> output)
   subroutine write_pic(itprint)
@@ -732,46 +736,52 @@ contains
 
   end subroutine write_pic
 
+  !=======================================================================
+  !> @brief Get n and r
+  !> @details Compute the shock normal and conpression ratio
+  !> param real [in]  prim1(8) : primitives in pre-shock region
+  !> param real [in]  prim2(8) : primitives in post-shock region
+  !> param real [out] n(3)     : unitary vector normal to the shock
+  !> param real [out] r        : compression ratio (rho2/rho1)
   subroutine get_NR(prim1,prim2,nsh, r)
     !see equation 26 to 27 Vaidya 2018
     implicit none
     real, intent(in) :: prim1(8), prim2(8)
     real, intent(out) :: nsh(3), r
-    real :: delu(3), delB(3), v2
+    real :: delV(3), delB(3), v2
 
     delB(1)=prim2(6)-prim1(6)  ! deltaBx
     delB(2)=prim2(7)-prim1(7)  ! deltaBy
     delB(3)=prim2(8)-prim1(8)  ! deltaBz
 
-    delu(1)=prim2(2)-prim1(2)  ! deltaVx
-    delu(2)=prim2(3)-prim1(3)  ! deltaVy
-    delu(3)=prim2(4)-prim1(4)  ! deltaVz
+    delV(1)=prim2(2)-prim1(2)  ! deltaVx
+    delV(2)=prim2(3)-prim1(3)  ! deltaVy
+    delV(3)=prim2(4)-prim1(4)  ! deltaVz
 
     if ((delB(1)**2 + delB(2)**2 + delB(3)**2) == 0.) then
 
-      nsh(1:3) = delu(1:3)
+      nsh(1:3) = delV(1:3)
 
-      v2 = delu(1)**2 + delu(2)**2 + delu(3)**2
+      v2 = delV(1)**2 + delV(2)**2 + delV(3)**2
       if (v2  == 0.) v2 = 1e-15
       nsh(:)=nsh(:)/sqrt(v2)
 
     else
 
-      nsh(1) = (prim1(8)*delu(1)-prim1(6)*delu(3))*delB(3) &
-             - (prim1(6)*delu(2)-prim1(7)*delu(1))*delB(2)
+      nsh(1) = (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(3)                     &
+             - (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(2)
 
-      nsh(2) = (prim1(6)*delu(2)-prim1(7)*delu(1))*delB(1) &
-             - (prim1(7)*delu(3)-prim1(8)*delu(2))*delB(3)
+      nsh(2) = (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(1)                     &
+             - (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(3)
 
-      nsh(3) = (prim1(7)*delu(3)-prim1(8)*delu(2))*delB(2) &
-             - (prim1(8)*delu(1)-prim1(6)*delu(3))*delB(1)
+      nsh(3) = (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(2)                     &
+             - (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(1)
 
       nsh(:) = nsh(:)/sqrt(nsh(1)**2+nsh(2)**2+nsh(3)**2)
 
     endif
 
     r = prim2(1)/prim1(1)
-
 
   end subroutine get_NR
 
