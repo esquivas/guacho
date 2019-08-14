@@ -271,8 +271,8 @@ contains
               thB2=acos(normal(1)*P_DSA(i_mp,2,6)+normal(2)*P_DSA(i_mp,2,7)    &
               + normal(3)*P_DSA(i_mp,2,8))*(180./3.14159)
 
-              !print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2,&
-              !        (180./3.14159)*ATAN2(normal(2),normal(1))
+              print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2,&
+                      (180./3.14159)*ATAN2(normal(2),normal(1))
 
             !  Clear shock particle flag and primit P1/P2 arrays
               Q_MP0(i_mp,10) = 0.
