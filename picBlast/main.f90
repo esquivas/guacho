@@ -102,8 +102,8 @@ program guacho
 
     if (rank == 0) print'(a,i0,a,es10.3,a,es10.3,a,es10.3,a)',                 &
       'Iteration ', currentIteration,                                          &
-      ' | time:', time*tsc         ,                                           &
-      ' | dt:', dt_CFL*tsc           ,                                         &
+      ' | time:', time*tsc,                                                    &
+      ' | dt:', dt_CFL*tsc,                                                    &
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
