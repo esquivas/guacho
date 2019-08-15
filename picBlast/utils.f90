@@ -51,8 +51,8 @@ contains
     ind(2) = int(pos(2)/dy) - coords(1)*ny
     ind(3) = int(pos(3)/dz) - coords(2)*nz
 
-    if ( ind(1)<0   .or. ind(2)<0   .or. ind(3)<0 .or. &
-         ind(1)>=nx .or. ind(2)>=ny .or. ind(3)>=nz ) then
+    if ( ind(1)<0  .or. ind(2)<0  .or. ind(3)<0 .or. &
+         ind(1)>nx .or. ind(2)>ny .or. ind(3)>nz ) then
 
       isInDomain = .false.
 
@@ -103,7 +103,7 @@ contains
   !> @brief In Which domain function
   !> @details Determines if the rank that has the position of a given point,
   !> returns -1 if point lies outside domain
-  ! @param real [in] : 3D position with respect to a cornet of the domain
+  ! @param real [in] : 3D position with respect to a corner of the domain
   function inWhichDomain(pos)
     use parameters, only : nx, ny, nz
     use globals,    only : dx, dy, dz, comm3d
@@ -113,7 +113,7 @@ contains
     implicit none
     integer          :: inWhichDomain
     real, intent(in) :: pos(3)
-    integer          :: ind(0:2),err
+    integer          :: ind(0:2), err
 
     ! get coords of rank
     ind(0) = int(pos(1)/dx)/nx
