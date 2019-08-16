@@ -23,21 +23,25 @@ extent =  [0,1,0,1]
 
 plt.figure(2)
 plt.clf()
-plt.imshow(shockF, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
+plt.imshow(shockF, extent=extent, origin='lower', cmap='rainbow',interpolation = 'none' )
 #plt.colorbar()
 plt.title('Shock detector (1 if shocked)')
 
 X,Y = np.meshgrid( np.linspace(0.,1.,num=rho.shape[0]),np.linspace(0.,1.,num=rho.shape[1]) )
 
+'''
 plt.figure(1)
 plt.clf()
 plt.imshow(rho, extent=extent, origin='lower', cmap='Spectral')
 plt.colorbar()
 plt.title('Density')
+'''
 
 plt.figure(3) ; plt.clf()
 
 npart = 250
+
+'''
 for (noutp) in range(nout+1):
     picData, SED, P1, P2= readpic(noutp,path=path)
     #picData= readpic(noutp,path=path)
@@ -47,10 +51,12 @@ for (noutp) in range(nout+1):
     plt.plot(picData[npart,1],picData[npart,2],'*',markersize=15, color='green')
     #plt.figure(3)
     #plt.loglog(SED[npart,:,0],SED[npart,:,1]*SED[npart,:,0]**2,label=str(noutp))
+'''
+picData, SED, P1, P2= readpic(nout,path=path)
 
 #plt.legend()
 plt.figure(2)
-sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,4],alpha=0.5,cmap='inferno',vmin=1.)
+sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,4],alpha=1.,cmap='inferno',vmin=1.)
 cb = plt.colorbar(sc)
 Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minlength=0.8)
 
@@ -62,5 +68,5 @@ Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minleng
 plt.figure(4)
 plt.clf()
 plt.imshow(shockF, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
-sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,5],alpha=0.5,cmap='Spectral')
+sc = plt.scatter(picData[:,1],picData[:,2], c=np.abs(picData[:,5]),alpha=0.5,cmap='Spectral')
 cb = plt.colorbar(sc)
