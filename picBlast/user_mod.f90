@@ -89,7 +89,7 @@ contains
     u(4,:,:,:) = 0.
     u(5,:,:,:) = cv*1e-5
     u(6,:,:,:) = 0.
-    u(7,:,:,:) = .1
+    u(7,:,:,:) = 0.1
     u(8,:,:,:) = 0.
 
     !We have to impose the blast according to .....FLASH CODE?
@@ -106,7 +106,6 @@ contains
           y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy
           z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz
           rad=sqrt((x+0.)**2+(y+0.)**2)
-
 
           if (rad.le.dx*4.) then
             pressSN=3.*(gamma-1)*eSN/((nu+1)*3.14*rad)
@@ -126,8 +125,8 @@ contains
     n_activeMP   =  0
 
     !Insert homogenously distributed particles
-    do yj=2,ny,4
-      do xi=2,nx,4
+    do yj=1,ny,2
+      do xi=1,nx,2
 
         !  position of particles (respect to a corner --needed by isInDomain--)
         pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
