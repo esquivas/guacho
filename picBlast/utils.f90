@@ -47,12 +47,13 @@ contains
     integer          :: ind(3)
 
     ! shift to the local processor
-    ind(1) = int(pos(1)/dx) - coords(0)*nx
-    ind(2) = int(pos(2)/dy) - coords(1)*ny
-    ind(3) = int(pos(3)/dz) - coords(2)*nz
+    ind(1) = int(pos(1)/dx) - coords(0)*nx + 1
+    ind(2) = int(pos(2)/dy) - coords(1)*ny + 1
+    ind(3) = int(pos(3)/dz) - coords(2)*nz + 1
 
-    if ( ind(1)<0  .or. ind(2)<0  .or. ind(3)<0 .or. &
-         ind(1)>nx .or. ind(2)>ny .or. ind(3)>nz ) then
+    !   False if not in physical domain
+    if ( ind(1) < 1  .or. ind(2)<1  .or. ind(3)<1 .or. &
+         ind(1) > nx .or. ind(2)>ny .or. ind(3)>nz ) then
 
       isInDomain = .false.
 
@@ -105,7 +106,7 @@ contains
   !> returns -1 if point lies outside domain
   ! @param real [in] : 3D position with respect to a corner of the domain
   function inWhichDomain(pos)
-    use parameters, only : nx, ny, nz
+    use parameters, only : nx, ny, nz, MPI_NBX, MPI_NBY, MPI_NBZ
     use globals,    only : dx, dy, dz, comm3d
 #ifdef MPIP
     use mpi
@@ -121,10 +122,12 @@ contains
     ind(2) = int(pos(3)/dz)/nz
 
 #ifdef MPIP
-    if(isInDomain(pos)) then
-      call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+    if ( ind(0) < 0 .or. ind(0) > (MPI_NBX-1) .or. &
+         ind(1) < 0 .or. ind(1) > (MPI_NBY-1) .or. &
+         ind(2) < 0 .or. ind(2) > (MPI_NBZ-1)   ) then
+         inWhichDomain = -1
     else
-      inWhichDomain = -1
+      call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
     endif
 #else
     if(.not.isInDomain(pos)) inWhichDomain = -1
