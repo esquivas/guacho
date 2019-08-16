@@ -72,8 +72,8 @@ contains
     integer :: yj,xi
     real    :: pos(3), E0
     real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
-
-
+    real    :: emin, emax !lower and upper energy limits of mp spectra
+    integer :: m, ntot_mp !m index of initial spectra, ntot_mp number of mp
     !-----------------------------------------------------------------------------
     !       HIDRODINAMICA : MEDIO AMBIENTE
     !       BLAST PROBLEM
