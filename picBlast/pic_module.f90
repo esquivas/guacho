@@ -168,7 +168,7 @@ contains
           end if
 
           !  Interpolate u, [B^2 & rho if needed] to particle position
-          l=1
+          l = 1
           do k= ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
               do i=ind(1),ind(1)+1
@@ -204,12 +204,12 @@ contains
               !        'marked inside the shock region', currentIteration
               !  interpolate Pressure
               !Q_MP0(i_mp,9) = 0.
-              l=1
+              l = 1
               do k= ind(3),ind(3)+1
                 do j=ind(2),ind(2)+1
                   do i=ind(1),ind(1)+1
                     Q_MP0(i_mp,9) = Q_MP0(i_mp,9) + primit(5,i,j,k)*weights(l)
-                    l = l +1
+                    l = l + 1
                   end do
                 end do
               end do
@@ -222,8 +222,8 @@ contains
                 P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
                 P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
                 P_DSA(i_mp,1,5) = Q_MP0(i_mp,9)  !  P
-                l=1
                 P_DSA(i_mp,1,6:8) = 0.
+                l = 1
                 do k= ind(3),ind(3)+1
                   do j=ind(2),ind(2)+1
                     do i=ind(1),ind(1)+1
@@ -244,8 +244,8 @@ contains
                 P_DSA(i_mp,2,3) = Q_MP0(i_mp,5)  !  vy
                 P_DSA(i_mp,2,4) = Q_MP0(i_mp,6)  !  vz
                 P_DSA(i_mp,2,5) = Q_MP0(i_mp,9)  !  P            .
-                l=1
                 P_DSA(i_mp,2,6:8) = 0.
+                l = 1
                 do k= ind(3),ind(3)+1
                   do j=ind(2),ind(2)+1
                     do i=ind(1),ind(1)+1
@@ -299,9 +299,9 @@ contains
                 P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
                 P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
                 P_DSA(i_mp,1,4) = Q_MP0(i_mp,6)  !  vz
-                l=1
                 P_DSA(i_mp,1,6:8) = 0.
                 Q_MP0(i_mp,9) = 0.
+                l = 1
                 do k= ind(3),ind(3)+1
                   do j=ind(2),ind(2)+1
                     do i=ind(1),ind(1)+1
@@ -329,10 +329,11 @@ contains
           !  predictor step
           Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
-        end if
+        end if  ! isIndomain (l 158)
 
         !  check if particle is leaving the domain
         dest = inWhichDomain(Q_MP1(i_mp,1:3))
+        if (dest == -1) call deactivateMP(i_mp)
         if( dest /= rank .and. dest /= -1 ) then
           !  count for MPI exchange
           sendLoc(dest) = sendLoc(dest) + 1
@@ -342,12 +343,12 @@ contains
           !                     ' is going to ',DEST
         end if
 
-      end if
-    end do
+      end if  ! if part was active
+    end do    ! loop over all particles
 
     !   consolidate list to have info of all send/receive operations
     call mpi_allgather(sendLoc(:),  np, mpi_integer, &
-    sendList, np, mpi_integer, comm3d,err)
+                       sendList, np, mpi_integer, comm3d,err)
 
     !  exchange particles
     do iR=0,np-1
@@ -476,9 +477,9 @@ contains
           !  Calculate interpolation reference and weights
           call interpBD(Q_MP1(i_mp,1:3),ind,weights)
           !  Interpolates the magnetic field to calculate beta.
-          l=1
           vel1(:) = 0.
-          do k= ind(3),ind(3)+1
+          l = 1
+          do k=ind(3),ind(3)+1
             do j=ind(2),ind(2)+1
               do i=ind(1),ind(1)+1
                 !  interpolate velocity / density and B**2
@@ -526,6 +527,7 @@ contains
 
         !  check if particle is leaving the domain
         dest = inWhichDomain( Q_MP0(i_mp,1:3) )
+        if (dest == -1) call deactivateMP(i_mp)
         if (dest /= rank .and. dest /= -1) then
           !  count for MPI exchange
           sendLoc(dest) = sendLoc(dest) + 1
@@ -633,31 +635,51 @@ contains
     real,    intent(in)  :: pos(3)
     integer, intent(out) :: ind(3)
     real,    intent(out) :: weights(8)
-    real                 :: x0, y0, z0
+    real                 :: x0, y0, z0, remx, remy, remz, distx, disty, distz
 
     ! get the index in the whole domain (integer part)
+    ! this is the particle position in "cell units" from 1 to nxmax (real)
     x0 = pos(1)/dx
     y0 = pos(2)/dy
     z0 = pos(3)/dz
 
-    ! shift to the local processor
-    ind(1) = int(x0) - coords(0)*nx
-    ind(2) = int(y0) - coords(1)*ny
-    ind(3) = int(z0) - coords(2)*nz
+    !  get reminder
+    remx = x0 - int(x0)
+    remy = y0 - int(y0)
+    remz = z0 - int(z0)
 
-    ! get the reminder
-    x0 = x0 - int(x0)
-    y0 = y0 - int(y0)
-    z0 = z0 - int(z0)
+    !  get bounds
+    if (remx < 0.5) then
+      ind(1)= int(x0) - coords(0)*nx
+    else
+      ind(1)= int(x0) - coords(0)*nx + 1
+    end if
 
-    weights(1) = (1-x0)*(1-y0)*(1-z0)
-    weights(2) =   x0  *(1-y0)*(1-z0)
-    weights(3) = (1-x0)*  y0  *(1-z0)
-    weights(4) =   x0  *  y0  *(1-z0)
-    weights(5) = (1-x0)*(1-y0)*  z0
-    weights(6) =   x0  *(1-y0)*  z0
-    weights(7) = (1-x0)*  y0  *  z0
-    weights(8) =   x0  *  y0  *  z0
+    if (remy < 0.5) then
+      ind(2)= int(y0)- coords(1)*ny
+    else
+      ind(2)= int(y0)- coords(1)*ny + 1
+    end if
+
+    if (remz < 0.5) then
+      ind(3)= int(z0)- coords(2)*nz
+    else
+      ind(3)= int(z0)- coords(2)*nz + 1
+    end if
+
+    !  get distances
+    distx = x0 - ( real(ind(1) + nx*coords(0) ) -0.5 )
+    disty = y0 - ( real(ind(2) + ny*coords(1) ) -0.5 )
+    distz = z0 - ( real(ind(3) + nz*coords(2) ) -0.5 )
+
+    weights(1) = (1.-distx) * (1.-disty) * (1.-distz)
+    weights(2) =     distx  * (1.-disty) * (1.-distz)
+    weights(3) = (1.-distx) *     disty  * (1.-distz)
+    weights(4) =     distx  *     disty  * (1.-distz)
+    weights(5) = (1.-distx) * (1.-disty) *     distz
+    weights(6) =     distx  * (1.-disty) *     distz
+    weights(7) = (1.-distx) *     disty  *     distz
+    weights(8) =     distx  *     disty  *     distz
 
     return
 
@@ -706,6 +728,7 @@ contains
     !  loop over particles owned by processor and write the active ones
     do i_mp=1,N_MP
       if (partID(i_mp) /=0) then
+
         write(unitout) partID(i_mp)
         write(unitout) Q_MP0(i_mp,1:3)
         if(pic_distF) then
@@ -713,6 +736,7 @@ contains
           write(unitout) MP_SED(1:2,:,i_mp)
           write(unitout) P_DSA(i_mp,:,:)
         end if
+
       end if
     end do
 
