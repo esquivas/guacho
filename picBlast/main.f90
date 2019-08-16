@@ -77,7 +77,7 @@ program guacho
   !   impose  boundaries (needed if imposing special BCs)
   call boundaryI()
 
-  !   update primitives with u
+  !  update primitives with u
   call calcprim(u,primit)
 
   if (dif_rad) call diffuse_rad()
@@ -100,10 +100,10 @@ program guacho
     !   computes the timestep
     call get_timestep(currentIteration, 10, time, tprint, dt_CFL, dump_out)
 
-    if (rank == 0) print'(a,i0,a,es12.3,a,es12.3,a,es12.3,a)',                 &
+    if (rank == 0) print'(a,i0,a,es10.3,a,es10.3,a,es10.3,a)',                 &
       'Iteration ', currentIteration,                                          &
-      ' | time:', time*tsc         ,                                           &
-      ' | dt:', dt_CFL*tsc           ,                                         &
+      ' | time:', time*tsc,                                                    &
+      ' | dt:', dt_CFL*tsc,                                                    &
       ' | tprint:', tprint*tsc
 
     !  if pic enabled compute predictor for particle positions
@@ -124,8 +124,8 @@ program guacho
       !call diffuse_rad()
       call write_output(itprint)
       if (rank == 0) then
-         print'(a,i4,i4)', &
-         '****************** wrote output ***************:' , itprint, currentIteration
+         print'(a,i4,a,i4)','********** wrote output **********:' , itprint,   &
+                            ' in iteration:', currentIteration
       end if
       tprint=tprint+dtprint
       itprint=itprint+1

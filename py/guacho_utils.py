@@ -284,7 +284,11 @@ def readpic(nout,path='', base='pic',trim=True):
     #vz = np.zeros(nproc*n_mp)
     id = np.zeros(nproc*n_mp, dtype = 'i4')-1
     if (n_bins > 0) :
-      SED = np.zeros(shape=(nproc*n_mp,n_bins,2))
+      SED = np.zeros( shape=(nproc*n_mp,n_bins,2) )
+      r  = np.zeros(nproc*n_mp)
+      th = np.zeros(nproc*n_mp)
+      P1  = np.zeros( shape=(nproc*n_mp,8) )
+      P2  = np.zeros( shape=(nproc*n_mp,8) )
     f.close()
     #  now reopen files one by one and read data onto the arrays
     for ip in range(nproc):
@@ -298,14 +302,20 @@ def readpic(nout,path='', base='pic',trim=True):
             x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
             #vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
             if (n_bins  > 0):
+              r[ii], th[ii] = struct.unpack('2d',f.read(16))
               for i_bin in range (n_bins):
                 SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
                 SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
+              for i_eq in range(8):
+                P1[ii,i_eq] = struct.unpack('1d', f.read(8) )[0]
+                P2[ii,i_eq] = struct.unpack('1d', f.read(8) )[0]
         f.close()
     if (n_bins > 0):
         indices = np.argsort(id)
         SED   = np.array(SED[indices,:,:])
-        array = np.array ( sorted(zip(id,x,y,z)) )
+        P1    = np.array(P1[indices,:])
+        P2    = np.array(P2[indices,:])
+        array = np.array ( sorted(zip(id,x,y,z,r,th)) )
         #array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
     else:
         array = np.array ( sorted(zip(id,x,y,z)) )
@@ -316,7 +326,9 @@ def readpic(nout,path='', base='pic',trim=True):
         array = array[n_mp::,:]
         if (n_bins > 0):
             SED   = SED  [n_mp::,:]
+            P1    = P1[n_mp::,:]
+            P2    = P2[n_mp::,:]
     if (n_bins > 0):
-        return array, SED
+        return array, SED, P1, P2
     else:
         return array
