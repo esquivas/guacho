@@ -134,6 +134,7 @@ contains
     use globals,   only : primit, dt_CFL, rank, comm3d, &
                           Q_MP0, Q_MP1, P_DSA, MP_SED, partID, currentIteration
     use parameters
+    use constants, only : pi
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
     integer :: i_mp, i, j, k, l, ind(3), dest, nLocSend, &
@@ -265,21 +266,14 @@ contains
                 !        'has left the shock region', currentIteration
 
                 !***  Here, the SED should be updated with te DSA prescription***
-                call get_NR(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:),normal, comp)
+                call get_NRth(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), normal, comp,   &
+                              thB1,thB2)
 
-                thB1=acos(normal(1)*P_DSA(i_mp,1,6)+normal(2)*P_DSA(i_mp,1,7)    &
-                        + normal(3)*P_DSA(i_mp,1,8))*(180./3.14159)
-
-                thB2=acos(normal(1)*P_DSA(i_mp,2,6)+normal(2)*P_DSA(i_mp,2,7)    &
-                        + normal(3)*P_DSA(i_mp,2,8))*(180./3.14159)
-
-                !print*, currentIteration, "partID", partID(i_mp), comp,thB1/thB2,&
-                !        (180./3.14159)*ATAN2(normal(2),normal(1))
-
-              !  Clear shock particle flag and primit P1/P2 arrays
-                Q_MP0(i_mp,10) = 0.
                 Q_MP0(i_mp,11) = max(comp, Q_MP0(i_mp,11))
-                Q_MP0(i_mp,12) = (180./3.14159)*ATAN2(normal(2),normal(1))
+                Q_MP0(i_mp,12) = thB2*180./pi
+
+                !  Clear shock particle flag and primit P1/P2 arrays
+                Q_MP0(i_mp,10) = 0.
                 P_DSA(i_mp,:,:)= 0.
               end if
 
@@ -780,12 +774,17 @@ contains
   !> param real [in]  prim2(8) : primitives in post-shock region
   !> param real [out] n(3)     : unitary vector normal to the shock
   !> param real [out] r        : compression ratio (rho2/rho1)
-  subroutine get_NR(prim1,prim2,nsh, r)
+  !> param real [out] thB1     : angle between shock normal and B1
+  !> param real [out] thB2     : angle between shock normal and B2
+  subroutine get_NRth(prim1,prim2,nsh,r,thB1,thb2)
     !see equation 26 to 27 Vaidya 2018
     implicit none
     real, intent(in) :: prim1(8), prim2(8)
-    real, intent(out) :: nsh(3), r
-    real :: delV(3), delB(3), v2
+    real, intent(out) :: nsh(3), r, thB1, thB2
+    real :: delV(3), delB(3), v2, BdotN, mag
+
+    !  the compression ratio
+    r = prim2(1)/prim1(1)
 
     delB(1)=prim2(6)-prim1(6)  ! deltaBx
     delB(2)=prim2(7)-prim1(7)  ! deltaBy
@@ -795,32 +794,65 @@ contains
     delV(2)=prim2(3)-prim1(3)  ! deltaVy
     delV(3)=prim2(4)-prim1(4)  ! deltaVz
 
-    if ((delB(1)**2 + delB(2)**2 + delB(3)**2) == 0.) then
+    !  do the calculation for th /= 0 or 90  (magnetic coplanarity)
+    nsh(1) = (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(3)                       &
+           - (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(2)
+
+    nsh(2) = (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(1)                       &
+           - (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(3)
+
+    nsh(3) = (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(2)                       &
+           - (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(1)
+
+    mag    = sqrt(nsh(1)**2 + nsh(2)**2 + nsh(3)**2)
+    if (mag == 0) then
+      nsh(:) = 0.
+    else
+      nsh(:) = nsh(:)/mag
+    end if
+
+    mag = sqrt( prim1(6)**2 + prim1(7)**2 + prim1(8)**2 )
+    if (mag /= 0.) then
+      BdotN = ( nsh(1)*prim1(6) + nsh(2)*prim1(7) + nsh(3)*prim1(8) ) / mag
+    else
+      BdotN =  0.
+    end if
+    thB1 = acos(abs(BdotN))
+
+    mag = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
+    if (mag /= 0.) then
+      BdotN = ( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) / mag
+    else
+      BdotN =  0.
+    end if
+    thB2 = acos(abs(BdotN))
+
+    !  Recompute if near 0 and 90
+    if ( (thB2 < 0.09 ).or.(thB2 > 1.49 ) )   then
 
       nsh(1:3) = delV(1:3)
-
       v2 = delV(1)**2 + delV(2)**2 + delV(3)**2
-      if (v2  == 0.) v2 = 1e-15
-      nsh(:)=nsh(:)/sqrt(v2)
+      if (v2  == 0.) then
+        nsh(:) = 0.
+      else
+        nsh(1:3)=nsh(1:3)/sqrt(v2)
+      end if
 
-    else
+      mag = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
+      if (mag /= 0.) then
+        BdotN = ( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) / mag
+      else
+        BdotN =  0.
+      end if
 
-      nsh(1) = (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(3)                     &
-             - (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(2)
+      if abs(BdotN) > 1 BdotN
 
-      nsh(2) = (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(1)                     &
-             - (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(3)
+      thB2 = 1000.*(BdotN)
 
-      nsh(3) = (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(2)                     &
-             - (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(1)
+    end if
 
-      nsh(:) = nsh(:)/sqrt(nsh(1)**2+nsh(2)**2+nsh(3)**2)
 
-    endif
-
-    r = prim2(1)/prim1(1)
-
-  end subroutine get_NR
+  end subroutine get_NRth
 
 end module pic_module
 

@@ -68,5 +68,5 @@ Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minleng
 plt.figure(4)
 plt.clf()
 plt.imshow(shockF, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
-sc = plt.scatter(picData[:,1],picData[:,2], c=np.abs(picData[:,5]),alpha=0.5,cmap='Spectral')
+sc = plt.scatter(picData[:,1],picData[:,2], c=(picData[:,5]),alpha=0.5,cmap='Spectral')
 cb = plt.colorbar(sc)
