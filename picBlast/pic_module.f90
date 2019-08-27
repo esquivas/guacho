@@ -272,9 +272,9 @@ contains
                 Q_MP0(i_mp,11) = max(comp, Q_MP0(i_mp,11))
                 Q_MP0(i_mp,12) = thB2*180./pi
 
-                !  Clear shock particle flag and primit P1/P2 arrays
-                Q_MP0(i_mp,10) = 0.
-                P_DSA(i_mp,:,:)= 0.
+                !   Mark particle with -1 as "just left shock region"
+                Q_MP0(i_mp,10) = -1.
+
               end if
 
             else
@@ -437,7 +437,7 @@ contains
   subroutine PICcorrector()
 
     use globals,   only : primit, dt_CFL, rank, comm3d,                        &
-                          MP_SED, Q_MP0, Q_MP1, partID
+                          MP_SED, Q_MP0, Q_MP1, partID, P_DSA
     use parameters
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
@@ -515,6 +515,14 @@ contains
                                   (1.+bdist*MP_SED(1,ib,i_mp))
 
               end do
+            else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
+
+              call inject_spectrum(i_mp)
+
+              !  Clear primit P1/P2 arrays and mark as no longer in shock
+              P_DSA(i_mp,:,:)= 0.
+              Q_MP0(i_mp,10) = 0.
+
             end if
 
         end if
@@ -781,7 +789,7 @@ contains
     implicit none
     real, intent(in) :: prim1(8), prim2(8)
     real, intent(out) :: nsh(3), r, thB1, thB2
-    real :: delV(3), delB(3), v2, BdotN, mag
+    real :: delV(3), delB(3), BdotN, magN, magB
 
     !  the compression ratio
     r = prim2(1)/prim1(1)
@@ -794,7 +802,7 @@ contains
     delV(2)=prim2(3)-prim1(3)  ! deltaVy
     delV(3)=prim2(4)-prim1(4)  ! deltaVz
 
-    !  do the calculation for th /= 0 or 90  (magnetic coplanarity)
+    !  get normal vector for th /= 0 or 90  (magnetic coplanarity)
     nsh(1) = (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(3)                       &
            - (prim1(6)*delV(2)-prim1(7)*delV(1))*delB(2)
 
@@ -804,55 +812,91 @@ contains
     nsh(3) = (prim1(7)*delV(3)-prim1(8)*delV(2))*delB(2)                       &
            - (prim1(8)*delV(1)-prim1(6)*delV(3))*delB(1)
 
-    mag    = sqrt(nsh(1)**2 + nsh(2)**2 + nsh(3)**2)
-    if (mag == 0) then
+    magN = sqrt(nsh(1)**2 + nsh(2)**2 + nsh(3)**2)
+    if (magN == 0) then
       nsh(:) = 0.
     else
-      nsh(:) = nsh(:)/mag
+      nsh(:) = nsh(:)/magN
     end if
 
-    mag = sqrt( prim1(6)**2 + prim1(7)**2 + prim1(8)**2 )
-    if (mag /= 0.) then
-      BdotN = ( nsh(1)*prim1(6) + nsh(2)*prim1(7) + nsh(3)*prim1(8) ) / mag
+    !  Compute thB1
+    magB = sqrt( prim1(6)**2 + prim1(7)**2 + prim1(8)**2 )
+    if (magB /= 0.) then
+      BdotN = abs( nsh(1)*prim1(6) + nsh(2)*prim1(7) + nsh(3)*prim1(8) ) / magB
     else
       BdotN =  0.
     end if
-    thB1 = acos(abs(BdotN))
-
-    mag = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
-    if (mag /= 0.) then
-      BdotN = ( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) / mag
-    else
-      BdotN =  0.
-    end if
-    thB2 = acos(abs(BdotN))
-
-    !  Recompute if near 0 and 90
-    if ( (thB2 < 0.09 ).or.(thB2 > 1.49 ) )   then
-
+    !  Recompute normal if thB1 will be close to 0 or 90 degrees
+    if ( (BdotN > 0.996 ).or.(BdotN < 0.087 ) )   then
       nsh(1:3) = delV(1:3)
-      v2 = delV(1)**2 + delV(2)**2 + delV(3)**2
-      if (v2  == 0.) then
+      magN = sqrt(delV(1)**2 + delV(2)**2 + delV(3)**2)
+      if (magN  == 0.) then
         nsh(:) = 0.
       else
-        nsh(1:3)=nsh(1:3)/sqrt(v2)
+        nsh(1:3)=nsh(1:3)/magN
       end if
-
-      mag = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
-      if (mag /= 0.) then
-        BdotN = ( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) / mag
+      magB = sqrt( prim1(6)**2 + prim1(7)**2 + prim1(8)**2 )
+      if (magB /= 0.) then
+        BdotN = abs( nsh(1)*prim1(6) + nsh(2)*prim1(7) + nsh(3)*prim1(8) ) /magB
       else
         BdotN =  0.
       end if
-
-      if abs(BdotN) > 1 BdotN
-
-      thB2 = 1000.*(BdotN)
-
     end if
+    BdotN = min(BdotN,1.0)
+    BdotN = max(BdotN,0.0)
+    thB1 = acos(BdotN)
 
+    !  Compute thB2
+    magB = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
+    if (magB /= 0.) then
+      BdotN = abs( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) /magB
+    else
+      BdotN =  0.
+    end if
+    !  Recompute normal if thB1 will be close to 0 or 90 degrees
+    if ( (BdotN > 0.996 ).or.(BdotN < 0.087 ) )   then
+    !if ( (BdotN > 0.98 ).or.(BdotN < 0.16 ) )   then
+      nsh(1:3) = delV(1:3)
+      magN = sqrt(delV(1)**2 + delV(2)**2 + delV(3)**2)
+      if (magN  == 0.) then
+        nsh(:) = 0.
+      else
+        nsh(1:3)=nsh(1:3)/magN
+      end if
+      magB = sqrt( prim2(6)**2 + prim2(7)**2 + prim2(8)**2 )
+      if (magB /= 0.) then
+        BdotN = abs( nsh(1)*prim2(6) + nsh(2)*prim2(7) + nsh(3)*prim2(8) ) /magB
+      else
+        BdotN =  0.
+      end if
+    end if
+    BdotN = min(BdotN,1.0)
+    BdotN = max(BdotN,0.0)
+    thB2  = acos(BdotN)
 
   end subroutine get_NRth
+
+  !=======================================================================
+  !> @brief Inject inject_spectrum
+  !> @details Inject new spectrum, after DSA subgrid calculation
+  subroutine inject_spectrum(i_mp)
+    use globals,    only : MP_SED, Q_MP0, P_DSA
+    use parameters, only : NBinsSEDMP
+    implicit none
+    integer, intent(in) :: i_mp
+    integer :: i
+    real    :: q_index, r, E0
+
+    r = max(1.5,Q_MP0(i_mp,11))
+
+    q_index = 3.*r/(r-1.)
+    E0 = MP_SED(2,1,i_mp)*MP_SED(1,1,i_mp)
+
+    do i = 1,NBinsSEDMP
+      MP_SED(2,i,i_mp)= MP_SED(1,i,i_mp)**(-q_index)/E0
+    end do
+
+  end subroutine inject_spectrum
 
 end module pic_module
 

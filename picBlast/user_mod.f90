@@ -88,12 +88,12 @@ contains
     u(3,:,:,:) = 0.
     u(4,:,:,:) = 0.
     u(5,:,:,:) = cv*1e-5
-    u(6,:,:,:) = 0.15
-    u(7,:,:,:) = 0.15
+    u(6,:,:,:) = -0.1
+    u(7,:,:,:) =  0.15
     u(8,:,:,:) = 0.
 
     !We have to impose the blast according to .....FLASH CODE?
-    eSN = 2. !energy of the SN
+    eSN = 10. !energy of the SN
     nu  = 3. !3 is for spherical and 2 for cylindrical
 
     !blast
@@ -105,7 +105,7 @@ contains
           x= ( real(i+coords(0)*nx-nxtot/2) - 0.5) *dx
           y= ( real(j+coords(1)*ny-nytot/2) - 0.5) *dy
           z= ( real(k+coords(2)*nz-nztot/2) - 0.5) *dz
-          rad=sqrt((x+0.)**2+(y+0.)**2)
+          rad=sqrt((x+0.0)**2+(y+0.0)**2)
 
           if (rad.le.dx*4.) then
             pressSN=3.*(gamma-1)*eSN/((nu+1)*3.14*rad)
