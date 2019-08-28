@@ -879,6 +879,7 @@ contains
   !=======================================================================
   !> @brief Inject inject_spectrum
   !> @details Inject new spectrum, after DSA subgrid calculation
+  !> @param integer [in] i_mp : index of the MP to which the SED is updated
   subroutine inject_spectrum(i_mp)
     use globals,    only : MP_SED, Q_MP0, P_DSA
     use parameters, only : NBinsSEDMP
