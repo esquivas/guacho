@@ -518,7 +518,7 @@ contains
 
               q_NR = 3.*Q_MP0(i_mp,11)/(Q_MP0(i_mp,11)-1.)
               q_NR = min(q_NR,5.)
-              call inject_PL_spectrum(i_mp,1.,q_NR,1e4,1.e-2)
+              call inject_PL_spectrum(i_mp,1.,q_NR,1e5,1.e-2)
 
               !  Clear primit P1/P2 arrays and mark as no longer in shock
               P_DSA(i_mp,:,:)= 0.
