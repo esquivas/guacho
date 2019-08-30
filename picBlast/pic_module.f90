@@ -23,8 +23,8 @@
 !=======================================================================
 
 !> @brief PIC module
-!> @details Implementation of a prticle module, based in
-!> Vaidya et al. 2918, ApJ, 865, 144
+!> @details Implementation of a prticle module, based in the Lagrangian tracer
+!> particles in Vaidya et al. 2918, ApJ, 865, 144
 
 module pic_module
 
@@ -43,7 +43,7 @@ contains
 
     if(pic_distF) then
       allocate( Q_MP0(N_MP,12) )
-      !Q_MP0(i, eq) has the following info:
+      ! Q_MP0(i, eq) has the following info:
       ! eq = 1-3 : x, y, z
       ! eq = 4-6 : vx, vy, vz
       ! eq = 7   : b**2 = bx**2+by**2+bz**2
@@ -265,7 +265,6 @@ contains
                 !print*, 'particle ', partID(i_mp),                               &
                 !        'has left the shock region', currentIteration
 
-                !***  Here, the SED should be updated with te DSA prescription***
                 call get_NRth(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), normal, comp,   &
                               thB1,thB2)
 
@@ -447,7 +446,7 @@ contains
                sendList(0:np-1,0:np-1)
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
-    real    :: ema, bdist, rhoNP1, crNP1, dataIn(12)
+    real    :: ema, bdist, rhoNP1, crNP1, dataIn(12), q_NR
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -517,7 +516,9 @@ contains
               end do
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
 
-              call inject_spectrum(i_mp)
+              q_NR = 3.*Q_MP0(i_mp,11)/(Q_MP0(i_mp,11)-1.)
+              q_NR = min(q_NR,5.)
+              call inject_PL_spectrum(i_mp,1.,q_NR,1e4,1.e-2)
 
               !  Clear primit P1/P2 arrays and mark as no longer in shock
               P_DSA(i_mp,:,:)= 0.
@@ -878,26 +879,35 @@ contains
 
   !=======================================================================
   !> @brief Inject inject_spectrum
-  !> @details Inject new spectrum, after DSA subgrid calculation
+  !> @details Inject new power law spectrum (for DSA subgrid calculation)
+  !> of the form N \propto A0 E^(-m)
   !> @param integer [in] i_mp : index of the MP to which the SED is updated
-  subroutine inject_spectrum(i_mp)
+  !> @param real    [in] A0   : Amplitude
+  !> @param real    [in] m    : spectral index
+  !> @param real    [in] Emin : lower end energy in the spectrum
+  !> @param real    [in] Emax : Upper end energy in the spectrun
+  subroutine inject_PL_spectrum(i_mp, A0, m, Emin, Emax)
     use globals,    only : MP_SED, Q_MP0, P_DSA
     use parameters, only : NBinsSEDMP
     implicit none
     integer, intent(in) :: i_mp
+    real,    intent(in) :: A0, m, Emin, Emax
     integer :: i
-    real    :: q_index, r, E0
+    real    :: B0, deltaE, logE0, logE1
 
-    r = max(1.5,Q_MP0(i_mp,11))
+    logE0 = LOG10(Emin)
+    logE1 = LOG10(Emax)
 
-    q_index = 3.*r/(r-1.)
-    E0 = MP_SED(2,1,i_mp)*MP_SED(1,1,i_mp)
+    !  delta E in logerithmic bins
+    deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
+    B0     = abs(A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m)))
 
     do i = 1,NBinsSEDMP
-      MP_SED(2,i,i_mp)= MP_SED(1,i,i_mp)**(-q_index)/E0
+      MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
+      MP_SED(2,i,i_mp) = B0*MP_SED(1,i,i_mp)**(-m)
     end do
 
-  end subroutine inject_spectrum
+  end subroutine inject_PL_spectrum
 
 end module pic_module
 
