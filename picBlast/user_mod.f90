@@ -71,9 +71,8 @@ contains
     real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
     real    :: pos(3), E0
-    real, parameter :: gamma_pic=3.,de=6./real(NBinsSEDMP)
-    real    :: emin, emax !lower and upper energy limits of mp spectra
-    integer :: m, ntot_mp !m index of initial spectra, ntot_mp number of mp
+    !  initial MP spectra parameters
+    real    :: emin, emax, deltaE, gamma_pic, B0
     !-----------------------------------------------------------------------------
     !       HIDRODINAMICA : MEDIO AMBIENTE
     !       BLAST PROBLEM
@@ -124,6 +123,13 @@ contains
     partID(:)    =  0
     n_activeMP   =  0
 
+    ! delta E in log bins
+    Emin = 1e-2
+    Emax = 1e4
+    gamma_pic = 3.
+    deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
+    B0     = (1.-gamma_pic)/(Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic))
+
     !Insert homogenously distributed particles
     do yj=1,ny,2
       do xi=1,nx,2
@@ -139,10 +145,10 @@ contains
           partID   (n_activeMP) = n_activeMP + rank*N_MP
           Q_MP0(n_activeMP,:) = 0.
           Q_MP0(n_activeMP,1:3) = pos(:)
-          E0 =  10**( -gamma_pic*(-4 + 1.5*de) )
+
           do i = 1,NBinsSEDMP
-            MP_SED(1,i,n_activeMP)=10**(-4+(0.5+real(i))*de)
-            MP_SED(2,i,n_activeMP)= MP_SED(1,i,n_activeMP)**(-gamma_pic)/E0
+            MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
+            MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
           end do
 
         endif
