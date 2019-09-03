@@ -46,7 +46,7 @@ contains
       ! Q_MP0(i, eq) has the following info:
       ! eq = 1-3 : x, y, z
       ! eq = 4-6 : vx, vy, vz
-      ! eq = 7   : b**2 = bx**2+by**2+bz**2
+      ! eq = 7   : b**2/2 = (bx**2+by**2+bz**2)/2
       ! eq = 8   : rho
       ! eq = 9   : P
       ! eq = 10  : shock flag (1 if shocked)
@@ -111,7 +111,7 @@ contains
     real,    intent(in)  :: Qdata(ndata)
     integer, intent(out) :: i_mp
 
-    ! sweep list and add element in empty slot
+    ! loop over list and add element in empty slot
     do i_mp=1, n_mp
       if(partID(i_mp) == 0) then
         partID(i_mp)  = ID
@@ -185,7 +185,7 @@ contains
                   Q_MP0(i_mp,7) = Q_MP0(i_mp,7) + weights(l)**2 *              &
                                                 (  primit(6,i,j,k)**2 +        &
                                                    primit(7,i,j,k)**2 +        &
-                                                   primit(8,i,j,k)**2  )
+                                                   primit(8,i,j,k)**2  ) /2.
                   !  aiabatic expansion term rho^n
                   Q_MP0(i_mp,8) = Q_MP0(i_mp,8) + primit(1,i,j,k)*weights(l)
                 end if
@@ -438,6 +438,7 @@ contains
     use globals,   only : primit, dt_CFL, rank, comm3d,                        &
                           MP_SED, Q_MP0, Q_MP1, partID, P_DSA
     use parameters
+    use constants, only : sigma_SB, sigma_T,clight,emass
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
     integer :: i_mp, i, j, k, l, ind(3)
@@ -447,6 +448,12 @@ contains
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
     real    :: ema, bdist, rhoNP1, crNP1, dataIn(12), q_NR
+    real, parameter :: Tcmb = 2.278
+    !> RH term eq (7) Vaidya +
+    real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
+    !> constant in front of eq(7) scaled to code units
+    real, parameter ::Cr0= ( 4.*sigma_T/3./emass**2/clight**3 )                &
+                           *rhosc**2*vsc**3*rsc**3
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -484,7 +491,7 @@ contains
                 if (pic_distF) then
                   !   source terms
                   rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
-                  crNP1  = crNP1  + weights(l)**2 *                            &
+                  crNP1  = crNP1  + 0.5 * weights(l)**2 *                      &
                    ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
 
                 end if
@@ -501,7 +508,7 @@ contains
             !  exp(-a) and cr
             ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
             ! eq. (23) Vaidya et al. 2018
-            bdist  = 0.5*dt_CFL*( Q_MP0(i_mp,7) + ema*crNP1 )
+            bdist  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(crNP1+Urad) )
 
             !  update only if *not* currently marked as inside shock
             if (Q_MP0(i_mp,10) == 0.) then
@@ -517,8 +524,8 @@ contains
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
 
               q_NR = 3.*Q_MP0(i_mp,11)/(Q_MP0(i_mp,11)-1.)
-              q_NR = min(q_NR,5.)
-              call inject_PL_spectrum(i_mp,1.,q_NR,1e5,1.e-2)
+              q_NR = min(q_NR,9.)
+              call inject_PL_spectrum(i_mp,1.,q_NR,1e-2,1.e4)
 
               !  Clear primit P1/P2 arrays and mark as no longer in shock
               P_DSA(i_mp,:,:)= 0.
@@ -900,7 +907,7 @@ contains
 
     !  delta E in logerithmic bins
     deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
-    B0     = abs(A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m)))
+    B0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
 
     do i = 1,NBinsSEDMP
       MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
