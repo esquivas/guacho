@@ -163,7 +163,7 @@ module parameters
   !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=2./128.      !< grid extent in Z (code units)
+  real, parameter :: zmax=2./128.     !< grid extent in Z (code units)
 !  real, parameter :: xphys=0.3*au    !< grid extent in X (physical units, cgs)
 
   real, parameter :: xphys=1.        !< grid extent in X (physical units, cgs)
