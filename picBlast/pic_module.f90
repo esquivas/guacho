@@ -447,6 +447,7 @@ contains
                sendList(0:np-1,0:np-1)
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
+    real    :: thB1, thB2, comp, normal(3),vsh
     real    :: ema, bdist, rhoNP1, crNP1, dataIn(12), q_NR
     real, parameter :: Tcmb = 2.278
     !> RH term eq (7) Vaidya +
@@ -523,7 +524,16 @@ contains
               end do
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
 
-              q_NR = 3.*Q_MP0(i_mp,11)/(Q_MP0(i_mp,11)-1.)
+              ! Call routine that calculates energy limits
+              ! and power law parameters
+              call get_NRth(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), normal, comp,   &
+                            thB1,thB2)
+
+              vsh = v_shock(comp,normal,P_DSA(i_mp,1,:),P_DSA(i_mp,2,:))
+
+              !calculate Acceleration efficiency
+
+              q_NR = 3.*comp/(comp-1.) !Equation 33 (Vaidya et al. 2018)
               q_NR = min(q_NR,9.)
               call inject_PL_spectrum(i_mp,1.,q_NR,1e-2,1.e4)
 
@@ -900,22 +910,58 @@ contains
     integer, intent(in) :: i_mp
     real,    intent(in) :: A0, m, Emin, Emax
     integer :: i
-    real    :: B0, deltaE, logE0, logE1
+    real    :: N0, deltaE, logE0, logE1
 
     logE0 = LOG10(Emin)
     logE1 = LOG10(Emax)
 
     !  delta E in logerithmic bins
     deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
-    B0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
+    N0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
 
     do i = 1,NBinsSEDMP
       MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
-      MP_SED(2,i,i_mp) = B0*MP_SED(1,i,i_mp)**(-m)
+      MP_SED(2,i,i_mp) = N0*MP_SED(1,i,i_mp)**(-m)
     end do
 
   end subroutine inject_PL_spectrum
 
+  !================================================================
+  function energy_upper(r,normal,prim1,prim2,Bfield)
+    implicit none
+    real, intent(in) :: r, normal(3),prim1(8), prim2(8), Bfield
+    real :: energy_upper
+    real :: v1, v2, Brat, v_shock, lambda_eff
+    real, parameter :: pic_eta = 1.5   !  for eq(32) in Vaidya et al.
+    real, parameter :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
+
+    Brat = sqrt(prim1(6)**2+prim1(7)**2+prim1(8)**2)/                          &
+           sqrt(prim2(6)**2+prim2(7)**2+prim2(8)**2)
+
+    v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
+    v2 = normal(1)*prim2(2)+normal(2)*prim2(3)+normal(3)*prim2(4)
+
+    v_shock = v1-r*v2 /(1.-r)
+
+    lambda_eff =  pic_eta*r / ( (v1-v_shock)**2)*(r-1.) )                      &
+               * (           cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)       &
+                   + r*Brat*(cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) ) )
+
+
+    energy_upper = e1const / sqrt(Bfield* lambda_eff)
+    !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
+    !with this we obtain A0 and thus .... can inject the spectrum
+  end function energy_upper
+
+!================================================================
+!  subroutine get_PL_parameters
+!    implicit none
+!
+!
+!  end subroutine get_PL_parameters
+
+
 end module pic_module
+
 
 !================================================================
