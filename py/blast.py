@@ -39,7 +39,7 @@ plt.title('Density')
 
 plt.figure(3) ; plt.clf()
 
-npart = 250
+npart = 475#250
 
 
 for (noutp) in range(nout+1):
