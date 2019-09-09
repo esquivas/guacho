@@ -987,11 +987,11 @@ contains
   end subroutine get_PL_parameters
 
   !=======================================================================
-  !> @brief Gets nold and Eold
+  !> @brief Get nold and Eold
   !> @details Obtains n and E intrgrating the spectra using the trapezoidal
   !> rule (assuming logarithmic spaced bins)
-  !> param integer [in ] nbins        : number of (log spaced) bins in SED
-  !> param real    [in ] SED(2,nbins) : spectra, 1st index 0 is E, 1 is chi=N/n
+  !> param integer [in]  nbins        : number of (log spaced) bins in SED
+  !> param real    [in]  SED(2,nbins) : spectra, 1st index 0 is E, 1 is chi=N/n
   !> param real    [out] nold         : total # of particles: int N(E) dE
   !> param real    [out] Eold         : total Energy: int N(E) E dE
   subroutine get_nE_old(nbins,SED,nold,Eold)
