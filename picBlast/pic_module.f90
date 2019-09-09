@@ -447,7 +447,8 @@ contains
                sendList(0:np-1,0:np-1)
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
-    real    :: ema, bdist, rhoNP1, crNP1, dataIn(12), q_NR
+    real    :: thB1, thB2, comp, normal(3)
+    real    :: ema, bdist, rhoNP1, crNP1, pNP1, dataIn(12), q_NR, bi, ei, Emin, Emax, A0
     real, parameter :: Tcmb = 2.278
     !> RH term eq (7) Vaidya +
     real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
@@ -466,10 +467,11 @@ contains
 
           !  clear come variables
           if(pic_distF) then
-            ema = 0.
-            bdist = 0.
+            ema    = 0.
+            bdist  = 0.
             rhoNP1 = 0.
             crNP1  = 0.
+            pNP1   = 0.
           end if
 
           !  Interpolate the velocity field to particle position, and add
@@ -493,7 +495,7 @@ contains
                   rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
                   crNP1  = crNP1  + 0.5 * weights(l)**2 *                      &
                    ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
-
+                   pNP1  = pNP1   + primit(5,i,j,k)*weights(l)
                 end if
                 l = l + 1
               end do
@@ -523,9 +525,16 @@ contains
               end do
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
 
-              q_NR = 3.*Q_MP0(i_mp,11)/(Q_MP0(i_mp,11)-1.)
-              q_NR = min(q_NR,9.)
-              call inject_PL_spectrum(i_mp,1.,q_NR,1e-2,1.e4)
+              ! Call routine that calculates energy limits
+              ! and power law parameters
+              BI = 2. * crNP1
+              EI = 0.5 * rhoNP1 * (vel1(1)**2 + vel1(2)**2 + vel1(3)**2)       &
+                 + crNP1 + cv * pNP1
+
+              call get_PL_parameters(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), rhoNP1,  &
+                   EI, BI, A0, q_NR, Emin, Emax)
+
+              call inject_PL_spectrum(i_mp,A0,q_NR,Emin,Emax)
 
               !  Clear primit P1/P2 arrays and mark as no longer in shock
               P_DSA(i_mp,:,:)= 0.
@@ -890,79 +899,83 @@ contains
   !> of the form N \propto A0 E^(-m)
   !> @param integer [in] i_mp : index of the MP to which the SED is updated
   !> @param real    [in] A0   : Amplitude
-  !> @param real    [in] m    : spectral index
+  !> @param real    [in] q    : spectral index
   !> @param real    [in] Emin : lower end energy in the spectrum
   !> @param real    [in] Emax : Upper end energy in the spectrun
-  subroutine inject_PL_spectrum(i_mp, A0, m, Emin, Emax)
+  subroutine inject_PL_spectrum(i_mp, A0, q, Emin, Emax)
     use globals,    only : MP_SED, Q_MP0, P_DSA
     use parameters, only : NBinsSEDMP
     implicit none
     integer, intent(in) :: i_mp
-    real,    intent(in) :: A0, m, Emin, Emax
+    real,    intent(in) :: A0, q, Emin, Emax
     integer :: i
-    real    :: B0, deltaE, logE0, logE1
+    real    :: N0, deltaE, logE0, logE1, m, comp
 
+!    print*, 'A0', A0,'m', m,'Emin', Emin,'Emax', Emax
     logE0 = LOG10(Emin)
     logE1 = LOG10(Emax)
 
-    !  delta E in logerithmic bins
-    deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
-    B0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
+    comp = q/(q-3.)
+    if (comp > 2.) then
 
-    do i = 1,NBinsSEDMP
-      MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
-      MP_SED(2,i,i_mp) = B0*MP_SED(1,i,i_mp)**(-m)
-    end do
+      m = q - 2.
+      !  delta E in logerithmic bins
+      deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
+      N0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
+
+      do i = 1,NBinsSEDMP
+        MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
+        MP_SED(2,i,i_mp) = N0*MP_SED(1,i,i_mp)**(-m)
+      end do
+
+    end if
 
   end subroutine inject_PL_spectrum
 
-  !=======================================================================
-  !> @brief Gets nold and Eold
-  !> @details Obtains n and E intrgrating the spectra using the trapezoidal
-  !> rule (assuming logarithmic spaced bins)
-  !> param integer [in ] nbins        : number of (log spaced) bins in SED
-  !> param real    [in ] SED(2,nbins) : spectra, 1st index 0 is E, 1 is chi=N/n
-  !> param real    [out] nold         : total # of particles: int N(E) dE
-  !> param real    [out] Eold         : total Energy: int N(E) E dE
-  subroutine get_nE_old(nbins,SED,nold,Eold)
+  !================================================================
+  subroutine get_PL_parameters(prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
+    use parameters, only : rhosc, rsc, vsc2
     implicit none
-    integer, intent(in)  ::
-    real,    intent(in)  :: SED(2,nbins)
-    real,    intent(out) :: nold, Eold
-    integer :: i
-    real    :: slopeN, slopeE, Fn0, Fn1, FE0, FE1, x0, x1
+    real, intent(in)  :: prim1(8), prim2(8), rhoI, EI, BI
+    real, intent(out) :: A0, qNR, Emin, Emax
+    real :: normal(3), r, thB1, thB2, v1, v2, v_shock,                 &
+            Brat, lambda_eff
+    real, parameter :: pic_eta = 1.5   !  for eq(32) in Vaidya et al.
+    real, parameter :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
+    real, parameter :: deltaN  = 0.1 ! Mimica et al. 2009
+    real, parameter :: deltaE  = 0.5 ! Mimica et al. 2009
 
-    nold = 0.
-    Eold = 0.
+    call get_NRth(prim1,prim2, normal, r, thB1,thB2)
+    qNR = 3*r /(r -1.)
 
-    do i = 1, nbins-1
+    v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
+    v2 = normal(1)*prim2(2)+normal(2)*prim2(3)+normal(3)*prim2(4)
 
-      x0  = SED(1,i  )
-      x1  = SED(1,i+1)
-      Fn0 = SED(2,i  )
-      Fn1 = SED(2,i+1)
-      FE0 = SED(1,i  )*SED(2,i  )
-      FE1 = SED(1,i+1)*SED(2,i+1)
+    v_shock = v1-r*v2 /(1.-r)
 
-      slopeN = log(Fn1/Fn0)/log(x1/x0)
-      slopeE = log(FE1/FE0)/log(x1/x0)
+    Brat = sqrt(prim1(6)**2+prim1(7)**2+prim1(8)**2)/                          &
+           sqrt(prim2(6)**2+prim2(7)**2+prim2(8)**2)
 
-      if (slopeN /= -1.) then
-        nold = nold + Fn0/(slopeN+1.)*(Fn1*(Fn1/Fn0)**slopeN-Fn0)
-      else
-        nold = nold + Fn0 * log(Fn1/Fn0)
-      end if
+    lambda_eff =  pic_eta*r / ( ( (v1-v_shock)**2)*(r-1.))                       &
+               * (           cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)       &
+                   + r*Brat*(cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) ) )
 
-      if (slopeE /= -1.) then
-        Eold = Eold + FE0/(slopeE+1.)*(FE1*(FnE/FE0)**slopeE-FE0)
-      else
-        Eold = Eold + FE0 * log(FE1/FE0)
-      end if
 
-    end do
+    Emax = e1const / sqrt(Bi* lambda_eff)
+    Emax = Emax/(rhosc*rsc**3*vsc2)
 
-  end subroutine get_nE_old
+    A0   = 1.
+    Emax = 1e4
+    Emin = 1.e-2
+
+    !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
+    !with this we obtain A0 and thus .... can inject the spectrum
+  end subroutine get_PL_parameters
+
+!================================================================
+
 
 end module pic_module
+
 
 !================================================================

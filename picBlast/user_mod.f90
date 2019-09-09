@@ -131,8 +131,8 @@ contains
     B0     = (1.-gamma_pic)/(Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic))
 
     !Insert homogenously distributed particles
-    do yj=1,ny,2
-      do xi=1,nx,2
+    do yj=4,ny,8
+      do xi=4,nx,8
 
         !  position of particles (respect to a corner --needed by isInDomain--)
         pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
