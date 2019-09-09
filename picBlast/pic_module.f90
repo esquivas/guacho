@@ -448,7 +448,8 @@ contains
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
     integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
     real    :: thB1, thB2, comp, normal(3)
-    real    :: ema, bdist, rhoNP1, crNP1, pNP1, dataIn(12), q_NR, bi, ei, Emin, Emax, A0
+    real    :: ema, bdist, rhoNP1, crNP1, pNP1, dataIn(12),                    &
+               q_NR, bi, ei, Emin, Emax, A0
     real, parameter :: Tcmb = 2.278
     !> RH term eq (7) Vaidya +
     real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
@@ -933,6 +934,19 @@ contains
   end subroutine inject_PL_spectrum
 
   !================================================================
+  !> @brief Obtain parameters for PL spectrum to be injected
+  !> @details Get the parameters of new power-law spectrum to be imposed
+  !> as a result of the subgrid recipe for the Diffuse Shock Acceleration.
+  !> (Vaidya 2018 et al)
+  !> @param real [in]  prim1(8) : primitives in the pre-shock region
+  !> @param real [in]  prim2(8) : primitives in the post-shock region
+  !> @param real [in]  rhoI     : density interpolated at the MP position
+  !> @param real [in]  EI       : energy density interpolated at the MP position
+  !> @param real [in]  BI       : B field interpolated at the MP position
+  !> @param real [out] A0       : Amplitude for the new PL
+  !> @param real [out] qNR      : q index (Drury et al. 1983)
+  !> @param real [out] Emin     : minimum energy (e0, Vaidya et al 2018)
+  !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
   subroutine get_PL_parameters(prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
     use parameters, only : rhosc, rsc, vsc2
     implicit none
@@ -956,7 +970,7 @@ contains
     Brat = sqrt(prim1(6)**2+prim1(7)**2+prim1(8)**2)/                          &
            sqrt(prim2(6)**2+prim2(7)**2+prim2(8)**2)
 
-    lambda_eff =  pic_eta*r / ( ( (v1-v_shock)**2)*(r-1.))                       &
+    lambda_eff =  pic_eta*r / ( ( (v1-v_shock)**2)*(r-1.))                     &
                * (           cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)       &
                    + r*Brat*(cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) ) )
 
