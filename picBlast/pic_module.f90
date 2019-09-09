@@ -972,10 +972,55 @@ contains
     !with this we obtain A0 and thus .... can inject the spectrum
   end subroutine get_PL_parameters
 
-!================================================================
+  !=======================================================================
+  !> @brief Gets nold and Eold
+  !> @details Obtains n and E intrgrating the spectra using the trapezoidal
+  !> rule (assuming logarithmic spaced bins)
+  !> param integer [in ] nbins        : number of (log spaced) bins in SED
+  !> param real    [in ] SED(2,nbins) : spectra, 1st index 0 is E, 1 is chi=N/n
+  !> param real    [out] nold         : total # of particles: int N(E) dE
+  !> param real    [out] Eold         : total Energy: int N(E) E dE
+  subroutine get_nE_old(nbins,SED,nold,Eold)
+    implicit none
+    integer, intent(in)  ::
+    real,    intent(in)  :: SED(2,nbins)
+    real,    intent(out) :: nold, Eold
+    integer :: i
+    real    :: slopeN, slopeE, Fn0, Fn1, FE0, FE1, x0, x1
 
+    nold = 0.
+    Eold = 0.
+
+    do i = 1, nbins-1
+
+      x0  = SED(1,i  )
+      x1  = SED(1,i+1)
+      Fn0 = SED(2,i  )
+      Fn1 = SED(2,i+1)
+      FE0 = SED(1,i  )*SED(2,i  )
+      FE1 = SED(1,i+1)*SED(2,i+1)
+
+      slopeN = log(Fn1/Fn0)/log(x1/x0)
+      slopeE = log(FE1/FE0)/log(x1/x0)
+
+      if (slopeN /= -1.) then
+        nold = nold + Fn0/(slopeN+1.)*(Fn1*(Fn1/Fn0)**slopeN-Fn0)
+      else
+        nold = nold + Fn0 * log(Fn1/Fn0)
+      end if
+
+      if (slopeE /= -1.) then
+        Eold = Eold + FE0/(slopeE+1.)*(FE1*(FnE/FE0)**slopeE-FE0)
+      else
+        Eold = Eold + FE0 * log(FE1/FE0)
+      end if
+
+    end do
+
+  end subroutine get_nE_old
+
+  !================================================================
 
 end module pic_module
-
 
 !================================================================
