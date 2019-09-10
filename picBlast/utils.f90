@@ -86,8 +86,8 @@ contains
 
     isInShock = .false.
 
-    if ( i < 1  .or. j < 1  .or. k < 1 .or. &
-         i > nx .or. j > ny .or. k > nz  ) then
+    if ( i < 1  .or. j < 1  .or. k < 1 .or.                                    &
+         i > nx .or. j > ny .or. k > nz      ) then
 
       return
 
@@ -175,6 +175,8 @@ contains
     end do
 
 end subroutine flag_shock
+
+
 
   !=======================================================================
 
