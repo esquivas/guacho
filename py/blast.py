@@ -39,11 +39,13 @@ plt.title('Density')
 
 plt.figure(3) ; plt.clf()
 
-npart = 500#250
+npart = 530#250
 
+GeV = 1.e9*1.60218E-12 # 1 GeV in ergs
 
 for (noutp) in range(nout+1):
     picData, SED, P1, P2= readpic(noutp,path=path)
+    SED[npart,:,0] = SED[npart,:,0] / GeV  # convert from erg to GeV
     #picData= readpic(noutp,path=path)
     print(picData.shape)
     plt.figure(1)
@@ -51,6 +53,7 @@ for (noutp) in range(nout+1):
     plt.plot(picData[npart,1],picData[npart,2],'*',markersize=15, color='green')
     plt.figure(3)
     plt.loglog(SED[npart,:,0],SED[npart,:,1]*SED[npart,:,0]**2,label=str(noutp))
+    plt.xlabel(r'E [Gev]')
 
 picData, SED, P1, P2= readpic(nout,path=path)
 
