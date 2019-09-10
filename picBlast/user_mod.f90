@@ -57,28 +57,28 @@ contains
 
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,      &
           pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-          gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np
+          gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np,xmax,ymax
 
     use globals,    only : coords, dx ,dy ,dz, rank,                           &
                            Q_MP0, partID, partOwner, n_activeMP, MP_SED
     use constants,  only : pi
     use utilities,  only : isInDomain
-
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     !logical ::  isInDomain
     integer :: i,j,k
     real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
-    real    :: pos(3), E0
+    real    :: pos(3)
     !  initial MP spectra parameters
     real    :: emin, emax, deltaE, gamma_pic, B0
-    !-----------------------------------------------------------------------------
+    logical, parameter :: uniform = .false. ! place the MPs uniformly
+    !---------------------------------------------------------------------------
     !       HIDRODINAMICA : MEDIO AMBIENTE
     !       BLAST PROBLEM
     !       (high Order Finite Difference and Finite Volume WENO Schemes
     !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
-    !-----------------------------------------------------------------------------
+    !---------------------------------------------------------------------------
 
     !ENVIRONMENT
 
@@ -130,31 +130,58 @@ contains
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
     B0     = (1.-gamma_pic)/(Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic))
 
-    !Insert homogenously distributed particles
-    do yj=4,ny,8
-      do xi=4,nx,8
+    if (uniform) then
+      !Insert homogenously distributed particles
+      do yj=4,ny,8
+        do xi=4,nx,8
 
-        !  position of particles (respect to a corner --needed by isInDomain--)
-        pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
-        pos(2)= real(yj+ coords(1)*ny + 0.5) * dy
+          !  position of MPs (respect to a corner --needed by isInDomain--)
+          pos(1)= real(xi+ coords(0)*nx + 0.5) * dx
+          pos(2)= real(yj+ coords(1)*ny + 0.5) * dy
+          pos(3)= real( 1+ coords(2)*nz + 0.5) * dz
+
+          if(isInDomain(pos) ) then
+            n_activeMP            = n_activeMP + 1
+            partOwner(n_activeMP) = rank
+            partID   (n_activeMP) = n_activeMP + rank*N_MP
+            Q_MP0(n_activeMP,:) = 0.
+            Q_MP0(n_activeMP,1:3) = pos(:)
+
+            do i = 1,NBinsSEDMP
+              MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
+              MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+            end do
+
+          endif
+
+        end do
+      end do
+    else
+      !  this will insert N_MP/2 (N_MP is set in parameters) randomly
+      !  distributed within each processor domain
+      do while (n_activeMP < N_MP/2)
+        call random_number(pos(1:2))
+        pos(1) = pos(1) * xmax
+        pos(2) = pos(2) * ymax
         pos(3)= real( 1+ coords(2)*nz + 0.5) * dz
 
         if(isInDomain(pos) ) then
-          n_activeMP            = n_activeMP + 1
-          partOwner(n_activeMP) = rank
-          partID   (n_activeMP) = n_activeMP + rank*N_MP
-          Q_MP0(n_activeMP,:) = 0.
-          Q_MP0(n_activeMP,1:3) = pos(:)
+            n_activeMP            = n_activeMP + 1
+            partOwner(n_activeMP) = rank
+            partID   (n_activeMP) = n_activeMP + rank*N_MP
+            Q_MP0(n_activeMP,:) = 0.
+            Q_MP0(n_activeMP,1:3) = pos(:)
 
-          do i = 1,NBinsSEDMP
-            MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-            MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
-          end do
+            do i = 1,NBinsSEDMP
+              MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
+              MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+            end do
 
-        endif
+          endif
 
       end do
-    end do
+    end if
+
 
     print*, rank, 'has ', n_activeMP, ' active MPs'
 
