@@ -947,18 +947,20 @@ contains
   !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
   subroutine get_PL_parameters(prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
     use parameters, only : rhosc, rsc, vsc2
+    use constants,  only : eV
     implicit none
     real, intent(in)  :: prim1(8), prim2(8), rhoI, EI, BI
     real, intent(out) :: A0, qNR, Emin, Emax
     real              :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
                          lambda_eff
-    real, parameter   :: pic_eta = 1.5         !  for eq(32) in Vaidya et al.
+    real, parameter   :: pic_eta = 1500.         !  for eq(32) in Vaidya et al.
     real, parameter   :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
     real, parameter   :: deltaN  = 0.1         ! Mimica et al. 2009
     real, parameter   :: deltaE  = 0.5         ! Mimica et al. 2009
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
     qNR = 3.*r/(r -1.)
+    r = max(r,1.1)      !
 
     v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
     v2 = normal(1)*prim2(2)+normal(2)*prim2(3)+normal(3)*prim2(4)
@@ -972,13 +974,13 @@ contains
                * (            cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)      &
                    + r*Brat*( cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) )  )
 
-    !  get E1, then scale it to code units
-    Emax = e1const / sqrt(BI*lambda_eff)
+    !  get E1, then scale it to code unit
+    Emax = e1const / sqrt(BI*lambda_eff)/eV
     Emax = Emax/(rhosc*rsc**3*vsc2)
 
     A0   = 1.
-    Emax = 1e4
-    Emin = 1.e-2
+    !Emax = 1e4
+    Emin = 1.e-6*Emax
 
     !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
     !with this we obtain A0 and thus .... can inject the spectrum
