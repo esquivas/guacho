@@ -130,21 +130,20 @@ contains
   !> It also implements the required update of the SED of each MP, including
   !> the Diffuse Shock Acceleration treatment
   subroutine PICpredictor()
-
     use globals,   only : primit, dt_CFL, rank, comm3d, &
                           Q_MP0, Q_MP1, P_DSA, MP_SED, partID, currentIteration
     use parameters
     use constants, only : pi
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
-    integer :: i_mp, i, j, k, l, ind(3), dest, nLocSend, &
-               sendLoc(0:np-1), sendList(0:np-1,0:np-1), &
-               dataLoc(N_MP), iS, iR
+    integer :: i_mp, i, j, k, l, ind(3)
     real    :: weights(8)
+    integer :: dest, nLocSend, sendLoc(0:np-1), sendList(0:np-1,0:np-1),       &
+               dataLoc(N_MP), iS, iR, status(MPI_STATUS_SIZE), err
     real    :: fullSend(2*NBinsSEDMP+28), fullRecv(2*NBinsSEDMP+28)
-    !          that is 2*NBinsSEDMP of the SED, 12 of Q_MP0 and 2*8 from P_DSA
-    integer :: status(MPI_STATUS_SIZE), err
+    !          above is 2*NBinsSEDMP of the SED, 12 of Q_MP0 and 2*8 from P_DSA
     real    :: normal(3), comp, thB1, thB2
+
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -201,7 +200,7 @@ contains
           !   If particle was already inside shock
             if (Q_MP0(i_mp,10) /= 0.) then
 
-              !print*, 'particle ', partID(i_mp),                                 &
+              !print*, 'particle ', partID(i_mp),                              &
               !        'marked inside the shock region', currentIteration
               !  interpolate Pressure
               !Q_MP0(i_mp,9) = 0.
@@ -262,7 +261,7 @@ contains
               end if
 
               if (.not.isInShock(Q_MP0(i_mp,1:3))) then
-                !print*, 'particle ', partID(i_mp),                               &
+                !print*, 'particle ', partID(i_mp),                            &
                 !        'has left the shock region', currentIteration
 
                 call get_NRth(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), normal, comp,   &
@@ -281,13 +280,13 @@ contains
               !  happily living its life
               if (isInShock(Q_MP0(i_mp,1:3))) then
 
-                !print*, 'particle ', partID(i_mp),                               &
+                !print*, 'particle ', partID(i_mp),                            &
                 !        ' has just entered shock', currentIteration
 
                 !  Mark it as shocked for future Reference
                 Q_MP0(i_mp,10) = 1.
 
-                !  interpolate primitives and load them to both P_DSA(i_mp,1:2,:)
+                ! interpolate primitives and load them to both P_DSA(i_mp,1:2,:)
                 P_DSA(i_mp,1,1) = Q_MP0(i_mp,8)  !  Density
                 P_DSA(i_mp,1,2) = Q_MP0(i_mp,4)  !  vx
                 P_DSA(i_mp,1,3) = Q_MP0(i_mp,5)  !  vy
@@ -332,7 +331,7 @@ contains
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
           dataLoc(nLocSend) = i_mp
-          !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp),  &
+          !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp),        &
           !                     ' is going to ',DEST
         end if
 
@@ -434,28 +433,28 @@ contains
   !> It also implements the required update of the SED of each MP, including
   !> the Diffuse Shock Acceleration treatment
   subroutine PICcorrector()
-
     use globals,   only : primit, dt_CFL, rank, comm3d,                        &
                           MP_SED, Q_MP0, Q_MP1, partID, P_DSA
     use parameters
     use constants, only : sigma_SB, sigma_T,clight,emass
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
-    integer :: i_mp, i, j, k, l, ind(3)
-    real    :: weights(8), vel1(3)
+    integer :: i_mp, i, j, k, l, ib, ind(3)
+    real    :: weights(8)
     integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1),                &
-               sendList(0:np-1,0:np-1)
-    real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5)
-    integer :: status(MPI_STATUS_SIZE), err, iR, iS, ib
-    real    :: thB1, thB2, comp, normal(3)
-    real    :: ema, bdist, rhoNP1, crNP1, pNP1, dataIn(12),                    &
-               q_NR, bi, ei, Emin, Emax, A0
-    real, parameter :: Tcmb = 2.278
+               sendList(0:np-1,0:np-1),status(MPI_STATUS_SIZE), err, iR, iS
+    real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5), dataIn(12)
+    real    :: rhoNP1, vel1(3), pNP1, B_2Np1, BI, EI
+    real    :: ema, bNP1
+    real    :: normal(3), thB1, thB2
+    real    :: q_NR, Emin, Emax, A0
     !> RH term eq (7) Vaidya +
+    real, parameter :: Tcmb = 2.278
     real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
     !> constant in front of eq(7) scaled to code units
     real, parameter ::Cr0= ( 4.*sigma_T/3./emass**2/clight**3 )                &
-                           *rhosc**2*vsc**3*rsc**3
+                            * rhosc**2*vsc**3*rsc**3
+
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -469,9 +468,9 @@ contains
           !  clear come variables
           if(pic_distF) then
             ema    = 0.
-            bdist  = 0.
+            bNP1   = 0.
             rhoNP1 = 0.
-            crNP1  = 0.
+            B_2NP1 = 0.
             pNP1   = 0.
           end if
 
@@ -494,7 +493,7 @@ contains
                 if (pic_distF) then
                   !   source terms
                   rhoNP1 = rhoNP1 + primit(1,i,j,k)*weights(l)
-                  crNP1  = crNP1  + 0.5 * weights(l)**2 *                      &
+                  B_2NP1  = B_2NP1  + 0.5 * weights(l)**2 *                    &
                    ( primit(6,i,j,k)**2 +primit(7,i,j,k)**2+primit(8,i,j,k)**2 )
                    pNP1  = pNP1   + primit(5,i,j,k)*weights(l)
                 end if
@@ -511,26 +510,26 @@ contains
             !  exp(-a) and cr
             ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
             ! eq. (23) Vaidya et al. 2018
-            bdist  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(crNP1+Urad) )
+            bNP1  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(B_2NP1+Urad) )
 
             !  update only if *not* currently marked as inside shock
             if (Q_MP0(i_mp,10) == 0.) then
               do ib=1,NBinsSEDMP
 
                 MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*ema*                       &
-                                  (1.+bdist*MP_SED(1,ib,i_mp))**2
+                                  (1.+bNP1*MP_SED(1,ib,i_mp))**2
 
                 MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*ema/                       &
-                                  (1.+bdist*MP_SED(1,ib,i_mp))
+                                  (1.+bNP1*MP_SED(1,ib,i_mp))
 
               end do
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
 
               ! Call routine that calculates energy limits
               ! and power law parameters
-              BI = 2. * crNP1
+              BI = 2. * B_2NP1
               EI = 0.5 * rhoNP1 * (vel1(1)**2 + vel1(2)**2 + vel1(3)**2)       &
-                 + crNP1 + cv * pNP1
+                 + B_2NP1 + cv * pNP1
 
               call get_PL_parameters(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), rhoNP1,  &
                    EI, BI, A0, q_NR, Emin, Emax)
@@ -602,8 +601,8 @@ contains
           if(iR == rank) then
             do i=1,sendList(iR,iS)
 
-              ! Sets de distribution fuction if enabled
-              !equation 3 in Vaidya et al. 2016.
+              !  Sets de distribution fuction if enabled
+              !  equation 3 in Vaidya et al. 2016.
               if (pic_distF) then
                 !  in case we are only the particles w/their SED
                 call mpi_recv(fullRecv,5+2*NBinsSEDMP, mpi_real_kind, IS,      &
@@ -873,7 +872,6 @@ contains
     end if
     !  Recompute normal if thB1 will be close to 0 or 90 degrees
     if ( (BdotN > 0.996 ).or.(BdotN < 0.087 ) )   then
-    !if ( (BdotN > 0.98 ).or.(BdotN < 0.16 ) )   then
       nsh(1:3) = delV(1:3)
       magN = sqrt(delV(1)**2 + delV(2)**2 + delV(3)**2)
       if (magN  == 0.) then
@@ -912,7 +910,7 @@ contains
     integer :: i
     real    :: N0, deltaE, logE0, logE1, m, comp
 
-!    print*, 'A0', A0,'m', m,'Emin', Emin,'Emax', Emax
+    !    print*, 'A0', A0,'m', m,'Emin', Emin,'Emax', Emax
     logE0 = LOG10(Emin)
     logE1 = LOG10(Emax)
 
@@ -952,15 +950,15 @@ contains
     implicit none
     real, intent(in)  :: prim1(8), prim2(8), rhoI, EI, BI
     real, intent(out) :: A0, qNR, Emin, Emax
-    real :: normal(3), r, thB1, thB2, v1, v2, v_shock,                 &
-            Brat, lambda_eff
-    real, parameter :: pic_eta = 1.5   !  for eq(32) in Vaidya et al.
-    real, parameter :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
-    real, parameter :: deltaN  = 0.1 ! Mimica et al. 2009
-    real, parameter :: deltaE  = 0.5 ! Mimica et al. 2009
+    real              :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
+                         lambda_eff
+    real, parameter   :: pic_eta = 1.5         !  for eq(32) in Vaidya et al.
+    real, parameter   :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
+    real, parameter   :: deltaN  = 0.1         ! Mimica et al. 2009
+    real, parameter   :: deltaE  = 0.5         ! Mimica et al. 2009
 
-    call get_NRth(prim1,prim2, normal, r, thB1,thB2)
-    qNR = 3*r /(r -1.)
+    call get_NRth(prim1,prim2,normal,r,thB1,thB2)
+    qNR = 3.*r/(r -1.)
 
     v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
     v2 = normal(1)*prim2(2)+normal(2)*prim2(3)+normal(3)*prim2(4)
@@ -971,11 +969,11 @@ contains
            sqrt(prim2(6)**2+prim2(7)**2+prim2(8)**2)
 
     lambda_eff =  pic_eta*r / ( ( (v1-v_shock)**2)*(r-1.))                     &
-               * (           cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)       &
-                   + r*Brat*(cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) ) )
+               * (            cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)      &
+                   + r*Brat*( cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) )  )
 
-
-    Emax = e1const / sqrt(Bi* lambda_eff)
+    !  get E1, then scale it to code units
+    Emax = e1const / sqrt(BI*lambda_eff)
     Emax = Emax/(rhosc*rsc**3*vsc2)
 
     A0   = 1.
@@ -984,6 +982,7 @@ contains
 
     !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
     !with this we obtain A0 and thus .... can inject the spectrum
+
   end subroutine get_PL_parameters
 
   !=======================================================================
@@ -992,11 +991,11 @@ contains
   !> rule (assuming logarithmic spaced bins)
   !> param integer [in]  nbins        : number of (log spaced) bins in SED
   !> param real    [in]  SED(2,nbins) : spectra, 1st index 0 is E, 1 is chi=N/n
-  !> param real    [out] nold         : total # of particles: int N(E) dE
-  !> param real    [out] Eold         : total Energy: int N(E) E dE
+  !> param real    [out]  nold        : total # of particles: int N(E) dE
+  !> param real    [out]  Eold        : total Energy: int N(E) E dE
   subroutine get_nE_old(nbins,SED,nold,Eold)
     implicit none
-    integer, intent(in)  ::
+    integer, intent(in)  :: nbins
     real,    intent(in)  :: SED(2,nbins)
     real,    intent(out) :: nold, Eold
     integer :: i
@@ -1024,7 +1023,7 @@ contains
       end if
 
       if (slopeE /= -1.) then
-        Eold = Eold + FE0/(slopeE+1.)*(FE1*(FnE/FE0)**slopeE-FE0)
+        Eold = Eold + FE0/(slopeE+1.)*(FE1*(FE1/FE0)**slopeE-FE0)
       else
         Eold = Eold + FE0 * log(FE1/FE0)
       end if
