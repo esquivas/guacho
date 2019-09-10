@@ -57,11 +57,12 @@ contains
 
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,      &
           pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
-          gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP, np,xmax,ymax
+          gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP,            &
+          np, xmax, ymax, vsc2
 
     use globals,    only : coords, dx ,dy ,dz, rank,                           &
                            Q_MP0, partID, partOwner, n_activeMP, MP_SED
-    use constants,  only : pi
+    use constants,  only : pi, eV
     use utilities,  only : isInDomain
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
@@ -123,9 +124,9 @@ contains
     partID(:)    =  0
     n_activeMP   =  0
 
-    ! delta E in log bins
-    Emin = 1e-2
-    Emax = 1e4
+    ! delta E in log bins (this is in ergs)
+    Emin = 0.63*1e6 *eV /(rhosc*rsc**3*vsc2)
+    Emax = 0.31*1e12*eV /(rhosc*rsc**3*vsc2)
     gamma_pic = 3.
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
     B0     = (1.-gamma_pic)/(Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic))
