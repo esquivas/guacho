@@ -531,8 +531,8 @@ contains
               EI = 0.5 * rhoNP1 * (vel1(1)**2 + vel1(2)**2 + vel1(3)**2)       &
                  + B_2NP1 + cv * pNP1
 
-              call get_PL_parameters(P_DSA(i_mp,1,:),P_DSA(i_mp,2,:), rhoNP1,  &
-                   EI, BI, A0, q_NR, Emin, Emax)
+              call get_PL_parameters(i_mp,P_DSA(i_mp,1,:),P_DSA(i_mp,2,:)      &
+                                     ,rhoNP1, EI, BI, A0, q_NR, Emin, Emax)
 
               call inject_PL_spectrum(i_mp,A0,q_NR,Emin,Emax)
 
@@ -945,22 +945,25 @@ contains
   !> @param real [out] qNR      : q index (Drury et al. 1983)
   !> @param real [out] Emin     : minimum energy (e0, Vaidya et al 2018)
   !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
-  subroutine get_PL_parameters(prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
-    use parameters, only : rhosc, rsc, vsc2
+  subroutine get_PL_parameters(i_mp,prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
+    use parameters, only : rhosc, rsc, vsc2, NBinsSEDMP
     use constants,  only : eV
+    use globals, only : MP_SED
     implicit none
-    real, intent(in)  :: prim1(8), prim2(8), rhoI, EI, BI
-    real, intent(out) :: A0, qNR, Emin, Emax
-    real              :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
-                         lambda_eff
-    real, parameter   :: pic_eta = 1500.         !  for eq(32) in Vaidya et al.
-    real, parameter   :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
-    real, parameter   :: deltaN  = 0.1         ! Mimica et al. 2009
-    real, parameter   :: deltaE  = 0.5         ! Mimica et al. 2009
+    integer, intent(in) :: i_mp
+    real, intent(in)    :: prim1(8), prim2(8), rhoI, EI, BI
+    real, intent(out)   :: A0, qNR, Emin, Emax
+    real                :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
+                           lambda_eff
+    real, parameter     :: pic_eta = 1500.         !  for eq(32) in Vaidya et al.
+    real, parameter     :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
+    real, parameter     :: deltaN  = 0.0001         ! Mimica et al. 2009
+    real, parameter     :: deltaE  = 0.0005         ! Mimica et al. 2009
+    real :: e_old, n_old, c1, c2
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
+    r = max(r,1.5)      !  this should be <= comp in if in injectcion routine
     qNR = 3.*r/(r -1.)
-    r = max(r,1.1)      !
 
     v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
     v2 = normal(1)*prim2(2)+normal(2)*prim2(3)+normal(3)*prim2(4)
@@ -978,9 +981,25 @@ contains
     Emax = e1const / sqrt(BI*lambda_eff)/eV
     Emax = Emax/(rhosc*rsc**3*vsc2)
 
-    A0   = 1.
+    call get_nE_old(NBinsSEDMP, MP_SED(:, :, i_mp), n_old, E_old)
+
+    !calculate Emin (see Esquivas notes)
+
+    c1   = deltaN*rhoI+n_old
+    c2   = deltaE*EI+E_old
+
+
+!    print*,"c1, c2, qNR", c1, c2, qNR
+    Emin = c2/c1 * (3.-qNR)/(4.-qNR) / (rhosc*rsc**3*vsc2)
+
+    Emin = MP_SED(1,1,i_mp)
+    Emax = MP_SED(1,100,i_mp)
+
+    !    print*,"n_old, e_old", n_old,E_old
+    A0   = c1*(3-qNR)/(Emax**(3.-qNR)-Emin**(3.-qNR))*Emin**(2.-qNR)
+!    print*, "Emin =", Emin, "Emax =", Emax, "A0", A0
     !Emax = 1e4
-    Emin = 1.e-6*Emax
+    !Emin = 1.e-6*Emax
 
     !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
     !with this we obtain A0 and thus .... can inject the spectrum
@@ -1019,15 +1038,15 @@ contains
       slopeE = log(FE1/FE0)/log(x1/x0)
 
       if (slopeN /= -1.) then
-        nold = nold + Fn0/(slopeN+1.)*(Fn1*(Fn1/Fn0)**slopeN-Fn0)
+        nold = nold + Fn0/(slopeN+1.)*(x1*(x1/x0)**slopeN-x0)
       else
-        nold = nold + Fn0 * log(Fn1/Fn0)
+        nold = nold + Fn0*x0*log(x1/x0)
       end if
 
       if (slopeE /= -1.) then
-        Eold = Eold + FE0/(slopeE+1.)*(FE1*(FE1/FE0)**slopeE-FE0)
+        Eold = Eold + FE0/(slopeE+1.)*(x1*(x1/x0)**slopeE-x0)
       else
-        Eold = Eold + FE0 * log(FE1/FE0)
+        Eold = Eold + FE0 * x0 * log(x1/x0)
       end if
 
     end do
