@@ -72,7 +72,7 @@ contains
     integer :: yj,xi
     real    :: pos(3)
     !  initial MP spectra parameters
-    real    :: emin, emax, deltaE, gamma_pic, B0
+    real    :: emin, emax, deltaE, gamma_pic, N0, chi0
     logical, parameter :: uniform = .false. ! place the MPs uniformly
     !---------------------------------------------------------------------------
     !       HIDRODINAMICA : MEDIO AMBIENTE
@@ -129,7 +129,8 @@ contains
     Emax = 0.31*1e12*eV /(rhosc*rsc**3*vsc2)
     gamma_pic = 3.
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
-    B0     = (1.-gamma_pic)/(Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic))
+    N0     =  1.0e5
+    chi0   = N0 * (1.-gamma_pic)/( Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic) )
 
     if (uniform) then
       !Insert homogenously distributed particles
@@ -150,7 +151,7 @@ contains
 
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-              MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
             end do
 
           endif
@@ -175,7 +176,7 @@ contains
 
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-              MP_SED(2,i,n_activeMP)= B0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
             end do
 
           endif
