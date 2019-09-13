@@ -447,7 +447,7 @@ contains
     real    :: rhoNP1, vel1(3), pNP1, B_2Np1, BI, EI
     real    :: ema, bNP1
     real    :: normal(3), thB1, thB2
-    real    :: q_NR, Emin, Emax, A0
+    real    :: q_NR, Emin, Emax, chi0
     !> RH term eq (7) Vaidya +
     real, parameter :: Tcmb = 2.278
     real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
@@ -532,9 +532,9 @@ contains
                  + B_2NP1 + cv * pNP1
 
               call get_PL_parameters(i_mp,P_DSA(i_mp,1,:),P_DSA(i_mp,2,:)      &
-                                     ,rhoNP1, EI, BI, A0, q_NR, Emin, Emax)
+                                     ,rhoNP1, EI, BI, chi0, q_NR, Emin, Emax)
 
-              call inject_PL_spectrum(i_mp,A0,q_NR,Emin,Emax)
+              call inject_PL_spectrum(i_mp,chi0,q_NR,Emin,Emax)
 
               !  Clear primit P1/P2 arrays and mark as no longer in shock
               P_DSA(i_mp,:,:)= 0.
@@ -897,16 +897,16 @@ contains
   !> @details Inject new power law spectrum (for DSA subgrid calculation)
   !> of the form N \propto A0 E^(-m)
   !> @param integer [in] i_mp : index of the MP to which the SED is updated
-  !> @param real    [in] A0   : Amplitude
+  !> @param real    [in] chi0 : Amplitude
   !> @param real    [in] q    : spectral index
   !> @param real    [in] Emin : lower end energy in the spectrum
   !> @param real    [in] Emax : Upper end energy in the spectrun
-  subroutine inject_PL_spectrum(i_mp, A0, q, Emin, Emax)
+  subroutine inject_PL_spectrum(i_mp, chi0, q, Emin, Emax)
     use globals,    only : MP_SED, Q_MP0, P_DSA
     use parameters, only : NBinsSEDMP
     implicit none
     integer, intent(in) :: i_mp
-    real,    intent(in) :: A0, q, Emin, Emax
+    real,    intent(in) :: chi0, q, Emin, Emax
     integer :: i
     real    :: N0, deltaE, logE0, logE1, m, comp
 
@@ -920,11 +920,10 @@ contains
       m = q - 2.
       !  delta E in logerithmic bins
       deltaE = ( logE1 - logE0 ) / (real(NBinsSEDMP)-1.)
-      N0     = A0*(1.-m)/(Emax**(1.-m)-Emin**(1.-m))
 
       do i = 1,NBinsSEDMP
         MP_SED(1,i,i_mp) = 10.**(logE0+real(i-1)*deltaE)
-        MP_SED(2,i,i_mp) = N0*MP_SED(1,i,i_mp)**(-m)
+        MP_SED(2,i,i_mp) = chi0*MP_SED(1,i,i_mp)**(-m)
       end do
 
     end if
@@ -941,24 +940,24 @@ contains
   !> @param real [in]  rhoI     : density interpolated at the MP position
   !> @param real [in]  EI       : energy density interpolated at the MP position
   !> @param real [in]  BI       : B field interpolated at the MP position
-  !> @param real [out] A0       : Amplitude for the new PL
+  !> @param real [out] chi0     : Amplitude for the new PL
   !> @param real [out] qNR      : q index (Drury et al. 1983)
   !> @param real [out] Emin     : minimum energy (e0, Vaidya et al 2018)
   !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
-  subroutine get_PL_parameters(i_mp,prim1,prim2,rhoI,EI,BI,A0,qNR,Emin,Emax)
+  subroutine get_PL_parameters(i_mp,prim1,prim2,rhoI,EI,BI,chi0,qNR,Emin,Emax)
     use parameters, only : rhosc, rsc, vsc2, NBinsSEDMP
     use constants,  only : eV
     use globals, only : MP_SED
     implicit none
     integer, intent(in) :: i_mp
     real, intent(in)    :: prim1(8), prim2(8), rhoI, EI, BI
-    real, intent(out)   :: A0, qNR, Emin, Emax
+    real, intent(out)   :: chi0, qNR, Emin, Emax
     real                :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
                            lambda_eff
-    real, parameter     :: pic_eta = 1500.         !  for eq(32) in Vaidya et al.
+    real, parameter     :: pic_eta = 4.25        !  for eq(32) in Vaidya et al.
     real, parameter     :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
-    real, parameter     :: deltaN  = 0.0001         ! Mimica et al. 2009
-    real, parameter     :: deltaE  = 0.0005         ! Mimica et al. 2009
+    real, parameter     :: deltaN  = 0.01         ! Mimica et al. 2009
+    real, parameter     :: deltaE  = 0.5         ! Mimica et al. 2009
     real :: e_old, n_old, c1, c2
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
@@ -984,25 +983,18 @@ contains
     call get_nE_old(NBinsSEDMP, MP_SED(:, :, i_mp), n_old, E_old)
 
     !calculate Emin (see Esquivas notes)
+    c1   = deltaN*rhoI + n_old
+    c2   = deltaE*EI   + E_old
 
-    c1   = deltaN*rhoI+n_old
-    c2   = deltaE*EI+E_old
-
-
-!    print*,"c1, c2, qNR", c1, c2, qNR
-    Emin = c2/c1 * (3.-qNR)/(4.-qNR) / (rhosc*rsc**3*vsc2)
-
-    Emin = MP_SED(1,1,i_mp)
-    Emax = MP_SED(1,100,i_mp)
+    Emin = c2/c1 * (4.-qNR)/(3.-qNR) / (rhosc*rsc**3*vsc2)
+    !Emin = MP_SED(1,1,i_mp)*1.0
+    !Emax = MP_SED(1,100,i_mp)
 
     !    print*,"n_old, e_old", n_old,E_old
-    A0   = c1*(3-qNR)/(Emax**(3.-qNR)-Emin**(3.-qNR))*Emin**(2.-qNR)
-!    print*, "Emin =", Emin, "Emax =", Emax, "A0", A0
+    chi0   = c1*(3.0-qNR)/(Emax**(3.0-qNR)-Emin**(3.0-qNR) )! *Emin**(2.-qNR) )
+    !print*, "Emin =", Emin, "Emax =", Emax, "chi0", chi0
     !Emax = 1e4
     !Emin = 1.e-6*Emax
-
-    !We need to calculate e0 as a function of c1 and c2 (n_old, e_old)
-    !with this we obtain A0 and thus .... can inject the spectrum
 
   end subroutine get_PL_parameters
 
