@@ -305,6 +305,7 @@ def readpic(nout,path='', base='pic',trim=True):
               r[ii], th[ii] = struct.unpack('2d',f.read(16))
               for i_bin in range (n_bins):
                 SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
+              for i_bin in range (n_bins):
                 SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
               for i_eq in range(8):
                 P1[ii,i_eq] = struct.unpack('1d', f.read(8) )[0]
