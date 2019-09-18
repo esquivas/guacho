@@ -984,8 +984,8 @@ contains
     Emax = e1const / sqrt(BI*lambda_eff)/eV
     Emax = Emax/(rhosc*rsc**3*vsc2)
 
+    Emax = 0.4   !MP_SED(1,100,i_mp)
     Emin = 0.5e-6!MP_SED(1,1,i_mp)
-    Emax = 0.4!MP_SED(1,100,i_mp)
 
     call get_nE_old(NBinsSEDMP, MP_SED(:, :, i_mp), n_old, E_old)
 
