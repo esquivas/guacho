@@ -7,17 +7,17 @@ from matplotlib.colors import LogNorm
 
 plt.ion()
 
-path = '../picBlast/BIN/'
+path = '../snr/BIN/'
 nout = 10
 
 nproc = get_Nproc(nout,path=path)
 
-rho  = get_2d_cut(3,1,nout=nout,neq=0,path=path,verbose=False)
-vx   = get_2d_cut(3,1,nout=nout,neq=1,path=path,verbose=False)
-vy   = get_2d_cut(3,1,nout=nout,neq=2,path=path,verbose=False)
-bx   = get_2d_cut(3,1,nout=nout,neq=5,path=path,verbose=False, mhd=True)
-by   = get_2d_cut(3,1,nout=nout,neq=6,path=path,verbose=False, mhd=True)
-shockF = get_2d_cut(3,1,nout=nout,neq=0,path=path,base='shock-',verbose=False)
+rho  = get_2d_cut(3,64,nout=nout,neq=0,path=path,verbose=False)
+vx   = get_2d_cut(3,64,nout=nout,neq=1,path=path,verbose=False)
+vy   = get_2d_cut(3,64,nout=nout,neq=2,path=path,verbose=False)
+bx   = get_2d_cut(3,64,nout=nout,neq=5,path=path,verbose=False, mhd=True)
+by   = get_2d_cut(3,64,nout=nout,neq=6,path=path,verbose=False, mhd=True)
+shockF = get_2d_cut(3,64,nout=nout,neq=0,path=path,base='shock-',verbose=False)
 
 extent =  [0,1,0,1]
 
@@ -39,7 +39,7 @@ plt.title('Density')
 
 plt.figure(3) ; plt.clf()
 
-npart = 358#250
+npart = 266#250
 
 GeV = 1.e9*1.60218E-12 # 1 GeV in ergs
 
@@ -71,6 +71,11 @@ Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minleng
 
 plt.figure(4)
 plt.clf()
-plt.imshow(shockF, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
+plt.imshow(rho, extent=extent, origin='lower', cmap='viridis',interpolation = 'none' )
 sc = plt.scatter(picData[:,1],picData[:,2], c=(picData[:,5]),alpha=0.5,cmap='viridis')
 cb = plt.colorbar(sc)
+
+#  get scalings, working on units problem
+rsc,vsc,rhosc,Bsc = get_scalings(nout,path=path,verbose=False)
+Psc = rhosc*vsc**2
+Esc = rsc**3*Psc
