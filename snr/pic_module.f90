@@ -451,11 +451,9 @@ contains
     !> RH term eq (7) Vaidya +
     real, parameter :: Tcmb = 2.278
     real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
-    !> constant in front of eq(7) scaled to code units
-    !real, parameter ::Cr0= ( 4.*sigma_T/3./emass**2/clight**3 )                &
-    !                        * rhosc**2*vsc**3*rsc**3
-    real, parameter ::Cr0= ( 4.*sigma_T/3./emass**2/clight**3 )                &
-                            * rhosc*vsc
+    !> constant in front of eq(7) in cgs
+    real, parameter ::Cr0= ( 4.*sigma_T )/(3.* emass**2 * clight**3 )
+
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
@@ -512,6 +510,8 @@ contains
             ema    = (rhoNP1/Q_MP0(i_mp,8))**(1./3.)
             ! eq. (23) Vaidya et al. 2018
             bNP1  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(B_2NP1+Urad) )
+            !  convert to cgs to update SED
+            bNP1  = bNP1 * tsc * Psc
 
             !  update only if *not* currently marked as inside shock
             if (Q_MP0(i_mp,10) == 0.) then
@@ -529,8 +529,7 @@ contains
               ! Call routine that calculates energy limits
               ! and power law parameters
               BI = 2. * B_2NP1
-              EI = 0.5 * rhoNP1 * (vel1(1)**2 + vel1(2)**2 + vel1(3)**2)       &
-                 + B_2NP1 + cv * pNP1
+              EI = cv * pNP1
 
               call get_PL_parameters(i_mp,P_DSA(i_mp,1,:),P_DSA(i_mp,2,:)      &
                                      ,rhoNP1, EI, BI, chi0, q_NR, Emin, Emax)
@@ -949,23 +948,23 @@ contains
   !> @param real [out] Emin     : minimum energy (e0, Vaidya et al 2018)
   !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
   subroutine get_PL_parameters(i_mp,prim1,prim2,rhoI,EI,BI,chi0,qNR,Emin,Emax)
-    use parameters, only : rhosc, rsc, vsc2, NBinsSEDMP
-    use constants,  only : eV
-    use globals, only : MP_SED
+    use parameters, only : rhosc, rsc, vsc2, NBinsSEDMP, Bsc, vsc2, Psc
+    use constants,  only : eV, clight, echarge
+    use globals, only : MP_SED, dx
     implicit none
     integer, intent(in) :: i_mp
     real, intent(in)    :: prim1(8), prim2(8), rhoI, EI, BI
     real, intent(out)   :: chi0, qNR, Emin, Emax
-    real                :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,      &
-                           lambda_eff
+    real                :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,    &
+                           beta1sq, lambda_eff, Elimit
     real, parameter     :: pic_eta = 4.25        !  for eq(32) in Vaidya et al.
-    real, parameter     :: e1const = 1.26095e-09 ! m^2c^3(9/(8pie^3))
-    real, parameter     :: deltaN  = 0.01         ! Mimica et al. 2009
-    real, parameter     :: deltaE  = 0.5         ! Mimica et al. 2009
+    real, parameter     :: e1const = 37.702      ! m^2c^4 sqrt(9/(8pie^3))
+    real, parameter     :: deltaN  = 0.01        ! Mimica et al. 2009
+    real, parameter     :: deltaE  = 0.1         ! Mimica et al. 2009
     real :: e_old, n_old, c1, c2
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
-    r = max(r,1.5)      !  this should be <= comp in if in injectcion routine
+    r = max(r,2.0)      !  this should be <= comp in if in injectcion routine
     qNR = 3.*r/(r -1.)
 
     v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
@@ -976,36 +975,34 @@ contains
     Brat = sqrt(prim1(6)**2+prim1(7)**2+prim1(8)**2)/                          &
            sqrt(prim2(6)**2+prim2(7)**2+prim2(8)**2)
 
-    lambda_eff = pic_eta*r / ( ( (v1-v_shock)**2 +1e-30 )*(r-1.))              &
+    beta1sq = (v1-v_shock)**2*vsc2 / (clight**2)
+    beta1sq = max(beta1sq, 1e-30)
+
+    lambda_eff = pic_eta*r / ( beta1sq*(r-1.) )                                &
                * (            cos(thB1)**2 + sin(thB1)**2/(1.+pic_eta**2)      &
                    + r*Brat*( cos(thB2)**2 + sin(thB2)**2/(1.+pic_eta**2) )  )
 
-    !  get E1, then scale it to code unit
-    Emax = e1const / sqrt(BI*lambda_eff)/eV
-    Emax = Emax/(rhosc*rsc**3*vsc2)
-
-    Emax = 0.4   !MP_SED(1,100,i_mp)
-    Emin = 0.5e-6!MP_SED(1,1,i_mp)
+    !>  Upper limit to energy to remain inside one cell
+    Elimit = 0.5*echarge*BI*Bsc*dx*rsc
+    !  get E1
+    Emax   = e1const / sqrt(BI*Bsc*lambda_eff)
+    Emax = min(Emax,Elimit)
 
     call get_nE_old(NBinsSEDMP, MP_SED(:, :, i_mp), n_old, E_old)
 
+    !  do not update enegy bounds (testing purposes)
+    !Emax = MP_SED(1,100,i_mp)
+    Emin = MP_SED(1,1,i_mp)
+
     !calculate Emin (see Esquivas notes)
-    c1   = deltaN*rhoI + n_old
-    c2   = deltaE*EI   + E_old
+    c1   = n_old + deltaN*rhoI
+    c2   = E_old + deltaE*EI*Psc
 
-    !Emin = c2/c1 * (4.-qNR)/(3.-qNR) / (rhosc*rsc**3*vsc2)
-
-    !print*, '------', qNR, Emin, Emax, n_old, E_old, c1
+    Emin = c2/c1 * (4.-qNR)/(3.-qNR)
+    Emin = max(Emin,1e-8)
+    !print*, '------', E_old, c2/c1 *(4.0-qNR)/(3.0-qNR)
     !    print*,"n_old, e_old", n_old,E_old
-    chi0   = 1e-6*(3.0-qNR)/(Emax**(3.0-qNR)-Emin**(3.0-qNR) )! *Emin**(2.-qNR) )
-    !! if (r >= 2.5) then
-    !!   print*, '------', qNR, Emin, Emax, n_old, E_old, c1
-    !!   print*, "Emin =", Emin, "Emax =", Emax, "chi0", chi0, "r",r, "i_mp", i_mp
-    !! else
-    !!   print*, '**** nothing to see here**********'
-    !! end if
-    !Emax = 1e4
-    !Emin = 1.e-6*Emax
+    chi0   =c1*(3.0-qNR)/(Emax**(3.0-qNR)-Emin**(3.0-qNR) ) /rhoI
 
   end subroutine get_PL_parameters
 
