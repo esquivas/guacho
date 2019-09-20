@@ -85,7 +85,7 @@ contains
 
     !ENVIRONMENT
 
-    rho_env = 5.e-3   !this is rho/rhosc
+    rho_env = 0.005   !this is rho/rhosc
     T_env   = 1000./Tempsc
     B_env   = 2.e-6/bsc
 
@@ -98,9 +98,9 @@ contains
     u(7,:,:,:) = B_env
     u(8,:,:,:) = 0.
 
-    xc = 12.5* pc/rsc
-    yc = 12.5* pc/rsc
-    zc = 12.5* pc/rsc
+    xc = 12.* pc/rsc
+    yc = 12.* pc/rsc
+    zc = 12.* pc/rsc
 
     call impose_snr(u,xc,yc,zc)
 
@@ -116,7 +116,7 @@ contains
     Emax = 0.31*1e12*eV !/(rhosc*rsc**3*vsc2)
     gamma_pic = 3.
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
-    N0     =  1.0e-6
+    N0     =  1.0e-6 / rho_env
     chi0   = N0 * (1.-gamma_pic)/( Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic) )
 
     if (uniform) then
