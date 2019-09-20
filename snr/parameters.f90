@@ -165,7 +165,7 @@ module parameters
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
   real, parameter :: zmax=1.          !< grid extent in Z (code units)
 
-  real, parameter :: xphys=25.*pc     !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys=24.*pc     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5 !gamma=1.5 !< Specific heat at constant volume (/R)
