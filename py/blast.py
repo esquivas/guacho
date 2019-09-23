@@ -5,19 +5,21 @@ import struct
 from guacho_utils import *
 from matplotlib.colors import LogNorm
 
-plt.ion()
+#plt.ion()
 
 path = '../snr/BIN/'
 nout = 10
 
+cut = 256
+
 nproc = get_Nproc(nout,path=path)
 
-rho  = get_2d_cut(3,64,nout=nout,neq=0,path=path,verbose=False)
-vx   = get_2d_cut(3,64,nout=nout,neq=1,path=path,verbose=False)
-vy   = get_2d_cut(3,64,nout=nout,neq=2,path=path,verbose=False)
-bx   = get_2d_cut(3,64,nout=nout,neq=5,path=path,verbose=False, mhd=True)
-by   = get_2d_cut(3,64,nout=nout,neq=6,path=path,verbose=False, mhd=True)
-shockF = get_2d_cut(3,64,nout=nout,neq=0,path=path,base='shock-',verbose=False)
+rho    = get_2d_cut(3,cut,nout=nout,neq=0,path=path,verbose=False)
+vx     = get_2d_cut(3,cut,nout=nout,neq=1,path=path,verbose=False)
+vy     = get_2d_cut(3,cut,nout=nout,neq=2,path=path,verbose=False)
+bx     = get_2d_cut(3,cut,nout=nout,neq=5,path=path,verbose=False, mhd=True)
+by     = get_2d_cut(3,cut,nout=nout,neq=6,path=path,verbose=False, mhd=True)
+shockF = get_2d_cut(3,cut,nout=nout,neq=0,path=path,base='shock-',verbose=False)
 
 extent =  [0,1,0,1]
 
@@ -64,6 +66,8 @@ plt.figure(2)
 sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,4],alpha=1.,cmap='inferno',vmin=1.)
 cb = plt.colorbar(sc)
 Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minlength=0.8)
+plt.xlim(0.,1.)
+plt.ylim(0.,1.)
 
 #picDataS = readpic(nout,path=path, base='pic-shocked-')
 #fig = plt.figure(2)
@@ -78,7 +82,7 @@ plt.xlim(0.,1.)
 plt.ylim(0.,1.)
 cb = plt.colorbar(sc)
 
-#  get scalings, working on units problem
-rsc,vsc,rhosc,Bsc = get_scalings(nout,path=path,verbose=False)
-Psc = rhosc*vsc**2
-Esc = rsc**3*Psc
+plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
+plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
+plt.figure(3) ; plt.savefig('fig3.png', transparent=True, bbox_inches='tight',dpi=300)
+plt.figure(4) ; plt.savefig('fig4.png', transparent=True, bbox_inches='tight',dpi=300)
