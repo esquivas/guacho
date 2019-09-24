@@ -164,7 +164,8 @@ def get_boxsize(nout,path='',base='points',verbose=False):
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   nx, ny, nz          = head_info[2]
-  return (nx, ny, nz)
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  return (nx*mpi_x, ny*mpi_y, nz*mpi_z)
 
 '''
   Returns the basic scalings
