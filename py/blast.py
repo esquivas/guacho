@@ -5,14 +5,15 @@ import struct
 from guacho_utils import *
 from matplotlib.colors import LogNorm
 
-#plt.ion()
+plt.ion()
 
 path = '../snr/BIN/'
 nout = 10
 
-cut = 256
-
 nproc = get_Nproc(nout,path=path)
+boxsize= get_boxsize(nout,path=path)
+
+cut = int(boxsize[2]/2)
 
 rho    = get_2d_cut(3,cut,nout=nout,neq=0,path=path,verbose=False)
 vx     = get_2d_cut(3,cut,nout=nout,neq=1,path=path,verbose=False)
@@ -27,7 +28,7 @@ plt.figure(2)
 plt.clf()
 plt.imshow(shockF, extent=extent, origin='lower', cmap='rainbow',interpolation = 'none' )
 #plt.colorbar()
-plt.title('Shock detector (1 if shocked)')
+plt.title('Shock detector (red if shocked)')
 
 X,Y = np.meshgrid( np.linspace(0.,1.,num=rho.shape[0]),np.linspace(0.,1.,num=rho.shape[1]) )
 
@@ -63,8 +64,9 @@ picData, SED, P1, P2= readpic(nout,path=path)
 
 plt.legend()
 plt.figure(2)
-sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,4],alpha=1.,cmap='inferno',vmin=1.)
+sc = plt.scatter(picData[:,1],picData[:,2], c=picData[:,5],alpha=0.8,cmap='inferno')
 cb = plt.colorbar(sc)
+cb.set_label(r'$\theta_{B1}$')
 Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minlength=0.8)
 plt.xlim(0.,1.)
 plt.ylim(0.,1.)
@@ -76,13 +78,16 @@ plt.ylim(0.,1.)
 
 plt.figure(4)
 plt.clf()
-map = plt.imshow(rho, extent=extent, origin='lower', cmap='inferno',interpolation = 'none', norm=LogNorm() )
-sc  = plt.scatter(picData[:,1],picData[:,2], c=(picData[:,5]),alpha=0.5,cmap='viridis')
+map = plt.imshow(rho, extent=extent, origin='lower', cmap='binary_r',interpolation = 'none', norm=LogNorm() )
+sc  = plt.scatter(picData[:,1],picData[:,2], c=picData[:,4],s =2.,alpha=0.5,cmap='inferno',vmin=1.,vmax=4.)
 plt.xlim(0.,1.)
 plt.ylim(0.,1.)
-cb = plt.colorbar(sc)
+cb1 = plt.colorbar(map)
+cb2 = plt.colorbar(sc)
+cb1.set_label(r'$\rho$ [g cm$^{-3}$]')
+cb2.set_label(r'Compression factor')
 
-plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
-plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
-plt.figure(3) ; plt.savefig('fig3.png', transparent=True, bbox_inches='tight',dpi=300)
-plt.figure(4) ; plt.savefig('fig4.png', transparent=True, bbox_inches='tight',dpi=300)
+#plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
+#plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
+#plt.figure(3) ; plt.savefig('fig3.png', transparent=True, bbox_inches='tight',dpi=300)
+#plt.figure(4) ; plt.savefig('fig4.png', transparent=True, bbox_inches='tight',dpi=300)
