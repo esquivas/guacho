@@ -112,11 +112,18 @@ LYAT = \
 hydro_core.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
+#  to get stokes parameters with the Lagrangian particles
+STOKES_LP = \
+pic_module.o \
+hydro_core.o \
+stokes_lp.o
+
 # Join object lists
-OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
-OBJECTS_NB      = ${MODULES_MAIN} ${NBODY}
-OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
-OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_ALL       = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
+OBJECTS_NB        = ${MODULES_MAIN} ${NBODY}
+OBJECTS_COLDENS   = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
+OBJECTS_LYAT      = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_STOKES_LP = ${MODULES_MAIN} ${MODULES_USER} ${STOKES_LP}
 #---------------------------------------------------
 # Set flags
 # Set flags
@@ -189,6 +196,15 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
 
+stokes_lp : prebuild ${OBJECTS_STOKES_LP}
+	@echo Linking object files ...
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_STOKES_LP) -o $@
+	@echo Cleaning up ...
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+	${SRC_PATH}/C2Ray/*.mod
+	@echo "Done! (`date`)"
+
 prebuild :
 	@echo "Guacho build started `date`"
 	@echo Compiling flags used: $(FLAGS)
@@ -239,7 +255,7 @@ clean :
 	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
 
 cleanall :
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau stokes_lp *.out *.err
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.modrm -f SS/BIN/*
