@@ -57,17 +57,17 @@ contains
       !  used to mark in the MHD grid shocked regions (shockF(i,j,k)=1)
 
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
-      !MP_SED(1,:,i) :  Energy (Lagrangian) bins
-      !MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
+      ! MP_SED(1,:,i) :  Energy (Lagrangian) bins
+      ! MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
 
       allocate( P_DSA(N_MP,2,8))
-      !P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
-      !P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
+      ! P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
+      ! P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
     else
       allocate( Q_MP0(N_MP,6) )
-      !Q_MP0(i, eq) has the following info:
-      ! eq = 1-3 : x, y, z
-      ! eq = 4-6 : vx, vy, vz
+      ! Q_MP0(i, eq) has the following info:
+      !  eq = 1-3 : x, y, z
+      !  eq = 4-6 : vx, vy, vz
     end if
 
     allocate( Q_MP1(N_MP,3) )    ! x,y,z position advanced by the predictor
@@ -723,7 +723,7 @@ contains
     integer              :: unitout, i_mp, i_active
 
 #ifdef MPIP
-    write(fileout,'(a,i3.3,a,i3.3,a)')  &
+    write(fileout,'(a,i3.3,a,i3.3,a)')                                         &
         trim(outputpath)//'BIN/pic',rank,'.',itprint,'.bin'
     unitout=rank+10
 #else
@@ -753,7 +753,7 @@ contains
         write(unitout) Q_MP0(i_mp,1:3)
         if(pic_distF) then
           write(unitout) Q_MP0(i_mp,11:12)
-          write(unitout) MP_SED(1,:,i_mp)!*(rhosc*vsc2*rsc**3)
+          write(unitout) MP_SED(1,:,i_mp)
           write(unitout) MP_SED(2,:,i_mp)
           write(unitout) P_DSA(i_mp,:,:)
         end if
