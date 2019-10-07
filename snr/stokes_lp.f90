@@ -95,7 +95,7 @@ implicit none
   if(rank.eq.master) then
      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
      print '(a)' ,'*******************************************'
-     print '(a)', 'Calculating Lyman Alpha Tau'
+     print '(a)', 'Calculating Stokes Parameters'
   end if
   call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
        , comm3d, err)
@@ -112,7 +112,7 @@ implicit none
   print '(a)' ,'*******************************************'
   print '(a)' ,'*     running on a single processor       *'
   print '(a)' ,'*******************************************'
-  print '(a)', 'Calculating Lyman Alpha Tau'
+  print '(a)', 'Calculating Stokes Parameters'
 #endif
 
 !   grid spacing
