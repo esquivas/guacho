@@ -100,8 +100,7 @@ subroutine initmain(tprint, itprint)
      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
      print '(a)' ,'*******************************************'
   end if
-  call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
-       , comm3d, err)
+  call mpi_cart_create(mpi_comm_world, ndim, dims, period,.true., comm3d, err)
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
   print '(a,i3,a,3i4)', 'processor ', rank                              &
