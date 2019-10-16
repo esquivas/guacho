@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import struct
 from guacho_utils import *
 from matplotlib.colors import LogNorm
+from scipy.ndimage import gaussian_filter
 
 plt.ion()
 
@@ -22,6 +23,11 @@ bx     = get_2d_cut(3,cut,nout=nout,neq=5,path=path,verbose=False, mhd=True)
 by     = get_2d_cut(3,cut,nout=nout,neq=6,path=path,verbose=False, mhd=True)
 shockF = get_2d_cut(3,cut,nout=nout,neq=0,path=path,base='shock-',verbose=False)
 
+f = open(path + 'stokes-'+str(nout).zfill(3)+'.bin','rb')
+stokes = np.fromfile(f, dtype = 'd', count=(boxsize[0]*boxsize[1]*3)).reshape(boxsize[0],boxsize[1],3,order='F').T
+f.close()
+
+
 extent =  [0,1,0,1]
 
 plt.figure(2)
@@ -31,14 +37,6 @@ plt.imshow(shockF, extent=extent, origin='lower', cmap='rainbow',interpolation =
 plt.title('Shock detector (red if shocked)')
 
 X,Y = np.meshgrid( np.linspace(0.,1.,num=rho.shape[0]),np.linspace(0.,1.,num=rho.shape[1]) )
-
-'''
-plt.figure(1)
-plt.clf()
-plt.imshow(rho, extent=extent, origin='lower', cmap='Spectral')
-plt.colorbar()
-plt.title('Density')
-'''
 
 plt.figure(1) ; plt.clf()
 plt.figure(3) ; plt.clf()
@@ -86,6 +84,16 @@ cb1 = plt.colorbar(map)
 cb2 = plt.colorbar(sc)
 cb1.set_label(r'$\rho$ [g cm$^{-3}$]')
 cb2.set_label(r'Compression factor')
+
+
+plt.figure(5); plt.clf()
+plt.imshow(stokes[0,:,:], origin='lower' )
+plt.colorbar()
+
+stokes_Is = gaussian_filter(stokes[0,:,:], sigma=2)
+plt.figure(6); plt.clf()
+plt.imshow(stokes_Is[:,:], origin='lower' )
+plt.colorbar()
 
 #plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
 #plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
