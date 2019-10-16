@@ -57,15 +57,15 @@ contains
       !  used to mark in the MHD grid shocked regions (shockF(i,j,k)=1)
 
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
-      ! MP_SED(1,:,i) :  Energy (Lagrangian) bins
-      ! MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
+      !  MP_SED(1,:,i) :  Energy (Lagrangian) bins
+      !  MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
 
       allocate( P_DSA(N_MP,2,8))
-      ! P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
-      ! P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
+      !  P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
+      !  P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
     else
       allocate( Q_MP0(N_MP,6) )
-      ! Q_MP0(i, eq) has the following info:
+      !  Q_MP0(i, eq) has the following info:
       !  eq = 1-3 : x, y, z
       !  eq = 4-6 : vx, vy, vz
     end if
@@ -131,7 +131,7 @@ contains
   !> the Diffuse Shock Acceleration treatment
   subroutine PICpredictor()
     use globals,   only : primit, dt_CFL, rank, comm3d, &
-                          Q_MP0, Q_MP1, P_DSA, MP_SED, partID, currentIteration
+                          Q_MP0, Q_MP1, P_DSA, MP_SED, partID
     use parameters
     use constants, only : pi
     use utilities, only : isInDomain, inWhichDomain, isInShock
@@ -446,7 +446,6 @@ contains
     real    :: fullSend(2*NBinsSEDMP+5), fullRecv(2*NBinsSEDMP+5), dataIn(12)
     real    :: rhoNP1, vel1(3), pNP1, B_2Np1, BI, EI
     real    :: ema, bNP1
-    real    :: normal(3), thB1, thB2
     real    :: q_NR, Emin, Emax, chi0
     !> RH term eq (7) Vaidya +
     real, parameter :: Tcmb = 2.278
@@ -904,13 +903,13 @@ contains
   !> @param real    [in] Emin : lower end energy in the spectrum
   !> @param real    [in] Emax : Upper end energy in the spectrun
   subroutine inject_PL_spectrum(i_mp, chi0, q, Emin, Emax)
-    use globals,    only : MP_SED, Q_MP0, P_DSA
+    use globals,    only : MP_SED
     use parameters, only : NBinsSEDMP
     implicit none
     integer, intent(in) :: i_mp
     real,    intent(in) :: chi0, q, Emin, Emax
     integer :: i
-    real    :: N0, deltaE, logE0, logE1, m, comp
+    real    :: deltaE, logE0, logE1, m, comp
 
     !    print*, 'A0', A0,'m', m,'Emin', Emin,'Emax', Emax
     logE0 = LOG10(Emin)
