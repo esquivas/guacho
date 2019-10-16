@@ -73,7 +73,8 @@ implicit none
   call mpi_comm_rank (mpi_comm_world,rank,err)
   call mpi_comm_size (mpi_comm_world,nps,err)
   if (nps.ne.np) then
-     print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
+     print*,                                                                   &
+     'processor number (',nps,') is not equal to pre-defined number (',np,')'
      call mpi_finalize(err)
      stop
   endif
@@ -97,11 +98,11 @@ implicit none
      print '(a)' ,'*******************************************'
      print '(a)', 'Calculating Stokes Parameters'
   end if
-  call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
+  call mpi_cart_create(mpi_comm_world, ndim, dims, period,.true.               &
        , comm3d, err)
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
-  print '(a,i3,a,3i4)', 'processor ', rank                              &
+  print '(a,i3,a,3i4)', 'processor ', rank                                     &
        ,' ready w/coords',coords(0),coords(1),coords(2)
   call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
   call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
@@ -147,7 +148,7 @@ if (pic_distF) then
   allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
 
 else
-  print 'a', "The SED of the Lagraingian particles is not enabled"
+  print '(a)', "The SED of the Lagraingian particles is not enabled"
   call mpi_finalize(err)
   stop
 end if
@@ -155,14 +156,12 @@ end if
 end subroutine init_stokes
 
 !=======================================================================
-
 !> @brief reads data from file
 !> @details reads data from file
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param integer [in] itprint : number of output
 !> @param string [in] filepath : path where the output is
-
 subroutine read_data(u,itprint,filepath)
 
   use parameters, only : np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,    &
@@ -177,7 +176,8 @@ subroutine read_data(u,itprint,filepath)
   integer :: nxp, nyp, nzp, x0p, y0p, z0p, &
              mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
   integer :: unitin, ip, err, unitin2, npP, n_mpP, i_activeP, NBinsSEDMPP
-    real :: dxp, dyp, dzp, scal(3), cvp, i_mp
+  real    :: dxp, dyp, dzp, scal(3), cvp
+  integer :: i_mp
   character (len=128) file1, file2
 
   take_turns : do ip=0,np-1
@@ -234,7 +234,8 @@ subroutine read_data(u,itprint,filepath)
          end do
 
          close(unitin2)
-         print'(i3,a,a)',rank,' read file:',trim(file2)
+         print'(i3,a,a,a,i0,a)',rank,' read file:',trim(file2),' (got ',       &
+                                n_activeMP,' active LPs)'
 
     end if
     call mpi_barrier(comm3d,err)
@@ -243,7 +244,6 @@ subroutine read_data(u,itprint,filepath)
 end subroutine read_data
 
 !=======================================================================
-
 !> @brief gets position of a cell
 !> @details Returns the position and spherical radius calculated with
 !! respect to  the center of the grid
@@ -253,9 +253,7 @@ end subroutine read_data
 !> @param real    [in] x : x position in the grid
 !> @param real    [in] y : y position in the grid
 !> @param real    [in] z : z position in the grid
-
   subroutine getXYZ(i,j,k,x,y,z)
-
     use globals,    only : dx, dy, dz, coords
     use parameters, only : nx, ny, nz, nxtot, nytot, nztot
     implicit none
@@ -269,7 +267,6 @@ end subroutine read_data
   end subroutine getXYZ
 
 !=======================================================================
-
 !> @brief Rotation around the X axis
 !> @details Does a rotation around the x axis
 !> @param real [in], theta : Angle of rotation (in radians)
@@ -279,11 +276,7 @@ end subroutine read_data
 !> @param real [out], x : final x position in the grid
 !> @param real [out], y : final y position in the grid
 !> @param real [out], x : final z position in the grid
-
 subroutine rotation_x(theta,x,y,z,xn,yn,zn)
-
-   ! rotation around the x axis by an angle theta
-
    implicit none
    real, intent(in ) :: theta, x, y, z
    reaL, intent(out) :: xn, yn, zn
@@ -293,7 +286,6 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
  end subroutine rotation_x
 
 !=======================================================================
-
 !> @brief Rotation around the Y axis
 !> @details Does a rotation around the x axis
 !> @param real [in], theta : Angle of rotation (in radians)
@@ -303,9 +295,7 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @param real [out], x : final x position in the grid
 !> @param real [out], y : final y position in the grid
 !> @param real [out], x : final z position in the grid
-
  subroutine rotation_y(theta,x,y,z,xn,yn,zn)
-
    implicit none
    real, intent(in ) :: theta, x, y, z
    real, intent(out) :: xn, yn, zn
@@ -325,7 +315,6 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @param real [out], x : final x position in the grid
 !> @param real [out], y : final y position in the grid
 !> @param real [out], x : final z position in the grid
-
  subroutine rotation_z(theta,x,y,z,xn,yn,zn)
 
    implicit none
@@ -337,7 +326,6 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
  end subroutine rotation_z
 
 !=======================================================================
-
 !> @brief Fill target map
 !> @details Fills the target map of one MPI block
 !> @param integer [in] nxmap : Number of X cells in target
@@ -350,94 +338,71 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @param real [in] thetax : Rotation around X
 !> @param real [in] thetay : Rotation around Y
 !> @param real [in] thetaz : Rotation around Z
-
-
-subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
-                   theta_x,theta_y,theta_z)
-
-  use constants, only : clight
-  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn
-  use globals, only : dz
-  use hydro_core, only : u2prim
-
+subroutine fill_map(nxmap, nymap, nmaps, map, dxT , dyT,                       &
+                   theta_x, theta_y, theta_z)
+  use globals,    only : u, Q_MP0, MP_SED, n_activeMP
+  use parameters, only : xmax, ymax, zmax
   implicit none
+  integer, intent(in)  :: nxmap,nymap,nmaps
+  real,    intent(in)  :: dxT, dYT, theta_x, theta_y, theta_z
+  real,    intent(out) :: map(nxmap,nymap,nmaps)
+  integer              :: i_mp, iobs, jobs
+  real                 :: x, xn, y, yn, z, zn
 
-  integer, intent(in) :: nxmap,nymap,nvmap
-  real, intent(in) :: vmin, vmax
-  real, intent(in) :: u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax)
-  real , intent(in) :: dxT, dyT, theta_x, theta_y, theta_z
-  real, intent(out) :: map(nxmap,nymap,nvmap)
-  integer :: i,j,k, iobs, jobs
-  real :: x,y,z,xn,yn,zn, vx, vy, vz,vxn, vyn, vzn, velsc
-  real :: T, prim(neq), profile(nvmap)
-  real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
-  velsc=sqrt(vsc2)
+  !  Clear target map
+  map(:,:,:) = 0.0
 
-  do k=1,nz
-     do j=1,ny
-        do i=1,nx
+  !  loop over al particles
+  !  (there's no need to test if it's active, we just read active LPs)
+  do i_mp=1, n_activeMP
 
-          !  obtain original position
-          call getXYZ(i,j,k, x,y,z)
-          !only do to the side facing the observer
-          if(z > 30.*dz ) then
-            !  do the rotation of the coordinates
-            call rotation_x(theta_x,x,y,z,xn,yn,zn)
-            call rotation_y(theta_y,xn,yn,zn,x,y,z)
-            call rotation_z(theta_z,x,y,z,xn,yn,zn)
-            ! This is the position on the target (centered)
-            ! Integration is along Z
-            iobs=xn/dxT + nxmap/2
-            jobs=yn/dyT + nymap/2
+    !  unpack the positions (just for clarity) and recenter
+    x = Q_MP0(i_mp,1) - xmax/2.0
+    y = Q_MP0(i_mp,2) - ymax/2.0
+    z = Q_MP0(i_mp,3) - zmax/2.0
+    !  we must interpolate B here, and then rotate it
+    !  rotate the coordinates
+    call rotation_x(theta_x,x,y,z,xn,yn,zn)
+    call rotation_y(theta_y,xn,yn,zn,x,y,z)
+    call rotation_z(theta_z,x,y,z,xn,yn,zn)
 
-            !  get the velocity in cm/s
-            call u2prim(u(:,i,j,k),prim,T)
-            vx=prim(2)*velsc
-            vy=prim(3)*velsc
-            vz=prim(4)*velsc
-            !  obtain the LOS velocity
-            call rotation_x(theta_x,vx,vy,vz,vxn,vyn,vzn)
-            call rotation_y(theta_y,vxn,vyn,vzn,vx,vy,vz)
-            call rotation_z(theta_z,vx,vy,vz,vxn,vyn,vzn)
+    ! This is the position on the target (centered)
+    ! Integration is along Z
+    iobs=nint(xn/dxT) + nxmap/2
+    jobs=nint(yn/dyT) + nymap/2
 
-            !  calculate the line profile function
-            call phigauss(T, vzn,vmin,vmax,nvmap,profile)
-            !  make sure the result lies in the map bounds
-            if( (iobs >=1    ).and.(jobs >=1    ).and. &
-                (iobs <=nxmap).and.(jobs <=nymap) ) then
-              !if ((T < 1e5).and.(prim(7)<0)) then
-              map(iobs,jobs,:)= map(iobs,jobs,:) + &
-                                  dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
-              !end if
-            end if
-          end if
-      end do
-    end do
+    !  Fill the maps
+    if( (iobs >=1    ).and.(jobs >=1    ) .and.                                &
+        (iobs <=nxmap).and.(jobs <=nymap) ) then
+
+      map(iobs,jobs,1)= map(iobs,jobs,1) + 1.0
+      map(iobs,jobs,2)= map(iobs,jobs,2) + Q_MP0(i_mp,  8)
+      map(iobs,jobs,3)= map(iobs,jobs,3) + Q_MP0(i_mp, 11)
+
+    end if
+
   end do
 
 end subroutine fill_map
 
 !=======================================================================
-
 !> @brief Writes projection to file
 !> @details Writes projection to file
 !> @param integer [in] itprint : number of output
 !> @param string [in] filepath : path where to write
 !> @param integer [in] nxmap : Number of X cells in target
 !> @param integer [in] nymap : Number of Y cells in target
-!> @param integer [in] nvmap : Number of velocity channels
+!> @param integer [in] nvmap : Number of maps (I,Q,U)
 !> @param real [in] map(nxmap,mymap) : Target map
-
-subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
+subroutine  write_stokes(itprint,filepath,nxmap,nymap,nmaps,map)
   implicit none
-  integer, intent(in) :: nxmap, nymap,nvmap,itprint
+  integer, intent(in) :: nxmap, nymap,nmaps,itprint
   character (len=128), intent(in) :: filepath
-  real, intent(in) :: map(nxmap,nymap,nvmap)
+  real, intent(in) :: map(nxmap,nymap,nmaps)
   character (len=128) file1
   integer ::  unitout
 
-  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
+  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/stokes-',itprint,'.bin'
   unitout=11
   open(unit=unitout,file=file1,status='unknown',access='stream')
 
@@ -446,54 +411,24 @@ subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
 
   print'(a,a)'," wrote file:",trim(file1)
 
-end subroutine write_LA
-
-!=======================================================================
-
-!> @brief This routine computes a gaussian line profile
-!> @details This routine computes a gaussian line profile
-
-subroutine phigauss(T,vzn,vmin,vmax,nvmap,profile)
-
-  use constants, only: amh, pi, kB, clight
-  implicit none
-  real, intent(in) :: T, vzn, vmin, vmax
-  integer, intent(in) :: nvmap
-  real, intent(out) :: profile(nvmap)
-  integer :: i
-  real :: coef, dv, vr
-
-  profile(:)=0.
-  dv=(vmax-vmin)/float(nvmap)
-
-  coef=amh/(2.*kB*T)
-
-  do i=1,nvmap
-     vr=(float(i)-0.5)*dv+vmin
-     profile(i)=sqrt(coef/pi)*exp(-coef*((vr-vzn)**2) )
-  end do
-
-end subroutine phigauss
+end subroutine write_stokes
 
 !=======================================================================
 
 end module stokes_lp_utilities
 
 !=======================================================================
-
 !> @brief Computes the Ly-alpha apbsorption
 !> @details Computes the Ly-alpha apbsorption
 !! @n It rotates the data along each of the coordinates axis
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and the LOS
 !! is along the Z axis
-
 program stokes_lp
 
   use constants, only : pi
-  use parameters, only : xmax,master, mpi_real_kind, &
-                         outputpath, nxtot, nytot
+  use parameters, only : xmax,master, mpi_real_kind, outputpath, nxtot, nytot
   use globals, only : u, rank, comm3d
-  use lyman_alpha_utilities
+  use stokes_lp_utilities
 #ifdef MPIP
   use mpi
 #endif
@@ -503,27 +438,24 @@ program stokes_lp
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x =-3.33 *pi/180.
-  real, parameter :: theta_y = 0.00 *pi/180.
-  real, parameter :: theta_z = 0.00 *pi/180.
+  real, parameter :: theta_x = 0.0 *pi/180.
+  real, parameter :: theta_y = 0.0 *pi/180.
+  real, parameter :: theta_z = 0.0 *pi/180.
   !   map and its dimensions
-  integer, parameter :: nvmap=250
+  integer, parameter :: nmaps= 3   !< (1=I, 2=Q, 3=U)
   integer            :: nxmap, nymap
-  real :: dxT, dyT, vmin,vmax
+  real :: dxT, dyT, nu_map
   real, allocatable :: map(:,:,:), map1(:,:,:)
   !real :: map(nxmap, nymap,nvmap), map1(nxmap, nymap,nvmap)
 
   nxmap = nxtot
   nymap = nytot
-  allocate( map(nxmap, nymap,nvmap))
-  allocate(map1(nxmap, nymap,nvmap))
+  allocate( map(nxmap, nymap,nmaps))
+  allocate(map1(nxmap, nymap,nmaps))
 
   ! initializes program
   call init_stokes()
 
-  !  minumim and maximum of the velocity channels
-  vmin=-300.e5
-  vmax= 300.e5
   !  Target pixel size, relative to the simulation
   dxT= xmax/float(nxmap)
   dyT= dxT
@@ -531,7 +463,9 @@ program stokes_lp
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  loop_over_outputs : do itprint=0,70
+  nu_map  =  150e9 !< frequency of observation (Hz)
+
+  loop_over_outputs : do itprint=0,10
 
     !  read MHD and particles data
     call read_data(u,itprint,filepath)
@@ -542,19 +476,21 @@ program stokes_lp
     !
     if (rank == master) then
        print'(a)', 'Calculating projection with angles of rotaton'
-       print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, ' &
-                                    ,theta_y*180./pi,'° around Y, '&
+       print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, '            &
+                                    ,theta_y*180./pi,'° around Y, '            &
                                     ,theta_z*180./pi,'° around Z, '
+       print'(a,es10.3,a)', 'Stokes parameters for a frequency of ',nu_map,' Hz'
     end if
 
     !  add info to the map
-    call fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT, theta_x, theta_y, theta_z)
+    call fill_map(nxmap,nymap,nmaps,map,dxT,dyT,theta_x, theta_y, theta_z)
     !  sum all the partial sums
-    call mpi_reduce(map,map1,nxmap*nymap*nvmap, mpi_real_kind, mpi_sum, master, comm3d, err)
+    call mpi_reduce(map,map1,nxmap*nymap*nmaps, mpi_real_kind, mpi_sum, master,&
+                    comm3d, err)
 
     !  write result
     if (rank == master) then
-      call write_LA(itprint,filepath,nxmap,nymap,nvmap,map1)
+      call write_stokes(itprint,filepath,nxmap,nymap,nmaps,map1)
     end if
 
   end do loop_over_outputs
