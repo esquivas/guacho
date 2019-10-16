@@ -134,17 +134,18 @@ module parameters
   !> Include particles tracers or pic (under construction)
   logical, parameter :: enable_pic = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =1024
+  integer, parameter :: N_MP =4096
   !>  Enable followind SED of MP
   logical, parameter :: pic_distF  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
 
-
 #ifdef PASSIVES
   integer, parameter :: npas=0        !< num. of passive scalars
 #else
   integer, parameter :: npas=0        !< num. of passive scalars
+  integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
+  integer, parameter :: n1_chem = 6   !< position of first index of species
 #endif
 
   integer, parameter :: nxtot=128    !< Total grid size in X
