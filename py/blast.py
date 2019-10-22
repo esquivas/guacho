@@ -41,7 +41,7 @@ X,Y = np.meshgrid( np.linspace(0.,1.,num=rho.shape[0]),np.linspace(0.,1.,num=rho
 plt.figure(1) ; plt.clf()
 plt.figure(3) ; plt.clf()
 
-npart = 266
+npart = 1169
 
 GeV = 1.e9*1.60218E-12 # 1 GeV in ergs
 
@@ -85,15 +85,30 @@ cb2 = plt.colorbar(sc)
 cb1.set_label(r'$\rho$ [g cm$^{-3}$]')
 cb2.set_label(r'Compression factor')
 
-
-plt.figure(5); plt.clf()
-plt.imshow(stokes[0,:,:], origin='lower' )
-plt.colorbar()
-
 stokes_Is = gaussian_filter(stokes[0,:,:], sigma=2)
+plt.figure(5); plt.clf()
+plt.imshow(stokes_Is[:,:], origin='lower' )
+plt.colorbar()
+plt.title(r'Stokes I')
+
+stokes_Qs = gaussian_filter(stokes[1,:,:], sigma=2)
 plt.figure(6); plt.clf()
 plt.imshow(stokes_Is[:,:], origin='lower' )
 plt.colorbar()
+plt.title(r'Stokes Q')
+
+stokes_Us = gaussian_filter(stokes[1,:,:], sigma=2)
+plt.figure(7); plt.clf()
+plt.imshow(stokes_Us[:,:], origin='lower' )
+plt.colorbar()
+plt.title(r'Stokes U')
+
+PI = np.sqrt(stokes[1,:,:]**2+stokes[2,:,:]**2)/(stokes[0,:,:]+1e-20)
+PIs = gaussian_filter(PI[:,:], sigma=2)
+plt.figure(8); plt.clf()
+plt.imshow(PIs[:,:], origin='lower' )
+plt.colorbar()
+plt.title(r'Polarization Degree')
 
 #plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
 #plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
