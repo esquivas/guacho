@@ -338,16 +338,18 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @param real [in] thetax : Rotation around X
 !> @param real [in] thetay : Rotation around Y
 !> @param real [in] thetaz : Rotation around Z
-subroutine fill_map(nxmap, nymap, nmaps, map, dxT , dyT,                       &
+subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,                       &
                    theta_x, theta_y, theta_z)
   use globals,    only : u, Q_MP0, MP_SED, n_activeMP
-  use parameters, only : xmax, ymax, zmax
+  use parameters, only : xmax, ymax, zmax, Bsc
+  use pic_module, only : interpBD
   implicit none
   integer, intent(in)  :: nxmap,nymap,nmaps
-  real,    intent(in)  :: dxT, dYT, theta_x, theta_y, theta_z
+  real,    intent(in)  :: freq_obs,dxT, dYT, theta_x, theta_y, theta_z
   real,    intent(out) :: map(nxmap,nymap,nmaps)
-  integer              :: i_mp, iobs, jobs
+  integer              :: i_mp, iobs, jobs, ind(3), i, j, k, l
   real                 :: x, xn, y, yn, z, zn
+  real                 :: weights(8), Bx, By, Bz, Bxn, Byn, Bzn, SI, SQ, SU
 
   !  Clear target map
   map(:,:,:) = 0.0
@@ -356,15 +358,37 @@ subroutine fill_map(nxmap, nymap, nmaps, map, dxT , dyT,                       &
   !  (there's no need to test if it's active, we just read active LPs)
   do i_mp=1, n_activeMP
 
+
     !  unpack the positions (just for clarity) and recenter
     x = Q_MP0(i_mp,1) - xmax/2.0
     y = Q_MP0(i_mp,2) - ymax/2.0
     z = Q_MP0(i_mp,3) - zmax/2.0
-    !  we must interpolate B here, and then rotate it
+
+    !  Interpolate Bfield to each particle position (and scale it to Gauss)
+    call interpBD(Q_MP0(i_mp,1:3),ind,weights)
+    Bx = 0.0
+    By = 0.0
+    Bz = 0.0
+    l = 1
+    do k= ind(3),ind(3)+1
+      do j=ind(2),ind(2)+1
+        do i=ind(1),ind(1)+1
+          Bx = Bx + u(6,i,j,k) * weights(l) * Bsc
+          By = By + u(7,i,j,k) * weights(l) * Bsc
+          Bz = Bz + u(8,i,j,k) * weights(l) * Bsc
+          l  = l + 1
+        end do
+      end do
+    end do
+
     !  rotate the coordinates
-    call rotation_x(theta_x,x,y,z,xn,yn,zn)
-    call rotation_y(theta_y,xn,yn,zn,x,y,z)
-    call rotation_z(theta_z,x,y,z,xn,yn,zn)
+    call rotation_x(theta_x, x , y , z,  xn, yn, zn)
+    call rotation_y(theta_y, xn, yn, zn, x,  y,  z )
+    call rotation_z(theta_z, x , y,  z,  xn, yn, zn)
+    !  rotate B
+    call rotation_x(theta_x, Bx , By , Bz,  Bxn, Byn, Bzn)
+    call rotation_y(theta_y, Bxn, Byn, Bzn, Bx,  By,  Bz )
+    call rotation_z(theta_z, Bx , By,  Bz,  Bxn, Byn, Bzn)
 
     ! This is the position on the target (centered)
     ! Integration is along Z
@@ -375,15 +399,44 @@ subroutine fill_map(nxmap, nymap, nmaps, map, dxT , dyT,                       &
     if( (iobs >=1    ).and.(jobs >=1    ) .and.                                &
         (iobs <=nxmap).and.(jobs <=nymap) ) then
 
-      map(iobs,jobs,1)= map(iobs,jobs,1) + 1.0
-      map(iobs,jobs,2)= map(iobs,jobs,2) + Q_MP0(i_mp,  8)
-      map(iobs,jobs,3)= map(iobs,jobs,3) + Q_MP0(i_mp, 11)
+      !  obtain stokes parameters of a single LP in one cells
+      !  the integrals in eqs 37 and 41 of Vaidya et al. is achieved by
+      !  summing all the elements in a map.
+
+      if (Q_MP0(i_mp, 11) /= 0) then
+        call get_stokes(i_mp,freq_obs,Bx,By,SI,SQ,SU)
+        map(iobs,jobs,1)= map(iobs,jobs,1) + SI
+        map(iobs,jobs,2)= map(iobs,jobs,2) + SQ
+        map(iobs,jobs,3)= map(iobs,jobs,3) + SU
+      end if
 
     end if
 
   end do
 
 end subroutine fill_map
+
+!=======================================================================
+subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
+  implicit none
+  integer, intent(in)  :: i_mp
+  real,    intent(in)  :: freq_obs, Bx, By
+  real,    intent(out) :: I, Q, U
+  real, parameter :: Jconst = 1.8755e-23 ! sqrt(3)*e^3/(4pi me c^2)
+  !real, parameter :: xconst = 1.5754e-19 ! 4pi me^3 c^5 /(3 e)
+  real            :: Jsyn, Jpol, I1, I2
+
+  I1 = 1.0
+  I2 = 1.0
+
+  Jsyn = Jconst*(Bx**2+By**2)*I1
+  Jpol = Jconst* I2
+
+  I = Jsyn !  eq(48) Vaidya
+  Q = Jpol * (Bx**2-By**2 )
+  U = Jpol * ( -2.0*Bx*By )
+
+end subroutine get_stokes
 
 !=======================================================================
 !> @brief Writes projection to file
@@ -438,13 +491,13 @@ program stokes_lp
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x = 0.0 *pi/180.
+  real, parameter :: theta_x = 15.0 *pi/180.
   real, parameter :: theta_y = 0.0 *pi/180.
   real, parameter :: theta_z = 0.0 *pi/180.
   !   map and its dimensions
   integer, parameter :: nmaps= 3   !< (1=I, 2=Q, 3=U)
   integer            :: nxmap, nymap
-  real :: dxT, dyT, nu_map
+  real :: dxT, dyT, freq_obs
   real, allocatable :: map(:,:,:), map1(:,:,:)
   !real :: map(nxmap, nymap,nvmap), map1(nxmap, nymap,nvmap)
 
@@ -463,7 +516,7 @@ program stokes_lp
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  nu_map  =  150e9 !< frequency of observation (Hz)
+  freq_obs  =  150e9 !< frequency of observation (Hz)
 
   loop_over_outputs : do itprint=0,10
 
@@ -471,7 +524,7 @@ program stokes_lp
     call read_data(u,itprint,filepath)
 
     !  resets map
-    map(:,:,:)=0.
+    map(:,:,:) =0.
     map1(:,:,:)=0.
     !
     if (rank == master) then
@@ -479,11 +532,11 @@ program stokes_lp
        print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, '            &
                                     ,theta_y*180./pi,'° around Y, '            &
                                     ,theta_z*180./pi,'° around Z, '
-       print'(a,es10.3,a)', 'Stokes parameters for a frequency of ',nu_map,' Hz'
+       print'(a,es10.3,a)', 'Stokes parameters for a frequency of ',freq_obs,' Hz'
     end if
 
     !  add info to the map
-    call fill_map(nxmap,nymap,nmaps,map,dxT,dyT,theta_x, theta_y, theta_z)
+    call fill_map(nxmap,nymap,nmaps,map,freq_obs,dxT,dyT,theta_x, theta_y, theta_z)
     !  sum all the partial sums
     call mpi_reduce(map,map1,nxmap*nymap*nmaps, mpi_real_kind, mpi_sum, master,&
                     comm3d, err)
