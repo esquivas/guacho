@@ -28,6 +28,10 @@
 
 module stokes_lp_utilities
 
+  implicit none
+  real, allocatable :: stokesTab(:,:)
+  integer           :: nTabLines
+
 contains
 
 !> @brief Initializes data
@@ -41,9 +45,10 @@ use globals, only : u, dx, dy, dz, coords, rank, left, right,                  &
                     top, bottom, out, in, rank, comm3d,                        &
                     Q_MP0, MP_SED, P_DSA, partID, partOwner
 implicit none
-  integer :: nps, err
+  integer :: nps, err, i, inp
   integer, dimension(0:ndim-1) :: dims
   logical, dimension(0:ndim-1) :: period
+  real :: xTab, fTab, gTab ! Tabulation of Modified Bessel Functions
 
   !initializes MPI
 #ifdef MPIP
@@ -146,6 +151,27 @@ if (pic_distF) then
   ! P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
   allocate( partID   (N_MP) )  ! Individual particle identifier
   allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
+
+  do inp=0,np-1  ! take turns to read tables
+    if (rank==inp) then
+
+      open(unit=10,file= trim(workdir)//'../src/LPlib/SynchroBessels.tab',     &
+          status='old')
+       read(10,*) nTabLines
+       !print*, nlines
+       allocate(stokesTab(3,nTabLines))
+
+       do i=1,nTabLines
+         read(10,*) xTab, fTab, gTab
+         stokesTab(1,i)=xTab
+         stokesTab(2,i)=fTab
+         stokesTab(3,i)=gTab
+       end do
+
+       close(unit=10)
+       print*, 'rank: ',rank,'  nTablines: ',nTabLines
+     end if
+   end do
 
 else
   print '(a)', "The SED of the Lagraingian particles is not enabled"
@@ -340,8 +366,8 @@ subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 !> @param real [in] thetaz : Rotation around Z
 subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,                       &
                    theta_x, theta_y, theta_z)
-  use globals,    only : u, Q_MP0, MP_SED, n_activeMP
-  use parameters, only : xmax, ymax, zmax, Bsc
+  use globals,    only : u, Q_MP0, n_activeMP, dz
+  use parameters, only : xmax, ymax, zmax, Bsc, rsc
   use pic_module, only : interpBD
   implicit none
   integer, intent(in)  :: nxmap,nymap,nmaps
@@ -357,7 +383,6 @@ subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,               
   !  loop over al particles
   !  (there's no need to test if it's active, we just read active LPs)
   do i_mp=1, n_activeMP
-
 
     !  unpack the positions (just for clarity) and recenter
     x = Q_MP0(i_mp,1) - xmax/2.0
@@ -402,12 +427,13 @@ subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,               
       !  obtain stokes parameters of a single LP in one cells
       !  the integrals in eqs 37 and 41 of Vaidya et al. is achieved by
       !  summing all the elements in a map.
-
       if (Q_MP0(i_mp, 11) /= 0) then
+
         call get_stokes(i_mp,freq_obs,Bx,By,SI,SQ,SU)
-        map(iobs,jobs,1)= map(iobs,jobs,1) + SI
-        map(iobs,jobs,2)= map(iobs,jobs,2) + SQ
-        map(iobs,jobs,3)= map(iobs,jobs,3) + SU
+        map(iobs,jobs,1)= map(iobs,jobs,1) + SI*dz*rsc
+        map(iobs,jobs,2)= map(iobs,jobs,2) + SQ*dz*rsc
+        map(iobs,jobs,3)= map(iobs,jobs,3) + SU*dz*rsc
+
       end if
 
     end if
@@ -418,26 +444,112 @@ end subroutine fill_map
 
 !=======================================================================
 subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
+  use parameters, only : NBinsSEDMP
+  use globals,    only : MP_SED
   implicit none
   integer, intent(in)  :: i_mp
   real,    intent(in)  :: freq_obs, Bx, By
   real,    intent(out) :: I, Q, U
   real, parameter :: Jconst = 1.8755e-23 ! sqrt(3)*e^3/(4pi me c^2)
-  !real, parameter :: xconst = 1.5754e-19 ! 4pi me^3 c^5 /(3 e)
-  real            :: Jsyn, Jpol, I1, I2
+  real, parameter :: xconst = 1.5754e-19 ! 4pi me^3 c^5 /(3 e)
+  real            :: Bperp, x0, x1, Fsyn0, Fsyn1, Fpol0, Fpol1, Isyn, Ipol,    &
+                     x, F, G, slopeF, slopeG
+  integer         :: ibin
+  real            :: Jpol
 
-  I1 = 1.0
-  I2 = 1.0
+  Bperp = sqrt(Bx**2+By**2)
+  Isyn  = 0.0
+  Ipol  = 0.0
 
-  Jsyn = Jconst*(Bx**2+By**2)*I1
-  Jpol = Jconst* I2
+  do ibin = 1, NBinsSEDMP-1
 
-  I = Jsyn !  eq(48) Vaidya
-  Q = Jpol * (Bx**2-By**2 )
-  U = Jpol * ( -2.0*Bx*By )
+    x0    = MP_SED(1,ibin  ,i_mp)
+    x1    = MP_SED(1,ibin+1,i_mp)
+
+    x = xconst*freq_obs / (MP_SED(1,ibin  ,i_mp)**2*Bperp)
+    call interpolateBessels(x, F, G)
+    Fsyn0 = MP_SED(2,ibin  ,i_mp)*F
+    Fpol0 = MP_SED(2,ibin  ,i_mp)*G
+
+    x = xconst*freq_obs / (MP_SED(1,ibin+1,i_mp)**2*Bperp)
+    call interpolateBessels(x, F, G)
+    Fsyn1 = MP_SED(2,ibin+1,i_mp)*F
+    Fpol1 = MP_SED(2,ibin+1,i_mp)*G
+
+    if (x1 /= x0) then
+        slopeF = ( log(Fsyn1/Fsyn0) )/( log(x1/x0) )
+        slopeG = ( log(Fpol1/Fpol0) )/( log(x1/x0) )
+      else
+        Isyn = -1.
+        Ipol = -1.
+        return
+      end if
+
+      if (slopeF /= -1.) then
+        Isyn = Isyn + Fsyn0/(slopeF+1.)*(x1*(x1/x0)**slopeF-x0)
+      else
+        Isyn = Isyn + Fsyn0*x0*log(x1/x0)
+      end if
+
+      if (slopeG /= -1.) then
+        Ipol = Ipol + Fpol0/(slopeG+1.)*(x1*(x1/x0)**slopeG-x0)
+      else
+        Ipol = Ipol + Fpol0 * x0 * log(x1/x0)
+      end if
+
+  end do
+
+  I    = Jconst*Bperp*Isyn      ! eq (48) Vaidya + 2018
+  Jpol = Jconst*Bperp*Ipol      ! eq (41) ''
+
+  ! Eqs (49-50) ''
+  Q = Jpol * (Bx**2-By**2 ) / Bperp**2
+  U = Jpol * ( -2.0*Bx*By ) / Bperp**2
 
 end subroutine get_stokes
 
+!=======================================================================
+subroutine interpolateBessels(x, F, G)
+  use globals, only : rank
+  implicit none
+  real, intent(in ) :: x
+  real, intent(out) :: F, G
+  real              ::  x1, x2, f1, f2, g1, g2
+  integer           :: i
+
+  i = 1 + (nTabLines-1) *                                                      &
+    int( log10(x/stokesTab(1,1))/log10(stokesTab(1,nTabLines)/stokesTab(1,1)) )
+
+  i = max(i,    1      )
+  i = min(i,nTabLines-1)
+
+  if (i==nTabLines-1) then
+    F = stokesTab(2,i+1)
+    G = stokesTab(3,i+1)
+    !if (rank == 0) print'(i0,2es15.3)',i, x, f
+
+    return
+  else if (i==1) then
+    F = stokesTab(2,i)
+    G = stokesTab(3,i)
+    !if (rank == 0) print'(i0,2es15.3)',i, x, f
+
+    return
+  else
+    x1 = stokesTab(1,i  )
+    x2 = stokesTab(1,i+1)
+    f1 = stokesTab(2,i  )
+    f2 = stokesTab(2,i+1)
+    g1 = stokesTab(3,i  )
+    g2 = stokesTab(3,i+1)
+
+    F = f1 * (x/x1)*(log10(f2/f1)/log10(x2/x1))
+    G = g1 * (x/x1)*(log10(g2/g1)/log10(x2/x1))
+    !if (rank == 0) print'(i0,6es15.3)',i, x, x1,x2,f1,f2,f
+
+  end if
+
+end subroutine interpolateBessels
 !=======================================================================
 !> @brief Writes projection to file
 !> @details Writes projection to file
@@ -516,7 +628,7 @@ program stokes_lp
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  freq_obs  =  150e9 !< frequency of observation (Hz)
+  freq_obs  =  1.4e3 !< frequency of observation (Hz)
 
   loop_over_outputs : do itprint=0,10
 
