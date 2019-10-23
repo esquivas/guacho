@@ -58,7 +58,7 @@ contains
 
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
       !  MP_SED(1,:,i) :  Energy (Lagrangian) bins
-      !  MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
+      !  MP_SED(2,:,i) :  Number of MP with Energy E_i +- Delta E
 
       allocate( P_DSA(N_MP,2,8))
       !  P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
@@ -1021,8 +1021,8 @@ contains
     integer :: i
     real    :: slopeN, slopeE, Fn0, Fn1, FE0, FE1, x0, x1
 
-    nold = 0.
-    Eold = 0.
+    nold = 0.0
+    Eold = 0.0
 
     do i = 1, nbins-1
 
@@ -1030,8 +1030,8 @@ contains
       x1  = SED(1,i+1)
       Fn0 = SED(2,i  )
       Fn1 = SED(2,i+1)
-      FE0 = SED(1,i  )*SED(2,i  )
-      FE1 = SED(1,i+1)*SED(2,i+1)
+      FE0 = SED(2,i  )*SED(1,i  )
+      FE1 = SED(2,i+1)*SED(1,i+1)
 
       if (x1 /= x0) then
         slopeN = ( log(Fn1/Fn0) )/( log(x1/x0) )
