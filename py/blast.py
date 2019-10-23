@@ -97,7 +97,7 @@ plt.imshow(stokes_Is[:,:], origin='lower' )
 plt.colorbar()
 plt.title(r'Stokes Q')
 
-stokes_Us = gaussian_filter(stokes[1,:,:], sigma=2)
+stokes_Us = gaussian_filter(stokes[2,:,:], sigma=2)
 plt.figure(7); plt.clf()
 plt.imshow(stokes_Us[:,:], origin='lower' )
 plt.colorbar()
