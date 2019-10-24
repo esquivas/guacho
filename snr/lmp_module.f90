@@ -734,7 +734,9 @@ contains
 
     i_active = 0
     do i_mp=1,N_MP
-      if(partID(i_mp)/=0) i_active = i_active + 1
+      if(partID(i_mp)/=0) then
+         if( isInDomain(Q_MP0(i_mp,1:3)) ) i_active = i_active + 1
+       end if
     end do
 
     !  write how many particles are in rank domain
@@ -747,16 +749,16 @@ contains
     !  loop over particles owned by processor and write the active ones
     do i_mp=1,N_MP
       if (partID(i_mp) /=0) then
-
-        write(unitout) partID(i_mp)
-        write(unitout) Q_MP0(i_mp,1:3)
-        if(lmp_distf) then
-          write(unitout) Q_MP0(i_mp,11:12)
-          write(unitout) MP_SED(1,:,i_mp)
-          write(unitout) MP_SED(2,:,i_mp)
-          write(unitout) P_DSA(i_mp,:,:)
-        end if
-
+        if( isInDomain(Q_MP0(i_mp,1:3)) ) then
+          write(unitout) partID(i_mp)
+          write(unitout) Q_MP0(i_mp,1:3)
+          if(lmp_distf) then
+            write(unitout) Q_MP0(i_mp,11:12)
+            write(unitout) MP_SED(1,:,i_mp)
+            write(unitout) MP_SED(2,:,i_mp)
+            write(unitout) P_DSA(i_mp,:,:)
+          end if
+        endif
       end if
     end do
 
