@@ -3,7 +3,7 @@
 !> @brief Global variables
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -38,9 +38,18 @@ module globals
   real, allocatable ::      h(:,:,:,:) !< Z fluxes
   real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
 
-! THIS IS FOR THE SPLITTING OF VARIABLES 28/04/2016 SPLIT  
-  real, allocatable ::    primit0(:,:,:,:) !< primit zeros
+  ! for the tracer particles and PIC module
+  real, allocatable    :: Q_MP0(:,:)     !< Particles  positions and velocities
+  real, allocatable    :: Q_MP1(:,:)     !< Positions after predictor
+  integer, allocatable :: partOwner(:)   !< Particle Owner (rank)
+  integer, allocatable :: partID(:)      !< Particle Identifier
+  integer              :: n_activeMP     !< Number of active macro particles
+  integer, allocatable :: shockF(:,:,:)  !< Shock detection flag (one is shock)
+  real, allocatable    :: MP_SED(:,:,:)  !< Energy distribution of MP particles
+  real, allocatable    :: P_DSA(:,:,: )  !< Pre and post shock, MHD states
 
+  ! For the split methods
+  real, allocatable ::    primit0(:,:,:,:) !< primit zeros
 
   real :: dx  !< grid spacing in X
   real :: dy  !< grid spacing in Y
@@ -56,15 +65,12 @@ module globals
   integer :: out    !< MPI neighbor in the -z direction
   integer :: in     !< MPI neighbor in the +z direction
 
-  integer :: rank     !< MPI rank
-  integer :: comm3d   !< Cartessian MPI comunicator
+  integer :: rank    !< MPI rank
+  integer :: comm3d  !< Cartessian MPI comunicator
 
-  !> Current time
-  real :: time
-  !> Current CFL $\Delta t$
-  real :: dt_CFL
-  !> Current iteration
-  integer :: currentIteration
+  real :: time                 !< Current time
+  real :: dt_CFL               !< Current CFL $\Delta t$
+  integer :: currentIteration  !< Current iteration
 
 end module globals
 
