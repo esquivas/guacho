@@ -41,7 +41,7 @@ contains
     use constants
     use parameters
     use globals
-    use pic_module
+    use lmp_module
     use cooling_dmc
     use cooling_chi
     use difrad
@@ -159,7 +159,7 @@ contains
     allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 #endif
 
-    if (enable_pic) call init_pic()
+    if (enable_lmp) call init_lmp()
 
     !   DMC cooling
     if (cooling == COOL_DMC) call init_cooling_dmc()
@@ -369,9 +369,13 @@ contains
       if (bc_user)  print'(a)', 'Other boundaries enabled (user_mod.f90)'
       print'(a)', ''
 
-      if(enable_pic) then
-        print'(a)', 'Tracer particles module enabled'
+      if(enable_lmp) then
+        print'(a)', 'Lagrangian tracer particles module enabled'
         print'(a)', ''
+        if (lmp_distf) then
+          print'(a)', 'Evolution of LMPs SED enabled'
+        print'(a)', ''
+        end if
       end if
 
       print'(a)', '----- OTHER STUFF -----------'
@@ -418,7 +422,7 @@ contains
   !> @param real [inout] itprint : number of current output
   subroutine initflow(itprint)
 
-    use parameters, only : outputpath, iwarm, enable_pic, pic_distF !, itprint0
+    use parameters, only : outputpath, iwarm, enable_lmp, lmp_distf !, itprint0
     use globals, only : u, rank, Q_MP0, MP_SED, partID, P_DSA, partID,         &
                         partOwner, n_activeMP
     use user_mod, only : initial_conditions
@@ -480,23 +484,23 @@ contains
       !   Read Lagrangian Particles info if they are enabled
 #ifdef MPIP
       write(file1,'(a,i3.3,a,i3.3,a)')                                       &
-            trim(outputpath)//'BIN/pic',rank,'.',itprint,'.bin'
+            trim(outputpath)//'BIN/lmp',rank,'.',itprint,'.bin'
 #else
-      write(file1,'(a,i3.3,a)') trim(outputpath)//'BIN/pic',itprint,'.bin'
+      write(file1,'(a,i3.3,a)') trim(outputpath)//'BIN/lmp',itprint,'.bin'
 #endif
 
       unitin=10
-      open(unit=unitin,file=file,1,status='unknown',access='stream')
+      open(unit=unitin,file=file1,status='unknown',access='stream')
 
       read(unitin) npp, n_mpp, n_activeMP, NBinsSEDMPP
 
-      do i_mp=1,i_activeMP
+      do i_mp=1,n_activeMP
 
         partOwner(i_mp) = rank
         read(unitin) partID(i_mp)
         read(unitin) Q_MP0(i_mp,1:3)
 
-        if(pic_distF) then
+        if(lmp_distf) then
           read(unitin) Q_MP0(i_mp,11:12)
           read(unitin) MP_SED(1,:,i_mp)
           read(unitin) MP_SED(2,:,i_mp)

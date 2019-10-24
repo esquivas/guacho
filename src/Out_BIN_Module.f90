@@ -241,7 +241,7 @@ contains
     end if
 #endif
 
-    if (enable_pic .and. dump_shock) then
+    if (enable_lmp .and. dump_shock) then
       !   This is a hack to write div V and alpha for now
       ! take turns to write to disk
       do ip=0, np-1

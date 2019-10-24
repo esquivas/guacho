@@ -38,7 +38,7 @@ module globals
   real, allocatable ::      h(:,:,:,:) !< Z fluxes
   real, allocatable ::   Temp  (:,:,:) !< Temperature array [K]
 
-  ! for the tracer particles and PIC module
+  ! for the tracer particles and Lagrangian Particles module
   real, allocatable    :: Q_MP0(:,:)     !< Particles  positions and velocities
   real, allocatable    :: Q_MP1(:,:)     !< Positions after predictor
   integer, allocatable :: partOwner(:)   !< Particle Owner (rank)

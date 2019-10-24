@@ -2,9 +2,9 @@
 !> @file parameters.f90
 !> @brief parameters module
 !> @author C. Villarreal, M. Schneiter, A. Esquivel
-!> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+!> @date 24/Oct/2019
+!
+! Copyright (c) 2019 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -25,7 +25,6 @@
 !> @brief Parameters module
 !> @details This module contains parameters of the run, some of this
 !! can be moved later to a runtime input file
-
 module parameters
   use constants
 #ifdef MPIP
@@ -131,12 +130,12 @@ module parameters
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
-  !> Include particles tracers or pic (under construction)
-  logical, parameter :: enable_pic = .true.
+  !> Include Lagrangian Macro Particles (tracers)
+  logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
   integer, parameter :: N_MP =4096
-  !>  Enable followind SED of MP
-  logical, parameter :: pic_distF  = .true.
+  !>  Enable following SED of each MP
+  logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
 

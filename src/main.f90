@@ -54,7 +54,7 @@ program guacho
   use globals
   use utilities
   use init
-  use pic_module
+  use lmp_module
   use hydro_core, only : calcprim, get_timestep
   use output
   use hydro_solver
@@ -82,7 +82,7 @@ program guacho
 
   if (dif_rad) call diffuse_rad()
 
-  if (enable_pic .and. pic_distF) call flag_shock()
+  if (enable_lmp .and. lmp_distf) call flag_shock()
 
   !  writes the initial conditions
   if (.not.iwarm) then
@@ -106,16 +106,16 @@ program guacho
       ' | dt:', dt_CFL*tsc,                                                    &
       ' | tprint:', tprint*tsc
 
-    !  if pic enabled compute predictor for particle positions
-    if(enable_pic) call PICpredictor()
+    !  if lmp enabled compute predictor for particle positions
+    if(enable_lmp) call LMPpredictor()
 
     !   advances the HD/MHD solution
     call tstep()
 
-    !  if pic enabled compute corrector for particle positions
-    if(enable_pic) then
-      if (pic_distF) call flag_shock()
-      call PICcorrector()
+    !  if lmp enabled compute corrector for particle positions
+    if(enable_lmp) then
+      if (lmp_distf) call flag_shock()
+      call LMPcorrector()
     end if
 
     time = time + dt_CFL

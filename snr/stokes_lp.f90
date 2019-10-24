@@ -132,7 +132,7 @@ implicit none
 allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
 !  LP
-if (pic_distF) then
+if (lmp_distf) then
   allocate( Q_MP0(N_MP,12) )
   !Q_MP0(i, eq) has the following info:
   ! eq = 1-3 : x, y, z
@@ -191,7 +191,7 @@ end subroutine init_stokes
 subroutine read_data(u,itprint,filepath)
 
   use parameters, only : np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,    &
-                         pic_distF
+                         lmp_distf
   use globals, only : rank, comm3d, Q_MP0, MP_SED, P_DSA, partID, partOwner,   &
                       n_activeMP
   implicit none
@@ -213,14 +213,14 @@ subroutine read_data(u,itprint,filepath)
         write(file1,'(a,i3.3,a,i3.3,a)')                                       &
              trim(filepath)//'BIN/points',rank,'.',itprint,'.bin'
         write(file2,'(a,i3.3,a,i3.3,a)')                                       &
-              trim(filepath)//'BIN/pic',rank,'.',itprint,'.bin'
+              trim(filepath)//'BIN/lmp',rank,'.',itprint,'.bin'
         unitin =rank+10
         unitin2=rank+11
 #else
          write(file1,'(a,i3.3,a)')                                             &
               trim(filepath)//'BIN/points',itprint,'.bin'
          write(file1,'(a,i3.3,a)')
-              trim(filepath)//'BIN/pic',itprint,'.bin'
+              trim(filepath)//'BIN/lmp',itprint,'.bin'
          unitin =10
          unitin2=11
 #endif
@@ -368,7 +368,7 @@ subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,               
                    theta_x, theta_y, theta_z)
   use globals,    only : u, Q_MP0, n_activeMP, dz
   use parameters, only : xmax, ymax, zmax, Bsc, rsc
-  use pic_module, only : interpBD
+  use lmp_module, only : interpBD
   implicit none
   integer, intent(in)  :: nxmap,nymap,nmaps
   real,    intent(in)  :: freq_obs,dxT, dYT, theta_x, theta_y, theta_z

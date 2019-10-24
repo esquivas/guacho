@@ -272,7 +272,7 @@ def minmax(q):
 '''
    reads tracer particles
 '''
-def readpic(nout,path='', base='pic',trim=True):
+def read_lmp(nout,path='', base='lmp',trim=True):
     #  read first output to determine N_MP and NP
     file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
     f = open(file_in,'rb')

@@ -73,7 +73,7 @@ contains
     integer :: yj,xi
     real    :: pos(3)
     !  initial MP spectra parameters
-    real    :: emin, emax, deltaE, gamma_pic, N0, chi0
+    real    :: emin, emax, deltaE, gamma_lmp, N0, chi0
     logical, parameter :: uniform = .false. ! place the MPs uniformly
     real    :: rho_env, T_env, B_env, xc, yc, zc
     !---------------------------------------------------------------------------
@@ -114,10 +114,10 @@ contains
     ! delta E in log bins (this is in ergs)
     Emin = 0.63*1e6 *eV !/(rhosc*rsc**3*vsc2)
     Emax = 0.31*1e12*eV !/(rhosc*rsc**3*vsc2)
-    gamma_pic = 3.
+    gamma_lmp = 3.
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
     N0     =  1.0e-6 / rho_env
-    chi0   = N0 * (1.-gamma_pic)/( Emax**(1.-gamma_pic)-Emin**(1.-gamma_pic) )
+    chi0   = N0 * (1.-gamma_lmp)/( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
 
     if (uniform) then
       !Insert homogenously distributed particles
@@ -138,7 +138,7 @@ contains
 
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_lmp)
             end do
 
           endif
@@ -163,7 +163,7 @@ contains
 
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_pic)
+              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_lmp)
             end do
 
           endif
