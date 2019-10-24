@@ -510,7 +510,6 @@ end subroutine get_stokes
 
 !=======================================================================
 subroutine interpolateBessels(x, F, G)
-  use globals, only : rank
   implicit none
   real, intent(in ) :: x
   real, intent(out) :: F, G
