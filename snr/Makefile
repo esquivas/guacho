@@ -252,7 +252,7 @@ clean :
 	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.mod
 	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
 
 cleanall :
 	rm -f $(PROGRAM) lyman_alpha_tau stokes_lp *.out *.err
