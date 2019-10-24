@@ -37,9 +37,6 @@ MPIP = Y
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
 BFIELD = Y
 
-#   Include PIC (Y/N) , (Particles, is this necessary?)
-PIC = Y
-
 #   Include passive scalars (Y/N)
 PASSIVES = N
 
@@ -150,10 +147,6 @@ ifeq ($(BFIELD),Y)
 FLAGS += -DBFIELD
 endif
 
-ifeq ($(PIC),Y)
-FLAGS += -DPIC
-endif
-
 ifeq ($(SILO),Y)
 FLAGS += -DOUT_SILO
 endif
@@ -255,7 +248,7 @@ clean :
 	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
 
 cleanall :
-	rm -f $(PROGRAM) lyman_alpha_tau stokes_lp *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.modrm -f SS/BIN/*
