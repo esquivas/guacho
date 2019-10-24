@@ -418,8 +418,9 @@ contains
   !> @param real [inout] itprint : number of current output
   subroutine initflow(itprint)
 
-    use parameters, only : outputpath, iwarm !, itprint0
-    use globals, only : u, rank
+    use parameters, only : outputpath, iwarm, enable_pic, pic_distF !, itprint0
+    use globals, only : u, rank, Q_MP0, MP_SED, partID, P_DSA, partID,         &
+                        partOwner, n_activeMP
     use user_mod, only : initial_conditions
 #ifdef MPIP
     use mpi
@@ -434,6 +435,7 @@ contains
     integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp,      &
     neqdynp, nghostp
     real :: dxp, dyp, dzp, scal(3), cvp
+    integer :: npp, n_mpp, NBinsSEDMPP, i_mp
 
     if (.not.iwarm) then
 
@@ -445,7 +447,7 @@ contains
 #ifdef MPIP
       write(file1,'(a,i3.3,a,i3.3,a)')                                           &
                     trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
-      unitin=rank+10
+      unitin=10  !*rank  (not needed)
 #else
       write(file1,'(a,i3.3,a)')         &
             trim(outputpath)//'BIN/points',itprint,'.bin'
@@ -474,6 +476,41 @@ contains
       close(unitin)
 
       print'(i3,a,a)',rank,' read: ',trim(file1)
+
+
+      !   Read Lagrangian Particles info if they are enabled
+#ifdef MPIP
+      write(file1,'(a,i3.3,a,i3.3,a)')                                       &
+            trim(outputpath)//'BIN/pic',rank,'.',itprint,'.bin'
+#else
+      write(file1,'(a,i3.3,a)') trim(outputpath)//'BIN/pic',itprint,'.bin'
+#endif
+
+      unitin=10
+      open(unit=unitin,file=file,1,status='unknown',access='stream')
+
+      read(unitin) npp, n_mpp, n_activeMP, NBinsSEDMPP
+
+      do i_mp=1,i_activeMP
+
+        partOwner(i_mp) = rank
+        read(unitin) partID(i_mp)
+        read(unitin) Q_MP0(i_mp,1:3)
+
+        if(pic_distF) then
+          read(unitin) Q_MP0(i_mp,11:12)
+          read(unitin) MP_SED(1,:,i_mp)
+          read(unitin) MP_SED(2,:,i_mp)
+          read(unitin) P_DSA(i_mp,:,:)
+        end if
+
+      end do
+
+      close(unitin)
+
+      print'(i3,a,a,a,i0,a)',rank,' read: ',trim(file1), ' (',n_activeMP,             &
+                    ' active particles)'
+
       itprint=itprint+1
 
 #ifdef MPIP
