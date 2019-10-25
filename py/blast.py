@@ -69,11 +69,6 @@ Q= plt.streamplot( X,Y,bx,by, density = 2., color='silver',linewidth=1., minleng
 plt.xlim(0.,1.)
 plt.ylim(0.,1.)
 
-#lmpDataS = read_lmp(nout,path=path, base='pic-shocked-')
-#fig = plt.figure(2)
-#plt.plot(lmpDataS[:,1], lmpDataS[:,2], '*', markersize=5, color='blue',alpha=0.5)
-#Q= plt.quiver(X[::8],Y[::8],bx[::8],by[::8], pivot='mid', scale=40, color='w', alpha=0.5)
-
 plt.figure(4)
 plt.clf()
 map = plt.imshow(rho, extent=extent, origin='lower', cmap='binary_r',interpolation = 'none', norm=LogNorm() )
