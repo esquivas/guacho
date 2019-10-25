@@ -467,12 +467,12 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
     x1    = MP_SED(1,ibin+1,i_mp)
 
     x = xconst*freq_obs / (MP_SED(1,ibin  ,i_mp)**2*Bperp)
-    call interpolateBessels(x, F, G)
+    call getBessels(x, F, G)
     Fsyn0 = MP_SED(2,ibin  ,i_mp)*F
     Fpol0 = MP_SED(2,ibin  ,i_mp)*G
 
     x = xconst*freq_obs / (MP_SED(1,ibin+1,i_mp)**2*Bperp)
-    call interpolateBessels(x, F, G)
+    call getBessels(x, F, G)
     Fsyn1 = MP_SED(2,ibin+1,i_mp)*F
     Fpol1 = MP_SED(2,ibin+1,i_mp)*G
 
@@ -509,18 +509,34 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
 end subroutine get_stokes
 
 !=======================================================================
-subroutine interpolateBessels(x, F, G)
+subroutine getBessels(x, F, G)
   implicit none
   real, intent(in ) :: x
   real, intent(out) :: F, G
   real              ::  x1, x2, f1, f2, g1, g2
   integer           :: i
 
+  !  if x is smaller than the first element in the tables use assymptotic
+  !  expression (see Mathematica notebook)
+  if (x <= stokesTab(1,1) ) then
+
+    F = 2.14953*x**(1.0/3.0)
+    G = 1.07476*x**(1.0/3.0)
+    return
+  else if x >= stokesTab(1,nTabLines) ) then
+    F = 0.278823*x*exp(4.0*x/3.0)                                              &
+      + exp(x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
+    G = 1.25331*exp(x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) ) )
+    return
+  end if
+
+  !  Otherwise use the tables and interpolate them
+
   i = 1 + (nTabLines-1) *                                                      &
     int( log10(x/stokesTab(1,1))/log10(stokesTab(1,nTabLines)/stokesTab(1,1)) )
 
-  i = max(i,    1      )
-  i = min(i,nTabLines-1)
+  !i = max(i,    1      )
+  !i = min(i,nTabLines-1)
 
   if (i==nTabLines-1) then
     F = stokesTab(2,i+1)
@@ -548,7 +564,7 @@ subroutine interpolateBessels(x, F, G)
 
   end if
 
-end subroutine interpolateBessels
+end subroutine getBessels
 !=======================================================================
 !> @brief Writes projection to file
 !> @details Writes projection to file
