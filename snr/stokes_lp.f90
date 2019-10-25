@@ -458,6 +458,7 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   real            :: Jpol
 
   Bperp = sqrt(Bx**2+By**2)
+
   Isyn  = 0.0
   Ipol  = 0.0
 
@@ -482,13 +483,14 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
       else
         Isyn = -1.
         Ipol = -1.
+        stop
         return
       end if
 
       if (slopeF /= -1.) then
         Isyn = Isyn + Fsyn0/(slopeF+1.)*(x1*(x1/x0)**slopeF-x0)
       else
-        Isyn = Isyn + Fsyn0*x0*log(x1/x0)
+        Isyn = Isyn + Fsyn0 * x0 * log(x1/x0)
       end if
 
       if (slopeG /= -1.) then
@@ -519,15 +521,23 @@ subroutine getBessels(x, F, G)
   !  if x is smaller than the first element in the tables use assymptotic
   !  expression (see Mathematica notebook)
   if (x <= stokesTab(1,1) ) then
-
+    !print*,'SMALL',x
     F = 2.14953*x**(1.0/3.0)
     G = 1.07476*x**(1.0/3.0)
     return
   else if (x >= stokesTab(1,nTabLines) ) then
-    F = 0.278823*x*exp(4.0*x/3.0)                                              &
+    if (x < 30) then   ! needed to avoid underflows
+      !print*,'LARGE',x
+      F = 0.278823*x*exp(4.0*x/3.0)                                              &
       + exp(x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
-    G = 1.25331*exp(x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) )
-    return
+      G = 1.25331*exp(x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) )
+      return
+    else
+      !print*,'extra LARGE',x
+      F = 7.61e-13
+      G = 6.44e-13
+      return
+    end if
   end if
 
   !  Otherwise use the tables and interpolate them
@@ -643,7 +653,7 @@ program stokes_lp
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  freq_obs  =  1.4e3 !< frequency of observation (Hz)
+  freq_obs  =  1.40e9 !< frequency of observation (Hz)
 
   loop_over_outputs : do itprint=0,10
 
