@@ -523,7 +523,7 @@ subroutine getBessels(x, F, G)
     F = 2.14953*x**(1.0/3.0)
     G = 1.07476*x**(1.0/3.0)
     return
-  else if x >= stokesTab(1,nTabLines) ) then
+  else if (x >= stokesTab(1,nTabLines) ) then
     F = 0.278823*x*exp(4.0*x/3.0)                                              &
       + exp(x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
     G = 1.25331*exp(x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) ) )
