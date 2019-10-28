@@ -528,9 +528,9 @@ subroutine getBessels(x, F, G)
   else if (x >= stokesTab(1,nTabLines) ) then
     if (x < 30) then   ! needed to avoid underflows
       !print*,'LARGE',x
-      F = 0.278823*x*exp(4.0*x/3.0)                                              &
-      + exp(x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
-      G = 1.25331*exp(x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) )
+      F = 0.278823*x*exp(-4.0*x/3.0)                                              &
+      + exp(-x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
+      G = 1.25331*exp(-x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) )
       return
     else
       !print*,'extra LARGE',x
