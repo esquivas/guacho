@@ -528,7 +528,7 @@ subroutine getBessels(x, F, G)
   else if (x >= stokesTab(1,nTabLines) ) then
     if (x < 30) then   ! needed to avoid underflows
       !print*,'LARGE',x
-      F = 0.278823*x*exp(-4.0*x/3.0)                                              &
+      F = 0.278823*x*exp(-4.0*x/3.0)                                           &
       + exp(-x)*(1.1147 + 0.938696*x + 0.092941*x**(1.5))/sqrt(x)
       G = 1.25331*exp(-x)/x**(1.5) * (-0.35108 + x*(0.0972222 + x) )
       return
@@ -542,23 +542,19 @@ subroutine getBessels(x, F, G)
 
   !  Otherwise use the tables and interpolate them
 
-  i = 1 + (nTabLines-1) *                                                      &
-    int( log10(x/stokesTab(1,1))/log10(stokesTab(1,nTabLines)/stokesTab(1,1)) )
-
+  i = int( 1 + (nTabLines-1) *                                                 &
+      log10(x/stokesTab(1,1))/log10(stokesTab(1,nTabLines)/stokesTab(1,1)) )
   !i = max(i,    1      )
   !i = min(i,nTabLines-1)
-
   if (i==nTabLines-1) then
     F = stokesTab(2,i+1)
     G = stokesTab(3,i+1)
     !if (rank == 0) print'(i0,2es15.3)',i, x, f
-
     return
   else if (i==1) then
     F = stokesTab(2,i)
     G = stokesTab(3,i)
     !if (rank == 0) print'(i0,2es15.3)',i, x, f
-
     return
   else
     x1 = stokesTab(1,i  )
@@ -568,8 +564,8 @@ subroutine getBessels(x, F, G)
     g1 = stokesTab(3,i  )
     g2 = stokesTab(3,i+1)
 
-    F = f1 * (x/x1)*(log10(f2/f1)/log10(x2/x1))
-    G = g1 * (x/x1)*(log10(g2/g1)/log10(x2/x1))
+    F = f1 * (x/x1)**(log10(f2/f1)/log10(x2/x1))
+    G = g1 * (x/x1)**(log10(g2/g1)/log10(x2/x1))
     !if (rank == 0) print'(i0,6es15.3)',i, x, x1,x2,f1,f2,f
 
   end if
@@ -614,7 +610,6 @@ end module stokes_lp_utilities
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and the LOS
 !! is along the Z axis
 program stokes_lp
-
   use constants, only : pi
   use parameters, only : xmax,master, mpi_real_kind, outputpath, nxtot, nytot
   use globals, only : u, rank, comm3d
@@ -693,5 +688,6 @@ program stokes_lp
   stop
 
 end program stokes_lp
+
 
 !=======================================================================
