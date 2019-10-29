@@ -105,6 +105,24 @@ plt.imshow(PIs[:,:], origin='lower' )
 plt.colorbar()
 plt.title(r'Polarization Degree')
 
+#  plot Polarization vectors
+X, Y = np.meshgrid(np.arange(0, 1,1./boxsize[0]), np.arange(0,1,1./boxsize[1]) )
+px = np.sin(np.arctan2(stokes_Us[:,:],stokes_Qs[:,:])/2. + np.pi/2.)
+py = np.cos(np.arctan2(stokes_Us[:,:],stokes_Qs[:,:])/2. + np.pi/2.)
+plt.figure(9); plt.clf()
+map = plt.imshow(rho, extent=extent, origin='lower', cmap='binary_r',interpolation = 'none', norm=LogNorm() )
+cb1 = plt.colorbar(map)
+Xp  = X[::4,::4]
+Yp  = Y[::4,::4]
+pxp = px[::4,::4]
+pyp = py[::4,::4]
+Isp = stokes_Is[::4,::4]
+mask = (Isp > 1e-20)
+vec = plt.quiver(Xp[mask], Yp[mask], pxp[mask], pyp[mask], Isp[mask],
+pivot='mid',scale=20., headlength=0, headwidth=1., width=0.006, cmap='inferno_r')
+plt.title(r'Polarization vectors')
+
+
 #plt.figure(1) ; plt.savefig('fig1.png', transparent=True, bbox_inches='tight',dpi=300)
 #plt.figure(2) ; plt.savefig('fig2.png', transparent=True, bbox_inches='tight',dpi=300)
 #plt.figure(3) ; plt.savefig('fig3.png', transparent=True, bbox_inches='tight',dpi=300)
