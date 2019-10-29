@@ -467,13 +467,14 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
     x0    = MP_SED(1,ibin  ,i_mp)
     x1    = MP_SED(1,ibin+1,i_mp)
 
-    x = xconst*freq_obs / (MP_SED(1,ibin  ,i_mp)**2*Bperp)
+    x = xconst*freq_obs / (x0*x1*Bperp)
+    !x = xconst*freq_obs / (MP_SED(1,ibin  ,i_mp)**2*Bperp)
     call getBessels(x, F, G)
     Fsyn0 = MP_SED(2,ibin  ,i_mp)*F
     Fpol0 = MP_SED(2,ibin  ,i_mp)*G
 
-    x = xconst*freq_obs / (MP_SED(1,ibin+1,i_mp)**2*Bperp)
-    call getBessels(x, F, G)
+    !x = xconst*freq_obs / (MP_SED(1,ibin+1,i_mp)**2*Bperp)
+    !call getBessels(x, F, G)
     Fsyn1 = MP_SED(2,ibin+1,i_mp)*F
     Fpol1 = MP_SED(2,ibin+1,i_mp)*G
 
