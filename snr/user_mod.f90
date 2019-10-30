@@ -64,6 +64,7 @@ contains
     use globals,    only : coords, dx ,dy ,dz, rank,                           &
                            Q_MP0, partID, partOwner, n_activeMP, MP_SED
     use constants,  only : pi, eV
+    use lmp_module, only : interpBD
     use utilities,  only : isInDomain
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
@@ -76,6 +77,8 @@ contains
     real    :: emin, emax, deltaE, gamma_lmp, N0, chi0
     logical, parameter :: uniform = .false. ! place the MPs uniformly
     real    :: rho_env, T_env, B_env, xc, yc, zc
+    integer :: ind(3), l
+    real    :: weights(8), rhoI
     !---------------------------------------------------------------------------
     !       HIDRODINAMICA : MEDIO AMBIENTE
     !       BLAST PROBLEM
@@ -116,8 +119,6 @@ contains
     Emax = 0.31*1e12*eV !/(rhosc*rsc**3*vsc2)
     gamma_lmp = 3.
     deltaE = (log10(Emax)-log10(Emin))/ (real(NBinsSEDMP)-1.)
-    N0     =  1.0e-6 / rho_env
-    chi0   = N0 * (1.-gamma_lmp)/( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
 
     if (uniform) then
       !Insert homogenously distributed particles
@@ -135,6 +136,21 @@ contains
             partID   (n_activeMP) = n_activeMP + rank*N_MP
             Q_MP0(n_activeMP,:) = 0.
             Q_MP0(n_activeMP,1:3) = pos(:)
+
+            !  Interpolate density to normalize SED
+            rhoI = 0.0
+            l    = 1
+            do k= ind(3),ind(3)+1
+              do j=ind(2),ind(2)+1
+                do i=ind(1),ind(1)+1
+                  rhoI = rhoI + u(1,i,j,k) * weights(l)
+                  l  = l + 1
+                end do
+              end do
+            end do
+            N0     =  1.0e-6 / rhoI
+            chi0   = N0 * (1.-gamma_lmp)/                                      &
+                          ( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
 
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
@@ -161,6 +177,21 @@ contains
             Q_MP0(n_activeMP,:) = 0.
             Q_MP0(n_activeMP,1:3) = pos(:)
 
+            !  Interpolate density to normalize SED
+            rhoI = 0.0
+            l    = 1
+            do k= ind(3),ind(3)+1
+              do j=ind(2),ind(2)+1
+                do i=ind(1),ind(1)+1
+                  rhoI = rhoI + u(1,i,j,k) * weights(l)
+                  l  = l + 1
+                end do
+              end do
+            end do
+            N0     =  1.0e-6 / rhoI
+            chi0   = N0 * (1.-gamma_lmp)/                                      &
+                          ( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
+
             do i = 1,NBinsSEDMP
               MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
               MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_lmp)
@@ -170,7 +201,6 @@ contains
 
       end do
     end if
-
 
     print*, rank, 'has ', n_activeMP, ' active MPs'
 
