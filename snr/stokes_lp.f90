@@ -624,7 +624,7 @@ program stokes_lp
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x = 15.0 *pi/180.
+  real, parameter :: theta_x = 0.0 *pi/180.
   real, parameter :: theta_y = 0.0 *pi/180.
   real, parameter :: theta_z = 0.0 *pi/180.
   !   map and its dimensions
