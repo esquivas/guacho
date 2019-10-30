@@ -138,6 +138,7 @@ contains
             Q_MP0(n_activeMP,1:3) = pos(:)
 
             !  Interpolate density to normalize SED
+            call interpBD(Q_MP0(n_activeMP,1:3),ind,weights)
             rhoI = 0.0
             l    = 1
             do k= ind(3),ind(3)+1
@@ -178,6 +179,7 @@ contains
             Q_MP0(n_activeMP,1:3) = pos(:)
 
             !  Interpolate density to normalize SED
+            call interpBD(Q_MP0(n_activeMP,1:3),ind,weights)
             rhoI = 0.0
             l    = 1
             do k= ind(3),ind(3)+1
