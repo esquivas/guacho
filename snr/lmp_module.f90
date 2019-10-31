@@ -579,7 +579,7 @@ contains
                 fullSend(6+NBinsSEDMP:5+2*NBinsSEDMP)=                         &
                                               MP_SED(2,1:NBinsSEDMP,dataLoc(i) )
 
-                  !  send the whole thing
+                !  send the whole thing
                 call mpi_send( fullSend ,5+2*NBinsSEDMP, mpi_real_kind ,IR,    &
                                partID(dataLoc(i)), comm3d,err )
 
