@@ -966,6 +966,7 @@ contains
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
     r = max(r,2.0)      !  this should be <= comp in if in injectcion routine
+    r = min(r,4.0)      !  Test
     qNR = 3.*r/(r -1.)
 
     v1 = normal(1)*prim1(2)+normal(2)*prim1(3)+normal(3)*prim1(4)
