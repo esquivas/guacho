@@ -2,10 +2,11 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=M1a
+PROGRAM=fes
 
 #  Seaerh Path, object files are searched in the order below
-VPATH = . : ../src
+#VPATH = . : ../ : ../../src
+VPATH = ../src
 
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
@@ -73,7 +74,6 @@ hydro_core.o \
 linear_system.o \
 difrad.o \
 hrate.o \
-chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \

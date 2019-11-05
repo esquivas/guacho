@@ -73,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_CHEM
+  integer, parameter :: eq_of_state = EOS_H_RATE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -128,10 +128,10 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure = .true.
+  logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange = .true.
+  logical, parameter :: charge_exchange = .false.
 
 
 #ifdef PASSIVES
@@ -140,23 +140,23 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
+  integer, parameter :: nxtot=100      !< Total grid size in X
   integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nztot=100      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=8     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
+  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
   !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
-  real, parameter :: ymax=0.25        !< grid extent in Y (code units)
-  real, parameter :: zmax=1.          !< grid extent in Z (code units)
+  real, parameter :: ymax=1.        !< grid extent in Y (code units)
+  real, parameter :: zmax=.25          !< grid extent in Z (code units)
   real, parameter :: xphys=0.2*au     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
