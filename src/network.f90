@@ -26,7 +26,7 @@
 
 module network
 
-  use parameters, only : n_spec, n1_chem
+  use parameters, only : n_spec
   implicit none
 
   ! number of species
@@ -40,9 +40,6 @@ module network
 
   ! number of non-equilibrium equations
   integer, parameter :: n_nequ = n_spec - nequil
-
-  !  first index for the species in the global array
-  !integer, parameter :: n1_chem = 6 MOVED TO PARAMETERS
 
   ! indexes of the different species
   integer, parameter :: H  = 1   ! H0
