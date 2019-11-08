@@ -48,7 +48,6 @@ subroutine u2prim(uu, prim, T)
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
                          pmhd, mhd, eq_of_state, n1_chem, n_spec
   use constants
-  !use network,  only : n1_chem, n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
@@ -145,7 +144,6 @@ subroutine u2primSplitAll(uu, prim, prim0, T)
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
                          pmhd, mhd, eq_of_state, n_spec
   use constants
-  !use network,  only : n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu, prim0
   real,    intent(out), dimension(neq)  :: prim
