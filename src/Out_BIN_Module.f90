@@ -32,52 +32,6 @@ module  Out_BIN_Module
 
 contains
 
-<<<<<<< HEAD
-!=======================================================================
-!> @brief Writes header
-!> @details Writes header for binary input
-!> @param integer [in] unit : number of logical unit
-
-subroutine write_header(unit, neq_out, nghost_out)
-  implicit none
-  integer, intent(in) :: unit, neq_out, nghost_out
-  character, parameter  :: lf = char(10)
-  character (len=128) :: cbuffer
-
-  !  Write ASCII header
-  write(unit) "**************** Output for Guacho v1.3****************",lf
-
-  write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)') &
-        coords(0)*nx, coords(1)*ny, coords(2)*nz
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)') &
-        MPI_NBX, MPI_NBY, MPI_NBZ
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') &
-        neq_out, neqdyn
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("Number of Ghost Cells  ", i0)') nghost_out
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer,'("Scalings ", a )')
-  write(unit) trim(cbuffer), lf
-
-  write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
-    rsc, vsc, rhosc
-  write(unit) trim(cbuffer), lf
-
-   write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
-  write(unit) trim(cbuffer), lf
-=======
   !=======================================================================
   !> @brief Writes header
   !> @details Writes header for binary input
@@ -121,7 +75,6 @@ subroutine write_header(unit, neq_out, nghost_out)
 
     write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
     write(unit) trim(cbuffer), lf
->>>>>>> origin/pic
 
 #ifdef DOUBLEP
     write(unit) "Double precision 8 byte floats",lf
@@ -129,44 +82,13 @@ subroutine write_header(unit, neq_out, nghost_out)
     write(unit) "Double precision 4 byte floats",lf
 #endif
 
-<<<<<<< HEAD
-  write(unit) "*******************************************************",lf
-  write(unit) achar(255),lf
-=======
     write(unit) "*******************************************************",lf
     write(unit) achar(255),lf
->>>>>>> origin/pic
 #ifdef DOUBLEP
     write(unit) 'd'
 #else
     write(unit) 'f'
 #endif
-<<<<<<< HEAD
-  write(unit) nx, ny, nz
-  write(unit) dx, dy, dz
-  write(unit) coords(0)*nx, coords(1)*ny, coords(2)*nz
-  write(unit) MPI_NBX, MPI_NBY, MPI_NBZ
-  write(unit) neq_out, neqdyn
-  write(unit) nghost_out
-  write(unit) rsc, vsc, rhosc
-  write(unit) cv
-
-end subroutine write_header
-
-!=======================================================================
-
-!> @brief  Writes Data, one file per processor
-!> @details  Writes Data in BIN format one file per processor
-!> @param integer [in] itprint : number of output
-
-
-subroutine write_BIN(itprint)
-
-  use difrad
-  implicit none
-  integer, intent(in) :: itprint
-  character (len=128) :: file1
-=======
     write(unit) nx, ny, nz
     write(unit) dx, dy, dz
     write(unit) coords(0)*nx, coords(1)*ny, coords(2)*nz
@@ -188,7 +110,6 @@ subroutine write_BIN(itprint)
     implicit none
     integer, intent(in) :: itprint
     character (len=128) :: file1
->>>>>>> origin/pic
 
 #ifdef MPIP
     integer :: err
@@ -199,15 +120,6 @@ subroutine write_BIN(itprint)
 #ifdef BFIELD
     real, allocatable :: divB(:,:,:)
 #endif
-<<<<<<< HEAD
-  integer :: unitout
-  integer :: ip
-  integer ::  i, j, k
-#ifdef BFIELD
-  real, allocatable :: divB(:,:,:)
-#endif
-=======
->>>>>>> origin/pic
 
 #ifdef MPIP
     write(file1,'(a,i3.3,a,i3.3,a)')  &
@@ -241,23 +153,6 @@ subroutine write_BIN(itprint)
               end do
             end do
           end do
-<<<<<<< HEAD
-       end do
-
-    else
-       write(unitout) u(:,:,:,:)
-    endif
-
-    close(unitout)
-    print'(i3,a,a)',rank," wrote file:",trim(file1)
-
-   end if
-#ifdef MPIP
-     call mpi_barrier(mpi_comm_world, err)
-#endif
-  end do
-=======
->>>>>>> origin/pic
 
         else
           write(unitout) u(:,:,:,:)
@@ -266,24 +161,6 @@ subroutine write_BIN(itprint)
         close(unitout)
         print'(i3,a,a)',rank," wrote file:",trim(file1)
 
-<<<<<<< HEAD
-        write(file1,'(a,i3.3,a,i3.3,a)') &
-              trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
-        unitout=10+rank
-        open(unit=unitout,file=file1,status='replace',access='stream')
-        call write_header(unitout,1,0)
-        write (unitout) ph(:,:,:)
-        close(unitout)
-        print'(i3,a,a)',rank," wrote file:",trim(file1)
-
-      end if
-#ifdef MPIP
-        call mpi_barrier(mpi_comm_world, err)
-#endif
-    end do
-
-  end if
-=======
       end if
 #ifdef MPIP
       call mpi_barrier(mpi_comm_world, err)
@@ -323,7 +200,6 @@ subroutine write_BIN(itprint)
       end do
 
     end if
->>>>>>> origin/pic
 
 #ifdef BFIELD
     if (dump_divb) then
@@ -348,15 +224,6 @@ subroutine write_BIN(itprint)
                 trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
           unitout=10+rank
 
-<<<<<<< HEAD
-        open(unit=unitout,file=file1,status='replace',access='stream')
-
-        call write_header(unitout,1,0)
-        write (unitout) divB(:,:,:)
-        close(unitout)
-
-      end if
-=======
           open(unit=unitout,file=file1,status='replace',access='stream')
 
           call write_header(unitout,1,0)
@@ -364,7 +231,6 @@ subroutine write_BIN(itprint)
           close(unitout)
 
         end if
->>>>>>> origin/pic
 #ifdef MPIP
         call mpi_barrier(mpi_comm_world, err)
 #endif
