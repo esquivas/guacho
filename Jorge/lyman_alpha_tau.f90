@@ -209,9 +209,9 @@ end subroutine read_data
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
 
-    x=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-    y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-    z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+    x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
+    y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
+    z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
 
   end subroutine getXYZ
 
@@ -317,7 +317,7 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
   real, intent(out) :: map(nxmap,nymap,nvmap)
   integer :: i,j,k, iobs, jobs
   real :: x,y,z,xn,yn,zn, vx, vy, vz,vxn, vyn, vzn, velsc
-  real :: T, prim(neq), profile(nvmap)
+  real :: T, prim(neq), profile(nvmap), profileH(nvmap)
   real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
   velsc=sqrt(vsc2)
 
@@ -328,7 +328,7 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
           !  obtain original position
           call getXYZ(i,j,k, x,y,z)
           !only do to the side facing the observer
-          if(z > 30.*dz ) then
+          if(z < -30.*dz ) then
             !  do the rotation of the coordinates
             call rotation_x(theta_x,x,y,z,xn,yn,zn)
             call rotation_y(theta_y,xn,yn,zn,x,y,z)
@@ -348,16 +348,27 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
             call rotation_y(theta_y,vxn,vyn,vzn,vx,vy,vz)
             call rotation_z(theta_z,vx,vy,vz,vxn,vyn,vzn)
 
-            !  calculate the line profile function
-            call phigauss(T, vzn,vmin,vmax,nvmap,profile)
+            !  calculate the line profile functions
+            !call phigauss(T, vzn,vmin,vmax,nvmap,profile)
+            ! Hack to use two Temperatures
+            call phigauss(1e4, vzn,vmin,vmax,nvmap,profile)
+            call phigauss(1e6, vzn,vmin,vmax,nvmap,profileH)
+
             !  make sure the result lies in the map bounds
             if( (iobs >=1    ).and.(jobs >=1    ).and. &
                 (iobs <=nxmap).and.(jobs <=nymap) ) then
               !if ((T < 1e5).and.(prim(7)<0)) then
               map(iobs,jobs,:)= map(iobs,jobs,:) + &
-                                  dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
+                                  dz*rsc*prim(neqdyn+3)*sigmaLA*lambdaLA*profileH(:) + &
+                                  dz*rsc*prim(neqdyn+5)*sigmaLA*lambdaLA*profile(:)
+              !                    dz*rsc*prim(neqdyn+1)*sigmaLA*lambdaLA*profile(:)
+
               !end if
             end if
+
+
+
+
           end if
       end do
     end do
@@ -384,7 +395,7 @@ subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
   character (len=128) file1
   integer ::  unitout
 
-  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
+  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-2T-',itprint,'.bin'
   unitout=11
   open(unit=unitout,file=file1,status='unknown',access='stream')
 
@@ -438,19 +449,19 @@ program lyman_alpha_tau
 
   use constants, only : pi
   use parameters, only : xmax,master, mpi_real_kind, &
-                         outputpath, nxtot, nytot
+                         outputpath, nxtot, nztot
   use globals, only : u, rank, comm3d
   use lyman_alpha_utilities
-#ifdef MPIP
-  use mpi
-#endif
-  implicit none
 
+  implicit none
+#ifdef MPIP
+  include "mpif.h"
+#endif
   character (len=128) :: filepath
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x =-3.33 *pi/180.
+  real, parameter :: theta_x =+3.33 *pi/180.
   real, parameter :: theta_y = 0.00 *pi/180.
   real, parameter :: theta_z = 0.00 *pi/180.
   !   map and its dimensions
@@ -461,7 +472,7 @@ program lyman_alpha_tau
   !real :: map(nxmap, nymap,nvmap), map1(nxmap, nymap,nvmap)
 
   nxmap = nxtot
-  nymap = nytot
+  nymap = nztot
   allocate( map(nxmap, nymap,nvmap))
   allocate(map1(nxmap, nymap,nvmap))
 
@@ -478,7 +489,7 @@ program lyman_alpha_tau
   ! chose output (fix later to input form screen)
   filepath=trim(outputpath) !'/datos/esquivel/EXO-GUACHO/P1c/'
 
-  loop_over_outputs : do itprint=0,70
+  loop_over_outputs : do itprint=71,108
 
     !  read ph and u from file
     call read_data(u,itprint,filepath)

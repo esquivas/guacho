@@ -58,14 +58,14 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         pmhd, mhd, passives
+                         neqdyn
   use globals,    only: coords, dx ,dy ,dz
 
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
   integer :: i,j,k
-  real :: x,y,z, rads, velx, vely, velz, dens,cpi
+  real :: x,y,z, rads, velx, vely, velz, dens
   !  the star wind does not cover the entire domain, we fill here
   !  as if the exoplanet is absent
   do i=nxmin,nxmax
@@ -73,9 +73,9 @@ subroutine initial_conditions(u)
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
@@ -84,33 +84,31 @@ subroutine initial_conditions(u)
         VelY=VSW*Y/RADS
         VelZ=VSW*Z/RADS
         DENS=DSW*RSW**2/RADS**2
-        !   total density and momena
+        !   total density and momenta
         u(1,i,j,k) = dens
         u(2,i,j,k) = dens*velx
         u(3,i,j,k) = dens*vely
         u(4,i,j,k) = dens*velz
-        if (pmhd .or. mhd) then
-          cpi = bsw*(RSW/rads)**3/(2.*rads**2)
-          u(6,i,j,k) = 3.*y*x*cpi
-          u(7,i,j,k) = (3.*y**2-rads**2)*cpi
-          u(8,i,j,k) = 3.*y*z*cpi
-        end if
-        if (mhd) then
-          ! total energy
-          u(5,i,j,k)=0.5*dens*vsw**2         &
-               + cv*dens*Tsw       &
-               + 0.5*(u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2)
-        else
-                ! total energy
-          u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-               + cv*dens*1.9999*Tsw
-        end if
-        if (passives) then
-          !  density of neutrals
-          u(neqdyn+1,i,j,k)= 0.0001*dens
-          !   passive scalar (h-hot, c-cold, i-ionized, n-neutral)
-          u(neqdyn+2,i,j,k)= dens   ! passive scalar
-        end if
+
+        ! total energy
+        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+        + cv*dens*1.9999*Tsw
+
+        !   Here the number density of the wind and planet
+        !   components separately
+        u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
+        u(neqdyn+3,i,j,k) =  1.E-4*dens   ! xhn*rho S neutro
+        u(neqdyn+4,i,j,k) =     0.*dens   ! xci*rho P ion
+        u(neqdyn+5,i,j,k) =     0.*dens   ! xcn*rho P neutro
+
+        ! ne
+        u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
+        !density of neutrals
+        u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
+
+        !   passive scalar (tag) for stellar material
+        u(neqdyn+7,i,j,k)= 1000*dens
+
       end do
     end do
   end do
@@ -157,28 +155,30 @@ end subroutine impose_user_bc
 
 subroutine get_user_source_terms(pp,s, i, j , k)
 
-  ! in this example a constant gravity is added
+  ! Adds the Rad Pressure according to the Beta profile of Bourrier
   use constants,  only : Ggrav
-  use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2
+  use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2,&
+                         beta_pressure, vsc
   use globals,    only : dx, dy, dz, coords
   use exoplanet
+  use radpress
   implicit none
-  integer, intent(in) :: i,j,k
+  integer, intent(in) :: i, j, k
+  integer             :: l, index, Nr
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
   integer, parameter  :: nb=2   ! 2 particles
   real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  integer :: l
   real    :: xc ,yc, zc
+  real :: v, fracv, frac_neutro !, a, b, c
 
-  GM(1)=0.3*Ggrav*MassS /rsc/vsc2
-  GM(2)=    Ggrav*MassP /rsc/vsc2
-
+  GM(1)= Ggrav*MassS/rsc/vsc2
+  GM(2)= Ggrav*MassP/rsc/vsc2
 
   !   get cell position
-  xc=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-  yc=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-  zc=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+  xc=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+  yc=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+  zc=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
   ! calculate distance from the sources
   ! star
@@ -192,16 +192,57 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   z(2)=zc-zp
   rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
 
-  ! update source terms with gravity
-  do l=1, nb
-    ! momenta
-    s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
-    s(3)= s(3)-pp(1)*GM(l)*y(l)/(rad2(l)**1.5)
-    s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
-    ! energy
-    s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
-           /(rad2(l)**1.5 )
-  end do
+
+if ( beta_pressure ) then
+
+    beta(i,j,k) = 0.
+    !  do only outside BC
+    if( (rad2(1) >= rsw**2) .and. (rad2(2) >= rpw**2) ) then
+
+      !compute Beta for radiation pressure
+      Nr = 800 !!vr and Br dimension
+
+      frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
+      !a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
+      !b = sqrt(1-a**2)                 !!sin(theta)
+      !c = atan2(yc,xc)                  !!Phi
+
+      !v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
+      !  Radial velocity in km s^-1
+      v =  ( (pp(2)*xc + pp(3)*yc + pp(4)*zc)/sqrt(rad2(1)) ) * (vsc/1e5)
+
+      fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
+      index = int(fracv)+1
+
+      if (index < 1) then
+        !print*, 'index out of bounds', index, xc, yc, zc
+        !print*, coords(:),i, j, k
+        index = 1
+      else if ( index > 799 ) then
+        !print*, 'index out of bounds', index, xc, yc, zc
+        !print*, coords(:), i, j, k
+        index = 799
+      end if
+
+      Beta(i,j,k) = ( Br(index)  + (v-vr(index))*( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index) ) ) *frac_neutro!*active
+
+      !!Linear interpolation for Beta, active allows turn on the Beta term.
+      GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
+
+    end if
+
+  endif
+
+    ! update source terms with gravity
+    do l=1, nb
+      ! momenta
+      s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
+      s(3)= s(3)-pp(1)*GM(l)*y(l)/(rad2(l)**1.5)
+      s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
+      ! energy
+      s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
+      /(rad2(l)**1.5 )
+    end do
 
 end subroutine get_user_source_terms
 

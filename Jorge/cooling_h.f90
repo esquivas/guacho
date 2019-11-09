@@ -40,9 +40,9 @@ contains
 
 subroutine coolingh()
 
-  use parameters, only : neq, nx, ny, nz, tsc, dif_rad
-  use globals, only : u, coords, dt_CFL
-  use difrad, only : ph
+  use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
+  use globals, only : u, primit, dt_CFL
+  use difrad, only : ph, phCold, phHot
 
   implicit none
   real    :: dt_seconds
@@ -51,70 +51,23 @@ subroutine coolingh()
   dt_seconds = dt_CFL*tsc
 
   do k=1,nz
-     do j=1,ny
-        do i=1,nx
+    do j=1,ny
+      do i=1,nx
 
-          if (dif_rad) then
-            call atomic(dt_seconds,u(:,i,j,k),1.,ph(i,j,k) )
+        if (dif_rad) then
+          if (.not.charge_exchange) then
+            call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, ph(i,j,k))
           else
-            call atomic(dt_seconds,u(:,i,j,k),1.,1.)
-          endif
-
-        end do
-     end do
+            call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, phCold(i,j,k)+phHot(i,j,k))
+          end if
+        else
+          call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, 0.)
+        end if
+      end do
+    end do
   end do
 
 end subroutine coolingh
-
-!======================================================================
-
-!> @brief calculates the recombination rate (case B)
-!> @details calculates the recombination rate (case B)
-!> @param real8 [in] T : Temperature K
-
-function alpha(T)
-
-  implicit none
-
-  real (kind=8) :: alpha
-  real (kind=8), intent(in) :: T
-
-  alpha=2.55d-13*(1.d4/T)**0.79
-
-end function alpha
-
-!======================================================================
-
-!> @brief calculates the recombination rate to level 1
-!> @details calculates the recombination rate to level 1
-!> @param real8 [in] T : Temperature K
-
-function alpha1(T)
-  implicit none
-
-  real (kind=8) :: alpha1
-  real (kind=8), intent(in) :: T
-
-  alpha1=1.57d-13*(1.d4/T)**0.52
-
-end function alpha1
-
-!======================================================================
-
-!> @brief calculates the collisional ionization rate
-!> @details calculates the collisional ionization rate
-!> @param real8[in] T : Temperature K
-
-function colf(T)
-
-  implicit none
-
-  real (kind=8) :: colf
-  real (kind=8), intent(in) :: T
-
-  colf=5.83d-11*sqrt(T)*exp(-157828./T)
-
-end function colf
 
 !======================================================================
 
@@ -162,19 +115,15 @@ FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
 
   real (kind=8) :: ALOSS
   real, intent(in)          :: DT
-  !real (kind=8), intent(in) :: X1,X2,DEN,DH0,TE0
   real (kind=8), intent(in) :: X1,X2,DEN,DH0,TE0
   real, parameter :: XION=2.179e-11, XH=0.9,XO=1.e-3
   real, parameter :: C0=0.5732,C1=1.8288e-5,C2=-1.15822e-10,C3=9.4288e-16
   real, parameter :: D0=0.5856,D1=1.55083e-5,D2=-9.669e-12, D3=5.716e-19
   real, parameter :: ENK=118409.,EN=1.634E-11
   real (kind=8) :: SHP
-  !real (kind=8) :: TE, DH,DHP,DE,DOI,DOII,OMEGA,OMEGAL,OMEGAH,FRAC,QLA
-  !real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
-  !real (kind=8) :: BETAH, BETAF, HIICOOL
   real (kind=8) :: TE, DH,DHP,DE,DOI,DOII,OMEGA,OMEGAL,OMEGAH,FRAC,QLA
   real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
-  real (kind=8) :: BETAF, HIICOOL!, BETAH
+  real (kind=8) :: BETAF, HIICOOL
 
   Te=MAX(Te0,10.)
   DH=DEN
@@ -247,128 +196,71 @@ END FUNCTION ALOSS
 
 !=======================================================================
 
-!> @brief Updates the ionization fraction and applpies cooling
-!> @details Calculates the new ionization state and energy density
-!!      using a time dependent ionization calculation and an
-!!      approximate time dependent cooling calculation
-!> @param real [in] dt      : timestep (seconds)
+!> @brief
+!> @details
+!> @param real [in] uu(neq) : primitive variablas in one cell
 !> @param real [in] uu(neq) : conserved variablas in one cell
-!> @param real [in] tau     : optical depth (not in use)
+!> @param real [in] dt      : timestep (seconds)
 !> @param real [in] radphi  : photoionizing rate
 
-subroutine atomic(dt,uu,tau,radphi)
+subroutine  cooling_h_neq(pp, uu, dt, radphi)
 
-  use parameters
+  use parameters, only : neqdyn, dif_rad, mhd, cv, neq, Tempsc, eq_of_state
+  use constants
   use hydro_core, only : u2prim
   implicit none
+  real, intent(inout) :: uu(neq), pp(neq)
+  real, intent(in)    :: dt, radphi
+  real                :: T, ch_factor
+  real(kind = 8)      :: y0, y1, dh, dh0, gain, Tprime, al, ce, T1
 
-  real, intent(in)                 :: dt, tau, radphi
-  real, intent(out),dimension(neq) :: uu
-  real, dimension(neq)             :: prim
-  real                             :: T !, radphi0, psi0
-  !real (kind=16) :: etau, psi, dh, y0, fpn, g0, e, y1, t1,dh0, al
-  !real (kind=16) :: gain, tprime, ce, ALOSS
-  real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
-  real (kind=8) :: tprime, ce  !, ALOSS
-  real(kind=8) :: fpn, gain
+  y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
+  y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt)
+  dh  = real( pp(1)             , 8)   !# total NH
+  dh0 = real( pp(neqdyn+1)      , 8)   !# neutrals density
 
-  !    these need to be double precision in order for
-  !      the ionization calculation to work
+  call u2prim(uu,pp,T)               !# get temperature
 
-  !  real (kind=8) :: te, col,rec,a,b,c,d,colf,alpha
-  real (kind=8) :: col,rec,a,b,c,d  !,colf,alpha
-  !
-  !    parameters
-  !      xi - neutral carbon abundance (for non-zero electron density
-  !      boltzm - Boltzmann's constant
-  !
-  !  real (kind=8), parameter ::  xi=1.d-4,boltzm=1.3807d-16,AMASS=2.158d-24
-  real (kind=8), parameter ::  xi=1.d-4,boltzm=1.3807d-16,AMASS=2.158d-24
-
-  !  the following is not used, and kept only to avoid compiler warnings
-  !ph0=0.
-  !psi0=0.
-  !   atenuate photoionization with optical depth (already atenuated in radif)
-  etau=exp(-tau)
-  !!!   radphi=radphi0*etau
-  !psi=psi0*etau
-
-  !   solve for the ionization fraction and the internal energy
-
-  call u2prim(uu,prim,T)            !# temperature
-  col=colf(real(t,8))                 !# collisional ionization rate
-  rec=alpha(real(t,8))                !# rad. recombination rate
-  y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction
-  dh=real( uu(1), 8 )                  !# H density
-  fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus
-  !print*,fpn
-  !fpn=0.
-
-  !    solve for the new neutral fraction using the analytical
-  !    solution (see notes)
-
-  a=rec+col
+  !  get the energy losses
+  al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
 
   if (dif_rad) then
-    b=-((2.+xi)*rec+(1.+xi)*col+fpn)
-  else
-    b=-((2.+xi)*rec+(1.+xi)*col    )
-  end if
-
-  c=(1.+xi)*rec
-  d=sqrt(b**2-4.*a*c)
-  g0=(2.*a*y0+b+d)/(2.*a*y0+b-d)
-  e=exp( -d*dh*real(dt,8) )
-
-  y1=(-b-d*(1.+g0*e)/(1.-g0*e))/(2.*a) !# the new neutral fraction
-  y1=min(y1,0.9999)
-  y1=max(y1,0.)
-
-  !    find the new total energy using the cooling and heating rates
-  !    and assuming that the cooling goes approximately linear with
-  !    temperature
-
-  dh0=real( uu(neqdyn+1), 8 )
-  al=ALOSS(y0,y1,dt,dh,dh0,real(t,8))/dh**2
-
-  !if(al.lt.0.) write(*,*) 'que paso !'
-  !if(al.lt.0.) al=0.
-  !  al=al*(1.-(0.5e4/max(1.e4,t))**4)
-  !if(t.le.1.e4) al=al*real((t/1.e4,8)**4)
-
-  if (dif_rad) then
-    gain=real(radphi,8)*dh0*boltzm*4.E4
-    tprime=max( gain*real(T,8)/(dh**2*al),1000.)
+    gain=real(radphi,8)*dh0*Kb*1.E4 !3.14d5
+    Tprime=max( gain*real(T,8)/(dh**2*al),1000.)
   else
     tprime=10.
   end if
   !tprime=1000.
 
-  ce=(2.*dh*al)/(3.*boltzm*real(T,8))
-  t1=tprime+(t-tprime)*exp(-ce*dt) !# new temperature
+  ce=(2.*dh*al)/(3.*Kb*real(T,8))
+  T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
-  t1=max(t1,0.1*real(t,8) )
-  t1=min(t1,10.*real(t,8) )
+  T1=max(T1,0.5*real(T,8) )
+  T1=min(T1,2.*real(T,8) )
   !  t1=max(t1,tprime)
 
-!#if TWOTEMP
-!  t1=1.E4-9990.*y1
-!#endif
-    !   update the uu array
-  uu(neqdyn+1)=real(y1)*uu(1)
+  ch_factor = real(T1)/T
 
+  !  update pressure
+  !pp(5) = pp(5) * ch_factor
+
+  !  set pressure floor "a la mala"
+  pp(5) = max(pp(5),(pp(1)+pp(11))*10000./Tempsc)
+
+  !  update total energy density
   if (mhd) then
 #ifdef BFIELD
-    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)      &
-         +0.5*        (prim(6)**2+prim(7)**2+prim(8)**2)
+
+    uu(5) = cv*pp(5) + 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)      &
+                     + 0.5*      (pp(6)**2+pp(7)**2+pp(8)**2)
+
 #endif
   else
-    uu(5) = cv*(2.*uu(1)-uu(neqdyn+1))*real(t1)/Tempsc        &
-         +0.5*prim(1)*(prim(2)**2+prim(3)**2+prim(4)**2)
+    uu(5) = cv*pp(5) + 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
+
   end if
 
-end subroutine atomic
+end subroutine cooling_h_neq
 
 #endif
 

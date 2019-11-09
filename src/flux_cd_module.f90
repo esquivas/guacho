@@ -1,6 +1,6 @@
 !=======================================================================
-!> @file field_cd_module.f90
-!> @brief Constrained Transport module
+!> @file flux_cd_module.f90
+!> @brief Flux CD module
 !> @author C. Villareal D'Angelo, M. Schneiter, A. Esquivel
 !> @date 26/Apr/2016
 
@@ -22,27 +22,27 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!> @brief Module to computes field CD div B correction
-!> @details This module corrects the div B with a field interpolated
-!> central difference scheme 
+!> @brief Module to computes the flux-CD div B correction
+!> @details This module corrects the div B with a flux interpolated
+!> central difference scheme
 !> See. Sect. 4.5 of Toth 2000, Journal of Computational Physics 161, 605
 
-module field_cd_module
+module flux_cd_module
 
 #ifdef BFIELD
 
   implicit none
-  real, allocatable :: e(:,:,:,:) !< electric current
+  real, allocatable :: e(:,:,:,:) !< electric field
 
   contains
 
 !=======================================================================
 
-!>@brief Boundary conditions (one cell) for field-CD
-!>@details Boundary conditions applied to the current, used
-!> in the field-CD calculation
+!>@brief Boundary conditions (one cell) for flux-CD
+!>@details Boundary conditions applied to E, used
+!> in the flux-CD calculation
 
-subroutine boundaryI_ct()
+subroutine boundaryI_ef()
 
   use parameters
   use globals
@@ -138,7 +138,7 @@ subroutine boundaryI_ct()
     end if
   end if
 
-#endif  
+#endif
 
   !   Reflecting BCs (not tested)
   !     left
@@ -234,14 +234,15 @@ subroutine boundaryI_ct()
     end if
   end if
 
-end subroutine boundaryI_ct
+end subroutine boundaryI_ef
 
 !=======================================================================
 
-!>@brief Computes current
-!>@details Obtains the current from the flixes (eq. 31 of Toth 2000)
+!>@brief Computes E
+!>@details Obtains the electric field from the fluxes
+!> (eq. 31 of Toth 2000)
 
-subroutine get_current()
+subroutine get_efield()
 
   use parameters, only : nx, ny, nz
   use globals, only :  f, g, h
@@ -261,28 +262,27 @@ subroutine get_current()
                        -h(6,i,j,k-1) - h(6,i,j,k) )
 
      e(3,i,j,k)=0.25*( -f(7,i-1,j,k) -f(7,i,j,k) &
-                       +g(6,i,j-1,k) +g(6,i,j,k) ) 
+                       +g(6,i,j-1,k) +g(6,i,j,k) )
 
     end do
    end do
   end do
 
-  call boundaryI_ct()  
-
-end subroutine get_current
-
+  call boundaryI_ef()
+  
+end subroutine get_efield
 
 !=======================================================================
 
-!> @brief Upper level wrapper for field-CD update 
-!> @details Upper level wrapper for field-CD, updates the
-!> hydro variables with upwind scheme and the field as field-CD
+!> @brief Upper level wrapper for flux-CD update
+!> @details Upper level wrapper for flux-CD, updates the
+!> hydro variables with upwind scheme and the field as flux-CD
 !> @param integer [in] i : cell index in the X direction
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] dt : timestep
 
-subroutine field_cd_update(i,j,k,dt)
+subroutine flux_cd_update(i,j,k,dt)
 
   use parameters, only : passives, neqdyn
   use globals, only : dx, dy, dz, up, u, f, g, h
@@ -307,7 +307,7 @@ subroutine field_cd_update(i,j,k,dt)
             -dtdy*(g(neqdyn+1:,i,j,k)-g(neqdyn+1:,i,j-1,k)) &
             -dtdz*(h(neqdyn+1:,i,j,k)-h(neqdyn+1:,i,j,k-1))
 #endif
-  ! evolution of B with field-CD
+  ! evolution of B with flux-CD
   up(6,i,j,k)=u(6,i,j,k)                                    &
               -0.5*dtdy*(e(3,i,j+1,k)-e(3,i,j-1,k))         &
               +0.5*dtdz*(e(2,i,j,k+1)-e(2,i,j,k-1))
@@ -320,8 +320,10 @@ subroutine field_cd_update(i,j,k,dt)
               -0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))         &
               +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
 
-end subroutine field_cd_update
+end subroutine flux_cd_update
 
 #endif
 
-end module field_cd_module
+!=======================================================================
+
+end module flux_cd_module

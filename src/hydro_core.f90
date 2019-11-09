@@ -46,9 +46,8 @@ contains
 subroutine u2prim(uu, prim, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_state
+                         pmhd, mhd, eq_of_state, n1_chem, n_spec
   use constants
-  use network,  only : n1_chem, n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu
   real,    intent(out), dimension(neq)  :: prim
@@ -143,9 +142,8 @@ end subroutine u2prim
 subroutine u2primSplitAll(uu, prim, prim0, T)
 
   use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                         pmhd, mhd, eq_of_state
+                         pmhd, mhd, eq_of_state, n_spec
   use constants
-  use network,  only : n_spec
   implicit none
   real,    intent(in),  dimension(neq)  :: uu, prim0
   real,    intent(out), dimension(neq)  :: prim
@@ -624,10 +622,10 @@ subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_fla
   use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
   use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd, riemann_solver
   use globals, only : primit, dx, dy, dz, primit0
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
   integer, intent(in)  :: current_iter, n_iter
   real,    intent(in)  :: current_time, tprint
   real,    intent(out) :: dt

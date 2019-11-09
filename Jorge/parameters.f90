@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./EXO/'
+  character (len=128),parameter ::  outputpath='./MB3d/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -44,25 +44,25 @@ module parameters
   !  If logical use true or false
   !  If integer, choose from list provided
   !----------------------------------------
-  
-  logical, parameter :: pmhd     = .false.  !<  enadble passive mhd
-  logical, parameter :: mhd      = .true.   !<  Enable full MHD
-  
+
+  logical, parameter :: pmhd     = .false.   !<  enadble passive mhd
+  logical, parameter :: mhd      = .false.   !<  Enable full MHD
+
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
-  !> SOLVER_HLLC : HLLC solver 
+  !> SOLVER_HLLC : HLLC solver
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_HLLD
+  integer, parameter :: riemann_solver = SOLVER_HLLC
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_flux_cd = .true.
+  logical, parameter :: enable_flux_cd = .false.
   !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .true.
+  logical, parameter :: dump_divb = .false.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -72,7 +72,7 @@ module parameters
   !> EOS_ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
-  !> CHEM              : Enables a full chemical network
+  !> EOS_CHEM          : Enables a full chemical network
   integer, parameter :: eq_of_state = EOS_H_RATE
 
   !> Type of cooling (choose only one)
@@ -91,12 +91,12 @@ module parameters
   !> BC_OTHER     : Left to the user to set boundary (via user_mod)
   !! Also in user mod the boundaries for sources (e.g. winds/outflows)
   !! are set
-  integer, parameter :: bc_left   = BC_outflow
-  integer, parameter :: bc_right  = BC_outflow
-  integer, parameter :: bc_bottom = BC_outflow
-  integer, parameter :: bc_top    = BC_outflow
-  integer, parameter :: bc_out    = BC_outflow
-  integer, parameter :: bc_in     = BC_outflow
+  integer, parameter :: bc_left   = BC_OUTFLOW
+  integer, parameter :: bc_right  = BC_OUTFLOW
+  integer, parameter :: bc_bottom = BC_OUTFLOW
+  integer, parameter :: bc_top    = BC_OUTFLOW
+  integer, parameter :: bc_out    = BC_OUTFLOW
+  integer, parameter :: bc_in     = BC_OUTFLOW
   logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
@@ -119,7 +119,7 @@ module parameters
   logical, parameter :: tc_saturation = .false.
 
   !> Enable 'diffuse' radiation
-  logical, parameter :: dif_rad = .false.
+  logical, parameter :: dif_rad = .true.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
   logical, parameter :: user_source_terms = .true.
@@ -127,37 +127,43 @@ module parameters
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
 
-  
+  !> Include radiative pressure Bourrier
+  logical, parameter :: beta_pressure = .false.
+
+  !> Include charge_exchange
+  logical, parameter :: charge_exchange = .false.
+
+
 #ifdef PASSIVES
-  integer, parameter :: npas=2        !< num. of passive scalars
+  integer, parameter :: npas=7        !< num. of passive scalars
 #else
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
+  integer, parameter :: nxtot=100      !< Total grid size in X
   integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nztot=100      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z   
+  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
-  !  set box size   
+  !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
-  real, parameter :: ymax=0.25        !< grid extent in Y (code units)
-  real, parameter :: zmax=1.          !< grid extent in Z (code units)
-  real, parameter :: xphys=0.3*au     !< grid extent in X (physical units, cgs)
+  real, parameter :: ymax=1.        !< grid extent in Y (code units)
+  real, parameter :: zmax=.25          !< grid extent in Z (code units)
+  real, parameter :: xphys=0.2*au     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
-  
+
   !  scaling factors to physical (cgs) units
   real, parameter :: T0=1.e4                !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
@@ -170,15 +176,15 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 5.*day/tsc
+  real, parameter :: tmax    = 3.8*day/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.025 *day/tsc
-  real, parameter :: cfl=0.4        !< Courant-Friedrichs-Lewy number
+  real, parameter :: dtprint = 0.035 *day/tsc
+  real, parameter :: cfl=0.35       !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.01       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=141  !< number of output to do warm start
+  integer            :: itprint0=0  !< number of output to do warm start
 
 
   !*********************************************************************
@@ -190,7 +196,7 @@ module parameters
 #else
   logical, parameter :: passives = .false.  !<  enable passive scalars
 #endif
- integer, parameter :: ndim=3         !< num. of dimensions
+  integer, parameter :: ndim=3         !< num. of dimensions
   integer, parameter :: nghost=2      !< num. of ghost cells
 
   !> number of dynamical equations
@@ -226,10 +232,10 @@ module parameters
   integer, parameter :: nymax = ny + nghost  !< upper bound of hydro arrays in y
   integer, parameter :: nzmin = 1  - nghost  !< lower bound of hydro arrays in z
   integer, parameter :: nzmax = nz + nghost  !< upper bound of hydro arrays in z
-  
+
   !  more mpi stuff
   integer, parameter ::master=0  !<  rank of master of MPI processes
-  
+
   !   set floating point precision (kind) for MPI messages
 #ifdef MPIP
 #ifdef DOUBLEP
@@ -242,4 +248,3 @@ module parameters
 end module parameters
 
 !=======================================================================
-

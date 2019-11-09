@@ -111,6 +111,7 @@ end subroutine write_header
 subroutine write_BIN(itprint)
 
   use difrad
+  use radpress, only : beta
   implicit none
   integer, intent(in) :: itprint
   character (len=128) :: file1
@@ -233,6 +234,7 @@ subroutine write_BIN(itprint)
         call write_header(unitout,1,0)
         write (unitout) divB(:,:,:)
         close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
 
       end if
 #ifdef MPIP
@@ -244,6 +246,27 @@ subroutine write_BIN(itprint)
 
   end if
 #endif
+
+  if (beta_pressure) then
+    ! take turns to write to disk
+    do ip=0, np-1
+      if(rank == ip) then
+        write(file1,'(a,i3.3,a,i3.3,a)') &
+              trim(outputpath)//'BIN/betaB-',rank,'.',itprint,'.bin'
+        unitout=10+rank
+
+        open(unit=unitout,file=file1,status='replace',access='stream')
+
+        call write_header(unitout,1,0)
+        write (unitout) beta(:,:,:)
+        close(unitout)
+        print'(i3,a,a)',rank," wrote file:",trim(file1)
+      end if
+#ifdef MPIP
+        call mpi_barrier(mpi_comm_world, err)
+#endif
+    end do
+  end if
 
 end subroutine write_BIN
 

@@ -4,3 +4,5 @@ BIN
 Guacho
 nfs*
 *.pyc
+.DS_store
+Icon*

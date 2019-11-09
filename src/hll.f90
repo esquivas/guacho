@@ -35,7 +35,7 @@ contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
 !! using the HLL solver
-!> @details Solves the Riemann problem at the interface betweem 
+!> @details Solves the Riemann problem at the interface betweem
 !! PL and PR using the HLL solver
 !> @n The fluxes are computed in the X direction, to obtain the
 !! y ans z directions a swap is performed
@@ -83,9 +83,9 @@ subroutine prim2fhll(priml,primr,ff)
 
 !=======================================================================
 
-!> @brief Calculates HLL fluxes from the primitive variables 
+!> @brief Calculates HLL fluxes from the primitive variables
 !!   on all the domain
-!> @details Calculates HLL fluxes from the primitive variables 
+!> @details Calculates HLL fluxes from the primitive variables
 !!   on all the domain
 !> @param integer [in] choice : 1, uses primit for the 1st half of timestep (first order)
 !!                  @n 2 uses primit for second order timestep
@@ -103,7 +103,7 @@ subroutine hllfluxes(choice)
   select case(choice)
 
   case(1)        ! 1st half timestep
- 
+
      do k=0,nz
         do j=0,ny
            do i=0,nx
@@ -144,7 +144,7 @@ subroutine hllfluxes(choice)
      do k=0,nz
         do j=0,ny
            do i=0,nx
-  
+
               !------- x direction ------------------------------------
               priml (:)=primit(:,i,  j,k )
               primr (:)=primit(:,i+1,j,k )
@@ -169,7 +169,7 @@ subroutine hllfluxes(choice)
               call prim2fhll(priml,primr,ff)
               call swapy(ff,neq)
               g(:,i,j,k)=ff(:)
-              
+
               !------- z direction ------------------------------------
               priml (:)=primit(:,i,j,k  )
               primr (:)=primit(:,i,j,k+1)
@@ -196,9 +196,3 @@ end subroutine hllfluxes
 end module hll
 
 !=======================================================================
-
-
-
-
-
-

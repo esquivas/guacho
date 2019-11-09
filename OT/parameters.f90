@@ -35,7 +35,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./HLLD-CD/'
+  character (len=128),parameter ::  outputpath='./hlld-fcd/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -50,7 +50,7 @@ module parameters
   
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
-  !> SOLVER_HLLC : HLLC solver 
+  !> SOLVER_HLLC : HLLC solver
   !> SOLVER_HLLE : HLLE solver (too diffusive)
   !> SOLVER_HLLD : HLLD solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
@@ -59,8 +59,8 @@ module parameters
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
-  !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_field_cd = .true.
+  !>  Enable flux-CD cleaning of div B
+  logical, parameter :: enable_flux_cd = .true.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .true.
 
@@ -140,14 +140,14 @@ module parameters
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z   
+  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
-  !  set box size   
+  !  set box size
   real, parameter :: xmax=1.          !< grid extent in X (code units)
   real, parameter :: ymax=1.          !< grid extent in Y (code units)
   real, parameter :: zmax=2./512.     !< grid extent in Z (code units)
@@ -170,7 +170,7 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc)  !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 3.1
+  real, parameter :: tmax    = 0.5
   !> interval between consecutive outputs
   real, parameter :: dtprint =  .1 /tsc
   real, parameter :: cfl=0.2        !< Courant-Friedrichs-Lewy number
@@ -241,4 +241,3 @@ module parameters
 end module parameters
 
 !=======================================================================
-
