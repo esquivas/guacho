@@ -102,7 +102,7 @@ subroutine get_jacobian(y,jacobian,rate)
 
   !Hsp
   jacobian(Hsp, Hsp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hp0)
-  jacobian(Hsp, Hs0) =   rate(coll )*y(ie ) + rate(beta)*y(Hpp) + phiH
+  jacobian(Hsp, Hs0) =   rate(coll )*y(ie ) + rate(beta)*y(Hpp) + rate(phiH)
   jacobian(Hsp, Hpp) =   rate(beta )*y(Hs0)
   jacobian(Hsp, Hp0) = - rate(beta )*y(Hsp)
   jacobian(Hsp, ie ) =   rate(coll )*y(Hs0) - rate(alpha)*y(Hsp)
@@ -118,7 +118,7 @@ subroutine get_jacobian(y,jacobian,rate)
   jacobian(Hpp, Hsp) =   rate(beta )*y(Hp0)
   jacobian(Hpp, Hs0) = - rate(beta )*y(Hpp)
   jacobian(Hpp, Hpp) = - rate(alpha)*y(ie ) - rate(beta)*y(Hs0)
-  jacobian(Hpp, Hp0) =   rate(coll )*y(ie ) + rate(beta)*y(Hsp) + phiC
+  jacobian(Hpp, Hp0) =   rate(coll )*y(ie ) + rate(beta)*y(Hsp) + rate(phiC)
   jacobian(Hpp, ie ) =   rate(coll )*y(Hp0) - rate(alpha)*y(Hpp)
 
   !Htot
