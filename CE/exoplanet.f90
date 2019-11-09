@@ -211,8 +211,8 @@ subroutine impose_exo(u,time)
           !   components separately
           u(neqdyn+2,i,j,k) =  0.*dens     ! xhi*rho S ion
           u(neqdyn+3,i,j,k) =  0.*dens     ! xhn*rho S neutro
-          u(neqdyn+4,i,j,k) =  0.5*dens     ! xci*rho P ion
-          u(neqdyn+5,i,j,k) =  0.5*dens     ! xcn*rho P neutro
+          u(neqdyn+4,i,j,k) =  0.8*dens     ! xci*rho P ion
+          u(neqdyn+5,i,j,k) =  0.2*dens     ! xcn*rho P neutro
 
           ! ne
           u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
