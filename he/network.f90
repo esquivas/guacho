@@ -64,20 +64,24 @@
      real (kind=8), intent(out) :: dydt(n_spec)
      real (kind=8), intent(in)  :: rate(n_reac)
 
-     dydt(iHI) = - rate(ichi)*y(ie)*y(iHI) + rate(iahii)*y(ie)*y(iHII)         &
-                 - rate(iphiH)*y(iHI)
+     dydt(iHI) = - rate(ichi )*y(iHI )*y(ie)                                   &
+                 + rate(iahii)*y(iHII)*y(ie)                                   &
+                 - rate(iphiH)*y(iHI )
 
-     dydt(iHeI) = - rate(ichei)*y(ie)*y(iHeI) + rate(iaheii)*y(ie)*y(iHeII)
+     dydt(iHeI) = - rate(ichei)*y(ie)*y(iHeI)                                  &
+                  + rate(iaheii)*y(ie)*y(iHeII)
 
-     dydt(iHeII) =  rate(ichei )*y(ie)*y(iHeI ) - rate(icheii )*y(ie)*y(iHeII )&
-                  - rate(iaheii)*y(ie)*y(iHeII) + rate(iaheiii)*y(ie)*y(iHeIII)
+     dydt(iHeII) =  rate(ichei )*y(ie)*y(iHeI )                                &
+                  - rate(icheii )*y(ie)*y(iHeII )                              &
+                  - rate(iaheii)*y(ie)*y(iHeII)                                &
+                  + rate(iaheiii)*y(ie)*y(iHeIII)
 
      !  "conservation" equations
-     dydt(iHII) = - y0(iH) + y(iHI) + y(iHII)
+     dydt(iHII  ) = - y0(iH) + y(iHI) + y(iHII)
 
      dydt(iHeIII) = - y0(iHe) + y(iHeI) + y(iHeII) + y(iHeIII)
 
-     dydt(ie) = y(ie) - y(iHII) - y(iHeII) - 2.*y(iHeIII)
+     dydt(ie)     = y(ie) - y(iHII) - y(iHeII) - 2.*y(iHeIII)
 
    end subroutine derv
 
@@ -161,11 +165,11 @@
      real, intent(out) :: y(n_spec)
      real, intent(in ) :: y0(n_elem)
 
-     y(iHI    ) =
-     y(iHII   ) =
-     y(iHeI   ) =
-     y(iHeII  ) =
-     y(iHeIII ) =
+     y(iHI    ) = 0.5     * y0(iH )
+     y(iHII   ) = 0.5     * y0(iH )
+     y(iHeI   ) = 1.0/3.0 * y0(iHe)
+     y(iHeII  ) = 1.0/3.0 * y0(iHe)
+     y(iHeIII ) = 1.0/3.0 * y0(iHe)
      y(ie     ) = y(iHII) + y(iHeII) + 2.*y(ieHII)
 
      return
@@ -182,7 +186,8 @@
 
      check_no_conservation = .false.
 
-     y0_calc(Ht)= y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+     y0_calc(iH )= y(iHI ) + y(iHII )
+     y0_calc(iHe)= y(iHeI) + y(iHeII) + y(iHeIII)
 
      do i = 1, n_elem
        if ( y0_calc(i) > 1.001*y0_in(i) ) check_no_conservation = .true.
