@@ -21,19 +21,11 @@ COMPILER= gfortran
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-<<<<<<< HEAD:OT/Makefile
-FLAGS = -cpp -O3
-# For DEBUG, suggestions:
-#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-#        -fbounds-check -fimplicit-none -fstack-protector-all
-=======
 #FLAGS = -cpp -O3
 # For DEBUG, suggestions:
 FLAGS = -cpp -Og -ggdb -pedantic -Wall -Waliasing -fbacktrace -Wsurprising  \
         -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow           \
 				-fbounds-check -fimplicit-none -fstack-protector-all
->>>>>>> origin/pic:snr/Makefile
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -124,13 +116,6 @@ hydro_core.o \
 stokes_lp.o
 
 # Join object lists
-<<<<<<< HEAD:OT/Makefile
-OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
-OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
-OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
-#---------------------------------------------------
-# Set flags
-=======
 OBJECTS_ALL       = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_NB        = ${MODULES_MAIN} ${NBODY}
 OBJECTS_COLDENS   = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
@@ -139,7 +124,6 @@ OBJECTS_STOKES_LP = ${MODULES_MAIN} ${MODULES_USER} ${STOKES_LP}
 #---------------------------------------------------
 # Set flags
 # Set flags
->>>>>>> origin/pic:snr/Makefile
 ifeq ($(DOUBLEP),Y)
 FLAGS += -DDOUBLEP
 ifeq ($(COMPILER),ifort)
@@ -261,11 +245,7 @@ clean :
 	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.mod
 	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
-<<<<<<< HEAD:OT/Makefile
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
-=======
 	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
->>>>>>> origin/pic:snr/Makefile
 
 cleanall :
 	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
