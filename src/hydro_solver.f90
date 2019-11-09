@@ -32,11 +32,11 @@ module hydro_solver
   use hllE
   use hlld
   use hlleSplitAll
-  use chemistry
+!  use chemistry
   implicit none
 
 contains
-
+  
 !> @brief Adds artificial viscosity to the conserved variables
 !> @details Adds artificial viscosity to the conserved variables
 !> using the advanced solution and copying the result in the U array
