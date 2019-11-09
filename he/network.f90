@@ -16,9 +16,9 @@
 
    ! indexes of the different species
    integer, parameter :: iHI    = 1
-   integer, parameter :: iHII   = 4
-   integer, parameter :: iHeI   = 2
-   integer, parameter :: iHeII  = 3
+   integer, parameter :: iHII   = 2
+   integer, parameter :: iHeI   = 3
+   integer, parameter :: iHeII  = 4
    integer, parameter :: iHeIII = 5
    integer, parameter :: ie     = 6
 
@@ -83,55 +83,55 @@
 
    !=======
 
-   subroutine get_jacobian(y,jac,rate)
+   subroutine get_jacobian(y,jacobian,rate)
 
      implicit none
      real (kind=8), intent(in)  :: y(n_spec)
-     real (kind=8), intent(out) :: jac(n_spec,n_spec)
+     real (kind=8), intent(out) ::jacobian(n_spec,n_spec)
      real (kind=8), intent(in)  :: rate(n_reac)
 
-     jac(iHI,iHI)       = - rate(ichi)*y(ie) - rate(iphiH)
-     jac(iHI,iHII)      = + rate(iahii)*y(ie)
-     jac(iHI,iHeI)      =   0.
-     jac(iHI,iHeII)     =   0.
-     jac(iHI,iHeIII)    =   0.
-     jac(iHI,ie)        = - rate(ichi)*y(iHI) + rate(iahii)*y(iHII)
+    jacobian(iHI,iHI)       = - rate(ichi)*y(ie) - rate(iphiH)
+    jacobian(iHI,iHII)      = + rate(iahii)*y(ie)
+    jacobian(iHI,iHeI)      =   0.
+    jacobian(iHI,iHeII)     =   0.
+    jacobian(iHI,iHeIII)    =   0.
+    jacobian(iHI,ie)        = - rate(ichi)*y(iHI) + rate(iahii)*y(iHII)
 
-     jac(iHII,iHI)      =   1.
-     jac(iHII,iHII)     =   1.
-     jac(iHII,iHeI)     =   0.
-     jac(iHII,iHeII)    =   0.
-     jac(iHII,iHeIII)   =   0.
-     jac(iHII,ie)       =   0.
+    jacobian(iHII,iHI)      =   1.
+    jacobian(iHII,iHII)     =   1.
+    jacobian(iHII,iHeI)     =   0.
+    jacobian(iHII,iHeII)    =   0.
+    jacobian(iHII,iHeIII)   =   0.
+    jacobian(iHII,ie)       =   0.
 
-     jac(iHeI,iHI)      =   0.
-     jac(iHeI,iHII)     =   0.
-     jac(iHeI,iHeI)     = - rate(ichei)*y(ie)
-     jac(iHeI,iHeII)    = + rate(iaheii)*y(ie)
-     jac(iHeI,iHeIII)   =   0.
-     jac(iHeI,ie)       = - rate(ichei)*y(iHeI) + rate(iaheii)*y(iHeII)
+    jacobian(iHeI,iHI)      =   0.
+    jacobian(iHeI,iHII)     =   0.
+    jacobian(iHeI,iHeI)     = - rate(ichei)*y(ie)
+    jacobian(iHeI,iHeII)    = + rate(iaheii)*y(ie)
+    jacobian(iHeI,iHeIII)   =   0.
+    jacobian(iHeI,ie)       = - rate(ichei)*y(iHeI) + rate(iaheii)*y(iHeII)
 
-     jac(iHeII,iHI)     =  0.
-     jac(iHeII,iHII)    =  0.
-     jac(iHeII,iHeI)    = + rate(ichei)*y(ie)
-     jac(iHeII,iHeII)   = - rate(icheii)*y(ie) - rate(iaheii)*y(ie)
-     jac(iHeII,iHeIII)  = + rate(iaheiii)*y(ie)
-     jac(iHeII,ie)      = + rate(ichei)*y(iHeI) - rate(icheii)*y(iHeII)        &
+    jacobian(iHeII,iHI)     =  0.
+    jacobian(iHeII,iHII)    =  0.
+    jacobian(iHeII,iHeI)    = + rate(ichei)*y(ie)
+    jacobian(iHeII,iHeII)   = - rate(icheii)*y(ie) - rate(iaheii)*y(ie)
+    jacobian(iHeII,iHeIII)  = + rate(iaheiii)*y(ie)
+    jacobian(iHeII,ie)      = + rate(ichei)*y(iHeI) - rate(icheii)*y(iHeII)    &
                           - rate(iaheii)*y(iHeII) + rate(iaheiii)*y(iHeIII)
 
-     jac(iHeIII,iHI)    =   0.
-     jac(iHeIII,iHII)   =   0.
-     jac(iHeIII,iHeI)   =   1.
-     jac(iHeIII,iHeII)  =   1.
-     jac(iHeIII,iHeIII) =   1.
-     jac(iHeIII,ie)     =   0.
+    jacobian(iHeIII,iHI)    =   0.
+    jacobian(iHeIII,iHII)   =   0.
+    jacobian(iHeIII,iHeI)   =   1.
+    jacobian(iHeIII,iHeII)  =   1.
+    jacobian(iHeIII,iHeIII) =   1.
+    jacobian(iHeIII,ie)     =   0.
 
-     jac(ie,iHI)        =   0.
-     jac(ie,iHII)       = - 1.
-     jac(ie,iHeI)       =   0.
-     jac(ie,iHeII)      = - 1.
-     jac(ie,iHeIII)     = - 2.
-     jac(ie,ie)         =   1.
+    jacobian(ie,iHI)        =   0.
+    jacobian(ie,iHII)       = - 1.
+    jacobian(ie,iHeI)       =   0.
+    jacobian(ie,iHeII)      = - 1.
+    jacobian(ie,iHeIII)     = - 2.
+    jacobian(ie,ie)         =   1.
 
    end subroutine get_jacobian
 

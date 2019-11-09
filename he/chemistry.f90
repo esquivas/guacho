@@ -43,9 +43,9 @@ contains
 subroutine update_chem()
 
   use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,  &
-                      nxtot, nytot, nztot, n_spec, n1_chem,
+                      nxtot, nytot, nztot, n_spec, n1_chem
   use globals,    only : u, primit, dt_CFL, coords, dx, dy, dz, rank
-  use network,    only : n_elem
+  use network,    only : n_elem, iHI, iHII, iHeI, iHeII, iHeIII, iH, iHe
   use hydro_core, only : u2prim
   use difrad,     only : ph
   use exoplanet,  only : RSW, RPW, xp, yp, zp
@@ -64,13 +64,15 @@ subroutine update_chem()
         !   get the primitives (and T)
         call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
         y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
-        y0(1      ) = primit(1,i,j,k)
+        y0(iH     ) = primit(neqdyn+iHI,   i,j,k) + primit(neqdyn+iHII,i,j,k )
+        y0(iHe    ) = primit(neqdyn+iHeI,  i,j,k) + primit(neqdyn+iHeII,i,j,k) &
+                    + primit(neqdyn+iHeIII,i,j,k)
         !  update the passive primitives (should not work in single precision)
 
         ! Position measured from the centre of the grid (star)
         xs=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
         ys=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
-        zs=(real(k+coords(2)*nz)-0.5)*dz
+        zs=(real(k+coords(2)*nz)        -0.5)*dz
         ! Position measured from the centre of the planet
         xpl=xs-xp
         ypl=ys
@@ -118,16 +120,17 @@ end subroutine update_chem
 !> @param real [in] T : Temperature [K]
 !> @param real [in] deltt : time interval (from the hydro, in seconds)
 
-subroutine chemstep(y,y0,T, deltt,phiH, phiC)
+subroutine chemstep(y,y0,T, deltt,phiH)
   use linear_system
-  use network, only : n_spec, n_reac, n_elem, get_reaction_rates,  &
-                      derv, get_jacobian, n_nequ, check_no_conservation
+  use parameters, only : n_spec
+  use network,    only : n_reac, n_elem, get_reaction_rates,                   &
+                        derv, get_jacobian, n_nequ, check_no_conservation
   implicit none
   real (kind=8), intent(inout) :: y(n_spec)
-  real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH, phiC
+  real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
-  real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
+  real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
   integer, parameter  :: niter=1000     ! number of iterations
   integer :: n,i,iff
 
@@ -137,7 +140,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   yin(:) =y (:)
   y0_in(:) = y0(:)
 
-  call get_reaction_rates(rate,T,phiH, phiC)
+  call get_reaction_rates(rate,T,phiH)
 
   do while ( n <= niter )
 
@@ -149,15 +152,15 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     !end if
 
     call derv(y,rate,dydt,y0)
-    call get_jacobian(y,jac,rate)
+    call get_jacobian(y,jacobian,rate)
 
     do i=1,n_nequ
-      jac(i,i)=jac(i,i)-dtm
+      jacobian(i,i)=jacobian(i,i)-dtm
       dydt(i)=dydt(i)-(y(i)-yin(i))*dtm
     end do
     y1(:)=-dydt(:)
 
-    call linsys(jac,y1, n_spec)
+    call linsys(jacobian,y1, n_spec)
 
     y(:)=y(:) + y1(:)
     !y(:)=max(y(:),1.e-40)

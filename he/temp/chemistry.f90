@@ -134,7 +134,7 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
   real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH, phiC
   real (kind=8) :: dtm
   real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
-  real (kind=8) :: rate(n_reac),dydt(n_spec),jac(n_spec,n_spec)
+  real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
   integer, parameter  :: niter=1000     ! number of iterations
   integer :: n,i,iff
 
@@ -156,15 +156,15 @@ subroutine chemstep(y,y0,T, deltt,phiH, phiC)
     !end if
 
     call derv(y,rate,dydt,y0)
-    call get_jacobian(y,jac,rate)
+    call get_jacobian(y,jacobian,rate)
 
     do i=1,n_nequ
-      jac(i,i)=jac(i,i)-dtm
+     jacobian(i,i)=jacobian(i,i)-dtm
       dydt(i)=dydt(i)-(y(i)-yin(i))*dtm
     end do
     y1(:)=-dydt(:)
 
-    call linsys(jac,y1, n_spec)
+    call linsys(jacobian,y1, n_spec)
 
     y(:)=y(:) + y1(:)
     !y(:)=max(y(:),1.e-40)
