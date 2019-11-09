@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM= guacho
+PROGRAM=guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../src
@@ -10,22 +10,30 @@ VPATH = . : ../src
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
-COMPILER= gfortran
 #COMPILER= ifort
+COMPILER= gfortran
 
 #   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
-#FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
+# FLAGS= -O3 -cpp -mcmodel=large -g -traceback -check bounds
+#FLAGS= -O3 -cpp -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
+<<<<<<< HEAD:OT/Makefile
 FLAGS = -cpp -O3
 # For DEBUG, suggestions:
 #FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
 #        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
 #        -fbounds-check -fimplicit-none -fstack-protector-all
+=======
+#FLAGS = -cpp -O3
+# For DEBUG, suggestions:
+FLAGS = -cpp -Og -ggdb -pedantic -Wall -Waliasing -fbacktrace -Wsurprising  \
+        -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow           \
+				-fbounds-check -fimplicit-none -fstack-protector-all
+>>>>>>> origin/pic:snr/Makefile
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -54,8 +62,9 @@ SILO = N
 # Additional USER modules to compile (they can only call constants,
 # parameters and globals)
 MODULES_USER= \
-orzag_tang.o
-
+snr.o
+#nbody_mod2.o \
+#starwind.o
 
 #####################################################
 # There should be no need to modify below this line #
@@ -64,9 +73,11 @@ orzag_tang.o
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o
+globals.o \
+utils.o
 
 OBJECTS_MAIN=\
+lmp_module.o \
 user_mod.o \
 network.o \
 flux_cd_module.o \
@@ -96,22 +107,39 @@ main.o
 #  for projection alog a LOS
 COLDENS = \
 user_mod.o \
+network.o \
 hydro_core.o \
 difrad.o \
-init.o \
-coldens. #   not updated to Guacho V1.3
+coldens.o
 
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 hydro_core.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
+#  to get stokes parameters with the Lagrangian particles
+STOKES_LP = \
+lmp_module.o \
+hydro_core.o \
+stokes_lp.o
+
 # Join object lists
+<<<<<<< HEAD:OT/Makefile
 OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
 #---------------------------------------------------
 # Set flags
+=======
+OBJECTS_ALL       = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
+OBJECTS_NB        = ${MODULES_MAIN} ${NBODY}
+OBJECTS_COLDENS   = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
+OBJECTS_LYAT      = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_STOKES_LP = ${MODULES_MAIN} ${MODULES_USER} ${STOKES_LP}
+#---------------------------------------------------
+# Set flags
+# Set flags
+>>>>>>> origin/pic:snr/Makefile
 ifeq ($(DOUBLEP),Y)
 FLAGS += -DDOUBLEP
 ifeq ($(COMPILER),ifort)
@@ -150,6 +178,15 @@ $(PROGRAM)  : prebuild ${OBJECTS_ALL}
   ${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
 
+test_nbody : prebuild ${OBJECTS_NB}
+		@echo Linking object files ...
+		@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_NB) -o $@
+		@echo Cleaning up ...
+		@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+		${SRC_PATH}/C2Ray/*.mod
+		@echo "Done! (`date`)"
+
 coldens : prebuild ${OBJECTS_COLDENS}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_COLDENS) -o $@
@@ -162,6 +199,15 @@ coldens : prebuild ${OBJECTS_COLDENS}
 lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_LYAT) -o $@
+	@echo Cleaning up ...
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+	${SRC_PATH}/C2Ray/*.mod
+	@echo "Done! (`date`)"
+
+stokes_lp : prebuild ${OBJECTS_STOKES_LP}
+	@echo Linking object files ...
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_STOKES_LP) -o $@
 	@echo Cleaning up ...
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
@@ -215,10 +261,14 @@ clean :
 	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.mod
 	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
+<<<<<<< HEAD:OT/Makefile
 	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
+=======
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
+>>>>>>> origin/pic:snr/Makefile
 
 cleanall :
-	rm -f $(PROGRAM) lyman_alpha_tau *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
 	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
 		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
 		${SRC_PATH}/C2Ray/*.modrm -f SS/BIN/*

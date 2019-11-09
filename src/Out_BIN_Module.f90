@@ -3,7 +3,7 @@
 !> @brief Output in BIN Format
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
+!
 ! Copyright (c) 2016 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -24,14 +24,15 @@
 
 !> @brief Output in BIN format
 !> @details This module writes the ouput in BIN format
-
 module  Out_BIN_Module
 
   use parameters
   use globals
   use constants
+
 contains
 
+<<<<<<< HEAD
 !=======================================================================
 !> @brief Writes header
 !> @details Writes header for binary input
@@ -76,20 +77,71 @@ subroutine write_header(unit, neq_out, nghost_out)
 
    write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
   write(unit) trim(cbuffer), lf
+=======
+  !=======================================================================
+  !> @brief Writes header
+  !> @details Writes header for binary input
+  !> @param integer [in] unit : number of logical unit
+  subroutine write_header(unit, neq_out, nghost_out)
+    implicit none
+    integer, intent(in) :: unit, neq_out, nghost_out
+    character, parameter  :: lf = char(10)
+    character (len=128) :: cbuffer
+
+    !  Write ASCII header
+    write(unit) "**************** Output for Guacho v1.3****************",lf
+
+    write(cbuffer,'("Dimensions    : ", i0,1x,i0,1x,i0)') NX, NY, NZ
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("Block Origin, cells    : ", i0,1x,i0,1x,i0)')             &
+          coords(0)*nx, coords(1)*ny, coords(2)*nz
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,1x,i0,1x,i0)')             &
+          MPI_NBX, MPI_NBY, MPI_NBZ
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)')       &
+          neq_out, neqdyn
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("Number of Ghost Cells  ", i0)') nghost_out
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer,'("Scalings ", a )')
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)')    &
+          rsc, vsc, rhosc
+    write(unit) trim(cbuffer), lf
+
+    write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
+    write(unit) trim(cbuffer), lf
+>>>>>>> origin/pic
 
 #ifdef DOUBLEP
-  write(unit) "Double precision 8 byte floats",lf
+    write(unit) "Double precision 8 byte floats",lf
 #else
-  write(unit) "Double precision 4 byte floats",lf
+    write(unit) "Double precision 4 byte floats",lf
 #endif
 
+<<<<<<< HEAD
   write(unit) "*******************************************************",lf
   write(unit) achar(255),lf
+=======
+    write(unit) "*******************************************************",lf
+    write(unit) achar(255),lf
+>>>>>>> origin/pic
 #ifdef DOUBLEP
-  write(unit) 'd'
+    write(unit) 'd'
 #else
-  write(unit) 'f'
+    write(unit) 'f'
 #endif
+<<<<<<< HEAD
   write(unit) nx, ny, nz
   write(unit) dx, dy, dz
   write(unit) coords(0)*nx, coords(1)*ny, coords(2)*nz
@@ -114,48 +166,82 @@ subroutine write_BIN(itprint)
   implicit none
   integer, intent(in) :: itprint
   character (len=128) :: file1
+=======
+    write(unit) nx, ny, nz
+    write(unit) dx, dy, dz
+    write(unit) coords(0)*nx, coords(1)*ny, coords(2)*nz
+    write(unit) MPI_NBX, MPI_NBY, MPI_NBZ
+    write(unit) neq_out, neqdyn
+    write(unit) nghost_out
+    write(unit) rsc, vsc, rhosc
+    write(unit) cv
+
+  end subroutine write_header
+
+  !=======================================================================
+  !> @brief  Writes Data, one file per processor
+  !> @details  Writes Data in BIN format one file per processor
+  !> @param integer [in] itprint : number of output
+  subroutine write_BIN(itprint)
+
+    use difrad
+    implicit none
+    integer, intent(in) :: itprint
+    character (len=128) :: file1
+>>>>>>> origin/pic
 
 #ifdef MPIP
-  integer :: err
+    integer :: err
 #endif
+    integer :: unitout
+    integer :: ip
+    integer ::  i, j, k
+#ifdef BFIELD
+    real, allocatable :: divB(:,:,:)
+#endif
+<<<<<<< HEAD
   integer :: unitout
   integer :: ip
   integer ::  i, j, k
 #ifdef BFIELD
   real, allocatable :: divB(:,:,:)
 #endif
+=======
+>>>>>>> origin/pic
 
 #ifdef MPIP
-  write(file1,'(a,i3.3,a,i3.3,a)')  &
-        trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
-  unitout=rank+10
+    write(file1,'(a,i3.3,a,i3.3,a)')  &
+          trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
+    unitout=rank+10
 #else
-  write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/points',itprint,'.bin'
-  unitout=10
+    write(file1,'(a,i3.3,a)')  trim(outputpath)//'BIN/points',itprint,'.bin'
+    unitout=10
 #endif
 
-  ! take turns
-  do ip=0, np-1
-   if(rank == ip) then
-    open(unit=unitout,file=file1,status='replace',access='stream')
+    ! take turns
+    do ip=0, np-1
+      if(rank == ip) then
+        open(unit=unitout,file=file1,status='replace',access='stream')
 
-    ! write header, then data
-    call write_header(unitout,neq,nghost)
-    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
-       do k =nzmin,nzmax
-          do j = nymin,nymax
-             do i = nxmin, nxmax
+        ! write header, then data
+        call write_header(unitout,neq,nghost)
+        if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) then
+          do k =nzmin,nzmax
+            do j = nymin,nymax
+              do i = nxmin, nxmax
                 write(unitout) u(1,i,j,k)+primit0(1,i,j,k)
                 write(unitout) u(2,i,j,k)
                 write(unitout) u(3,i,j,k)
                 write(unitout) u(4,i,j,k)
-                write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+&
-              0.5*(primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2)
+                write(unitout) u(5,i,j,k)+cv*primit0(5,i,j,k)+ 0.5*            &
+                   (primit0(6,i,j,k)**2+primit0(7,i,j,k)**2+primit0(8,i,j,k)**2)
                 write(unitout) u(6,i,j,k)+primit0(6,i,j,k)
                 write(unitout) u(7,i,j,k)+primit0(7,i,j,k)
                 write(unitout) u(8,i,j,k)+primit0(8,i,j,k)
-             end do
+              end do
+            end do
           end do
+<<<<<<< HEAD
        end do
 
     else
@@ -170,24 +256,17 @@ subroutine write_BIN(itprint)
      call mpi_barrier(mpi_comm_world, err)
 #endif
   end do
+=======
+>>>>>>> origin/pic
 
-     !   write the emissvity and photoionizing rate
-     !   if diffuse radiation enabled
-  if (dif_rad) then
+        else
+          write(unitout) u(:,:,:,:)
+        endif
 
-       ! take turns
-    do ip=0, np-1
-      if(rank == ip) then
-
-        write(file1,'(a,i3.3,a,i3.3,a)') &
-              trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
-        unitout=10+rank
-        open(unit=unitout,file=file1,status='replace', access='stream')
-        call write_header(unitout,1,0)
-        write (unitout) em(:,:,:)
         close(unitout)
         print'(i3,a,a)',rank," wrote file:",trim(file1)
 
+<<<<<<< HEAD
         write(file1,'(a,i3.3,a,i3.3,a)') &
               trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
         unitout=10+rank
@@ -204,30 +283,72 @@ subroutine write_BIN(itprint)
     end do
 
   end if
-
-#ifdef BFIELD
-  if (dump_divb) then
-    !   This is a hack to write div(B) to plot it easily
-    !  compute div(B)
-    allocate(divB(nx,ny,nz))
-
-    do k=1,nz
-      do j=1,ny
-        do i=1,nx
-          divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) + &
-                        (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) + &
-                        (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
-        end do
-      end do
+=======
+      end if
+#ifdef MPIP
+      call mpi_barrier(mpi_comm_world, err)
+#endif
     end do
 
-    ! take turns to write to disk
-    do ip=0, np-1
-      if(rank == ip) then
-        write(file1,'(a,i3.3,a,i3.3,a)') &
-              trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
-        unitout=10+rank
+    !   write the emissvity and photoionizing rate
+    !   if diffuse radiation enabled
+    if (dif_rad) then
 
+      ! take turns
+      do ip=0, np-1
+        if(rank == ip) then
+
+          write(file1,'(a,i3.3,a,i3.3,a)') &
+          trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
+          unitout=10+rank
+          open(unit=unitout,file=file1,status='replace', access='stream')
+          call write_header(unitout,1,0)
+          write (unitout) em(:,:,:)
+          close(unitout)
+          print'(i3,a,a)',rank," wrote file:",trim(file1)
+
+          write(file1,'(a,i3.3,a,i3.3,a)') &
+          trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
+          unitout=10+rank
+          open(unit=unitout,file=file1,status='replace',access='stream')
+          call write_header(unitout,1,0)
+          write (unitout) ph(:,:,:)
+          close(unitout)
+          print'(i3,a,a)',rank," wrote file:",trim(file1)
+
+        end if
+#ifdef MPIP
+        call mpi_barrier(mpi_comm_world, err)
+#endif
+      end do
+
+    end if
+>>>>>>> origin/pic
+
+#ifdef BFIELD
+    if (dump_divb) then
+      !   This is a hack to write div(B) to plot it easily
+      !  compute div(B)
+      allocate(divB(nx,ny,nz))
+
+      do k=1,nz
+        do j=1,ny
+          do i=1,nx
+            divB(i,j,k) = (u(6,i+1,j,k)-u(6,i-1,j,k))/(2.*dx) +                &
+                          (u(7,i,j+1,k)-u(7,i,j-1,k))/(2.*dy) +                &
+                          (u(8,i,j,k+1)-u(8,i,j,k-1))/(2.*dz)
+          end do
+        end do
+      end do
+
+      ! take turns to write to disk
+      do ip=0, np-1
+        if(rank == ip) then
+          write(file1,'(a,i3.3,a,i3.3,a)')                                     &
+                trim(outputpath)//'BIN/divB-',rank,'.',itprint,'.bin'
+          unitout=10+rank
+
+<<<<<<< HEAD
         open(unit=unitout,file=file1,status='replace',access='stream')
 
         call write_header(unitout,1,0)
@@ -235,19 +356,51 @@ subroutine write_BIN(itprint)
         close(unitout)
 
       end if
+=======
+          open(unit=unitout,file=file1,status='replace',access='stream')
+
+          call write_header(unitout,1,0)
+          write (unitout) divB(:,:,:)
+          close(unitout)
+
+        end if
+>>>>>>> origin/pic
 #ifdef MPIP
         call mpi_barrier(mpi_comm_world, err)
 #endif
-    end do
+      end do
 
-    deallocate(divB)
+      deallocate(divB)
 
-  end if
+    end if
 #endif
 
-end subroutine write_BIN
+    if (enable_lmp .and. dump_shock) then
+      !   This is a hack to write div V and alpha for now
+      ! take turns to write to disk
+      do ip=0, np-1
+        if(rank == ip) then
+          write(file1,'(a,i3.3,a,i3.3,a)')                                     &
+                trim(outputpath)//'BIN/shock-',rank,'.',itprint,'.bin'
+          unitout=10+rank
 
-!=======================================================================
+          open(unit=unitout,file=file1,status='replace',access='stream')
+
+          call write_header(unitout,1,0)
+          write (unitout) real(shockF)
+          close(unitout)
+
+        end if
+#ifdef MPIP
+        call mpi_barrier(mpi_comm_world, err)
+#endif
+      end do
+
+    end if
+
+  end subroutine write_BIN
+
+  !=======================================================================
 
 end module Out_BIN_Module
 

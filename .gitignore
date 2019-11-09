@@ -2,7 +2,15 @@ BIN
 *.mod
 *.o
 Guacho
+guacho
 nfs*
 *.pyc
 .DS_store
 Icon*
+<<<<<<< HEAD
+=======
+*~
+#*
+.#*
+\#*
+>>>>>>> origin/pic
