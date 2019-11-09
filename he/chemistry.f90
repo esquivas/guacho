@@ -129,7 +129,7 @@ subroutine chemstep(y,y0,T, deltt,phiH)
   real (kind=8), intent(inout) :: y(n_spec)
   real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
   real (kind=8) :: dtm
-  real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem)!,yt(n_spec)
+  real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem), yt(n_spec)
   real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
   integer, parameter  :: niter=1000     ! number of iterations
   integer :: n,i,iff
@@ -155,19 +155,20 @@ subroutine chemstep(y,y0,T, deltt,phiH)
     call get_jacobian(y,jacobian,rate)
 
     do i=1,n_nequ
-      jacobian(i,i)=jacobian(i,i)-dtm
-      dydt(i)=dydt(i)-(y(i)-yin(i))*dtm
+      jacobian(i,i)=jacobian(i,i) - dtm
+      dydt(i)      =dydt(i) - ( y(i)-yin(i) )*dtm
     end do
-    y1(:)=-dydt(:)
+    y1(:) = -dydt(:)
 
-    call linsys(jacobian,y1, n_spec)
+    call linsys(jacobian, y1, n_spec)
 
-    y(:)=y(:) + y1(:)
+    yt(:)=y1(:)/y(:)
+
+    y(:) = y(:) + y1(:)
     !y(:)=max(y(:),1.e-40)
-    !yt(:)=y1(:)/y(:)
 
     !  exit the loop if converged
-    if(all(abs(y1(:)) <= 0.001)) exit
+    if(all(abs(yt(:)) <= 0.01)) exit
 
     n=n+1
 
@@ -175,7 +176,7 @@ subroutine chemstep(y,y0,T, deltt,phiH)
 
   if (n >= niter) then
     failed_convergence = failed_convergence + 1
-  !  print*, "failed to converge after ", niter, " iterations"
+    print*, "failed to converge after ", niter, " iterations"
   !else
   !  print*, 'converged after ', n+1, ' iterations'
   end if
