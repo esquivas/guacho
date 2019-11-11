@@ -31,156 +31,180 @@ module chemistry
 
 contains
 
-!=======================================================================
-!> @brief Advances the chemistry network
-!> @details Advances the chemistry network on the entire domain
-!> (except ghost cells), updates primitives and conserved variables
-!> in globals
-subroutine update_chem()
+  !=======================================================================
+  !> @brief Advances the chemistry network
+  !> @details Advances the chemistry network on the entire domain
+  !> (except ghost cells), updates primitives and conserved variables
+  !> in globals
+  subroutine update_chem()
 
-  use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,  &
-                      nxtot, nytot, nztot, n_spec, n1_chem
-  use globals,    only : u, primit, dt_CFL, coords, dx, dy, dz, rank
-  use network,    only : n_elem, iHI, iHII, iHeI, iHeII, iHeIII, iH, iHe
-  use hydro_core, only : u2prim
-  use difrad,     only : ph
-  use exoplanet,  only : RSW, RPW, xp, yp, zp
-  implicit none
-  real :: dt_seconds, T, y(n_spec), y0(n_elem)
-  integer :: i, j, k, l
-  real    :: xs, ys, zs, rads, radp, xpl, ypl, zpl
+    use parameters, only : neq, neqdyn, nx, ny, nz, tsc, rhosc,                &
+                           nxtot, nytot, nztot, n_spec, n1_chem
+    use globals,    only : u, primit, dt_CFL, coords, dx, dy, dz, rank
+    use network,    only : n_elem, iHI, iHII, iHeI, iHeII, iHeIII, iH, iHe
+    use hydro_core, only : u2prim
+    use difrad,     only : ph
+    use exoplanet,  only : RSW, RPW, xp, yp, zp
+    implicit none
+    real :: dt_seconds, T, y(n_spec), y0(n_elem)
+    integer :: i, j, k, l
+    real    :: xs, ys, zs, rads, radp, xpl, ypl, zpl
 
-  dt_seconds = dt_CFL*tsc
-  failed_convergence = 0
+    dt_seconds = dt_CFL*tsc
+    failed_convergence = 0
 
-  do k=1,nz
-    do j=1,ny
-      do i=1,nx
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
 
-        !   get the primitives (and T)
-        call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
-        y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
-        y0(iH     ) = primit(neqdyn+iHI,   i,j,k) + primit(neqdyn+iHII,i,j,k )
-        y0(iHe    ) = primit(neqdyn+iHeI,  i,j,k) + primit(neqdyn+iHeII,i,j,k) &
-                    + primit(neqdyn+iHeIII,i,j,k)
-        !  update the passive primitives (should not work in single precision)
+          !   get the primitives (and T)
+          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
+          y(1:n_spec) = primit(n1_chem: n1_chem+n_spec-1,i,j,k)
+          y0(iH     ) = primit(neqdyn+iHI, i,j,k) + primit(neqdyn+iHII,i,j,k )
+          y0(iHe    ) = primit(neqdyn+iHeI,i,j,k) + primit(neqdyn+iHeII,i,j,k) &
+                      + primit(neqdyn+iHeIII,i,j,k)
+          !  update the passive primitives (should not work in single precision)
 
-        ! Position measured from the centre of the grid (star)
-        xs=( real(i+coords(0)*nx-nxtot/2) - 0.5 )*dx
-        ys=( real(j+coords(1)*ny-nytot/2) - 0.5 )*dy
-        zs=( real(k+coords(2)*nz)         - 0.5 )*dz
-        ! Position measured from the centre of the planet
-        xpl=xs-xp
-        ypl=ys
-        zpl=zs-zp
+          ! Position measured from the centre of the grid (star)
+          xs=( real(i+coords(0)*nx-nxtot/2) - 0.5 )*dx
+          ys=( real(j+coords(1)*ny-nytot/2) - 0.5 )*dy
+          zs=( real(k+coords(2)*nz)         - 0.5 )*dz
+          ! Position measured from the centre of the planet
+          xpl=xs-xp
+          ypl=ys
+          zpl=zs-zp
 
-        ! Distance from the centre of the star
-        rads=sqrt(xs**2+ys**2+zs**2)
-        ! Distance from the centre of the planet
-        radp=sqrt(xpl**2+ypl**2+zpl**2)
+          ! Distance from the centre of the star
+          rads=sqrt(xs**2+ys**2+zs**2)
+          ! Distance from the centre of the planet
+          radp=sqrt(xpl**2+ypl**2+zpl**2)
 
-        ! IF OUTSIDE THE STAR
-        if( (rads >= rsw) .and. (radp >= rpw) ) then
-          call chemstep(y, y0, T, dt_seconds, ph(i,j,k) )
-        end if
+          ! IF OUTSIDE THE STAR
+          if( (rads >= rsw) .and. (radp >= rpw) ) then
+            call chemstep(y, y0, T, dt_seconds, ph(i,j,k) )
+          end if
 
-        !  update the primitives and conserved variables
-        do l = 0, n_spec-1
-          !primit(n1_chem+l-1, i,j,k) = y(l)
-          u(n1_chem+l, i, j,k ) =  max( y(l), 0. )
+          !  update the primitives and conserved variables
+          do l = 0, n_spec-1
+            !primit(n1_chem+l-1, i,j,k) = y(l)
+            u(n1_chem+l, i, j,k ) =  max( y(l), 0. )
+          end do
+
+          !  VAMOS A REVISAR ESTO
+          !  "correct" the density
+          !u(1,i,j,k)      = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+          !primit(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
+
         end do
-
-        !  VAMOS A REVISAR ESTO
-        !  "correct" the density
-        !u(1,i,j,k)      = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
-        !primit(1,i,j,k) = y(Hsp) + y(Hs0) + y(Hpp) + y(Hp0)
-
       end do
     end do
-  end do
 
-  if (failed_convergence > 0) write(*, '(a,i3,a,i3,a)') 'in rank: ',rank,      &
-      ', chemistry convergence failed in ',failed_convergence,'cells'
+    if (failed_convergence > 0) write(*, '(a,i3,a,i3,a)') 'in rank: ',rank,    &
+    ', chemistry convergence failed in ',failed_convergence,'cells'
 
-end subroutine update_chem
+  end subroutine update_chem
 
+  !=======================================================================
+  !> @brief Advances the chemistry network in one cell
+  !> @details Advances the chemistry network on the in one cell
+  !> @param real [inout] y(n_spec) : number densities of the species
+  !> to be updated by the chemistry
+  !> @param real [in] y[n_elem] : total number density of each of the
+  !> elements involved in the reactions
+  !> @param real [in] T : Temperature [K]
+  !> @param real [in] deltt : time interval (from the hydro, in seconds)
+  subroutine chemstep(y,y0,T, deltt,phiH)
+    use linear_system
+    use parameters, only : n_spec
+    use network,    only : n_reac, n_elem, get_reaction_rates,                 &
+    derv, get_jacobian, n_nequ, check_no_conservation
+    implicit none
+    real (kind=8), intent(inout) :: y(n_spec)
+    real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
+    real (kind=8) :: dtm
+    real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem), yt(n_spec)
+    real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
+    integer, parameter  :: niter=1000     ! number of iterations
+    integer :: n,i,iff
 
-!=======================================================================
+    n=0
+    dtm=1./deltt
+    iff=1
+    yin(:) =y (:)
+    y0_in(:) = y0(:)
 
-!> @brief Advances the chemistry network in one cell
-!> @details Advances the chemistry network on the in one cell
-!> @param real [inout] y(n_spec) : number densities of the species
-!> to be updated by the chemistry
-!> @param real [in] y[n_elem] : total number density of each of the
-!> elements involved in the reactions
-!> @param real [in] T : Temperature [K]
-!> @param real [in] deltt : time interval (from the hydro, in seconds)
+    call get_reaction_rates(rate,T,phiH)
 
-subroutine chemstep(y,y0,T, deltt,phiH)
-  use linear_system
-  use parameters, only : n_spec
-  use network,    only : n_reac, n_elem, get_reaction_rates,                   &
-                        derv, get_jacobian, n_nequ, check_no_conservation
-  implicit none
-  real (kind=8), intent(inout) :: y(n_spec)
-  real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
-  real (kind=8) :: dtm
-  real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem), yt(n_spec)
-  real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
-  integer, parameter  :: niter=1000     ! number of iterations
-  integer :: n,i,iff
+    do while ( n <= niter )
 
-  n=0
-  dtm=1./deltt
-  iff=1
-  yin(:) =y (:)
-  y0_in(:) = y0(:)
+      !  initial guess for Newton-Raphson
+      !if ( check_no_conservation(y,y0_in) ) then
+      !  print*, '*****Reset Initial Guess ********'
+      !  print*, "T=", T
+      !  call nr_init(y,y0_in)
+      !end if
 
-  call get_reaction_rates(rate,T,phiH)
+      call derv(y,rate,dydt,y0)
+      call get_jacobian(y,jacobian,rate)
 
-  do while ( n <= niter )
+      do i=1,n_nequ
+        jacobian(i,i)=jacobian(i,i) - dtm
+        dydt(i)      =dydt(i) - ( y(i)-yin(i) )*dtm
+      end do
+      y1(:) = -dydt(:)
 
-    !  initial guess for Newton-Raphson
-    !if ( check_no_conservation(y,y0_in) ) then
-    !  print*, '*****Reset Initial Guess ********'
-    !  print*, "T=", T
-    !  call nr_init(y,y0_in)
-    !end if
+      call linsys(jacobian, y1, n_spec)
 
-    call derv(y,rate,dydt,y0)
-    call get_jacobian(y,jacobian,rate)
+      yt(:)=y1(:)/y(:)
 
-    do i=1,n_nequ
-      jacobian(i,i)=jacobian(i,i) - dtm
-      dydt(i)      =dydt(i) - ( y(i)-yin(i) )*dtm
+      y(:) = y(:) + y1(:)
+      !y(:)=max(y(:),1.e-40)
+
+      !  exit the loop if converged
+      if(all(abs(yt(:)) <= 0.01)) exit
+
+      n=n+1
+
     end do
-    y1(:) = -dydt(:)
 
-    call linsys(jacobian, y1, n_spec)
+    if (n >= niter) then
+      failed_convergence = failed_convergence + 1
+      print*, "failed to converge after ", niter, " iterations"
+      !else
+      !  print*, 'converged after ', n+1, ' iterations'
+    end if
 
-    yt(:)=y1(:)/y(:)
+    return
 
-    y(:) = y(:) + y1(:)
-    !y(:)=max(y(:),1.e-40)
+  end subroutine chemstep
 
-    !  exit the loop if converged
-    if(all(abs(yt(:)) <= 0.01)) exit
+  !=======================================================================
+  !> @brief Cooling module using the chemistry
+  !> @details Cooling using the ionization states computed with the ionic/
+  !> chemistry module
+  subroutine cooling_chem()
 
-    n=n+1
+    use globals, only : u, primit, dt_CFL
+    implicit none
+    real    :: dt_seconds, T
+    integer :: i,j,k
 
-  end do
+    dt_seconds = dt_CFL*tsc
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
 
-  if (n >= niter) then
-    failed_convergence = failed_convergence + 1
-    print*, "failed to converge after ", niter, " iterations"
-  !else
-  !  print*, 'converged after ', n+1, ' iterations'
-  end if
+          !   get the primitives (and T)
+          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
 
-  return
+        end do
+      end do
+    end do
 
-end subroutine chemstep
+  end subroutine cooling_chem
 
-!=======================================================================
+  !=======================================================================
 
   end module chemistry
+
+  !=======================================================================
