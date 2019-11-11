@@ -179,31 +179,6 @@ contains
   end subroutine chemstep
 
   !=======================================================================
-  !> @brief Cooling module using the chemistry
-  !> @details Cooling using the ionization states computed with the ionic/
-  !> chemistry module
-  subroutine cooling_chem()
-
-    use globals, only : u, primit, dt_CFL
-    implicit none
-    real    :: dt_seconds, T
-    integer :: i,j,k
-
-    dt_seconds = dt_CFL*tsc
-    do k=1,nz
-      do j=1,ny
-        do i=1,nx
-
-          !   get the primitives (and T)
-          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
-
-        end do
-      end do
-    end do
-
-  end subroutine cooling_chem
-
-  !=======================================================================
 
   end module chemistry
 
