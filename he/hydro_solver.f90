@@ -133,9 +133,9 @@ contains
     use constants
     use globals
     use hydro_core, only : calcprim
-  #ifdef PASSIVES
-      use hrate,      only : update_neutral_fraction
-  #endif
+#ifdef PASSIVES
+    use hrate,      only : update_neutral_fraction
+#endif
     use boundaries
     use chemistry,  only : update_chem, cooling_chem
     use cooling_H
