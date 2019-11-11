@@ -36,7 +36,7 @@ module hydro_solver
   implicit none
 
 contains
-  
+
 !> @brief Adds artificial viscosity to the conserved variables
 !> @details Adds artificial viscosity to the conserved variables
 !> using the advanced solution and copying the result in the U array
@@ -54,10 +54,10 @@ contains
   do k=1,nz
      do j=1,ny
         do i=1,nx
-           u(:,i,j,k)=up(:,i,j,k)+eta*(  up(:,i+1,j,k)+up(:,i-1,j,k)       &
-                                        +up(:,i,j+1,k)+up(:,i,j-1,k)       &
-                                        +up(:,i,j,k+1)+up(:,i,j,k-1)       &
-                                     -6.*up(:,i,j,k) )
+           u(:,i,j,k)=up(:,i,j,k) +eta*(   up(:,i+1,j,k) + up(:,i-1,j,k)       &
+                                         + up(:,i,j+1,k) + up(:,i,j-1,k)       &
+                                         + up(:,i,j,k+1) + up(:,i,j,k-1)       &
+                                         -6.*up(:,i,j,k) )
         end do
      end do
   end do
@@ -102,9 +102,9 @@ subroutine step(dt)
 
         if (.not.enable_flux_cd) then
           !  upwind step for all variables
-          up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
-                                -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
-                                -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
+          up(:,i,j,k) = u(:,i,j,k) - dtdx * (f(:,i,j,k) - f(:,i-1,j,k))        &
+                                   - dtdy * (g(:,i,j,k) - g(:,i,j-1,k))        &
+                                   - dtdz * (h(:,i,j,k) - h(:,i,j,k-1))
         else
 
 #ifdef BFIELD
