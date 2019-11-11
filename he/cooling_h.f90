@@ -70,11 +70,9 @@ subroutine coolingh()
 end subroutine coolingh
 
 !======================================================================
-
 !> @brief betaH(T)
 !> @details @f$ \beta_H(T) @f$
 !> @param real 8[in] T : Temperature K
-
 function betah(T)
 
   implicit none
@@ -89,8 +87,6 @@ function betah(T)
 end function betah
 
 !======================================================================
-
-
 !> @brief Non equilibrium cooling
 !> @details   Non-equilibrium energy loss for low temperatures
 !!     considering the collisional excitation of [O I] and
@@ -108,7 +104,6 @@ end function betah
 !> @param real8 [in] den : total density of hydrogen
 !> @param real8 [in] dh0 : density of neutral hydrogen
 !> @param real8 [in] Te0 : Temperature
-
 FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
 
   implicit none
@@ -195,14 +190,12 @@ FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
 END FUNCTION ALOSS
 
 !=======================================================================
-
 !> @brief
 !> @details
 !> @param real [in] uu(neq) : primitive variablas in one cell
 !> @param real [in] uu(neq) : conserved variablas in one cell
 !> @param real [in] dt      : timestep (seconds)
 !> @param real [in] radphi  : photoionizing rate
-
 subroutine  cooling_h_neq(pp, uu, dt, radphi)
 
   use parameters, only : neqdyn, dif_rad, mhd, cv, neq, Tempsc, eq_of_state
@@ -221,14 +214,14 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   dh0 = real( pp(neqdyn+1)      , 8)   !# neutrals density
 
   call u2prim(uu,pp,T)               !# get temperature
-  
+
   if (T<=1e4) return
 
   !  get the energy losses
-  al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2 
+  al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
 
   !aal=ALOSS(y0,y1,dt,dh,dh0,real(T,8))
-!  if(T<1e4)then 
+!  if(T<1e4)then
 !     print*, 'aloss=', aal
 !  endif
 
@@ -256,7 +249,7 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   !  t1=max(t1,tprime)
 
   ch_factor = real(T1)/T
-  
+
   !  update pressure
   pp(5) = pp(5) * ch_factor
 
