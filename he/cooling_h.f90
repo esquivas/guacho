@@ -33,11 +33,11 @@ module cooling_H
 
 contains
 
+!=======================================================================
 !> @brief High level wrapper to apply cooling
 !> @details High level wrapper to apply cooling
 !! @n  parametrized cooling curve, uses the ionization state of
 !! hydrogen and ties the O I and II to it
-
 subroutine coolingh()
 
   use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
@@ -221,9 +221,9 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
   al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
 
   !aal=ALOSS(y0,y1,dt,dh,dh0,real(T,8))
-!  if(T<1e4)then
-!     print*, 'aloss=', aal
-!  endif
+  !  if(T<1e4)then
+  !     print*, 'aloss=', aal
+  !  endif
 
   if (dif_rad) then
     gain=real(radphi,8)*dh0*Kb*2.3E4 !3.14d5 #1.15e4 por cada eV (2 a 3 eV en espectro solar)
@@ -271,6 +271,7 @@ subroutine  cooling_h_neq(pp, uu, dt, radphi)
 
 end subroutine cooling_h_neq
 
+!=======================================================================
 #endif
 
 end module cooling_H
