@@ -139,7 +139,7 @@ subroutine tstep()
   use globals
   use hydro_core, only : calcprim
   use boundaries
-  use chemistry,  only : update_chem, cooling_chem 
+  use chemistry,  only : update_chem!, cooling_chem
   use cooling_H
   use cooling_DMC
   use cooling_CHI
@@ -199,9 +199,7 @@ subroutine tstep()
   !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
-  if (cooling == COOL_H) then
-    call coolingh()
-  end if
+  if (cooling == COOL_H) call coolingh()
 
   ! DMC cooling (the primitives are updated in the cooling routine)
   if (cooling == COOL_DMC) call coolingdmc()
@@ -210,7 +208,7 @@ subroutine tstep()
   if (cooling == COOL_CHI) call coolingchi()
 
   ! Chemistry network cooling (primitives are already updated in update_chem)
-  if (cooling == COOL_CHEM) call cooling_chem()
+  !if (cooling == COOL_CHEM) call cooling_chem()
 
   !   boundary contiditions on u
   call boundaryI()
