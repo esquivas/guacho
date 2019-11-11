@@ -132,15 +132,16 @@ contains
                            th_cond
     use constants
     use globals
-    use hydro_core, only : calcprim
+    use hydro_core,   only : calcprim
 #ifdef PASSIVES
-    use hrate,      only : update_neutral_fraction
+    use hrate,        only : update_neutral_fraction
 #endif
     use boundaries
-    use chemistry,  only : update_chem, cooling_chem
+    use chemistry,    only : update_chem
     use cooling_H
     use cooling_DMC
     use cooling_CHI
+    use cooling_chem, only : chem_cool
     use difrad
     use thermal_cond
     implicit none
@@ -214,10 +215,10 @@ contains
 
     case(COOL_CHEM)
       ! Chemistry network cooling (primitives are already updated in update_chem)
-      call cooling_chem()
+      call chem_cool()
 
-    case (COOL_NONE)
-      call calcprim(u,primit)
+    !case (COOL_NONE)
+    !  call calcprim(u,primit)
 
     end select
 
