@@ -170,7 +170,7 @@
      y(iHeI   ) = 1.0/3.0 * y0(iHe)
      y(iHeII  ) = 1.0/3.0 * y0(iHe)
      y(iHeIII ) = 1.0/3.0 * y0(iHe)
-     y(ie     ) = y(iHII) + y(iHeII) + 2.*y(ieHII)
+     y(ie     ) = y(iHII) + y(iHeII) + 2.*y(iHeIII)
 
      return
    end subroutine nr_init
