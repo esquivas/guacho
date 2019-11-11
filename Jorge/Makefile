@@ -64,9 +64,11 @@ radp.o
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o
+globals.o \
+utils.o
 
 OBJECTS_MAIN=\
+lmp_module.o \
 user_mod.o \
 network.o \
 flux_cd_module.o \

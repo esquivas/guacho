@@ -133,9 +133,19 @@ module parameters
   !> Include charge_exchange
   logical, parameter :: charge_exchange = .false.
 
+  !> Include Lagrangian Macro Particles (tracers)
+  logical, parameter :: enable_lmp = .false.
+  !> Max number of macro particles followed by each processor
+  integer, parameter :: N_MP =4096
+  !>  Enable following SED of each MP
+  logical, parameter :: lmp_distf  = .false.
+  !>  Number of bins for SED (Spectral Energy Distribution)
+  integer, parameter :: NBinsSEDMP = 100
 
 #ifdef PASSIVES
   integer, parameter :: npas=7        !< num. of passive scalars
+  integer, parameter :: n_spec  = 5     !< num. of species (chemistry enabled)
+  integer, parameter :: n1_chem = 7     !< position of 1st index of  chem spec.
 #else
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
