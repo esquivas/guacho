@@ -83,15 +83,15 @@ subroutine initial_conditions(u)
   do i=nxmin,nxmax
     do j=nymin,nymax
       do k=nzmin,nzmax
- 
+
         ! Position measured from the centre of the grid (star)
-        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(real(k+coords(2)*nz)+0.5)*dz
+        x=( real(i+coords(0)*nx-nxtot/2) -0.5 )*dx
+        y=( real(j+coords(1)*ny-nytot/2) -0.5 )*dy
+        z=( real(k+coords(2)*nz)        - 0.5 )*dz
 
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
-   
+
         xpl=x-xp
         ypl=y
         zpl=z-zp
@@ -153,18 +153,18 @@ subroutine initial_conditions(u)
               ! fill with parker solution all the mesh
               ! get sonic point radius
                   Rc = Ggrav * MassS / (2.0 * a**2.0)
-    
+
                   Vr0 = a
                   dVr = a/10
                   if (rads*rsc < Rc) then
                       dVr = - dVr
                   end if
-    
+
                   LHS = Vr0 * exp(-Vr0**2.0 / (2.0 * a**2.0) )
                   RHS = a * (Rc/(rads*rsc))**2.0 * exp(-2.0 * Rc/(rads*rsc) + 3.0/2.0)
-    
+
                   Vr = Vr0
-    
+
                   do while (abs(LHS/RHS-1.0) > 1.e-8)
                           ! save old LHS
                           LHSold = LHS
@@ -179,7 +179,7 @@ subroutine initial_conditions(u)
                   end do
                   vr=vr/vsc
             endif
-    
+
             VelX=vr*X/RADS
             VelY=vr*Y/RADS
             VelZ=vr*Z/RADS
@@ -189,7 +189,7 @@ subroutine initial_conditions(u)
             u(2,i,j,k) = dens*velx
             u(3,i,j,k) = dens*vely
             u(4,i,j,k) = dens*velz
-    
+
             !   Here the number density of the wind and planet
             !   components separately
             !!u(neqdyn+2,i,j,k) = 0.999*dens   ! xhi*rho S ion
@@ -207,11 +207,11 @@ subroutine initial_conditions(u)
             u(neqdyn+1,i,j,k) = fneutro_s*dens
             !   passive scalar (tag) for stellar material
             u(neqdyn+2,i,j,k)= 1000*dens
-    
+
             ! total energy
             u(5,i,j,k) = 0.5*dens*(velx**2+vely**2+velz**2) &
                           + cv*(2.*dens-u(neqdyn+1,i,j,k))*Tsw
-            
+
         endif
 
       end do
@@ -267,7 +267,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   use globals,    only : dx, dy, dz, coords
   use exoplanet
   use radpress
- 
+
   implicit none
   integer, intent(in) :: i, j, k
   integer             :: l, index
@@ -282,9 +282,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   GM(2)= Ggrav*MassP/rsc/vsc2
 
   !   get cell position
-  xc=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-  yc=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-  zc=(real(k+coords(2)*nz)+0.5)*dz
+  xc=( real(i+coords(0)*nx-nxtot/2) -0.5 )*dx
+  yc=( real(j+coords(1)*ny-nytot/2) -0.5 )*dy
+  zc=( real(k+coords(2)*nz)         -0.5 )*dz
 
   ! calculate distance from the sources
   ! star
