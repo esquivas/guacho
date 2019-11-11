@@ -5,26 +5,27 @@
 PROGRAM=GJ436_H3
 
 #  Seaerh Path, object files are searched in the order below
-VPATH = . : ../ : ../../src
+VPATH = . : ../src
 
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
-COMPILER= gfortran
 #COMPILER= ifort
+COMPILER= gfortran
 
+#   Compiler flags, make sure they are compatible with the previous selection
 ### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
-#FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
+# FLAGS= -O3 -cpp -mcmodel=large -g -traceback -check bounds
+#FLAGS= -O3 -cpp -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-FLAGS = -cpp -O3
+#FLAGS = -cpp -O3
 # For DEBUG, suggestions:
-#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-        -fbounds-check -fimplicit-none -fstack-protector-all
+FLAGS = -cpp -Og -ggdb -pedantic -Wall -Waliasing -fbacktrace -Wsurprising  \
+        -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow           \
+				-fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -34,10 +35,10 @@ FLAGS = -cpp -O3
 MPIP = Y
 
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
-BFIELD = N
+BFIELD = Y
 
 #   Include passive scalars (Y/N)
-PASSIVES = Y
+PASSIVES = N
 
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
@@ -63,17 +64,18 @@ radp.o
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o
+globals.o \
+utils.o
 
 OBJECTS_MAIN=\
+lmp_module.o \
 user_mod.o \
 network.o \
-field_cd_module.o \
+flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
-difrad.o \
-hrate.o \
 chemistry.o \
+difrad.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
@@ -96,28 +98,28 @@ main.o
 #  for projection alog a LOS
 COLDENS = \
 user_mod.o \
+network.o \
 hydro_core.o \
 difrad.o \
-init.o \
-coldens.o #   not updated to Guacho V1.3
+coldens.o
 
 #  For the Lyman Alpha Tau calculation
 LYAT = \
-network.o \
 hydro_core.o \
-lyman_alpha_tau_angle.o  #   not updated to Guacho V1.3
+lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
-#  For the H Alpha Tau calculation
-HAT = \
-network.o \
+#  to get stokes parameters with the Lagrangian particles
+STOKES_LP = \
+lmp_module.o \
 hydro_core.o \
-h_alpha_tau_angle.o  #   not updated to Guacho V1.3
+stokes_lp.o
 
 # Join object lists
-OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
-OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
-OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
-OBJECTS_HAT    = ${MODULES_MAIN} ${MODULES_USER} ${HAT}
+OBJECTS_ALL       = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
+OBJECTS_NB        = ${MODULES_MAIN} ${NBODY}
+OBJECTS_COLDENS   = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
+OBJECTS_LYAT      = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_STOKES_LP = ${MODULES_MAIN} ${MODULES_USER} ${STOKES_LP}
 #---------------------------------------------------
 # Set flags
 # Set flags
@@ -154,28 +156,45 @@ $(PROGRAM)  : prebuild ${OBJECTS_ALL}
 	@echo Linking flags used: $(LINKFLAGS)
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS)  $(OBJECTS_ALL) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+  ${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
+
+test_nbody : prebuild ${OBJECTS_NB}
+		@echo Linking object files ...
+		@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_NB) -o $@
+		@echo Cleaning up ...
+		@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+		${SRC_PATH}/C2Ray/*.mod
+		@echo "Done! (`date`)"
 
 coldens : prebuild ${OBJECTS_COLDENS}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_COLDENS) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+	${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
 
-lyman_alpha_tau_angle : prebuild ${OBJECTS_LYAT}
+lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@echo Linking object files ...
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_LYAT) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+	${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
 
-h_alpha_tau_angle : prebuild ${OBJECTS_HAT}
+stokes_lp : prebuild ${OBJECTS_STOKES_LP}
 	@echo Linking object files ...
-	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_HAT) -o $@
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_STOKES_LP) -o $@
 	@echo Cleaning up ...
-	@rm -f *.o *.mod
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+	${SRC_PATH}/C2Ray/*.mod
 	@echo "Done! (`date`)"
 
 prebuild :
@@ -200,7 +219,37 @@ prebuild :
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
 
+# C2ray routines and modules
+%.o:src/C2ray/%.f95
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+%.o:src/C2Ray/%.f90
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+%.o:.src/C2Ray/%.f
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+%.o:src/C2Ray/%.F95
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+%.o:/src/C2Ray/%.F90
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
+%.o:src//C2Ray/%.F
+	@echo Compiling $^ ...
+	@$(COMPILER) $(FLAGS) -c $< -o $@
 
 clean :
-	rm -f *.o *.mod
-	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err
+	rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+	  ${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+		${SRC_PATH}/C2Ray/*.mod
+	rm -rf *genmod.f90 ${SRC_PATH}/*genmod.f90
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
+
+cleanall :
+	rm -f $(PROGRAM) lyman_alpha_tau coldens stokes_lp test_nbody *.out *.err
+	@rm -f *.o *.mod ${SRC_PATH}/*.o  ${SRC_PATH}/*.mod \
+		${USR_PATH}/*.o ${USR_PATH}/*.mod ${SRC_PATH}/C2Ray/*.o  \
+		${SRC_PATH}/C2Ray/*.modrm -f SS/BIN/*
+	rm -f ${USR_PATH}/SILO/*.root
+	rm -f ${USR_PATH}/SILO/BLOCKS/*
