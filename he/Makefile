@@ -75,6 +75,7 @@ flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
 difrad.o \
+hrate.o \
 chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
