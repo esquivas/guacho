@@ -7,10 +7,8 @@ nfs*
 *.pyc
 .DS_store
 Icon*
-<<<<<<< HEAD
-=======
 *~
 #*
 .#*
 \#*
->>>>>>> origin/pic
+*.dSYM
