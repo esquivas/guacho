@@ -73,9 +73,9 @@ subroutine initial_conditions(u)
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
@@ -177,9 +177,9 @@ subroutine get_user_source_terms(pp,s, i, j , k)
 
 
   !   get cell position
-!  xc=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-!  yc=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-!  zc=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+!  xc=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+!  yc=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+!  zc=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
   ! calculate distance from the sources
   ! star

@@ -72,8 +72,8 @@ contains
 !     yc = 0.
 ! 
 !       do i = nxmin,nxmax
-!         x = (float(i+coords(0)*nx) - 0.5)*dx
-!         y = (float(j+coords(1)*ny) - 0.5)*dy
+!         x = (real(i+coords(0)*nx) - 0.5)*dx
+!         y = (real(j+coords(1)*ny) - 0.5)*dy
 !         if (coords(1).eq.0) then
 !           u(3,i,0:10,:)=u(1,i,0:10,:)*Av*exp(-((x-xc)**2.+(y-yc)**2.)/w**2.)!*sin(2.*pi*time/Pd)
 !           u(5,i,0:10,:) = cv*u(1,i,0:10,:)*Tempc + 0.5*u(3,i,0:10,:)*u(3,i,0:10,:)/u(1,i,0:10,:) &
@@ -107,9 +107,9 @@ contains
 !           do k=nzmin,nzmax
 !            
 !              !   measured from the corner of the computational mesh
-!              x=(float(i+coords(0)*nx) - 0.5)*dx
-!              y=(float(j+coords(1)*ny) - 0.5)*dy
-!              z=(float(k+coords(2)*nz) - 0.5)*dz
+!              x=(real(i+coords(0)*nx) - 0.5)*dx
+!              y=(real(j+coords(1)*ny) - 0.5)*dy
+!              z=(real(k+coords(2)*nz) - 0.5)*dz
 ! 
 !              xp=x-posj(1)
 !              yp=y-posj(2)

@@ -213,9 +213,9 @@ end subroutine read_data
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
 
-    x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-    y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-    z=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+    x=( real(i+coords(0)*nx-nxtot/2) - 0.5 )*dx
+    y=( real(j+coords(1)*ny-nytot/2) - 0.5 )*dy
+    z=( real(k+coords(2)*nz-nztot/2) - 0.5 )*dz
 
   end subroutine getXYZ
 
@@ -481,7 +481,7 @@ program coldens
   real :: map(nxmap, nymap), map1(nxmap,nymap)
 
   !  Target pixel size, relative to the simulation
-  dxT= xmax/float(nxmap)
+  dxT= xmax/real(nxmap)
   dyT= dxT
 
   ! initializes program (uses the parameters.f90 form the rest of the code)

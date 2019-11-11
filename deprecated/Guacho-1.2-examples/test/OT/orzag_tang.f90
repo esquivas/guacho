@@ -34,8 +34,8 @@ contains
           do k=nzmin,nzmax
 
              ! Position measured from the bottom corner of the grid
-             x=(float(i+coords(0)*nx)+0.5)*dx*rsc !WHY +0.5?
-             y=(float(j+coords(1)*ny)+0.5)*dy*rsc !ANS: Position of cell center
+             x=(real(i+coords(0)*nx)+0.5)*dx*rsc !WHY +0.5?
+             y=(real(j+coords(1)*ny)+0.5)*dy*rsc !ANS: Position of cell center
 
                 vx = -sin( y*twopi )
                 vy =  sin( x*twopi )

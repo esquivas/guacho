@@ -68,9 +68,9 @@ subroutine update_chem()
         !  update the passive primitives (should not work in single precision)
 
         ! Position measured from the centre of the grid (star)
-        xs=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        ys=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        zs=(float(k+coords(2)*nz)+0.5)*dz
+        xs=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        ys=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        zs=(real(k+coords(2)*nz)+0.5)*dz
         ! Position measured from the centre of the planet
         xpl=xs-xp
         ypl=ys

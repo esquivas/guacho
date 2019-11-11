@@ -87,7 +87,7 @@ subroutine initial_conditions(u)
   
   do j = nymin,nymax
      jj = j +coords(1)
-     y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
+     y = (real(j+coords(1)*ny) + 0.5)*dy*rsc
 !     do coords(1)=0,np-1
 !        integral = integral + mu*g*dy/Rg/Temp
 !     end do
@@ -130,7 +130,7 @@ real function integral(jj,Temp1,Temp2,mu_1, mu_2)
   g = Ggrav*Msun/Rsun/Rsun
   integral=0.
   do ii=0,jj
-     y = (float(ii)+0.5)*dy*rsc
+     y = (real(ii)+0.5)*dy*rsc
      if(y.le.2.E8) then
         integral = integral + dy*rsc*mu_1*g/Rg/Temp1  
      else 

@@ -260,9 +260,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span>  :: i, j, k</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <span class="keywordtype">real</span>,    <span class="keywordtype">intent(out)</span> :: x, y, z</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    x=(float(i+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(0)*nx-nxtot/2)+0.5)*<a class="code" href="namespaceglobals.html#aafee650389fdf595e41e37cb340155ae">dx</a></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    y=(float(j+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(1)*ny-nytot/2)+0.5)*<a class="code" href="namespaceglobals.html#a9b12323045a0672fe06f9b7091cd3e7a">dy</a></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    z=(float(k+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(2)*nz-nztot/2)+0.5)*<a class="code" href="namespaceglobals.html#a81293f145f1af171eb88b6feced78c95">dz</a></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    x=(real(i+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(0)*nx-nxtot/2)+0.5)*<a class="code" href="namespaceglobals.html#aafee650389fdf595e41e37cb340155ae">dx</a></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    y=(real(j+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(1)*ny-nytot/2)+0.5)*<a class="code" href="namespaceglobals.html#a9b12323045a0672fe06f9b7091cd3e7a">dy</a></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    z=(real(k+<a class="code" href="namespaceglobals.html#a8d38eca539ad2b24a66616e42b79ac4c">coords</a>(2)*nz-nztot/2)+0.5)*<a class="code" href="namespaceglobals.html#a81293f145f1af171eb88b6feced78c95">dz</a></div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        </div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="keyword">  end subroutine </span><a class="code" href="namespaceh__alpha__utilities.html#af48cd3c223c292170bc1f90da256f537">getxyz</a></div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
@@ -456,7 +456,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;  <span class="keywordtype">real</span> :: map(nxmap, nymap), map1(nxmap,nymap)</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;</div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;  <span class="comment">!  Target pixel size, relative to the simulation</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;  dxt= xmax/float(nxmap)</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;  dxt= xmax/real(nxmap)</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;  dyt= dxt</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;</div>
 <div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;  <span class="comment">! initializes program (uses the parameters.f90 form the rest of the code)</span></div>

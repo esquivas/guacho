@@ -85,7 +85,7 @@ for nout in range(25,26):
     frame = nout*nframes
 
     for t in np.linspace(0,1,nframes):
-      kernel = np.sin(np.arange(kernellen)*np.pi/kernellen)*(1+np.sin(2*np.pi*5*(np.arange(kernellen)/float(kernellen)+t)))
+      kernel = np.sin(np.arange(kernellen)*np.pi/kernellen)*(1+np.sin(2*np.pi*5*(np.arange(kernellen)/real(kernellen)+t)))
       kernel = kernel.astype(np.float32)
 
       image = vp.line_integral_convolution(bx_c[::,::].astype(np.float32), 

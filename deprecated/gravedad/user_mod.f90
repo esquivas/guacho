@@ -71,7 +71,7 @@ subroutine initial_conditions(u)
    
   do j = nymin,nymax
      
-    y = (float(j+coords(1)*ny) + 0.5)*dy*rsc
+    y = (real(j+coords(1)*ny) + 0.5)*dy*rsc
     if (y <= 2.E8) then
       P_y = P_0*exp(-c1*y/Temp1)
     else

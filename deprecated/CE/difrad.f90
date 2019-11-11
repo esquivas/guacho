@@ -280,7 +280,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
 
   if (i < 1) then
     buffersize(1)=buffersize(1)+1
-    photL(1,1, buffersize(1))= xl0+float(nx)
+    photL(1,1, buffersize(1))= xl0+real(nx)
     photL(1,2, buffersize(1))= yl0
     photL(1,3, buffersize(1))= zl0
 
@@ -291,7 +291,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
     !return
   else if(i > nx) then
     buffersize(2)=buffersize(2)+1
-    photR(1,1, buffersize(2))= xl0-float(nx)
+    photR(1,1, buffersize(2))= xl0-real(nx)
     photR(1,2, buffersize(2))= yl0
     photR(1,3, buffersize(2))= zl0
 
@@ -304,7 +304,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   if (j < 1) then
     buffersize(3)=buffersize(3)+1
     photB(1,1, buffersize(3))= xl0
-    photB(1,2, buffersize(3))= yl0+float(ny)
+    photB(1,2, buffersize(3))= yl0+real(ny)
     photB(1,3, buffersize(3))= zl0
 
     photB(1,4, buffersize(3))= xd
@@ -315,7 +315,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   else if(j > ny) then
     buffersize(4)=buffersize(4)+1
     photT(1,1, buffersize(4))= xl0
-    photT(1,2, buffersize(4))= yl0-float(ny)
+    photT(1,2, buffersize(4))= yl0-real(ny)
     photT(1,3, buffersize(4))= zl0
 
     photT(1,4, buffersize(4))= xd
@@ -328,7 +328,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
     buffersize(5)=buffersize(5)+1
     photO(1,1, buffersize(5))= xl0
     photO(1,2, buffersize(5))= yl0
-    photO(1,3, buffersize(5))= zl0+float(nz)
+    photO(1,3, buffersize(5))= zl0+real(nz)
 
     photO(1,4, buffersize(5))= xd
     photO(1,5, buffersize(5))= yd
@@ -339,7 +339,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
     buffersize(6)=buffersize(6)+1
     photI(1,1, buffersize(6))= xl0
     photI(1,2, buffersize(6))= yl0
-    photI(1,3, buffersize(6))= zl0-float(nz)
+    photI(1,3, buffersize(6))= zl0-real(nz)
 
     photI(1,4, buffersize(6))= xd
     photI(1,5, buffersize(6))= yd
@@ -398,7 +398,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
      !  the photon reaches the domain boundaries
   if (i < 1) then
      buffersize(1)=buffersize(1)+1
-     photL(1,1, buffersize(1))= xl-dxl+float(nx)
+     photL(1,1, buffersize(1))= xl-dxl+real(nx)
      photL(1,2, buffersize(1))= yl-dyl
      photL(1,3, buffersize(1))= zl-dzl
 
@@ -409,7 +409,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
      return
   else if(i > nx) then
      buffersize(2)=buffersize(2)+1
-     photR(1,1, buffersize(2))= xl-dxl-float(nx)
+     photR(1,1, buffersize(2))= xl-dxl-real(nx)
      photR(1,2, buffersize(2))= yl-dyl
      photR(1,3, buffersize(2))= zl-dzl
 
@@ -422,7 +422,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   if (j < 1) then
      buffersize(3)=buffersize(3)+1
      photB(1,1, buffersize(3))= xl-dxl
-     photB(1,2, buffersize(3))= yl-dyl+float(ny)
+     photB(1,2, buffersize(3))= yl-dyl+real(ny)
      photB(1,3, buffersize(3))= zl-dzl
 
      photB(1,4, buffersize(3))= xd
@@ -433,7 +433,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
   else if(j > ny) then
      buffersize(4)=buffersize(4)+1
      photT(1,1, buffersize(4))= xl-dxl
-     photT(1,2, buffersize(4))= yl-dyl-float(ny)
+     photT(1,2, buffersize(4))= yl-dyl-real(ny)
      photT(1,3, buffersize(4))= zl-dzl
 
      photT(1,4, buffersize(4))= xd
@@ -446,7 +446,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
      buffersize(5)=buffersize(5)+1
      photO(1,1, buffersize(5))= xl-dxl
      photO(1,2, buffersize(5))= yl-dyl
-     photO(1,3, buffersize(5))= zl-dzl+float(nz)
+     photO(1,3, buffersize(5))= zl-dzl+real(nz)
 
      photO(1,4, buffersize(5))= xd
      photO(1,5, buffersize(5))= yd
@@ -457,7 +457,7 @@ subroutine photons(xl0,yl0,zl0,xd,yd,zd,f)
      buffersize(6)=buffersize(6)+1
      photI(1,1, buffersize(6))= xl-dxl
      photI(1,2, buffersize(6))= yl-dyl
-     photI(1,3, buffersize(6))= zl-dzl-float(nz)
+     photI(1,3, buffersize(6))= zl-dzl-real(nz)
 
      photI(1,4, buffersize(6))= xd
      photI(1,5, buffersize(6))= yd
@@ -485,7 +485,7 @@ subroutine radbounds()
 
   !   loop over MPI blocks to ensure the rays are followed to the
   !   entire domain
-  do ip=1,int( sqrt(float(MPI_NBX)**2+float(MPI_NBY)**2+float(MPI_NBZ)**2) )
+  do ip=1,int( sqrt(real(MPI_NBX)**2+real(MPI_NBY)**2+real(MPI_NBZ)**2) )
 
     !print'(a,2i3, 6i7)','**',rank,np,buffersize
     call mpi_allgather(buffersize(:)   , 6, mpi_integer, &
@@ -703,9 +703,9 @@ subroutine diffuse_rad()
 
   !   fire the photon torpedoes! (nrays=1000000  moved to header)
   !   posicion de la fuente ionizante, in the entire domain
-  !    xc=float(nxtot/2)*dx
-  !    yc=float(nytot/2)*dy
-  !    zc=float(nztot/2)*dz
+  !    xc=real(nxtot/2)*dx
+  !    yc=real(nytot/2)*dy
+  !    zc=real(nztot/2)*dz
 
   !   posicion de la fuente ionizante
   xc = real(nxtot/2)*dx
@@ -738,9 +738,9 @@ subroutine diffuse_rad()
      if( (ii==coords(0)).and.(jj==coords(1)).and.(kk==coords(2))) then
         in=in+1
         ! trace the photon
-        call photons(float(i-coords(0)*nx)-0.5, &
-                     float(j-coords(1)*ny)-0.5, &
-                     float(k-coords(2)*nz)-0.5, &
+        call photons(real(i-coords(0)*nx)-0.5, &
+                     real(j-coords(1)*ny)-0.5, &
+                     real(k-coords(2)*nz)-0.5, &
                      dirx,diry,dirz,f)
         !call progress(niter,nrays)
      end if
@@ -758,11 +758,11 @@ subroutine diffuse_rad()
   call radbounds()
 
   if (charge_exchange) then
-    phCold(:,:,:)=phCold(:,:,:)/float(nmax)
-    phHot(:,:,:)=phHot(:,:,:)/float(nmax)
+    phCold(:,:,:)=phCold(:,:,:)/real(nmax)
+    phHot(:,:,:)=phHot(:,:,:)/real(nmax)
   else
     em=ph
-    ph(:,:,:)=ph(:,:,:)/float(nmax)
+    ph(:,:,:)=ph(:,:,:)/real(nmax)
   end if
 
   return

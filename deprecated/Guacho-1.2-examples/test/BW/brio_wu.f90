@@ -45,7 +45,7 @@ do i=nxmin,nxmax
       do k=nzmin,nzmax
 
          ! Position measured from the centre of the grid
-         x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
+         x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
 
          ! IF LEFFT STATE
          if( x <= 0.) then

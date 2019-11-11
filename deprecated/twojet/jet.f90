@@ -112,9 +112,9 @@ contains
       do j=nymin,nymax
         do k=nzmin,nzmax
           !   measured from the center of the computational mesh
-          x=(float(i+coords(0)*nx-nxtot/2) - 0.5)*dx
-          y=(float(j+coords(1)*ny-nytot/2) - 0.5)*dy
-          z=(float(k+coords(2)*nz-nztot/2) - 0.5)*dz
+          x=(real(i+coords(0)*nx-nxtot/2) - 0.5)*dx
+          y=(real(j+coords(1)*ny-nytot/2) - 0.5)*dy
+          z=(real(k+coords(2)*nz-nztot/2) - 0.5)*dz
 
           do nj =1,2
 

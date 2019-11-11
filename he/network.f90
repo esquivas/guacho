@@ -68,12 +68,12 @@
                  + rate(iahii)*y(iHII)*y(ie)                                   &
                  - rate(iphiH)*y(iHI )
 
-     dydt(iHeI) = - rate(ichei)*y(ie)*y(iHeI)                                  &
+     dydt(iHeI) = - rate(ichei )*y(ie)*y(iHeI )                                &
                   + rate(iaheii)*y(ie)*y(iHeII)
 
-     dydt(iHeII) =  rate(ichei )*y(ie)*y(iHeI )                                &
+     dydt(iHeII) =  rate(ichei  )*y(ie)*y(iHeI  )                              &
                   - rate(icheii )*y(ie)*y(iHeII )                              &
-                  - rate(iaheii)*y(ie)*y(iHeII)                                &
+                  - rate(iaheii )*y(ie)*y(iHeII )                              &
                   + rate(iaheiii)*y(ie)*y(iHeIII)
 
      !  "conservation" equations
@@ -117,11 +117,11 @@
 
     jacobian(iHeII,iHI)     =  0.
     jacobian(iHeII,iHII)    =  0.
-    jacobian(iHeII,iHeI)    = + rate(ichei)*y(ie)
-    jacobian(iHeII,iHeII)   = - rate(icheii)*y(ie) - rate(iaheii)*y(ie)
-    jacobian(iHeII,iHeIII)  = + rate(iaheiii)*y(ie)
-    jacobian(iHeII,ie)      = + rate(ichei)*y(iHeI) - rate(icheii)*y(iHeII)    &
-                          - rate(iaheii)*y(iHeII) + rate(iaheiii)*y(iHeIII)
+    jacobian(iHeII,iHeI)    = + rate(ichei) *y(ie    )
+    jacobian(iHeII,iHeII)   = - rate(icheii)*y(ie    ) - rate(iaheii )*y(ie)
+    jacobian(iHeII,iHeIII)  = + rate(iaheiii)*y(ie   )
+    jacobian(iHeII,ie)      = + rate(ichei  )*y(iHeI ) - rate(icheii )*y(iHeII)&
+                              - rate(iaheii )*y(iHeII) + rate(iaheiii)*y(iHeIII)
 
     jacobian(iHeIII,iHI)    =   0.
     jacobian(iHeIII,iHII)   =   0.

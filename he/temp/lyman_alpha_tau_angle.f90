@@ -205,9 +205,9 @@ end subroutine read_data
     integer, intent(in)  :: i, j, k
     real,    intent(out) :: x, y, z
  
-    x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-    y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-    z=(float(k+coords(2)*nz)+0.5)*dz
+    x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+    y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+    z=(real(k+coords(2)*nz)+0.5)*dz
         
   end subroutine getXYZ
 
@@ -415,12 +415,12 @@ subroutine phigauss(T,vzn,vmin,vmax,nvmap,profile)
   real :: coef, dv, vr
   
   profile(:)=0.
-  dv=(vmax-vmin)/float(nvmap)
+  dv=(vmax-vmin)/real(nvmap)
   
   coef=amh/(2.*kB*T)
   
   do i=1,nvmap
-     vr=(float(i)-0.5)*dv+vmin
+     vr=(real(i)-0.5)*dv+vmin
      profile(i)=sqrt(coef/pi)*exp(-coef*((vr-vzn)**2) )
   end do
   
@@ -447,14 +447,14 @@ subroutine phivoigt(T,vzn,rho_n,vmin,vmax,nvmap,profile)
   ccs = pi*(2.0*a0)**2
   
   profile(:) = 0.
-  dv = (vmax-vmin)/float(nvmap)
+  dv = (vmax-vmin)/real(nvmap)
   
   sigm = sqrt(2.0*kB*T/amh)
   gamm = 6.27e8*lambdaLA !lambdaLA*rho_n*ccs/(2.0*pi)*sigm
   coef = 1./sqrt(pi)/sigm
   
   do i=1,nvmap
-     vr=(float(i)-0.5)*dv + vmin
+     vr=(real(i)-0.5)*dv + vmin
      v = (vr - vzn)/sigm
      a = gamm/4.0/pi/sigm
      call humlicek(a,v,W)
@@ -561,7 +561,7 @@ program lyman_alpha_tau
   vmin=-300.e5
   vmax= 300.e5
   !  Target pixel size, relative to the simulation
-  dxT= xmax/float(nxtot)
+  dxT= xmax/real(nxtot)
   dyT= dxT
   
   ! chose output (fix later to input form screen)

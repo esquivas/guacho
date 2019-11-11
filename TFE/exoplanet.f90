@@ -142,9 +142,9 @@ subroutine init_exo()
       do i=nxmin,nxmax
 
         ! Position measured from the centre of the grid (planet)
-        xpl=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        ypl=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-        zpl=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+        xpl=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+        ypl=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+        zpl=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
 
         ! Distance from the centre of the planet (centred)
         radp=sqrt(xpl**2+ypl**2+zpl**2)
@@ -187,9 +187,9 @@ subroutine impose_exo(u,time)
           do i=nxmin,nxmax
            
            ! Position measured from the centre of the grid (planet)
-           xpl=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx
-           ypl=(float(j+coords(1)*ny-nytot/2)+0.5)*dy
-           zpl=(float(k+coords(2)*nz-nztot/2)+0.5)*dz
+           xpl=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
+           ypl=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
+           zpl=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
            
            ! Distance from the centre of the planet (centred)
            radp=sqrt(xpl**2+ypl**2+zpl**2)

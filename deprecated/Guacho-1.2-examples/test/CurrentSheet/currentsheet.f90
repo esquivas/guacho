@@ -35,8 +35,8 @@ contains
           do i=nxmin,nxmax
 
              ! Position measured from the centre of the grid (star)
-             x=(float(i+coords(0)*nx-nxtot/2)+0.5)*dx*rsc
-             y=(float(j+coords(1)*ny-nytot/2)+0.5)*dy*rsc
+             x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx*rsc
+             y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy*rsc
 
              rho = 1.0
              p = beta*0.5

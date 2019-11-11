@@ -97,9 +97,9 @@ contains
           do k=nzmin,nzmax
            
            !   measured from the corner of the computational mesh
-           x=(float(i+coords(0)*nx) - 0.5)*dx
-           y=(float(j+coords(1)*ny) - 0.5)*dy
-           z=(float(k+coords(2)*nz) - 0.5)*dz
+           x=(real(i+coords(0)*nx) - 0.5)*dx
+           y=(real(j+coords(1)*ny) - 0.5)*dy
+           z=(real(k+coords(2)*nz) - 0.5)*dz
 
            xp=x-posj(1)
            yp=y-posj(2)

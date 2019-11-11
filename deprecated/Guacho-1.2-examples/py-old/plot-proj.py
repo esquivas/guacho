@@ -31,7 +31,7 @@ for nout in range(1,74):
 	#name of the file to read
 	filein=path+'LA_tau-'+str(nout).zfill(3)+'.bin'
 
-	dx=0.15*1.49e13/float(nxmap) #  dx in cm ( 1AU = 1.49e13 cm)
+	dx=0.15*1.49e13/real(nxmap) #  dx in cm ( 1AU = 1.49e13 cm)
 	rstar= 1.1*6.955e10*2.         #  star radius in cm
 	plt.ion()
 
@@ -39,7 +39,7 @@ for nout in range(1,74):
 	data=f.readReals(kind).reshape(nxmap,nymap,nvmap,order='F').T
 
 	emtaunu=np.exp(-data)
-	emtau= np.sum(emtaunu,0)/float(nvmap)
+	emtau= np.sum(emtaunu,0)/real(nvmap)
 
 	Emission=np.zeros(shape=(nxmap,nymap))
 	Emission[::,::]=1e-3
@@ -48,7 +48,7 @@ for nout in range(1,74):
 
 	for i in range(nxmap):
 	    for j in range(nxmap):
-	        rad=np.sqrt( (float(i-nxmap/2)+0.5)**2+(float(j-nymap/2)+0.5)**2 )*dx 
+	        rad=np.sqrt( (real(i-nxmap/2)+0.5)**2+(real(j-nymap/2)+0.5)**2 )*dx 
 	        if (rad <= rstar):
 	            Emission[i,j]=emtau[i,j]
 	            Ref = Ref + 1.
