@@ -52,7 +52,7 @@ contains
 
           !   get the primitives (and T)
           call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
-
+          
         end do
       end do
     end do
