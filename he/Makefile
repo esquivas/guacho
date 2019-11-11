@@ -38,7 +38,7 @@ MPIP = Y
 BFIELD = Y
 
 #   Include passive scalars (Y/N)
-PASSIVES = N
+PASSIVES = Y
 
 #   Double Precision (Y/N Default is single)
 DOUBLEP= Y
@@ -74,8 +74,8 @@ network.o \
 flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
-chemistry.o \
 difrad.o \
+chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
