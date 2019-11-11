@@ -1,0 +1,31 @@
+#!/bin/sh 
+
+#SBATCH --time=00:20:00
+#SBATCH --nodes=1
+#SBATCH -A tcast006c
+#SBATCH -p DevQ
+#SBATCH --mail-user=villarrc@tcd.ie
+#SBATCH --mail-type=END
+#SBATCH --output=outfile
+#SBATCH --error=errfile 
+
+module load intel/2018u4
+
+workdir="$SLURM_SUBMIT_DIR"
+cd $workdir
+
+
+
+JOBID=`echo $PBS_JOBID | sed -e 's/\..*$//'`
+
+echo -e "JobID: $JOBID\n======"
+echo "Time: `date`"
+echo "Running on master node: `hostname`"
+echo "Current directory: `pwd`"
+echo "numnodes: $SLURM_NNODES"
+echo "nproc: $SLURM_NPROCS"
+
+
+mpirun -n 30 GJ436
+
+

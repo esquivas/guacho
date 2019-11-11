@@ -674,10 +674,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;  <span class="keywordtype">integer</span> :: N</div>
 <div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;  <span class="keywordtype">real</span>,    <span class="keywordtype">intent(in)</span> :: snu</div>
 <div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;  <a class="code" href="namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06">superstep</a>=float(n)/(2.*snu) * ( (1+snu)**(2*n) - (1-snu)**(2*n) ) / &amp;</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;  <a class="code" href="namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06">superstep</a>=real(n)/(2.*snu) * ( (1+snu)**(2*n) - (1-snu)**(2*n) ) / &amp;</div>
 <div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;       ( (1+snu)**(2*n) + (1-snu)**(2*n) )</div>
 <div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;  <span class="comment">!1/( (nu-1.)*Cos(pi*(2*float(j)-1.)/(2.*float(N)) )+nu+1. )</span></div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;  <span class="comment">!1/( (nu-1.)*Cos(pi*(2*real(j)-1.)/(2.*real(N)) )+nu+1. )</span></div>
 <div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;</div>
 <div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;<span class="keyword">end function </span><a class="code" href="namespacethermal__cond.html#a535cc1746914d413d4978aeda7b8fc06">superstep</a></div>
 <div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;</div>
@@ -690,7 +690,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00649"></a><span class="lineno">  649</span>&#160;  <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: j, N</div>
 <div class="line"><a name="l00650"></a><span class="lineno">  650</span>&#160;  <span class="keywordtype">real</span>,    <span class="keywordtype">intent(in)</span> :: nu</div>
 <div class="line"><a name="l00651"></a><span class="lineno">  651</span>&#160;</div>
-<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;  <a class="code" href="namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294">substep</a>=1./( (nu-1.)*cos(pi*float(2*j-1)/(2.*float(n)) )+nu+1. )</div>
+<div class="line"><a name="l00652"></a><span class="lineno">  652</span>&#160;  <a class="code" href="namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294">substep</a>=1./( (nu-1.)*cos(pi*real(2*j-1)/(2.*real(n)) )+nu+1. )</div>
 <div class="line"><a name="l00653"></a><span class="lineno">  653</span>&#160;</div>
 <div class="line"><a name="l00654"></a><span class="lineno">  654</span>&#160;<span class="keyword">end function </span><a class="code" href="namespacethermal__cond.html#a782aaba01217281f2aa57dcc955fd294">substep</a></div>
 <div class="line"><a name="l00655"></a><span class="lineno">  655</span>&#160;</div>

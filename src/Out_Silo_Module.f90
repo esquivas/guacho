@@ -128,15 +128,15 @@ allocate ( yax(jmin:jmax+1) )
 allocate ( zax(kmin:kmax+1) )
 
 do i=imin,imax+1
-  xax(i)=(float( i +coords(0)*nx -1 ) )*dx
+  xax(i)=(real( i +coords(0)*nx -1 ) )*dx
 end do
 
 do j=jmin,jmax+1
-  yax(j)=(float( j +coords(1)*ny -1 ) )*dy
+  yax(j)=(real( j +coords(1)*ny -1 ) )*dy
 end do
 
 do k=kmin,kmax+1
-  zax(k)=(float( k +coords(2)*nz -1 ) )*dz
+  zax(k)=(real( k +coords(2)*nz -1 ) )*dz
 end do
 
 !  open the silo file

@@ -1,0 +1,17 @@
+#!/bin/bash
+HOMEDIR=/ichec/home/users/carito/guacho-dev/CE/GJ436_H3
+DATADIR=/ichec/work/tcast009c/GJ436_H3
+
+#cp $HOMEDIR/GJ436_H3 $DATADIR/.
+#cp $HOMEDIR/GJ436_beta_int.dat $DATADIR/.
+#cp $HOMEDIR/lyman_alpha_tau_angle $DATADIR/.
+cp $HOMEDIR/h_alpha_tau_angle $DATADIR/.
+#cp $HOMEDIR/lyman_alpha_tau-c0 $DATADIR/.
+#cp $HOMEDIR/lyman_alpha_tau-h0 $DATADIR/.
+#cp $HOMEDIR/job_submit.sh $DATADIR/.
+#cp $HOMEDIR/H3_submit_ProdQ.sh $DATADIR/.
+#cp $HOMEDIR/lyman_submit.sh $DATADIR/.
+cp $HOMEDIR/halpha_submit.sh $DATADIR/.
+cp $HOMEDIR/H2pop_chianti.bin $DATADIR/.
+cd $DATADIR
+

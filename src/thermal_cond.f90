@@ -628,10 +628,10 @@ real function superstep(N,snu)
   integer :: N
   real,    intent(in) :: snu
 
-  superstep=float(N)/(2.*snu) * ( (1+snu)**(2*N) - (1-snu)**(2*N) ) / &
+  superstep=real(N)/(2.*snu) * ( (1+snu)**(2*N) - (1-snu)**(2*N) ) / &
        ( (1+snu)**(2*N) + (1-snu)**(2*N) )
 
-  !1/( (nu-1.)*Cos(pi*(2*float(j)-1.)/(2.*float(N)) )+nu+1. )
+  !1/( (nu-1.)*Cos(pi*(2*real(j)-1.)/(2.*real(N)) )+nu+1. )
 
 end function superstep
 
@@ -649,7 +649,7 @@ real function substep(j,N,nu)
   integer, intent(in) :: j, N
   real,    intent(in) :: nu
 
-  substep=1./( (nu-1.)*Cos(pi*float(2*j-1)/(2.*float(N)) )+nu+1. )
+  substep=1./( (nu-1.)*Cos(pi*real(2*j-1)/(2.*real(N)) )+nu+1. )
 
 end function substep
 

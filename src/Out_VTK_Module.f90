@@ -83,9 +83,9 @@ subroutine write_VTK(itprint)
   open(unit=unitout,file=file1,status='replace',access='stream')!, convert='BIG_ENDIAN')
 
   !   write the header
-  x0=( float(coords(0)*nx) )*dx
-  y0=( float(coords(1)*ny) )*dy
-  z0=( float(coords(2)*nz) )*dz
+  x0=( real(coords(0)*nx) )*dx
+  y0=( real(coords(1)*ny) )*dy
+  z0=( real(coords(2)*nz) )*dz
   nCells = nx*ny*nz
 
   write(cbuffer,'(a)') '# vtk DataFile Version 2.0 '

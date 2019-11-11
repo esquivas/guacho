@@ -33,14 +33,13 @@ contains
 
 !> @brief Solves the Riemann problem at the interface PL,PR
 !! using the HLLC solver
-!> @details Solves the Riemann problem at the interface betweem 
+!> @details Solves the Riemann problem at the interface betweem
 !! PL and PR using the HLLC solver
 !> @n The fluxes are computed in the X direction, to obtain the
 !! y ans z directions a swap is performed
 !> @param real [in] primL : primitives at the Left state
 !> @param real [in] primR : primitives at the Right state
 !> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
-
 subroutine prim2fhllc(priml,primr,ff)
 
   use parameters, only : neq, neqdyn, cv, pmhd, passives
@@ -51,7 +50,7 @@ subroutine prim2fhllc(priml,primr,ff)
   real, dimension(neq)               :: uu, uuk
   real :: csl, csr, sl, sr, slmul, srmur, rholul, rhorur, sst
   real :: rhost,ek
-  
+
   call csound(priml(5),priml(1),csl)
   call csound(primr(5),primr(1),csr)
 
@@ -62,20 +61,20 @@ subroutine prim2fhllc(priml,primr,ff)
     call prim2f(priml,ff)
     return
   endif
-  
+
   if (sr < 0) then
     call prim2f(primr,ff)
     return
   endif
-  
+
   slmul=sl-priml(2)
   srmur=sr-primr(2)
   rholul=priml(1)*priml(2)
   rhorur=primr(1)*primr(2)
 
-  sst = (srmur*rhorur-slmul*rholul-primr(5)+priml(5) )        &  
+  sst = (srmur*rhorur-slmul*rholul-primr(5)+priml(5) )        &
         / (srmur*primr(1)-slmul*priml(1) )
-  
+
   if (sst >= 0.) then
     rhost=priml(1)*(slmul)/(sl-sst)
     ek= 0.5*priml(1)*(priml(2)**2+priml(3)**2+priml(4)**2)+cv*priml(5)
@@ -89,7 +88,7 @@ subroutine prim2fhllc(priml,primr,ff)
   if (pmhd) then
 #ifdef BFIELD
     uuk(6:8)=rhost*priml(6:8)/priml(1)
-#endif 
+#endif
   end if
 #ifdef PASSIVES
   if (passives) then
@@ -119,7 +118,7 @@ subroutine prim2fhllc(priml,primr,ff)
     uuk(6:8)=rhost*primr(6:8)/primr(1)
 #endif
   end if
-  
+
 #ifdef PASSIVES
   if (passives) then
     uuk(neqdyn+1:neq)=rhost*primr(neqdyn+1:neq)/primr(1)
@@ -142,12 +141,13 @@ end subroutine prim2fhllc
 
 !=======================================================================
 
-!> @brief Calculates HLLC fluxes from the primitive variables 
+!> @brief Calculates HLLC fluxes from the primitive variables
 !!   on all the domain
-!> @details Calculates HLLC fluxes from the primitive variables 
-!!   on all the domain
-!> @param integer [in] choice : 1, uses primit for the 1st half of timestep (first order)
-!!                  @n 2 uses primit for second order timestep
+!> @details Calculates HLLC fluxes from the primitive variables
+!! on all the domain
+!> @param integer [in] choice : 1, uses primit for the 1st half of
+!> timestep (first order)
+!> @n 2 uses primit for second order timestep
 
 subroutine hllcfluxes(choice)
 

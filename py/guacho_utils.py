@@ -164,7 +164,8 @@ def get_boxsize(nout,path='',base='points',verbose=False):
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   nx, ny, nz          = head_info[2]
-  return (nx, ny, nz)
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  return (nx*mpi_x, ny*mpi_y, nz*mpi_z)
 
 '''
   Returns the basic scalings
@@ -177,6 +178,16 @@ def get_scalings(nout,path='',base='points',verbose=False):
   Bsc = np.sqrt(4.*np.pi*rhosc*vsc**2)
   return (rsc, vsc, rhosc, Bsc)
 
+'''
+  Returns the number of cores read from HD output
+'''
+def get_Nproc(nout,path='',base='points',verbose=False):
+
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  mpi_x, mpi_y, mpi_z = head_info[5]
+  n_proc = mpi_x*mpi_y*mpi_z
+  return n_proc
 
 '''
  Returns a 2D cut perpenticular to the x, y or z axes (cut ==1, 2, 3, respectively)
@@ -256,3 +267,73 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
 '''
 def minmax(q):
     print('min=',q.min(),' max=', q.max())
+<<<<<<< HEAD
+=======
+
+
+'''
+   reads tracer particles
+'''
+def read_lmp(nout,path='', base='lmp',trim=True):
+    #  read first output to determine N_MP and NP
+    file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+    f = open(file_in,'rb')
+    nproc, n_mp, n_act, n_bins = struct.unpack('4i',f.read(16))
+    x  = np.zeros(nproc*n_mp)
+    y  = np.zeros(nproc*n_mp)
+    z  = np.zeros(nproc*n_mp)
+    #vx = np.zeros(nproc*n_mp)
+    #vy = np.zeros(nproc*n_mp)
+    #vz = np.zeros(nproc*n_mp)
+    id = np.zeros(nproc*n_mp, dtype = 'i4')-1
+    if (n_bins > 0) :
+      SED = np.zeros( shape=(nproc*n_mp,n_bins,2) )
+      r  = np.zeros(nproc*n_mp)
+      th = np.zeros(nproc*n_mp)
+      P1  = np.zeros( shape=(nproc*n_mp,8) )
+      P2  = np.zeros( shape=(nproc*n_mp,8) )
+    f.close()
+    #  now reopen files one by one and read data onto the arrays
+    for ip in range(nproc):
+        file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+        f = open(file_in,'rb')
+        nproc,n_mp,n_activeMP, n_bins = struct.unpack('4i',f.read(16))
+        for i_mp in range(n_activeMP):
+            ii = struct.unpack('1i',f.read(4))[0]
+            ii -= 1
+            id[ii] = ii
+            x [ii], y [ii], z [ii] = struct.unpack('3d',f.read(24))
+            #vx[ii], vy[ii], vz[ii] = struct.unpack('3d',f.read(24))
+            if (n_bins  > 0):
+              r[ii], th[ii] = struct.unpack('2d',f.read(16))
+              for i_bin in range (n_bins):
+                SED[ii,i_bin,0]=struct.unpack('1d',f.read(8))[0]
+              for i_bin in range (n_bins):
+                SED[ii,i_bin,1]=struct.unpack('1d',f.read(8))[0]
+              for i_eq in range(8):
+                P1[ii,i_eq] = struct.unpack('1d', f.read(8) )[0]
+                P2[ii,i_eq] = struct.unpack('1d', f.read(8) )[0]
+        f.close()
+    if (n_bins > 0):
+        indices = np.argsort(id)
+        SED   = np.array(SED[indices,:,:])
+        P1    = np.array(P1[indices,:])
+        P2    = np.array(P2[indices,:])
+        array = np.array ( sorted(zip(id,x,y,z,r,th)) )
+        #array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    else:
+        array = np.array ( sorted(zip(id,x,y,z)) )
+        #array = np.array ( sorted(zip(id,x,y,z,vx,vy,vz)) )
+    if (trim) :
+        #  trim
+        n_mp = np.size(np.where(array[:,0] < 0 ))
+        array = array[n_mp::,:]
+        if (n_bins > 0):
+            SED   = SED  [n_mp::,:]
+            P1    = P1[n_mp::,:]
+            P2    = P2[n_mp::,:]
+    if (n_bins > 0):
+        return array, SED, P1, P2
+    else:
+        return array
+>>>>>>> origin/pic
