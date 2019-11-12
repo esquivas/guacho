@@ -117,7 +117,7 @@ contains
     use linear_system
     use parameters, only : n_spec
     use network,    only : n_reac, n_elem, get_reaction_rates,                 &
-    derv, get_jacobian, n_nequ, check_no_conservation
+                           derv, get_jacobian, n_nequ, check_no_conservation
     implicit none
     real (kind=8), intent(inout) :: y(n_spec)
     real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
@@ -177,9 +177,7 @@ contains
     return
 
   end subroutine chemstep
-+
+
   !=======================================================================
 
   end module chemistry
-
-  !=======================================================================

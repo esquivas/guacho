@@ -103,5 +103,3 @@ module constants
   integer, parameter :: TC_ANISOTROPIC = 2
 
 end module constants
-
-!=======================================================================

@@ -34,129 +34,120 @@ module cooling_dmc
 
 contains
 
-!> @brief Initializes the DMC cooling
-!> @details Declares variables and reads table
+  !=======================================================================
+  !> @brief Initializes the DMC cooling
+  !> @details Declares variables and reads table
+  subroutine init_cooling_dmc()
 
-subroutine init_cooling_dmc()
+    implicit none
 
-  implicit none
+    allocate(cooltab_dmc(2,41))
+    call read_table_dmc()
 
-  allocate(cooltab_dmc(2,41))
-  call read_table_dmc()
+  end subroutine init_cooling_dmc
 
+  !=======================================================================
+  !> @brief Reads the cooling curve table
+  !> @details Reads the Dalgarno McCray cooling courve
+  !! the location is assumed in src/DMClib/coolingDMC.tab,
+  !! it is read by init subroutine
+  subroutine read_table_dmc()
 
-end subroutine init_cooling_dmc
-
-!=======================================================================
-
-!> @brief Reads the cooling curve table
-!> @details Reads the Dalgarno McCray cooling courve
-!! the location is assumed in src/DMClib/coolingDMC.tab,
-!! it is read by init subroutine
-
-subroutine read_table_dmc()
-
-  use parameters, only : workdir, master
-  use globals, only : rank
+    use parameters, only : workdir, master
+    use globals, only : rank
 #ifdef MPIP
-  use mpi
+    use mpi
 #endif
-  implicit none
-  integer :: i, err
-  real (kind=8) :: a, b
+    implicit none
+    integer :: i, err
+    real (kind=8) :: a, b
 
-
-  if(rank.eq.master) then
-     open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',status='old')
-     do i=1,41
-        read(10,*) a, b
-        cooltab_dmc(1,i)=10.e0**(a)
-        cooltab_dmc(2,i)=10.e0**(-b)
-     end do
-     close(unit=10)
-  endif
+    if(rank.eq.master) then
+      open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',         &
+           status='old')
+       do i=1,41
+         read(10,*) a, b
+         cooltab_dmc(1,i)=10.e0**(a)
+         cooltab_dmc(2,i)=10.e0**(-b)
+       end do
+       close(unit=10)
+     endif
 #ifdef MPIP
-  call mpi_bcast(cooltab_dmc,82,mpi_real8,0,mpi_comm_world,err)
+    call mpi_bcast(cooltab_dmc,82,mpi_real8,0,mpi_comm_world,err)
 #endif
 
-end subroutine read_table_dmc
+  end subroutine read_table_dmc
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Returns the cooling coefficient interpolating the table
+  !> @param real [in] T : Temperature K
+  function cooldmc(T)
 
-!> @brief Returns the cooling coefficient interpolating the table
-!> @param real [in] T : Temperature K
+    real , intent(in) :: T
+    integer           :: if1
+    real (kind=8)     :: cooldmc, T0, T1, C0, C1
 
-function cooldmc(T)
+    if(T.gt.1e8) then
+      cooldmc=0.27e-26*Sqrt(real(T,8))
+    else
+      if1=int(log10(T)*10)-39
+      T0=cooltab_dmc(1,if1)
+      c0=cooltab_dmc(2,if1)
+      T1=cooltab_dmc(1,if1+1)
+      c1=cooltab_dmc(2,if1+1)
+      cooldmc=(c1-c0)*(real(T,8)-T0)/(T1-T0)+c0
+    end if
 
-  real , intent(in) :: T
-  integer           :: if1
-  real (kind=8)     :: cooldmc, T0, T1, C0, C1
+  end function cooldmc
 
-  if(T.gt.1e8) then
-    cooldmc=0.27e-26*Sqrt(real(T,8))
-  else
-    if1=int(log10(T)*10)-39
-    T0=cooltab_dmc(1,if1)
-    c0=cooltab_dmc(2,if1)
-    T1=cooltab_dmc(1,if1+1)
-    c1=cooltab_dmc(2,if1+1)
-    cooldmc=(c1-c0)*(real(T,8)-T0)/(T1-T0)+c0
-  end if
+  !=======================================================================
+  !> @brief High level wrapper to apply cooling with DMC table
+  !> @details High level wrapper to apply cooling with DMC table
+  !> @n cooling is applied in the entire domain and updates both the
+  !! conserved and primitive variables
+  subroutine coolingdmc()
 
-end function cooldmc
+    use parameters, only : nx, ny, nz, cv, Psc, tsc
+    use globals, only : u, primit, dt_CFL
+    use hydro_core, only : u2prim
+    implicit none
+    real                 :: T ,Eth0, dens
+    real, parameter :: Tmin=10000.
+    real (kind=8)        :: ALOSS, Ce
+    integer :: i, j, k
+    real :: dt_seconds
 
-!=======================================================================
+    dt_seconds = dt_CFL*tsc
 
-!> @brief High level wrapper to apply cooling with DMC table
-!> @details High level wrapper to apply cooling with DMC table
-!> @n cooling is applied in the entire domain and updates both the
-!! conserved and primitive variables
-
-subroutine coolingdmc()
-
-  use parameters, only : nx, ny, nz, cv, Psc, tsc
-  use globals, only : u, primit, dt_CFL
-  use hydro_core, only : u2prim
-  implicit none
-  real                 :: T ,Eth0, dens
-  real, parameter :: Tmin=10000.
-  real (kind=8)        :: ALOSS, Ce
-  integer :: i, j, k
-  real :: dt_seconds
-
-  dt_seconds = dt_CFL*tsc
-
-  do k=1,nz
-     do j=1,ny
+    do k=1,nz
+      do j=1,ny
         do i=1,nx
 
-           !   get the primitives (and T)
-           call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
+          !   get the primitives (and T)
+          call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
 
-           if(T > Tmin) then
+          if(T > Tmin) then
 
-              Eth0=cv*primit(5,i,j,k)
+            Eth0=cv*primit(5,i,j,k)
 
-              Aloss=cooldmc(T)
-              dens=primit(1,i,j,k)
-              Ce=(Aloss*real(dens,8)**2)/(Eth0*Psc)  ! cgs
+            Aloss=cooldmc(T)
+            dens=primit(1,i,j,k)
+            Ce=(Aloss*real(dens,8)**2)/(Eth0*Psc)  ! cgs
 
-              !  apply cooling to primitive and conserved variables
-              primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)
+            !  apply cooling to primitive and conserved variables
+            primit(5,i,j,k)=primit(5,i,j,k)*exp(-ce*dt_seconds)
 
-              !   u(neqdyn,new)=Ekin0+Eth_new
-              u(5,i,j,k)=u(5,i,j,k)-Eth0+cv*primit(5,i,j,k)
+            !   u(neqdyn,new)=Ekin0+Eth_new
+            u(5,i,j,k)=u(5,i,j,k)-Eth0+cv*primit(5,i,j,k)
 
-           end if
+          end if
 
         end do
-     end do
-  end do
+      end do
+    end do
 
-end subroutine coolingdmc
+  end subroutine coolingdmc
 
-!======================================================================
+  !======================================================================
 
 end module cooling_dmc
-
-!======================================================================
