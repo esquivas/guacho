@@ -73,5 +73,3 @@ module globals
   integer :: currentIteration  !< Current iteration
 
 end module globals
-
-!=======================================================================
