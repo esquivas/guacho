@@ -43,7 +43,7 @@ contains
     use globals,    only : u, primit, dt_CFL, coords, dx, dy, dz, rank
     use network,    only : n_elem, iHI, iHII, iHeI, iHeII, iHeIII, iH, iHe
     use hydro_core, only : u2prim
-    use difrad,     only : ph
+    use difrad,     only : phHI, phHeI, phHeII
     use exoplanet,  only : RSW, RPW, xp, yp, zp
     implicit none
     real :: dt_seconds, T, y(n_spec), y0(n_elem)
@@ -81,7 +81,8 @@ contains
 
           ! IF OUTSIDE THE STAR
           if( (rads >= rsw) .and. (radp >= rpw) ) then
-            call chemstep(y, y0, T, dt_seconds, ph(i,j,k) )
+            call chemstep(y, y0, T, dt_seconds, phHI(i,j,k), phHeI(i,j,k),     &
+                                                phHeII(i,j,k) )
           end if
 
           !  update the primitives and conserved variables
@@ -113,14 +114,14 @@ contains
   !> elements involved in the reactions
   !> @param real [in] T : Temperature [K]
   !> @param real [in] deltt : time interval (from the hydro, in seconds)
-  subroutine chemstep(y,y0,T, deltt,phiH)
+  subroutine chemstep(y,y0,T, deltt,phiHI, phiHeI, phiHeII)
     use linear_system
     use parameters, only : n_spec
     use network,    only : n_reac, n_elem, get_reaction_rates,                 &
                            derv, get_jacobian, n_nequ, check_no_conservation
     implicit none
     real (kind=8), intent(inout) :: y(n_spec)
-    real (kind=8), intent(in) ::    y0(n_elem), T, deltt  , phiH
+    real (kind=8), intent(in) ::    y0(n_elem), T, deltt, phiHI, phiHeI, phiHeII
     real (kind=8) :: dtm
     real (kind=8) :: y1(n_spec),yin(n_spec), y0_in(n_elem), yt(n_spec)
     real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
@@ -133,7 +134,7 @@ contains
     yin(:) =y (:)
     y0_in(:) = y0(:)
 
-    call get_reaction_rates(rate,T,phiH)
+    call get_reaction_rates(rate,T,phiHI,phiHeI,phiHeII)
 
     do while ( n <= niter )
 
