@@ -87,7 +87,7 @@ contains
   !>   on all the domain
   !> @param integer [in] choice : 1, uses primit for the 1st half of timestep
   !> (first order)
-  !>                  @n 2 uses primit for second order timestep
+  !> @n 2 uses primit for second order timestep
   subroutine hllEfluxes(choice)
 
     use parameters, only : neq, nx, ny, nz
