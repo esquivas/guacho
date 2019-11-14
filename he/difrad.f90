@@ -33,11 +33,9 @@ module difrad
   use globals
 
   implicit none
-  real, parameter    :: a0HI  = 6.3e-18 !< Fotoionization cross section of HI
-  real, parameter    :: a0HeI =         !< Fotoionization cross section of HeI
-  real, parameter    :: a0HeII=         !< Fotoionization cross section of HeII
-
   integer, parameter :: nrays=1E7      !< Number of rays
+  !> Fotoionization cross sections of HI, HeI anh HeII, and the corresponding S*
+  real               :: a0(3), S_ion(3)
   real, allocatable  :: phHI(:,:,:)    !< Photoionizing rate of H I
   real, allocatable  :: phHeI(:,:,:)   !< Photoionizing rate of HeI
   real, allocatable  :: phHeII(:,:,:)  !< Photoionizing rate of HeII
@@ -63,7 +61,15 @@ contains
     character (len=10) :: system_time
     real :: rtime
 
-    allocate( phH   (nx,ny,nz) )
+    a0(1) = 6.30e-18
+    a0(2) = 7.40e-18
+    a0(2) = 1.70e-18
+
+    S_ion(1) = S0
+    S_ion(2) = S0
+    S_ion(3) = S0
+
+    allocate( phHI  (nx,ny,nz) )
     allocate( phHeI (nx,ny,nz) )
     allocate( phHeII(nx,ny,nz) )
 
@@ -192,27 +198,37 @@ contains
   !> @details Launches a photon from cell (xc,yc,zc) in the (xd,yd,zd)
   !! direction, with f and ionizing photons, and updates the
   !! photoionizing rate
-  !> @param real [in] xl0 : Initial X position
-  !> @param real [in] yl0 : Initial Y position
-  !> @param real [in] zl0 : Initial Z position
-  !> @param real [in] xd :  Direction in X
-  !> @param real [in] yd :  Direction in Y
-  !> @param real [in] zd :  Direction in Z
-  !> @param real [in] f  : NUmber of photoionizong photons *************
-  subroutine photons(xl0,yl0,zl0,xd,yd,zd,fHI,fHeI,fHeII)
+  !> @param real [in]  xl0 : Initial X position
+  !> @param real [in]  yl0 : Initial Y position
+  !> @param real [in]  zl0 : Initial Z position
+  !> @param real [in]  xd :  Direction in X
+  !> @param real [in]  yd :  Direction in Y
+  !> @param real [in]  zd :  Direction in Z
+  !> @param real [in]  f  :  Number of photoionizong photons
+  !> @param real [out] ph :  Photionizing rate
+  subroutine photons(xl0,yl0,zl0,xd,yd,zd,f,phi,i_spec)
 
     use network, only : iHI, iHeI, iHeII
     implicit none
     real, intent(in) :: xl0, yl0, zl0, xd,yd,zd
-    real, intent(inout) :: fHI, fHeI , fHeII)
-    real :: dl, dxl, dyl, dzl, xl, yl, zl, dtauHI, dtauHeI, dtauHeII
+    real, intent(inout) :: f
+    real, intent(inout) :: phi(nx,ny,nz)
+    integer, intent(in) :: i_spec
+    real :: dl, dxl, dyl, dzl, xl, yl, zl, dtau
     real :: fmin
-    integer :: i, j ,k
+    integer :: i, j ,k, i_eq
 
-    !     photon trajectory
-    fmin = min(fHI,  fHeI )
-    fmin = min(fmin, fHeII)
-    fmin=1.e-10*fmin
+    select case(i_eq)
+
+    case(1)
+      i_eq = n1_chem-1+iHI
+    case(2)
+      i_eq = n1_chem-1+iHeI
+    case(3)
+      i_eq = n1_chem-1+iHeII
+    end select
+
+    fmin=1.e-10*f
 
     dl=0.5
     dxl=dl*xd
@@ -305,47 +321,22 @@ contains
         .and. (k <= nz).and.(k >= 1) &
         )
 
-    dtauHI   = u(n1_chem-1+iHI  ,i,j,k) * a0HI   *dl*dx*rsc
-    dtauHeI  = u(n1_chem-1+iHeI ,i,j,k) * a0HeI  *dl*dx*rsc
-    dtauHeII = u(n1_chem-1+iHeII,i,j,k) * a0HeII *dl*dx*rsc
-
-    !  HI
-    if (dtauHI < 1E-5) then
-      phHI(i,j,k)=fHI *a0HI *dl/((dx*rsc)**2)
-      fHI=(1.-dtauHI)*fHI
+    dtau  = u(i_eq,i,j,k) * a0(i_spec) *dl*dx*rsc
+    if (dtau < 1E-5) then
+      phi(i,j,k) = f *a0(i_spec) *dl/((dx*rsc)**2)
+      f = (1.-dtau)*f
     else
-      phHI(i,j,k)= phHI(i,j,k)+ fHI * (1.-exp(-dtauHI) )                       &
-                     /(u(n1_chem-1+iHI,i,j,k)*(dx*rsc)**3 )
-      fHI=fHI*exp(-dtauHI)
-    end if
-
-    !  He I
-    if (dtauHeI < 1E-5) then
-      phHeI(i,j,k)=fHeI *a0HeI *dl/((dx*rsc)**2)
-      fHeI=(1.-dtauHeI)*fHeI
-    else
-      phHeI(i,j,k)= phHeI(i,j,k)+ fHeI * (1.-exp(-dtauHeI) )                   &
-                     /(u(n1_chem-1+iHeI,i,j,k)*(dx*rsc)**3 )
-      fHeI=fHeI*exp(-dtauHeI)
-    end if
-
-    !  He II
-    if (dtauHeII < 1E-5) then
-      phHeII(i,j,k)=fHeII *a0HeII *dl/((dx*rsc)**2)
-      fHeII=(1.-dtauHeII)*fHeII
-    else
-      phHeII(i,j,k)= phHeII(i,j,k)+ fHeII * (1.-exp(-dtauHeII) )               &
-                     /(u(n1_chem-1+iHeII,i,j,k)*(dx*rsc)**3 )
-      fHeII=fHeII*exp(-dtauHeII)
+      phi(i,j,k) = phi(i,j,k) + f*(1.-exp(-dtau) )/(u(i_eq,i,j,k)*(dx*rsc)**3 )
+      f = f*exp(-dtau)
     end if
 
      xl=xl+dxl
      yl=yl+dyl
      zl=zl+dzl
 
-     i=int(xl+0.5)
-     j=int(yl+0.5)
-     k=int(zl+0.5)
+     i=int(xl + 0.5)
+     j=int(yl + 0.5)
+     k=int(zl + 0.5)
 
      !  the photon reaches the domain boundaries
      if (i < 1) then
@@ -425,10 +416,12 @@ contains
  !=======================================================================
  !> @brief follows the rays across MPI boundaries
  !> @details follows the rays across MPI boundaries
- subroutine radbounds()
+ subroutine radbounds(phi, i_spec)
 
 #ifdef MPIP
     implicit none
+    real ,   intent(inout) :: phi(nx,ny,nz)
+    integer, intent(in)    :: i_spec
     integer :: ip
     integer :: AllBufferSize(np*6), sizeSend, sizeRecv, niter
     integer,  parameter :: length=np*6
@@ -546,7 +539,8 @@ contains
       if(left /= MPI_PROC_NULL) then
         do niter=1,Allbuffersize(6*left+2)
           call photons(photL(2,1,niter),photL(2,2,niter),photL(2,3,niter),     &
-          photL(2,4,niter),photL(2,5,niter),photL(2,6,niter),photL(2,7,niter) )
+          photL(2,4,niter),photL(2,5,niter),photL(2,6,niter),photL(2,7,niter), &
+           phi, i_spec )
         end do
       endif
 
@@ -554,40 +548,45 @@ contains
       if(right /= MPI_PROC_NULL) then
         do niter=1,Allbuffersize(6*right+1)
           call photons(photR(2,1,niter),photR(2,2,niter),photR(2,3,niter),     &
-          photR(2,4,niter),photR(2,5,niter),photR(2,6,niter),photR(2,7,niter) )
+          photR(2,4,niter),photR(2,5,niter),photR(2,6,niter),photR(2,7,niter), &
+           phi, i_spec )
         end do
       end if
 
       !  bottom face
       if(bottom /= MPI_PROC_NULL) then
         do niter=1,Allbuffersize(6*bottom+4)
-          call photons(photB(2,1,niter),photB(2,2,niter),photB(2,3,niter), &
-          photB(2,4,niter),photB(2,5,niter),photB(2,6,niter),photB(2,7,niter) )
+          call photons(photB(2,1,niter),photB(2,2,niter),photB(2,3,niter),     &
+          photB(2,4,niter),photB(2,5,niter),photB(2,6,niter),photB(2,7,niter), &
+          phi, i_spec )
         end do
       end if
 
       !  top face
       if(top /= MPI_PROC_NULL) then
         do niter=1,Allbuffersize(6*top+3)
-          call photons(photT(2,1,niter),photT(2,2,niter),photT(2,3,niter), &
-          photT(2,4,niter),photT(2,5,niter),photT(2,6,niter),photT(2,7,niter) )
+          call photons(photT(2,1,niter),photT(2,2,niter),photT(2,3,niter),     &
+          photT(2,4,niter),photT(2,5,niter),photT(2,6,niter),photT(2,7,niter), &
+          phi, i_spec )
         end do
       end if
 
       !  out face
       if(out /= MPI_PROC_NULL) then
-      do niter=1,Allbuffersize(6*out+6)
-        call photons(photO(2,1,niter),photO(2,2,niter),photO(2,3,niter), &
-        photO(2,4,niter),photO(2,5,niter),photO(2,6,niter),photO(2,7,niter) )
+        do niter=1,Allbuffersize(6*out+6)
+          call photons(photO(2,1,niter),photO(2,2,niter),photO(2,3,niter),     &
+          photO(2,4,niter),photO(2,5,niter),photO(2,6,niter),photO(2,7,niter), &
+          phi, i_spec )
       end do
       end if
 
       !  in face
       if(in /= MPI_PROC_NULL) then
-      do niter=1,Allbuffersize(6*in+5)
-        call photons(photI(2,1,niter),photI(2,2,niter),photI(2,3,niter), &
-        photI(2,4,niter),photI(2,5,niter),photI(2,6,niter),photI(2,7,niter) )
-      end do
+        do niter=1,Allbuffersize(6*in+5)
+          call photons(photI(2,1,niter),photI(2,2,niter),photI(2,3,niter),     &
+          photI(2,4,niter),photI(2,5,niter),photI(2,6,niter),photI(2,7,niter), &
+          phi, i_spec )
+        end do
       end if
 
       !  reset the remaining out buffers
@@ -627,16 +626,11 @@ contains
   subroutine diffuse_rad()
 
     implicit none
-    real :: fHI, fHeI,fHeII, dirx,diry,dirz
-    real :: Srad, xc,yc,zc, xp, yp, zp
+    real :: f, dirx,diry,dirz,srad
+    real :: xc,yc,zc, xp, yp, zp
     integer :: i,j,k, err, niter, ii, jj, kk
-    integer :: in, nmax
-
-    !resets the photoionization rate
-    phHI(:,:,:)=0.
-    phHeI(:,:,:)=0.
-    phHeII(:,:,:)=0.
-    buffersize(:)=0
+    integer :: in, nmax, i_spec
+    real    :: phi(nx,ny,nz)
 
     !   posicion de la fuente ionizante
     xc = real(nxtot/2)*dx
@@ -647,52 +641,82 @@ contains
     ! this is the radius of the actual star [code units]
     srad=Rstar
 
-    in=0  ! number or rays successfully injected
-    do niter=1, nrays
-      !  get the location and direction of the photon to be traced
-      !  from 1:nxtot, 1:nytot, 1:nztot
-      call starsource(srad,xc,yc,zc,xp,yp,zp,dirx,diry,dirz)
+    !resets the photoionization rate
+    phHI(:,:,:)   = 0.0
+    phHeI(:,:,:)  = 0.0
+    phHeII(:,:,:) = 0.0
+
+    do i_spec = 1, 3 !  1:HI, 2:HeI, 3:HeII
+
+      !resets the photoionization rate
+      phi(:,:,:)    = 0.0
+      buffersize(:) = 0.0
+      photL(:,:,:)  = 0.0
+      photR(:,:,:)  = 0.0
+      photB(:,:,:)  = 0.0
+      photT(:,:,:)  = 0.0
+      photO(:,:,:)  = 0.0
+      photI(:,:,:)  = 0.0
 
       !  flujo de fotones ionizantes:not divided by np
-      fHI   = S0
-      fHeI  = S0 *0.0
-      fHeII = S0 *0.0
+      f = S_ion(i_spec)
 
-      i=int(xp/dx - 0.5)
-      j=int(yp/dy - 0.5)
-      k=int(zp/dz - 0.5)
+      in=0  ! number or rays successfully injected
+      do niter=1, nrays
 
-      ii=i/nx
-      jj=j/ny
-      kk=k/nz
+        !  get the location and direction of the photon to be traced
+        !  from 1:nxtot, 1:nytot, 1:nztot
+        call starsource(srad,xc,yc,zc,xp,yp,zp,dirx,diry,dirz)
 
-      if( (ii==coords(0)).and.(jj==coords(1)).and.(kk==coords(2))) then
-        in=in+1
-        ! trace the photon
-        call photons(real(i-coords(0)*nx) - 0.5, &
-                     real(j-coords(1)*ny) - 0.5, &
-                     real(k-coords(2)*nz) - 0.5, &
-                     dirx,diry,dirz,fHI,fHeI,fHeII)
-        !call progress(niter,nrays)
-      end if
+        i=int(xp/dx - 0.5)
+        j=int(yp/dy - 0.5)
+        k=int(zp/dz - 0.5)
 
-    end do
+        ii=i/nx
+        jj=j/ny
+        kk=k/nz
+
+        if( (ii==coords(0)).and.(jj==coords(1)).and.(kk==coords(2))) then
+          in=in+1
+
+          ! trace the photon
+          call photons(real(i-coords(0)*nx) - 0.5, &
+                       real(j-coords(1)*ny) - 0.5, &
+                       real(k-coords(2)*nz) - 0.5, &
+                       dirx,diry,dirz,f,phi,i_spec)
+          !call progress(niter,nrays)
+        end if
+
+      end do
 
     !determine the actual number of photons injected, !
     !and divide ph among them
 #ifdef MPIP
-    call mpi_allreduce(in, nmax, 1, mpi_integer, mpi_sum, mpi_comm_world,err)
+      call mpi_allreduce(in, nmax, 1, mpi_integer, mpi_sum, mpi_comm_world,err)
 #else
-    nmax=in
+      nmax=in
 #endif
-    ! trace photons across boundaries)
-    call radbounds()
 
-    phHI(:,:,:)   = phHI(:,:,:)   / real(nmax)
-    phHeI(:,:,:)  = phHeI(:,:,:)  / real(nmax)
-    phHeII(:,:,:) = phHeII(:,:,:) / real(nmax)
+    ! trace photons across boundaries)
+      call radbounds(phi,i_spec)
+
+      select case(i_spec)
+
+      case (1)  ! HI
+        phHI(:,:,:)     = phi(:,:,:)   / real(nmax)
+
+      case(2)  ! HeI
+        phHeI(:,:,:)    = phi(:,:,:)   / real(nmax)
+
+      case(3)  ! HeII
+        phHeII(:,:,:)   = phi(:,:,:)   / real(nmax)
+
+      end select
+
+    end do
 
     return
+
   end subroutine diffuse_rad
 
   !=======================================================================
