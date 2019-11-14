@@ -34,31 +34,25 @@ module cooling_chem
 contains
 
   !=======================================================================
+  subroutine init_cooling_chem()
+
+    use cooling_schure, only : init_cooling_schure
+    implicit none
+
+    call init_cooling_schure()
+
+  end subroutine init_cooling_chem
+
+  !=======================================================================
   !> @brief Cooling module using the chemistry
   !> @details Cooling using the ionization states computed with the ionic/
   !> chemistry module
   subroutine chem_cool()
-    use parameters, only : nx, ny, nz, tsc
-    use globals,    only : u, primit, dt_CFL
-    use hydro_core, only : u2prim
-    use difrad,     only : ph
-    use cooling_H,  only : cooling_h_neq
+
+    use cooling_schure, only : coolingschure
     implicit none
-    real    :: dt_seconds, T
-    integer :: i,j,k
 
-    dt_seconds = dt_CFL*tsc
-
-    do k=1,nz
-      do j=1,ny
-        do i=1,nx
-
-          !   get the primitives (and T)
-          call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, ph(i,j,k))
-
-        end do
-      end do
-    end do
+    call coolingschure()
 
   end subroutine chem_cool
 
@@ -67,5 +61,3 @@ contains
 #endif
 
 end module cooling_chem
-
-!======================================================================
