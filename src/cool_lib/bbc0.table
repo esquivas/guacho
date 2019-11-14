@@ -1,0 +1,6 @@
+Number_of_elements  Number_of_molecules 
+2 1
+Label Atomic#  Charge  Mass(amu)  Gam  Abundance
+H       1        0      1.0080  1.6667  1.00e+0
+He      2        0      4.0026  1.6667  9.77e-2
+Zb      0        0     16.0080  1.6667  0.00e+0
