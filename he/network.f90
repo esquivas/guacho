@@ -138,7 +138,7 @@
 
    subroutine get_reaction_rates(rate,T,phiHI, phiHeI, phiHeII)
      implicit none
-     real (kind=8), intent(in) :: T, phiH, phiHeI, phiHeII
+     real (kind=8), intent(in) :: T, phiHI, phiHeI, phiHeII
      real (kind=8),intent(out) :: rate(n_reac)
 
      ! indexes of the different rates
