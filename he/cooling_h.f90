@@ -36,8 +36,8 @@ contains
   !=======================================================================
   !> @brief High level wrapper to apply cooling
   !> @details High level wrapper to apply cooling
-  !! @n  parametrized cooling curve, uses the ionization state of
-  !! hydrogen and ties the O I and II to it
+  !> @n  parametrized cooling curve, uses the ionization state of
+  !> hydrogen and ties the O I and II to it
   subroutine coolingh()
 
     use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
@@ -56,9 +56,11 @@ contains
 
           if (dif_rad) then
             if (.not.charge_exchange) then
-              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, ph(i,j,k))
+              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      &
+                                 ph(i,j,k))
             else
-              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, phCold(i,j,k)+phHot(i,j,k))
+              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      *
+                                 phCold(i,j,k)+phHot(i,j,k))
             end if
           else
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, 0.)
@@ -89,15 +91,15 @@ contains
   !======================================================================
   !> @brief Non equilibrium cooling
   !> @details   Non-equilibrium energy loss for low temperatures
-  !!     considering the collisional excitation of [O I] and
-  !!   [O II] lines and radiative recombination of H. This
-  !!   cooling rate is multiplied by a factor of 7.033 so
-  !!   that it has the same value as the "coronal equilibrium"
-  !!   cooling rate at a temperature of 44770 K (at temperatures
-  !!   higher than this value, the equilibrium cooling rate is
-  !!   used). The collisional ionization of H and excitation
-  !!   of Lyman-alpha are computed separately, and added to
-  !!   the cooling rate.
+  !>     considering the collisional excitation of [O I] and
+  !>   [O II] lines and radiative recombination of H. This
+  !>   cooling rate is multiplied by a factor of 7.033 so
+  !>   that it has the same value as the "coronal equilibrium"
+  !>   cooling rate at a temperature of 44770 K (at temperatures
+  !>   higher than this value, the equilibrium cooling rate is
+  !>   used). The collisional ionization of H and excitation
+  !>   of Lyman-alpha are computed separately, and added to
+  !>   the cooling rate.
   !> @param real8 [in] x1  : initial H ionization fraction
   !> @param real8 [in] x2  : final H ionization fraction
   !> @param real [in] dt  : timestep
@@ -137,10 +139,10 @@ contains
     IF(TE.LE.55000.) OMEGA=C0+TE*(C1+TE*(C2+TE*C3))
     IF(TE.GE.72000.) OMEGA=D0+TE*(D1+TE*(D2+TE*D3))
     IF(TE.GT.55000..AND.TE.LT.72000.) THEN
-       OMEGAL=C0+TE*(C1+TE*(C2+TE*C3))
-       OMEGAH=D0+TE*(D1+TE*(D2+TE*D3))
-       FRAC=(TE-55000.)/17000.
-       OMEGA=(1.-FRAC)*OMEGAL+FRAC*OMEGAH
+      OMEGAL=C0+TE*(C1+TE*(C2+TE*C3))
+      OMEGAH=D0+TE*(D1+TE*(D2+TE*D3))
+      FRAC=(TE-55000.)/17000.
+      OMEGA=(1.-FRAC)*OMEGAL+FRAC*OMEGAH
     END IF
     QLA=8.6287E-6/(2.*SQRT(TE))*OMEGA*EXP(-ENK/TE)
     ECOLL=DE*DH0*QLA*EN
@@ -167,7 +169,6 @@ contains
     EOII=MAX(EOII,0.)
 
     !   free-free cooling
-
     BETAF=1.3*1.42E-27*TE**0.5
     HIICOOL=DE*DHP*BETAF
 
@@ -180,9 +181,9 @@ contains
     IF(TE.LE.44770.) FR=0.
     IF(TE.GE.54770.) FR=1.
     IF(TE.GT.44770..AND.TE.LT.54770.) THEN
-       EX2=EXP(-2.*(TE-49770.)/500.)
-       TANH=(1.-EX2)/(1.+EX2)
-       FR=0.5*(1.+TANH)
+      EX2=EXP(-2.*(TE-49770.)/500.)
+      TANH=(1.-EX2)/(1.+EX2)
+      FR=0.5*(1.+TANH)
     END IF
 
     ALOSS=ECOLL+EION+(EREC+7.033*(EOI+EOII))*(1.-FR)+EQUIL*FR
@@ -231,7 +232,7 @@ contains
       if(Tprime<1e3) print*, 'Tprime=', Tprime
     else
       tprime=10.
-     ! if(Tprime<1e3) print*, 'Tprime=', Tprime
+      ! if(Tprime<1e3) print*, 'Tprime=', Tprime
     end if
     !tprime=1000.
 
@@ -239,9 +240,9 @@ contains
     T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
     if(T1<1e3) then
-       print*, 'T1=', T1
-       print*, 'T=', T
-       print*, 'ce=', ce
+      print*, 'T1=', T1
+      print*, 'T=', T
+      print*, 'ce=', ce
     endif
 
     T1=max(T1,0.5*real(T,8) )
@@ -266,15 +267,13 @@ contains
 #endif
     else
       uu(5) = cv*pp(5) + 0.5*pp(1)*(pp(2)**2+pp(3)**2+pp(4)**2)
-
     end if
 
-  end subroutine cooling_h_neq
+end subroutine cooling_h_neq
 
-  !=======================================================================
+
+!======================================================================
 
 #endif
 
 end module cooling_H
-
-!======================================================================
