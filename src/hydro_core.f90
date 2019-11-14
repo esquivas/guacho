@@ -120,7 +120,7 @@ contains
       prim(5) = dentot * T /Tempsc
     end if
 
-    #endif
+#endif
 
   end subroutine u2prim
 
