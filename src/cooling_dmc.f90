@@ -25,7 +25,7 @@
 !> @brief Cooling module with Dalgarno McCray coronal cooling curve
 !> @details Cooling module with Dalgarno McCray coronal cooling curve
 !> @n The location of the tables is assumed to be in
-!! src/DMClib/coolingDMC.tab, it is read by init subroutine
+!! src/cool_lib/coolingDMC.tab, it is read by init subroutine
 
 module cooling_dmc
 
@@ -49,7 +49,7 @@ contains
   !=======================================================================
   !> @brief Reads the cooling curve table
   !> @details Reads the Dalgarno McCray cooling courve
-  !! the location is assumed in src/DMClib/coolingDMC.tab,
+  !! the location is assumed in src/cool_lib/coolingDMC.tab,
   !! it is read by init subroutine
   subroutine read_table_dmc()
 
@@ -63,7 +63,7 @@ contains
     real (kind=8) :: a, b
 
     if(rank.eq.master) then
-      open(unit=10,file=trim(workdir)//'../src/DMClib/coolingDMC.tab',         &
+      open(unit=10,file=trim(workdir)//'../src/cool_lib/coolingDMC.tab',         &
            status='old')
        do i=1,41
          read(10,*) a, b

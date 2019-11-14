@@ -144,7 +144,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  <span class="keywordtype">real (kind=8)</span> :: a, b</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keywordflow">if</span>(<a class="code" href="namespaceglobals.html#a93f283242b146b3ef8b53fd1b1ad7bac">rank</a> == master) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;     <span class="keyword">open</span>(unit=10,file= trim(workdir)//<span class="stringliteral">&#39;/src/CHIANTIlib/coolingCHIANTI.tab&#39;</span>,status=<span class="stringliteral">&#39;old&#39;</span>)</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;     <span class="keyword">open</span>(unit=10,file= trim(workdir)//<span class="stringliteral">&#39;/src/cool_lib/coolingCHIANTI.tab&#39;</span>,status=<span class="stringliteral">&#39;old&#39;</span>)</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;     <span class="keywordflow">do</span> i=1,41</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keyword">read</span>(10,*) a, b</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        cooltab_chianti(1,i)=a</div>
