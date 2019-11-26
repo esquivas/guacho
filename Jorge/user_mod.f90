@@ -31,7 +31,7 @@
 module user_mod
 
   ! load auxiliary modules
-  use exoplanet
+  use stars
 
   implicit none
 
@@ -44,7 +44,7 @@ subroutine init_user_mod()
 
   implicit none
   !  initialize modules loaded by user
-  call init_exo()
+  call init_stars()
 
 end subroutine init_user_mod
 
@@ -80,10 +80,10 @@ subroutine initial_conditions(u)
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
 
-        VelX=VSW*X/RADS
-        VelY=VSW*Y/RADS
-        VelZ=VSW*Z/RADS
-        DENS=DSW*RSW**2/RADS**2
+        VelX=0.0 !VSW*X/RADS
+        VelY=0.0 !VSW*Y/RADS
+        VelZ=0.0 !VSW*Z/RADS
+        DENS=0.0 !DSW*RSW**2/RADS**2
         !   total density and momenta
         u(1,i,j,k) = dens
         u(2,i,j,k) = dens*velx
@@ -92,7 +92,7 @@ subroutine initial_conditions(u)
 
         ! total energy
         u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-        + cv*dens*1.9999*Tsw
+        + cv*dens*1.9999*0.0!Tsw
 
         !   Here the number density of the wind and planet
         !   components separately
@@ -113,7 +113,7 @@ subroutine initial_conditions(u)
     end do
   end do
 
-  call impose_exo(u,0.)
+  call impose_stars(u,0.)
 
 end subroutine initial_conditions
 
@@ -136,7 +136,7 @@ subroutine impose_user_bc(u,order)
 
   !  In this case the boundary is the same for 1st and second order)
   if (order >= 1) then
-    call impose_exo(u,time)
+    call impose_stars(u,time)
   end if
 
 end subroutine impose_user_bc
@@ -155,94 +155,12 @@ end subroutine impose_user_bc
 
 subroutine get_user_source_terms(pp,s, i, j , k)
 
-  ! Adds the Rad Pressure according to the Beta profile of Bourrier
-  use constants,  only : Ggrav
-  use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2,&
-                         beta_pressure, vsc
-  use globals,    only : dx, dy, dz, coords
-  use exoplanet
-  use radpress
+  use parameters, only : neq
   implicit none
-  integer, intent(in) :: i, j, k
-  integer             :: l, index, Nr
+  integer, intent(in) :: i, j ,k
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
-  integer, parameter  :: nb=2   ! 2 particles
-  real :: x(nb),y(nb),z(nb), GM(nb), rad2(nb)
-  real    :: xc ,yc, zc
-  real :: v, fracv, frac_neutro !, a, b, c
 
-  GM(1)= Ggrav*MassS/rsc/vsc2
-  GM(2)= Ggrav*MassP/rsc/vsc2
-
-  !   get cell position
-  xc=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
-  yc=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
-  zc=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
-
-  ! calculate distance from the sources
-  ! star
-  x(1)=xc
-  y(1)=yc
-  z(1)=zc
-  rad2(1) = x(1)**2 +y(1)**2 + z(1)**2
-  ! planet
-  x(2)=xc-xp
-  y(2)=yc
-  z(2)=zc-zp
-  rad2(2) = x(2)**2 +y(2)**2 + z(2)**2
-
-
-if ( beta_pressure ) then
-
-    beta(i,j,k) = 0.
-    !  do only outside BC
-    if( (rad2(1) >= rsw**2) .and. (rad2(2) >= rpw**2) ) then
-
-      !compute Beta for radiation pressure
-      Nr = 800 !!vr and Br dimension
-
-      frac_neutro = pp(6)/pp(1)        !!Each cell feels a given pressure proporcional to the neutrals fraction
-      !a = zc/sqrt((xc**2+yc**2+zc**2)) !!cos(theta)
-      !b = sqrt(1-a**2)                 !!sin(theta)
-      !c = atan2(yc,xc)                  !!Phi
-
-      !v = (pp(2)*b*cos(c) + pp(3)*b*sin(c) + pp(4)*a)*(sqrt(vsc2)/10**5) !!Radial component of velocity
-      !  Radial velocity in km s^-1
-      v =  ( (pp(2)*xc + pp(3)*yc + pp(4)*zc)/sqrt(rad2(1)) ) * (vsc/1e5)
-
-      fracv = (v-vr(1))/(vr(Nr)-vr(1))*Nr
-      index = int(fracv)+1
-
-      if (index < 1) then
-        !print*, 'index out of bounds', index, xc, yc, zc
-        !print*, coords(:),i, j, k
-        index = 1
-      else if ( index > 799 ) then
-        !print*, 'index out of bounds', index, xc, yc, zc
-        !print*, coords(:), i, j, k
-        index = 799
-      end if
-
-      Beta(i,j,k) = ( Br(index)  + (v-vr(index))*( Br(index+1)-Br(index) ) / ( vr(index+1)-vr(index) ) ) *frac_neutro!*active
-
-      !!Linear interpolation for Beta, active allows turn on the Beta term.
-      GM(1)=GM(1)*(1.-Beta(i,j,k)) !!Update scale factor GM
-
-    end if
-
-  endif
-
-    ! update source terms with gravity
-    do l=1, nb
-      ! momenta
-      s(2)= s(2)-pp(1)*GM(l)*x(l)/(rad2(l)**1.5)
-      s(3)= s(3)-pp(1)*GM(l)*y(l)/(rad2(l)**1.5)
-      s(4)= s(4)-pp(1)*GM(l)*z(l)/(rad2(l)**1.5)
-      ! energy
-      s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
-      /(rad2(l)**1.5 )
-    end do
 
 end subroutine get_user_source_terms
 
