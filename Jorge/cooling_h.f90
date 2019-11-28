@@ -228,7 +228,7 @@ contains
     T1=min(T1,2.*real(T,8) )
     !  t1=max(t1,tprime)
 
-    ch_factor = 1. !real(T1)/T
+    ch_factor = real(T1)/T
 
     !  update pressure
     pp(5) = pp(5) * ch_factor
