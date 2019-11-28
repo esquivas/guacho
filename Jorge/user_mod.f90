@@ -58,60 +58,18 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         neqdyn
-  use globals,    only: coords, dx ,dy ,dz
+                         neqdyn, cv, Tempsc
 
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  real, parameter :: nenv=0.16, Tenv=1e4
+  !impose enironment
 
-  integer :: i,j,k
-  real :: x,y,z, rads, velx, vely, velz, dens
-  !  the star wind does not cover the entire domain, we fill here
-  !  as if the exoplanet is absent
-  do i=nxmin,nxmax
-    do j=nymin,nymax
-      do k=nzmin,nzmax
-
-        ! Position measured from the centre of the grid (star)
-        x=( real(i+coords(0)*nx-nxtot/2) - 0.5 )*dx
-        y=( real(j+coords(1)*ny-nytot/2) - 0.5 )*dy
-        z=( real(k+coords(2)*nz-nztot/2) - 0.5 )*dz
-
-        ! Distance from the centre of the star
-        rads=sqrt(x**2+y**2+z**2)
-
-        VelX=0.0 !VSW*X/RADS
-        VelY=0.0 !VSW*Y/RADS
-        VelZ=0.0 !VSW*Z/RADS
-        DENS=0.0 !DSW*RSW**2/RADS**2
-        !   total density and momenta
-        u(1,i,j,k) = dens
-        u(2,i,j,k) = dens*velx
-        u(3,i,j,k) = dens*vely
-        u(4,i,j,k) = dens*velz
-
-        ! total energy
-        u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-        + cv*dens*1.9999*0.0!Tsw
-
-        !   Here the number density of the wind and planet
-        !   components separately
-        u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
-        u(neqdyn+3,i,j,k) =  1.E-4*dens   ! xhn*rho S neutro
-        u(neqdyn+4,i,j,k) =     0.*dens   ! xci*rho P ion
-        u(neqdyn+5,i,j,k) =     0.*dens   ! xcn*rho P neutro
-
-        ! ne
-        u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
-        !density of neutrals
-        u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-
-        !   passive scalar (tag) for stellar material
-        u(neqdyn+7,i,j,k)= 1000*dens
-
-      end do
-    end do
-  end do
+  u(1,:,:,:)   = nenv ! is already in code units
+  u(2:4,:,:,:) = 0.
+  u(5,:,:,:)   = cv*nenv*Tenv/Tempsc
+  u(6,:,:,:)   = 0.9999*nenv
+  u(7,:,:,:)   = -nenv
 
   call impose_stars(u,0.)
 
