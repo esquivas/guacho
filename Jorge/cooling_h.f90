@@ -127,7 +127,7 @@ contains
 
     SHP=-DH*(X1-X2)/DT  !  ?```
     if(TE <= 1e4 ) then
-      ALOSS = 0.
+      ALOSS = 1.e-35
       return
     end if
 
@@ -211,7 +211,8 @@ contains
 
     !  get the energy losses
     al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
-
+    !al = max(1e-30,al)
+    !print*, T, al
     if (dif_rad) then
       gain=real(radphi,8)*dh0*Kb*1.E4 !3.14d5
       Tprime=max( gain*real(T,8)/(dh**2*al),1000.)
@@ -227,13 +228,10 @@ contains
     T1=min(T1,2.*real(T,8) )
     !  t1=max(t1,tprime)
 
-    ch_factor = real(T1)/T
+    ch_factor = 1. !real(T1)/T
 
     !  update pressure
-    !pp(5) = pp(5) * ch_factor
-
-    !  set pressure floor "a la mala"
-    pp(5) = max(pp(5),(pp(1)+pp(11))*10000./Tempsc)
+    pp(5) = pp(5) * ch_factor
 
     !  update total energy density
     if (mhd) then
