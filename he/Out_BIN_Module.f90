@@ -179,25 +179,34 @@ subroutine write_BIN(itprint)
       ! take turns
       do ip=0, np-1
         if(rank == ip) then
-  
+
           write(file1,'(a,i3.3,a,i3.3,a)') &
-                trim(outputpath)//'BIN/em-',rank,'.',itprint,'.bin'
+                trim(outputpath)//'BIN/phHI-',rank,'.',itprint,'.bin'
           unitout=10+rank
           open(unit=unitout,file=file1,status='replace', access='stream')
           call write_header(unitout,1,0)
-          write (unitout) em(:,:,:)
+          write (unitout) phHI(:,:,:)
           close(unitout)
           print'(i3,a,a)',rank," wrote file:",trim(file1)
-  
+
           write(file1,'(a,i3.3,a,i3.3,a)') &
-                trim(outputpath)//'BIN/ph-',rank,'.',itprint,'.bin'
+                trim(outputpath)//'BIN/phHeI-',rank,'.',itprint,'.bin'
           unitout=10+rank
           open(unit=unitout,file=file1,status='replace',access='stream')
           call write_header(unitout,1,0)
-          write (unitout) ph(:,:,:)
+          write (unitout) phHeI(:,:,:)
           close(unitout)
           print'(i3,a,a)',rank," wrote file:",trim(file1)
-  
+
+          write(file1,'(a,i3.3,a,i3.3,a)') &
+                trim(outputpath)//'BIN/phHeII-',rank,'.',itprint,'.bin'
+          unitout=10+rank
+          open(unit=unitout,file=file1,status='replace',access='stream')
+          call write_header(unitout,1,0)
+          write (unitout) phHeII(:,:,:)
+          close(unitout)
+          print'(i3,a,a)',rank," wrote file:",trim(file1)
+
         end if
 #ifdef MPIP
           call mpi_barrier(mpi_comm_world, err)
@@ -273,5 +282,3 @@ end subroutine write_BIN
 !=======================================================================
 
 end module Out_BIN_Module
-
-!=======================================================================

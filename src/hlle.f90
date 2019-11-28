@@ -33,170 +33,166 @@ module hlle
 
 contains
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Solves the Riemann problem at the interface PL,PR
+  !! using the HLLE solver
+  !> @details Solves the Riemann problem at the interface betweem
+  !! PL and PR using the HLLE solver
+  !> @n The fluxes are computed in the X direction, to obtain the
+  !! y ans z directions a swap is performed
+  !> @param real [in] primL : primitives at the Left state
+  !> @param real [in] primR : primitives at the Right state
+  !> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
+  subroutine prim2fhlle(priml,primr,ff)
 
-!> @brief Solves the Riemann problem at the interface PL,PR
-!! using the HLLE solver
-!> @details Solves the Riemann problem at the interface betweem 
-!! PL and PR using the HLLE solver
-!> @n The fluxes are computed in the X direction, to obtain the
-!! y ans z directions a swap is performed
-!> @param real [in] primL : primitives at the Left state
-!> @param real [in] primR : primitives at the Right state
-!> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
+    use parameters, only : neq
+    use hydro_core, only : cfastX, prim2f, prim2u
+    implicit none
+    real, dimension(neq),intent(in   ) :: priml, primr
+    real, dimension(neq),intent(inout) :: ff
+    real, dimension(neq)               :: uR, uL, fL, fR
+    real :: csl, csr, sl, sr
 
-subroutine prim2fhlle(priml,primr,ff)
+    call cfastX(priml,csl)
+    call cfastX(primr,csr)
 
-  use parameters, only : neq
-  use hydro_core, only : cfastX, prim2f, prim2u
-  implicit none
-  real, dimension(neq),intent(in   ) :: priml, primr
-  real, dimension(neq),intent(inout) :: ff
-  real, dimension(neq)               :: uR, uL, fL, fR
-  real :: csl, csr, sl, sr
+    sr=max(priml(2)+csl,primr(2)+csr)
+    sl=min(priml(2)-csl,primr(2)-csr)
 
-  call cfastX(priml,csl)
-  call cfastX(primr,csr)
+    if (sl > 0) then
+      call prim2f(priml,ff)
+      return
+    endif
 
-  sr=max(priml(2)+csl,primr(2)+csr)
-  sl=min(priml(2)-csl,primr(2)-csr)
+    if (sr < 0) then
+      call prim2f(primr,ff)
+      return
+    endif
 
-  if (sl > 0) then
-     call prim2f(priml,ff)
-     return
-  endif
+    call prim2f(priml,fL)
+    call prim2f(primr,fR)
+    call prim2u(priml,uL)
+    call prim2u(primr,uR)
 
-  if (sr < 0) then
-     call prim2f(primr,ff)
-     return
-  endif
+    ff(:)=(sr*fL(:)-sl*fR(:)+sl*sr*(uR(:)-uL(:)))/(sr-sl)
 
-  call prim2f(priml,fL)
-  call prim2f(primr,fR)
-  call prim2u(priml,uL)
-  call prim2u(primr,uR)
-
-  ff(:)=(sr*fL(:)-sl*fR(:)+sl*sr*(uR(:)-uL(:)))/(sr-sl)
-
-  return
+    return
 
   end subroutine prim2fhlle
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Calculates HLLE fluxes from the primitive variables
+  !>   on all the domain
+  !> @details Calculates HLLE fluxes from the primitive variables
+  !>   on all the domain
+  !> @param integer [in] choice : 1, uses primit for the 1st half of timestep
+  !> (first order)
+  !> @n 2 uses primit for second order timestep
+  subroutine hllEfluxes(choice)
 
-!> @brief Calculates HLLE fluxes from the primitive variables 
-!!   on all the domain
-!> @details Calculates HLLE fluxes from the primitive variables 
-!!   on all the domain
-!> @param integer [in] choice : 1, uses primit for the 1st half of timestep
-!! (first order)
-!!                  @n 2 uses primit for second order timestep
+    use parameters, only : neq, nx, ny, nz
+    use globals, only : primit, f, g, h
+    use hydro_core, only : swapy, swapz, limiter
+    implicit none
+    integer, intent(in) :: choice
+    integer :: i, j, k
+    real, dimension(neq) :: priml, primr, primll, primrr, ff
 
-subroutine hllEfluxes(choice)
+    select case(choice)
 
-  use parameters, only : neq, nx, ny, nz
-  use globals, only : primit, f, g, h
-  use hydro_core, only : swapy, swapz, limiter
-  implicit none
-  integer, intent(in) :: choice
-  integer :: i, j, k
-  real, dimension(neq) :: priml, primr, primll, primrr, ff
-  !
-  select case(choice)
- 
-  case(1)        ! 1st half timestep
- 
-     do k=0,nz
+    case(1)        ! 1st half timestep
+
+      do k=0,nz
         do j=0,ny
-           do i=0,nx
- 
-              !------- x direction -------------------------------------
-              priml(:)=primit(:,i  ,j ,k )
-              primr(:)=primit(:,i+1,j ,k )
- 
-              call prim2fhlle(priml,primr,ff)
-              f(:,i,j,k)=ff(:)
+          do i=0,nx
 
-              !------- y direction -------------------------------------
-              priml(:)=primit(:,i ,j  ,k )
-              primr(:)=primit(:,i, j+1,k )
-              call swapy(priml,neq)
-              call swapy(primr,neq)
- 
-              call prim2fhlle(priml,primr,ff)
-              call swapy(ff,neq)
-              g(:,i,j,k)=ff(:)
+            !------- x direction -------------------------------------
+            priml(:)=primit(:,i  ,j ,k )
+            primr(:)=primit(:,i+1,j ,k )
 
-              !------- z direction -------------------------------------
-              priml(:)=primit(:,i ,j ,k  )
-              primr(:)=primit(:,i, j, k+1)
-              call swapz(priml,neq)
-              call swapz(primr,neq)
-              !
-              call prim2fhlle(priml,primr,ff)
-              call swapz(ff,neq)
-              h(:,i,j,k)=ff(:)
- 
-           end do
+            call prim2fhlle(priml,primr,ff)
+            f(:,i,j,k)=ff(:)
+
+            !------- y direction -------------------------------------
+            priml(:)=primit(:,i ,j  ,k )
+            primr(:)=primit(:,i, j+1,k )
+            call swapy(priml,neq)
+            call swapy(primr,neq)
+
+            call prim2fhlle(priml,primr,ff)
+            call swapy(ff,neq)
+            g(:,i,j,k)=ff(:)
+
+            !------- z direction -------------------------------------
+            priml(:)=primit(:,i ,j ,k  )
+            primr(:)=primit(:,i, j, k+1)
+            call swapz(priml,neq)
+            call swapz(primr,neq)
+
+            call prim2fhlle(priml,primr,ff)
+            call swapz(ff,neq)
+            h(:,i,j,k)=ff(:)
+
+          end do
         end do
-     end do
- 
-  case (2)   !  2nd half timestep
- 
-     do k=0,nz
+      end do
+
+    case (2)   !  2nd half timestep
+
+      do k=0,nz
         do j=0,ny
-           do i=0,nx
-  
-              !------- x direction ------------------------------------
-              priml (:)=primit(:,i,  j,k )
-              primr (:)=primit(:,i+1,j,k )
-              primll(:)=primit(:,i-1,j,k )
-              primrr(:)=primit(:,i+2,j,k )
-              call limiter(primll,priml,primr,primrr,neq)
- 
-              call prim2fhlle(priml,primr,ff)
-              f(:,i,j,k)=ff(:)
- 
-              !------- y direction ------------------------------------
-              priml (:)=primit(:,i,j  ,k )
-              primr (:)=primit(:,i,j+1,k )
-              primll(:)=primit(:,i,j-1,k )
-              primrr(:)=primit(:,i,j+2,k )
-              call swapy(priml,neq)
-              call swapy(primr,neq)
-              call swapy(primll,neq)
-              call swapy(primrr,neq)
-              call limiter(primll,priml,primr,primrr,neq)
- 
-              call prim2fhlle(priml,primr,ff)
-              call swapy(ff,neq)
-              g(:,i,j,k)=ff(:)
- 
-              !------- z direction ------------------------------------
-              priml (:)=primit(:,i,j,k  )
-              primr (:)=primit(:,i,j,k+1)
-              primll(:)=primit(:,i,j,k-1)
-              primrr(:)=primit(:,i,j,k+2)
-              call swapz(priml,neq)
-              call swapz(primr,neq)
-              call swapz(primll,neq)
-              call swapz(primrr,neq)
-              call limiter(primll,priml,primr,primrr,neq)
- 
-              call prim2fhlle(priml,primr,ff)
-              call swapz(ff,neq)
-              h(:,i,j,k)=ff(:)
- 
-           end do
+          do i=0,nx
+
+            !------- x direction ------------------------------------
+            priml (:)=primit(:,i,  j,k )
+            primr (:)=primit(:,i+1,j,k )
+            primll(:)=primit(:,i-1,j,k )
+            primrr(:)=primit(:,i+2,j,k )
+            call limiter(primll,priml,primr,primrr,neq)
+
+            call prim2fhlle(priml,primr,ff)
+            f(:,i,j,k)=ff(:)
+
+            !------- y direction ------------------------------------
+            priml (:)=primit(:,i,j  ,k )
+            primr (:)=primit(:,i,j+1,k )
+            primll(:)=primit(:,i,j-1,k )
+            primrr(:)=primit(:,i,j+2,k )
+            call swapy(priml,neq)
+            call swapy(primr,neq)
+            call swapy(primll,neq)
+            call swapy(primrr,neq)
+            call limiter(primll,priml,primr,primrr,neq)
+
+            call prim2fhlle(priml,primr,ff)
+            call swapy(ff,neq)
+            g(:,i,j,k)=ff(:)
+
+            !------- z direction ------------------------------------
+            priml (:)=primit(:,i,j,k  )
+            primr (:)=primit(:,i,j,k+1)
+            primll(:)=primit(:,i,j,k-1)
+            primrr(:)=primit(:,i,j,k+2)
+            call swapz(priml,neq)
+            call swapz(primr,neq)
+            call swapz(primll,neq)
+            call swapz(primrr,neq)
+            call limiter(primll,priml,primr,primrr,neq)
+
+            call prim2fhlle(priml,primr,ff)
+            call swapz(ff,neq)
+            h(:,i,j,k)=ff(:)
+
+          end do
         end do
-     end do
+      end do
 
-  end select
+    end select
 
-end subroutine hllEfluxes
+  end subroutine hllEfluxes
+
+  !=======================================================================
 
 #endif
 
 end module hlle
-
-!=======================================================================

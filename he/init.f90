@@ -44,6 +44,7 @@ contains
     use lmp_module
     use cooling_dmc
     use cooling_chi
+    use cooling_chem
     use difrad
     use thermal_cond
     use flux_cd_module
@@ -167,6 +168,8 @@ contains
     !   CHIANTI COOLING
     if (cooling == COOL_CHI) call init_cooling_chianti()
 
+    if (cooling == COOL_CHEM) call init_cooling_chem()
+
     !  Deprecated soon to be removed
     !   BBC COOLING
     !#ifdef COOLINGBBC
@@ -183,6 +186,9 @@ contains
 
     !  Thermal conduction
     if (th_cond /= TC_OFF) call init_thermal_cond()
+
+    !  Diffuse radiation transfer module required random numbers
+    if (dif_rad) call init_rand()
 
     !  create directories to write the outputs
     if (rank == master) then
@@ -203,9 +209,6 @@ contains
     !  User input initialization, it is called always,
     !  it has to be there, even if empty
     call init_user_mod()
-
-    !  Diffuse radiation transfer module required random numbers
-    if (dif_rad) call init_rand()
 
     !   write report of compilation parameters
 #ifdef MPIP
@@ -313,6 +316,9 @@ contains
         print'(a)', ''
       else if (cooling == COOL_CHI) then
         print'(a)', 'Radiative cooling ON (Uses table from CHIANTI)'
+        print'(a)', ''
+      else if (cooling == COOL_CHEM) then
+        print'(a)', 'Radiative cooling ON (Uses cooling_chem)'
         print'(a)', ''
       else
         print'(a)', 'Unrecognized cooling scheme'

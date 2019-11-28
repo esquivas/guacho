@@ -29,182 +29,177 @@ module coldens_utilities
 
 contains
 
-!> @brief Initializes data
-!> @details Initializes data, MPI and other stuff
+  !=======================================================================
+  !> @brief Initializes data
+  !> @details Initializes data, MPI and other stuff
+  subroutine init_coldens()
 
-subroutine init_coldens()
+    !  Initializes MPI, data arrays, etc
+    use parameters
+    use globals, only : u, dx, dy, dz, coords, rank, left, right, top, bottom, &
+                        out, in, rank, comm3d
+    implicit none
+    integer :: nps, err
+    integer, dimension(0:ndim-1) :: dims
+    logical, dimension(0:ndim-1) :: period
 
-!  Initializes MPI, data arrays, etc
-use parameters
-use globals, only : u, dx, dy, dz, coords, rank, left, right   &
-                     , top, bottom, out, in, rank, comm3d
-implicit none
-  integer :: nps, err
-  integer, dimension(0:ndim-1) :: dims
-  logical, dimension(0:ndim-1) :: period
-
-  !initializes MPI
+    !initializes MPI
 #ifdef MPIP
 #ifdef PERIODX
-  logical, parameter :: perx=.true.
+    logical, parameter :: perx=.true.
 #else
-  logical, parameter :: perx=.false.
+    logical, parameter :: perx=.false.
 #endif
 #ifdef PERIODY
-  logical, parameter :: pery=.true.
+    logical, parameter :: pery=.true.
 #else
-  logical, parameter :: pery=.false.
+    logical, parameter :: pery=.false.
 #endif
 #ifdef PERIODZ
-  logical, parameter :: perz=.true.
+    logical, parameter :: perz=.true.
 #else
-  logical, parameter :: perz=.false.
+    logical, parameter :: perz=.false.
 #endif
-  period(0)=perx
-  period(1)=pery
-  period(2)=perz
-  dims(0)  =MPI_NBX
-  dims(1)  =MPI_NBY
-  dims(2)  =MPI_NBZ
+    period(0)=perx
+    period(1)=pery
+    period(2)=perz
+    dims(0)  =MPI_NBX
+    dims(1)  =MPI_NBY
+    dims(2)  =MPI_NBZ
 
-  call mpi_init (err)
-  call mpi_comm_rank (mpi_comm_world,rank,err)
-  call mpi_comm_size (mpi_comm_world,nps,err)
-  if (nps.ne.np) then
-     print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
-     call mpi_finalize(err)
-     stop
-  endif
+    call mpi_init (err)
+    call mpi_comm_rank (mpi_comm_world,rank,err)
+    call mpi_comm_size (mpi_comm_world,nps,err)
+    if (nps.ne.np) then
+       print*, 'processor number (',nps,                                       &
+               ') is not equal to pre-defined number (',np,')'
+       call mpi_finalize(err)
+       stop
+    endif
 #else
-  rank=0
-  coords(:)=0
+    rank=0
+    coords(:)=0
 #endif
-  if(rank.eq.master) then
-     print '(a)' ,"*******************************************"
-     print '(a)' ,"                        _                 *"
-     print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
-     print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
-     print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
-     print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
-     print '(a)' ," |___/                                    *"
-  endif
+    if(rank.eq.master) then
+       print '(a)' ,"*******************************************"
+       print '(a)' ,"                        _                 *"
+       print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
+       print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
+       print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
+       print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
+       print '(a)' ," |___/                                    *"
+    endif
 #ifdef MPIP
-  if(rank.eq.master) then
-     print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
-     print '(a)' ,'*******************************************'
-     print '(a)', 'Calculating Column Density'
-  end if
-  call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
-       , comm3d, err)
-  call mpi_comm_rank(comm3d, rank, err)
-  call mpi_cart_coords(comm3d, rank, ndim, coords, err)
-  print '(a,i3,a,3i4)', 'processor ', rank                              &
-       ,' ready w/coords',coords(0),coords(1),coords(2)
-  call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
-  call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
-  call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
-  call mpi_barrier(mpi_comm_world, err)
-  !
+    if(rank.eq.master) then
+       print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
+       print '(a)' ,'*******************************************'
+       print '(a)', 'Calculating Column Density'
+    end if
+    call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1                 &
+         , comm3d, err)
+    call mpi_comm_rank(comm3d, rank, err)
+    call mpi_cart_coords(comm3d, rank, ndim, coords, err)
+    print '(a,i3,a,3i4)', 'processor ', rank                                   &
+         ,' ready w/coords',coords(0),coords(1),coords(2)
+    call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
+    call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
+    call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
+    call mpi_barrier(mpi_comm_world, err)
 #else
-  print '(a)' ,'*******************************************'
-  print '(a)' ,'*     running on a single processor       *'
-  print '(a)' ,'*******************************************'
-  print '(a)', 'Calculating Column Density'
+    print '(a)' ,'*******************************************'
+    print '(a)' ,'*     running on a single processor       *'
+    print '(a)' ,'*******************************************'
+    print '(a)', 'Calculating Column Density'
 #endif
 
-!   grid spacing
-  dx=xmax/nxtot
-  dy=ymax/nytot
-  dz=zmax/nztot
+    !  grid spacing
+    dx=xmax/nxtot
+    dy=ymax/nytot
+    dz=zmax/nztot
 
-!   allocate big arrays in memory
-allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+    !  allocate big arrays in memory
+    allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
-end subroutine init_coldens
+  end subroutine init_coldens
 
-!=======================================================================
+  !=======================================================================
+  !> @brief reads data from file
+  !> @details reads data from file
+  !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+  !! conserved variables
+  !> @param integer [in] itprint : number of output
+  !> @param string [in] filepath : path where the output is
+  subroutine read_data(u,itprint,filepath)
 
-!> @brief reads data from file
-!> @details reads data from file
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-!! conserved variables
-!> @param integer [in] itprint : number of output
-!> @param string [in] filepath : path where the output is
+    use parameters, only : np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+    use globals,    only : rank, comm3d
+    implicit none
+    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    integer, intent(in) :: itprint
+    character (len=128), intent(in) :: filepath
+    integer :: unitin, ip, err
+    character (len=128) file1
+    character           :: byte_read
+    character, parameter  :: lf = char(10)
+    integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp, neqp,     &
+               neqdynp, nghostp
+    real :: dxp, dyp, dzp, scal(3), cvp
 
-subroutine read_data(u,itprint,filepath)
-
-  use parameters, only : &
-                       np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals, only : rank, comm3d
-  implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  integer, intent(in) :: itprint
-  character (len=128), intent(in) :: filepath
-  integer :: unitin, ip, err
-  character (len=128) file1
-  character           :: byte_read
-  character, parameter  :: lf = char(10)
-  integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
-  real :: dxp, dyp, dzp, scal(3), cvp
-
-  take_turns : do ip=0,np-1
-    if (rank == ip) then
-
+    take_turns : do ip=0,np-1
+      if (rank == ip) then
 
 #ifdef MPIP
-      write(file1,'(a,i3.3,a,i3.3,a)')  &
-            trim(filepath)//'/BIN/points',rank,'.',itprint,'.bin'
-      unitin=rank+10
+        write(file1,'(a,i3.3,a,i3.3,a)')                                       &
+              trim(filepath)//'/BIN/points',rank,'.',itprint,'.bin'
+        unitin=rank+10
 #else
-      write(file1,'(a,i3.3,a)')         &
-            trim(filepath)//'/BIN/points',itprint,'.bin'
-      unitin=10
+        write(file1,'(a,i3.3,a)')                                              &
+              trim(filepath)//'/BIN/points',itprint,'.bin'
+        unitin=10
 #endif
-      open(unit=unitin,file=file1,status='old', access='stream', &
+        open(unit=unitin,file=file1,status='old', access='stream',             &
             convert='LITTLE_ENDIAN')
 
-      !   discard the ascii header
-      do while (byte_read /= achar(255) )
+        !   discard the ascii header
+        do while (byte_read /= achar(255) )
+          read(unitin) byte_read
+          !print*, byte_read
+        end do
+        !  read bin header, sanity check to do
         read(unitin) byte_read
-        !print*, byte_read
-      end do
-      !  read bin header, sanity check to do
-      read(unitin) byte_read
-      read(unitin) byte_read
-      read(unitin) nxp, nyp, nzp
-      read(unitin) dxp, dyp, dzp
-      read(unitin) x0p, y0p, z0p
-      read(unitin) mpi_xp, mpi_yp, mpi_zp
-      read(unitin) neqp, neqdynp
-      read(unitin) nghostp
-      read(unitin) scal(1:3)
-      read(unitin) cvp
-      read(unitin) u(:,:,:,:)
-      close(unitin)
+        read(unitin) byte_read
+        read(unitin) nxp, nyp, nzp
+        read(unitin) dxp, dyp, dzp
+        read(unitin) x0p, y0p, z0p
+        read(unitin) mpi_xp, mpi_yp, mpi_zp
+        read(unitin) neqp, neqdynp
+        read(unitin) nghostp
+        read(unitin) scal(1:3)
+        read(unitin) cvp
+        read(unitin) u(:,:,:,:)
+        close(unitin)
 
-      print'(i3,a,a)',rank,' read: ',trim(file1)
+        print'(i3,a,a)',rank,' read: ',trim(file1)
 
 #ifdef MPIP
-      call mpi_barrier(comm3d,err)
+        call mpi_barrier(comm3d,err)
 #endif
 
-    end if
-  end do take_turns
+      end if
+    end do take_turns
 
-end subroutine read_data
+  end subroutine read_data
 
-!=======================================================================
-
-!> @brief gets position of a cell
-!> @details Returns the position and spherical radius calculated with
-!! respect to  the center of the grid
-!> @param integer [in] i : cell index in the x direction
-!> @param integer [in] j : cell index in the y direction
-!> @param integer [in] k : cell index in the z direction
-!> @param real    [in] x : x position in the grid
-!> @param real    [in] y : y position in the grid
-!> @param real    [in] z : z position in the grid
-
+  !=======================================================================
+  !> @brief gets position of a cell
+  !> @details Returns the position and spherical radius calculated with
+  !! respect to  the center of the grid
+  !> @param integer [in] i : cell index in the x direction
+  !> @param integer [in] j : cell index in the y direction
+  !> @param integer [in] k : cell index in the z direction
+  !> @param real    [in] x : x position in the grid
+  !> @param real    [in] y : y position in the grid
+  !> @param real    [in] z : z position in the grid
   subroutine getXYZ(i,j,k,x,y,z)
 
     use globals,    only : dx, dy, dz, coords
@@ -219,249 +214,239 @@ end subroutine read_data
 
   end subroutine getXYZ
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Rotation around the X axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
+  subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 
-!> @brief Rotation around the X axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
+    ! rotation around the x axis by an angle theta
 
-subroutine rotation_x(theta,x,y,z,xn,yn,zn)
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    reaL, intent(out) :: xn, yn, zn
+    xn =   x
+    yn =   y*cos(theta) - z*sin(theta)
+    zn =   y*sin(theta) + z*cos(theta)
 
-   ! rotation around the x axis by an angle theta
+  end subroutine rotation_x
 
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   reaL, intent(out) :: xn, yn, zn
-   xn =   x
-   yn =   y*cos(theta) - z*sin(theta)
-   zn =   y*sin(theta) + z*cos(theta)
- end subroutine rotation_x
+  !=======================================================================
+  !> @brief Rotation around the Y axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
 
-!=======================================================================
+  subroutine rotation_y(theta,x,y,z,xn,yn,zn)
 
-!> @brief Rotation around the Y axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    real, intent(out) :: xn, yn, zn
+    xn =   x*cos(theta) + z*sin(theta)
+    yn =   y
+    zn = - x*sin(theta) + z*cos(theta)
 
- subroutine rotation_y(theta,x,y,z,xn,yn,zn)
+  end subroutine rotation_y
 
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   real, intent(out) :: xn, yn, zn
-   xn =   x*cos(theta) + z*sin(theta)
-   yn =   y
-   zn = - x*sin(theta) + z*cos(theta)
- end subroutine rotation_y
+  !=======================================================================
+  !> @brief Rotation around the Z axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
+  subroutine rotation_z(theta,x,y,z,xn,yn,zn)
 
-!=======================================================================
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    real, intent(out) :: xn, yn, zn
+    xn =   x*cos(theta) - y*sin(theta)
+    yn =   x*sin(theta) + y*cos(theta)
+    zn =   z
 
-!> @brief Rotation around the Z axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
+  end subroutine rotation_z
 
- subroutine rotation_z(theta,x,y,z,xn,yn,zn)
+  !=======================================================================
+  !> @brief Fill target map
+  !> @details Fills the target map of one MPI block
+  !> @param integer [in] nxmap : Number of X cells in target
+  !> @param integer [in] nymap : Number of Y cells in target
+  !> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
+  !! conserved variables
+  !> @param real [out] map(nxmap,mymap) : Target map
+  !> @param real [in] dxT : target pixel width
+  !> @param real [in] dyT : target pixel height
+  !> @param real [in] thetax : Rotation around X
+  !> @param real [in] thetay : Rotation around Y
+  !> @param real [in] thetaz : Rotation around Z
+  subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
 
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   real, intent(out) :: xn, yn, zn
-   xn =   x*cos(theta) - y*sin(theta)
-   yn =   x*sin(theta) + y*cos(theta)
-   zn =   z
- end subroutine rotation_z
+     use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+                           neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn, rhosc
+    use globals, only : dz
+    use hydro_core, only : u2prim
 
-!=======================================================================
+    implicit none
 
-!> @brief Fill target map
-!> @details Fills the target map of one MPI block
-!> @param integer [in] nxmap : Number of X cells in target
-!> @param integer [in] nymap : Number of Y cells in target
-!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
-!! conserved variables
-!> @param real [out] map(nxmap,mymap) : Target map
-!> @param real [in] dxT : target pixel width
-!> @param real [in] dyT : target pixel height
-!> @param real [in] thetax : Rotation around X
-!> @param real [in] thetay : Rotation around Y
-!> @param real [in] thetaz : Rotation around Z
+    integer, intent(in) :: nxmap,nymap
+    real, intent(in) :: u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax)
+    real , intent(in) :: dxT, dyT, theta_x, theta_y, theta_z
+    real, intent(out) :: map(nxmap,nymap)
+    integer :: i,j,k, iobs, jobs
+    real :: x,y,z,xn,yn,zn
 
+    do k=1,nz
+       do j=1,ny
+          do i=1,nx
 
-subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
+            !  obtain original position
+            call getXYZ(i,j,k, x,y,z)
 
-   use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn, rhosc
-  use globals, only : dz
-  use hydro_core, only : u2prim
+            !  do the rotation of the coordinates
+            call rotation_x(theta_x,x,y,z,xn,yn,zn)
+            call rotation_y(theta_y,xn,yn,zn,x,y,z)
+            call rotation_z(theta_z,x,y,z,xn,yn,zn)
+            ! This is the position on the target (centered)
+            ! Integration is along Z
+            iobs=xn/dxT + nxmap/2
+            jobs=yn/dyT + nymap/2
 
-  implicit none
+            !  make sure the result lies in the map bounds
+            if( (iobs >=1    ).and.(jobs >=1    ).and. &
+                (iobs <=nxmap).and.(jobs <=nymap) ) then
 
-  integer, intent(in) :: nxmap,nymap
-  real, intent(in) :: u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax)
-  real , intent(in) :: dxT, dyT, theta_x, theta_y, theta_z
-  real, intent(out) :: map(nxmap,nymap)
-  integer :: i,j,k, iobs, jobs
-  real :: x,y,z,xn,yn,zn
+              if (u(7,i,j,k) <= 0. ) then
+                map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
+              end if
 
-  do k=1,nz
-     do j=1,ny
-        do i=1,nx
-
-          !  obtain original position
-          call getXYZ(i,j,k, x,y,z)
-
-          !  do the rotation of the coordinates
-          call rotation_x(theta_x,x,y,z,xn,yn,zn)
-          call rotation_y(theta_y,xn,yn,zn,x,y,z)
-          call rotation_z(theta_z,x,y,z,xn,yn,zn)
-          ! This is the position on the target (centered)
-          ! Integration is along Z
-          iobs=xn/dxT + nxmap/2
-          jobs=yn/dyT + nymap/2
-
-          !  make sure the result lies in the map bounds
-          if( (iobs >=1    ).and.(jobs >=1    ).and. &
-              (iobs <=nxmap).and.(jobs <=nymap) ) then
-
-            if (u(7,i,j,k) <= 0. ) then
-              map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
             end if
-
-          end if
+        end do
       end do
     end do
-  end do
 
-end subroutine fill_map
+  end subroutine fill_map
 
-!=======================================================================
-!> @brief Writes header
-!> @details Writes header for binary input
-!> @param integer [in] unit : number of logical unit
+  !=======================================================================
+  !> @brief Writes header
+  !> @details Writes header for binary input
+  !> @param integer [in] unit : number of logical unit
+  subroutine write_header(unit, nx, ny)
 
-subroutine write_header(unit, nx, ny)
-  use globals, only : dx, dy, dz
-  use parameters,  only : rsc, vsc, rhosc, cv
-  implicit none
-  integer, intent(in) :: unit, nx, ny
-  character, parameter  :: lf = char(10)
-  character (len=128) :: cbuffer
+    use globals, only : dx, dy, dz
+    use parameters,  only : rsc, vsc, rhosc, cv
+    implicit none
+    integer, intent(in) :: unit, nx, ny
+    character, parameter  :: lf = char(10)
+    character (len=128) :: cbuffer
 
-  !  Write ASCII header
-  write(unit) "**************** Output for Guacho v1.1****************",lf
+    !  Write ASCII header
+    write(unit) "**************** Output for Guacho v1.1****************",lf
 
-  write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, 1
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Dimensions    : ", i0,x,i0,x,i0)') NX, NY, 1
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Spacings      : ", 3(es10.3))') dX, dY, dZ
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Block Origin, cells    : ", i0,x,i0,x,i0)') 0, 0, 0
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Block Origin, cells    : ", i0,x,i0,x,i0)') 0, 0, 0
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,x,i0,x,i0)') 1, 1, 1
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("MPI blocks (X, Y, Z)   : ", i0,x,i0,x,i0)') 1, 1, 1
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') 1, 1
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Number of Equations/dynamical ones  ", i0,"/",i0)') 1, 1
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Number of Ghost Cells  ", i0)') 0
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Number of Ghost Cells  ", i0)') 0
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer,'("Scalings ", a )')
-  write(unit) trim(cbuffer), lf
+    write(cbuffer,'("Scalings ", a )')
+    write(unit) trim(cbuffer), lf
 
-  write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)') &
-    rsc, vsc, rhosc
-  write(unit) trim(cbuffer), lf
+    write(cbuffer, '("r_sc: ",es10.3," v_sc: ",es10.3," rho_sc: ",es10.3)')    &
+      rsc, vsc, rhosc
+    write(unit) trim(cbuffer), lf
 
-   write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
-  write(unit) trim(cbuffer), lf
+     write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
+    write(unit) trim(cbuffer), lf
 
 #ifdef DOUBLEP
-  write(unit) "Double precision 8 byte floats",lf
+    write(unit) "Double precision 8 byte floats",lf
 #else
-  write(unit) "Double precision 4 byte floats",lf
+    write(unit) "Double precision 4 byte floats",lf
 #endif
 
-  write(unit) "*******************************************************",lf
-  write(unit) achar(255),lf
+    write(unit) "*******************************************************",lf
+    write(unit) achar(255),lf
 #ifdef DOUBLEP
-  write(unit) 'd'
+    write(unit) 'd'
 #else
-  write(unit) 'f'
+    write(unit) 'f'
 #endif
-  write(unit) nx, ny, 1
-  write(unit) dx, dy, dz
-  write(unit) 0, 0, 0
-  write(unit) 1, 1, 1
-  write(unit) 1, 1
-  write(unit) 0
-  write(unit) rsc, vsc, rhosc
-  write(unit) cv
+    write(unit) nx, ny, 1
+    write(unit) dx, dy, dz
+    write(unit) 0, 0, 0
+    write(unit) 1, 1, 1
+    write(unit) 1, 1
+    write(unit) 0
+    write(unit) rsc, vsc, rhosc
+    write(unit) cv
 
-end subroutine write_header
+  end subroutine write_header
 
+  !=======================================================================
+  !> @brief Writes projection to file
+  !> @details Writes projection to file
+  !> @param integer [in] itprint : number of output
+  !> @param string [in] fileout : file where to write
+  !> @param integer [in] nxmap : Number of X cells in target
+  !> @param integer [in] nymap : Number of Y cells in target
+  !> @param real [in] map(nxmap,mymap) : Target map
+  subroutine  write_map(fileout,nxmap,nymap,map)
 
-!=======================================================================
+    implicit none
+    integer, intent(in) :: nxmap, nymap
+    character (len=128), intent(in) :: fileout
+    real, intent(in) :: map(nxmap,nymap)
+    integer ::  unitout
 
-!> @brief Writes projection to file
-!> @details Writes projection to file
-!> @param integer [in] itprint : number of output
-!> @param string [in] fileout : file where to write
-!> @param integer [in] nxmap : Number of X cells in target
-!> @param integer [in] nymap : Number of Y cells in target
-!> @param real [in] map(nxmap,mymap) : Target map
+    unitout = 11
+    open(unit=unitout,file=trim(fileout),status='unknown',access='stream',     &
+         convert='LITTLE_ENDIAN')
 
-subroutine  write_map(fileout,nxmap,nymap,map)
+    call write_header(unitout,nxmap, nymap)
 
-  implicit none
-  integer, intent(in) :: nxmap, nymap
-  character (len=128), intent(in) :: fileout
-  real, intent(in) :: map(nxmap,nymap)
-  integer ::  unitout
+    write (unitout) map(:,:)
+    close(unitout)
 
-  unitout = 11
-  open(unit=unitout,file=trim(fileout),status='unknown',access='stream', &
-       convert='LITTLE_ENDIAN')
+    print'(a,a)'," wrote file:",trim(fileout)
 
-  call write_header(unitout,nxmap, nymap)
-
-  write (unitout) map(:,:)
-  close(unitout)
-
-  print'(a,a)'," wrote file:",trim(fileout)
-
-end subroutine write_map
+  end subroutine write_map
 
 !=======================================================================
 
 end module coldens_utilities
 
 !=======================================================================
-
 !> @brief Computes the H-alpha emission
 !> @details Computes the H-alpha apbsorption
 !! @n It rotates the data along each of the coordinates axis
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and  projectcs the
 !! map along the the LOS, which is taken to be the Z axis
-
 program coldens
 
   use constants, only : pi
@@ -530,15 +515,16 @@ program coldens
   !
   if (rank == master) then
      print'(a)', 'Calculating projection with angles of rotaton'
-     print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, ' &
-                                  ,theta_y*180./pi,'° around Y, '&
+     print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, '              &
+                                  ,theta_y*180./pi,'° around Y, '              &
                                   ,theta_z*180./pi,'° around Z, '
   end if
 
   !  add info to the map
   call fill_map(nxmap,nymap,u,map,dxT,dyT, theta_x, theta_y, theta_z)
   !  sum all the partial sums
-  call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master, comm3d, err)
+  call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master,        &
+                 comm3d, err)
 
   !  write result
   if (rank == master) then
@@ -553,5 +539,3 @@ program coldens
   stop
 
 end program coldens
-
-!=======================================================================

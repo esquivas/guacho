@@ -35,23 +35,23 @@ c     bbc5=L (L(Z,T))  bbc6=Zi (ioninzing near equilibrium)
 c     bbc7=Zr (recombining near equilibrium)
 c     bbc8=f (ionic fractions as a function of Z,T)
       open(unit=22,file=
-     & 'BBClib/bbc0.table',status='unknown')
+     & 'cool_libbbc0.table',status='unknown')
       open(unit=23,file=
-     & 'BBClib/bbc1.table',status='unknown')
+     & 'cool_libbbc1.table',status='unknown')
       open(unit=24,file=
-     & 'BBClib/bbc2.table',status='unknown')
+     & 'cool_libbbc2.table',status='unknown')
       open(unit=16,file=
-     & 'BBClib/bbc3.table',status='unknown')
+     & 'cool_libbbc3.table',status='unknown')
       open(unit=17,file=
-     & 'BBClib/bbc4.table',status='unknown')
+     & 'cool_libbbc4.table',status='unknown')
       open(unit=18,file=
-     & 'BBClib/bbc5.table',status='unknown')
+     & 'cool_libbbc5.table',status='unknown')
       open(unit=19,file=
-     & 'BBClib/bbc6.table',status='unknown')
+     & 'cool_libbbc6.table',status='unknown')
       open(unit=20,file=
-     & 'BBClib/bbc7.table',status='unknown')
+     & 'cool_libbbc7.table',status='unknown')
       open(unit=21,file=
-     & 'BBClib/bbc8.table',status='unknown')
+     & 'cool_libbbc8.table',status='unknown')
 c     I changed the first three unit numbers to avoid conflict w/ out.F
 c     ------------------------------------------------
 c      call species_rd(10)

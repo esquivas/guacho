@@ -21,11 +21,11 @@ COMPILER= gfortran
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
-FLAGS = -cpp -O3
+#FLAGS = -cpp -O3
 # For DEBUG, suggestions:
-#FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-#        -fbounds-check -fimplicit-none -fstack-protector-all
+FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
+        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -54,7 +54,7 @@ SILO = N
 # Additional USER modules to compile (they can only call constants,
 # parameters and globals)
 MODULES_USER= \
-exoplanet.o  \
+stars.o  \
 radp.o
 
 #####################################################
@@ -64,9 +64,11 @@ radp.o
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o
+globals.o \
+utils.o
 
 OBJECTS_MAIN=\
+lmp_module.o \
 user_mod.o \
 network.o \
 flux_cd_module.o \

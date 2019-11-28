@@ -27,30 +27,21 @@
    integer, parameter :: iHe = 2
 
    ! number of reaction rates
-   integer, parameter :: n_reac = 7
+   integer, parameter :: n_reac = 9
 
    ! indexes of the different rates
-   integer, parameter :: ichi    = 1
-   integer, parameter :: ichei   = 2
-   integer, parameter :: icheii  = 3
-   integer, parameter :: iahii   = 4
-   integer, parameter :: iaheii  = 5
-   integer, parameter :: iaheiii = 6
-   integer, parameter :: iphiH   = 7
+   integer, parameter :: ichi      = 1
+   integer, parameter :: ichei     = 2
+   integer, parameter :: icheii    = 3
+   integer, parameter :: iahii     = 4
+   integer, parameter :: iaheii    = 5
+   integer, parameter :: iaheiii   = 6
+   integer, parameter :: iphiHI    = 7
+   integer, parameter :: iphiHeI   = 8
+   integer, parameter :: iphiHeII  = 9
 
    ! names of the equation to be solved
    character(len=10)  :: name_eqs(n_spec)
-
-   ! Size of the table
-   real (kind=8) :: rate_table(141,n_reac)
-
-   ! number of different densities
-   integer, parameter     :: ndens = 21
-
-   ! This is the table when we store the cooling rates
-   real (kind=8) ::  lambda_table(200,21,n_spec)
-
-   !=======
 
  contains
 
@@ -64,17 +55,20 @@
      real (kind=8), intent(out) :: dydt(n_spec)
      real (kind=8), intent(in)  :: rate(n_reac)
 
-     dydt(iHI) = - rate(ichi )*y(iHI )*y(ie)                                   &
-                 + rate(iahii)*y(iHII)*y(ie)                                   &
-                 - rate(iphiH)*y(iHI )
+     dydt(iHI) = - rate(ichi  )*y(iHI )*y(ie)                                  &
+                 + rate(iahii )*y(iHII)*y(ie)                                  &
+                 - rate(iphiHI)*y(iHI )
 
      dydt(iHeI) = - rate(ichei )*y(ie)*y(iHeI )                                &
-                  + rate(iaheii)*y(ie)*y(iHeII)
+                  + rate(iaheii)*y(ie)*y(iHeII)                                &
+                  - rate(iphiHeI)*y(iHeI )
 
-     dydt(iHeII) =  rate(ichei  )*y(ie)*y(iHeI  )                              &
-                  - rate(icheii )*y(ie)*y(iHeII )                              &
-                  - rate(iaheii )*y(ie)*y(iHeII )                              &
-                  + rate(iaheiii)*y(ie)*y(iHeIII)
+     dydt(iHeII) =  rate(ichei   )*y(ie)*y(iHeI  )                             &
+                  - rate(icheii  )*y(ie)*y(iHeII )                             &
+                  - rate(iaheii  )*y(ie)*y(iHeII )                             &
+                  + rate(iaheiii )*y(ie)*y(iHeIII)                             &
+                  + rate(iphiHeI )*y(iHeI )                                    &
+                  - rate(iphiHeII)*y(iHeII)
 
      !  "conservation" equations
      dydt(iHII  ) = - y0(iH) + y(iHI) + y(iHII)
@@ -94,7 +88,7 @@
      real (kind=8), intent(out) ::jacobian(n_spec,n_spec)
      real (kind=8), intent(in)  :: rate(n_reac)
 
-    jacobian(iHI,iHI)       = - rate(ichi)*y(ie) - rate(iphiH)
+    jacobian(iHI,iHI)       = - rate(ichi)*y(ie) - rate(iphiHI)
     jacobian(iHI,iHII)      = + rate(iahii)*y(ie)
     jacobian(iHI,iHeI)      =   0.
     jacobian(iHI,iHeII)     =   0.
@@ -110,15 +104,16 @@
 
     jacobian(iHeI,iHI)      =   0.
     jacobian(iHeI,iHII)     =   0.
-    jacobian(iHeI,iHeI)     = - rate(ichei)*y(ie)
+    jacobian(iHeI,iHeI)     = - rate(ichei)*y(ie) - rate(iphiHeI)
     jacobian(iHeI,iHeII)    = + rate(iaheii)*y(ie)
     jacobian(iHeI,iHeIII)   =   0.
     jacobian(iHeI,ie)       = - rate(ichei)*y(iHeI) + rate(iaheii)*y(iHeII)
 
     jacobian(iHeII,iHI)     =  0.
     jacobian(iHeII,iHII)    =  0.
-    jacobian(iHeII,iHeI)    = + rate(ichei) *y(ie    )
-    jacobian(iHeII,iHeII)   = - rate(icheii)*y(ie    ) - rate(iaheii )*y(ie)
+    jacobian(iHeII,iHeI)    = + rate(ichei) *y(ie    ) + rate(iphiHeI)
+    jacobian(iHeII,iHeII)   = - rate(icheii)*y(ie    ) - rate(iaheii )*y(ie)   &
+                              - rate(iphiHeII)
     jacobian(iHeII,iHeIII)  = + rate(iaheiii)*y(ie   )
     jacobian(iHeII,ie)      = + rate(ichei  )*y(iHeI ) - rate(icheii )*y(iHeII)&
                               - rate(iaheii )*y(iHeII) + rate(iaheiii)*y(iHeIII)
@@ -141,9 +136,9 @@
 
    !=======================================================================
 
-   subroutine get_reaction_rates(rate,T,phiH)
+   subroutine get_reaction_rates(rate,T,phiHI, phiHeI, phiHeII)
      implicit none
-     real (kind=8), intent(in) :: T, phiH
+     real (kind=8), intent(in) :: T, phiHI, phiHeI, phiHeII
      real (kind=8),intent(out) :: rate(n_reac)
 
      ! indexes of the different rates
@@ -154,7 +149,9 @@
      rate(iaheii ) = 4.30e-13*(1.0e4/T)**0.672                                 &
                    + 0.0019*T**(-1.5)*exp(-4.7e5/T)*(1.0+0.3*exp(-94000.0/T) )
      rate(iaheiii) = 2.21e-9*T**0.79
-     rate(iphiH  ) = phiH
+     rate(iphiHI  ) = phiHI
+     rate(iphiHeI ) = phiHeI
+     rate(iphiHeII) = phiHeII
 
    end subroutine get_reaction_rates
 

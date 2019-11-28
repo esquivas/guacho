@@ -22,14 +22,15 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!The locations of tableis is in src/Beta_bourrier.dat
+!The locations of table is in src/Beta_bourrier.dat
 
 module radpress
 
   implicit none
-  real (kind=8) :: Br(800)
-  real (kind=8) :: vr(800)
-  real, allocatable :: Beta(:,:,:)
+  real (kind=8),allocatable :: Br(:)
+  real (kind=8),allocatable :: vr(:)
+  integer                   :: Nr
+  real, allocatable         :: Beta(:,:,:)
 
 contains
 
@@ -41,29 +42,36 @@ subroutine read_table_beta()
 
   use parameters, only : workdir, master, nx, ny, nz
   use globals, only : rank
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+  use mpi
 #endif
+  implicit none
   integer :: i, err
   real (kind=8) :: a, b
   allocate( Beta(nx,ny,nz) )
 
   if(rank == master) then
-     open(unit=21,file=trim(workdir)//'Beta_bourrier.dat', status='unknown')
-     do i=1, size(vr)
+     open(unit=21,file=trim(workdir)//'GJ436_beta_int.dat', status='unknown')
+     !read header lenth of file
+     read(21,*) Nr
+     allocate(Br(Nr),vr(Nr))
+     do i=1, Nr
         read(21,*) a, b
         vr(i) = a
         Br(i) = b
      enddo
      close(unit=21)
-     print*, "just read Bourrier's beta table"
-     print*,'v(1): ', vr(1), ' v(800): ', vr(800)
-     print*,'Beta(1): ', Br(1), ' Beta(800): ', Br(800)
+     print*, "just read beta table"
+     !print*,'v(1): ', vr(1), ' v(800): ', vr(Nr)
+     !print*,'Beta(1): ', Br(1), ' Beta(800): ', Br(Nr)
   endif
 #ifdef MPIP
-  call mpi_bcast(Br,size(Br),mpi_double_precision,0,mpi_comm_world,err)
-  call mpi_bcast(vr,size(vr),mpi_double_precision,0,mpi_comm_world,err)
+  call mpi_bcast(Nr,1,mpi_integer,0,mpi_comm_world,err)
+  if (rank /= master) then
+     allocate(Br(Nr),vr(Nr))
+  endif
+  call mpi_bcast(Br,Nr,mpi_double_precision,0,mpi_comm_world,err)
+  call mpi_bcast(vr,Nr,mpi_double_precision,0,mpi_comm_world,err)
 #endif
 
 end subroutine read_table_beta

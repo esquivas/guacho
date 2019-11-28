@@ -40,12 +40,6 @@ module network
 
   ! number of non-equilibrium equations
   integer, parameter :: n_nequ = n_spec - nequil
-<<<<<<< HEAD
-
-  !  first index for the species in the global array
-  integer, parameter :: n1_chem = 6 
-=======
->>>>>>> origin/pic
 
   ! indexes of the different species
   integer, parameter :: H  = 1   ! H0

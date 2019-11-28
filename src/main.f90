@@ -78,7 +78,7 @@ program guacho
   call boundaryI()
 
   !  update primitives with u
-  call calcprim(u,primit)
+  call calcprim(u,primit, only_ghost=.false.)
 
   if (dif_rad) call diffuse_rad()
 

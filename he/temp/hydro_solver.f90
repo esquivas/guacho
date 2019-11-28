@@ -208,30 +208,35 @@ subroutine tstep()
 
   !-------------------------
   !   apply cooling/heating terms
+  select case(cooling)
 
-  !   add cooling (H rat e)to the conserved variables
-  !   and updates the primitives in physical domain
-  if (cooling == COOL_H) then
+  case(COOL_H)
+    !   add cooling (H rate) to the conserved variables
     call coolingh()
-  end if
 
-  ! DMC cooling (the primitives are updated in the cooling routine)
-  if (cooling == COOL_DMC) call coolingdmc()
+  case(COOL_DMC)
+    ! DMC cooling (the primitives are updated in the cooling routine)
+    call coolingdmc()
 
-  ! Chianti cooling (the primitives are updated in the cooling routine)
-  if (cooling == COOL_CHI) call coolingchi()
+  case(COOL_CHI)
+    ! Chianti cooling (the primitives are updated in the cooling routine)
+    call coolingchi()
 
-  ! Chemistry network cooling (primitives are already updated in update_chem)
-  if (cooling == COOL_CHEM) call cooling_chem()
+  case(COOL_CHEM)
+    ! Chemistry network cooling (primitives are already updated in update_chem)
+    call cooling_chem()
 
-  if (cooling == COOL_NONE) call calcprim(u,primit)
+  case (COOL_NONE)
+    call calcprim(u,primit)
+
+  end select
 
   !   boundary contiditions on u
   call boundaryI()
 
-  if (cooling == COOL_NONE) then
+  if ( (cooling == COOL_NONE) .or. (cooling == COOL_H) ) then
     !  must update primitives in all the domain
-        call calcprim(u,primit)
+    call calcprim(u,primit)
   else
     !  update primitives on the boundaries
     call calcprim(u,primit,only_ghost=.true.)
@@ -241,6 +246,8 @@ subroutine tstep()
   if (th_cond /= 0 ) call thermal_conduction()
 
 end subroutine tstep
+
+!=======================================================================
 
 end module hydro_solver
 
