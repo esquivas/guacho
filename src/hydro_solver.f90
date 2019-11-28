@@ -167,7 +167,7 @@ subroutine tstep()
   !  2nd half timestep ========================
   !  boundaries in up and  primitives up ---> primit
   call boundaryII()
-  call calcprim(up,primit)
+  call calcprim(up,primit,only_ghost=.false.)
 
   !   calculate the fluxes using the primitives
   !   with linear reconstruction (piecewise linear)
@@ -217,7 +217,7 @@ subroutine tstep()
 
   if ( (cooling == COOL_H).or.(cooling == COOL_NONE) ) then
     !  must update primitives in all the domain
-        call calcprim(u,primit)
+        call calcprim(u,primit,only_ghost=.false.)
   else
     !  update primitives on the boundaries
     call calcprim(u,primit,only_ghost=.true.)
