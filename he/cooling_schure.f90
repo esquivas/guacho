@@ -80,7 +80,7 @@ contains
       close(unit=10)
     endif
 #ifdef MPIP
-    call mpi_bcast(cooltab_chianti,360,mpi_double_precision,0,mpi_comm_world,err)
+    call mpi_bcast(cooltab,360,mpi_double_precision,0,mpi_comm_world,err)
 #endif
 
 end subroutine read_table_schure
@@ -102,7 +102,7 @@ end subroutine read_table_schure
       get_lambda=0.21e-26*sqrt(T)
     else
       if1=int(( log10(T)- logTmin) /deltaTemp) +1
-      if (if < 1) then begin
+      if (if1 < 1) then
         get_lambda = cooltab(2,1)
         return
       end if
@@ -126,7 +126,7 @@ end subroutine read_table_schure
     use constants,  only : Kb
     use globals, only : u, primit, dt_CFL
     use hydro_core, only : u2prim
-    use difrad
+    use difradHe
     use network
     implicit none
     real                 :: T , dens
