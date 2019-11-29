@@ -623,7 +623,7 @@ contains
   !> @brief  Diffuse radiation driver
   !> @details Upper level wrapper to compute the diffuse photoionization
   !!rate
-  subroutine diffuse_rad()
+  subroutine diffuse_radHe()
 
     implicit none
     real :: f, dirx,diry,dirz,srad
@@ -717,7 +717,7 @@ contains
 
     return
 
-  end subroutine diffuse_rad
+  end subroutine diffuse_radHe
 
   !=======================================================================
 
