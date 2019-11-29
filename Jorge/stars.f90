@@ -31,7 +31,7 @@ module stars
 
   integer :: Nstars
   real, allocatable :: xstar(:), ystar(:), zstar(:), vws(:), mdots(:),sstar(:)
-
+  real :: Tsw, rw
 contains
 
   !=======================================================================
@@ -40,7 +40,7 @@ contains
   !! to code units
   subroutine init_stars()
 
-    use parameters, only : workdir, master, rsc
+    use parameters, only : workdir, master, rsc, Tempsc
     use globals,    only : rank
     use constants,  only : Msun, yr, pc
 #ifdef MPIP
@@ -49,6 +49,9 @@ contains
     implicit none
     integer :: i, err
     real    :: datain(6)
+
+    Tsw = 1E4/Tempsc
+    rw = 0.58*pc/rsc
 
     !  Master reads data
     if(rank == master) then
@@ -60,12 +63,14 @@ contains
       allocate(   vws(Nstars) )
       allocate( mdots(Nstars) )
       allocate( sstar(Nstars) )
-      print*, 'Nstars:', Nstars
+  !    print*, 'Nstars:', Nstars
+!Reads position (x, y, z), wind velocities,
+! mass loss rate and photon emission from a table.
       do i=1,Nstars
         read(10,*) datain(1:6)
         xstar(i) = datain(1) *pc / rsc
-        ystar(i) = datain(2) *pc / rsc
         zstar(i) = datain(3) *pc / rsc
+        ystar(i) = datain(2) *pc / rsc
         vws(i)   = datain(4) *1.0e5
         mdots(i) = 10**datain(5)*Msun/yr
         sstar(i) = 10**datain(6)
@@ -93,15 +98,6 @@ contains
     call mpi_bcast(sstar,Nstars,mpi_real_kind,master,mpi_comm_world,err)
 #endif
 
-    if (rank == 2) then
-      do i=1,NstarS
-        print'(6es15.3)',xstar(i),ystar(i),zstar(i),vws(i),mdots(i),sstar(i)
-      end do
-    end if
-
-    call mpi_finalize(err)
-    stop "llegue aca"
-
   end subroutine init_stars
 
   !=======================================================================
@@ -113,10 +109,57 @@ contains
   !--------------------------------------------------------------------
   subroutine impose_stars(u,time)
 
-    use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+    use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,&
+                           rhosc, vsc
+    use globals, only : coords, dx, dy, dz
+    use constants, only : pi
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent (in) :: time
+    real :: x,y,z,rad,densw,dens,velx,vely,velz
+    integer :: i,j,k,l
+
+    do k = nzmin,nzmax
+      do j = nymin,nymax
+        do i = nxmin,nxmax
+          ! Position measured from the centre of the grid (star)
+          x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+          y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+          z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
+
+          do l=1,Nstars
+
+            rad=sqrt((x-xstar(l))**2+(y-ystar(l))**2+(z-zstar(l))**2)
+            if (rad <= rw) then
+              if(rad == 0.) rad=dx*0.10
+              densw=((mdots(l)/rw)/(4*pi*rw*vws(l)))   ! stellar wind density
+              densw=densw/rhosc
+
+              velx=vws(l)*x/rad/vsc
+              vely=vws(l)*y/rad/vsc
+              velz=vws(l)*z/rad/vsc
+
+              dens=densw*rw**2/rad**2
+
+              !   total density and momenta
+              u(1,i,j,k) = dens
+              u(2,i,j,k) = dens*velx
+              u(3,i,j,k) = dens*vely
+              u(4,i,j,k) = dens*velz
+              ! total energy
+              u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
+              + cv*dens*1.9999*Tsw
+
+              u(6,i,j,k) = 1.E-4*dens
+              u(7,i,j,k) = dens
+            end if
+          end do
+
+        end do
+      end do
+    end do
+
+
 
   end subroutine impose_stars
 

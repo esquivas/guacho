@@ -28,10 +28,11 @@
 
 module parameters
   use constants
+#ifdef MPIP
   use mpi
+#endif
   implicit none
 #ifdef MPIP
-  !include "mpif.h"
   logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
 #endif
 
@@ -151,9 +152,9 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=100      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=100      !< Total grid size in Z
+  integer, parameter :: nxtot=128      !< Total grid size in X
+  integer, parameter :: nytot=128      !< Total grid size in Y
+  integer, parameter :: nztot=128      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors

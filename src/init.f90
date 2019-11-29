@@ -184,9 +184,6 @@ contains
     !  Thermal conduction
     if (th_cond /= TC_OFF) call init_thermal_cond()
 
-    !  Diffuse radiation transfer module required random numbers
-    if (dif_rad) call init_rand()
-
     !  create directories to write the outputs
     if (rank == master) then
       if (out_bin) then
@@ -206,6 +203,9 @@ contains
     !  User input initialization, it is called always,
     !  it has to be there, even if empty
     call init_user_mod()
+
+    !  Diffuse radiation transfer module required random numbers
+    if (dif_rad) call init_rand()
 
     !   write report of compilation parameters
 #ifdef MPIP
