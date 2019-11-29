@@ -46,6 +46,7 @@ contains
     use cooling_chi
     use cooling_chem
     use difrad
+    use difradHe
     use thermal_cond
     use flux_cd_module
     use user_mod
@@ -188,7 +189,9 @@ contains
     if (th_cond /= TC_OFF) call init_thermal_cond()
 
     !  Diffuse radiation transfer module required random numbers
-    if (dif_rad) call init_rand()
+    if (dif_rad)   call init_difrad()
+    if (dif_radHe) call init_difradHe()
+
 
     !  create directories to write the outputs
     if (rank == master) then
