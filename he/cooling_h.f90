@@ -57,7 +57,6 @@ contains
           if (dif_rad) then
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      &
                                ph(i,j,k))
-            end if
           else
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, 0.)
           end if
