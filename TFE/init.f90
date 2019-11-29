@@ -195,7 +195,7 @@ subroutine initmain(tprint, itprint)
   if (th_cond /= TC_OFF) call init_thermal_cond()
   
   !  Diffuse radiation transfer module required random numbers
-  if (dif_rad) call init_rand()
+  if (dif_rad) call init_difrad()
 
   !  create directories to write the outputs
   if (rank == master) then

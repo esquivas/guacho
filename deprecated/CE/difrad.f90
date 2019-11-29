@@ -52,7 +52,7 @@ contains
 !> @brief initializes random number generation
 !> @details initializes random number generation
 
-subroutine init_rand()
+subroutine init_difrad()
   implicit none
   integer :: rand_size
   integer, allocatable, dimension(:) :: rand_seed
@@ -90,7 +90,7 @@ subroutine init_rand()
   call random_seed(put=rand_seed)
   deallocate(rand_seed)
 
-end subroutine init_rand
+end subroutine init_difrad
 
 !=======================================================================
 

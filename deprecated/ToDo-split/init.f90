@@ -200,7 +200,7 @@ subroutine initmain(tprint, itprint)
   call init_thermal_cond()
 #endif
 #ifdef RADDIFF
-  call init_rand()
+  call init_difrad()
 #endif
 
   !  create directories to write the outputs
