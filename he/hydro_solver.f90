@@ -143,6 +143,7 @@ contains
     use cooling_CHI
     use cooling_chem, only : chem_cool
     use difrad
+    use difradHe
     use thermal_cond
     implicit none
     real :: dtm
@@ -187,7 +188,8 @@ contains
     call viscous_copy()
 
     !  Do the Radiation transfer (Monte Carlo type)
-    if (dif_rad) call diffuse_rad()
+    if (dif_rad  ) call diffuse_rad()
+    if (dif_radHe) call diffuse_radHe()
 
     !  Advance neutral fraction (only Us) if H rate is used, updates the
     !  rest of the primitives
