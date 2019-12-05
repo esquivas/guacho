@@ -30,7 +30,7 @@ module difrad
   use globals
   implicit none
   real, parameter    :: a0=6.3e-18    !< Fotoionization cross section
-  integer, parameter :: nrays=1000 !< Number of rays
+  integer, parameter :: nrays=100000 !< Number of rays
   real, allocatable  :: ph(:,:,:)     !< Photoionizing rate
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
