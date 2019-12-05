@@ -152,15 +152,15 @@ module parameters
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=128      !< Total grid size in X
-  integer, parameter :: nytot=128      !< Total grid size in Y
-  integer, parameter :: nztot=128      !< Total grid size in Z
+  integer, parameter :: nxtot=512      !< Total grid size in X
+  integer, parameter :: nytot=512      !< Total grid size in Y
+  integer, parameter :: nztot=512      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=1     !< number of MPI blocks in Z
+  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
@@ -188,10 +188,10 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 2.0e5*yr/tsc
+  real, parameter :: tmax    = 2.0e4*yr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1.0e4*yr/tsc
-  real, parameter :: cfl=0.3         !< Courant-Friedrichs-Lewy number
+  real, parameter :: dtprint = 1.0e3*yr/tsc
+  real, parameter :: cfl=0.5         !< Courant-Friedrichs-Lewy number
   real, parameter :: eta=0.001       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
