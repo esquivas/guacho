@@ -51,7 +51,7 @@ contains
     real    :: datain(6)
 
     Tsw = 1E4/Tempsc
-    rw = 0.58*pc/rsc
+    rw = 0.7*pc/rsc
 
     !  Master reads data
     if(rank == master) then
@@ -110,7 +110,7 @@ contains
   subroutine impose_stars(u,time)
 
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,&
-                           rhosc, vsc
+                           rhosc, vsc, rsc
     use globals, only : coords, dx, dy, dz
     use constants, only : pi
     implicit none
@@ -133,13 +133,13 @@ contains
             if (rad <= rw) then
               if(rad == 0.) rad=dx*0.10
               densw=((mdots(l)/rw)/(4*pi*rw*vws(l)))   ! stellar wind density
-              densw=densw/rhosc
+              densw=densw/(rhosc*rsc**2)
 
               velx=vws(l)*x/rad/vsc
               vely=vws(l)*y/rad/vsc
               velz=vws(l)*z/rad/vsc
 
-              dens=densw*rw**2/rad**2
+              dens=densw!*rw**2/rad**2
 
               !   total density and momenta
               u(1,i,j,k) = dens
