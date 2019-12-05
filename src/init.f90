@@ -205,7 +205,7 @@ contains
     call init_user_mod()
 
     !  Diffuse radiation transfer module required random numbers
-    if (dif_rad) call init_rand()
+    if (dif_rad) call init_difrad()
 
     !   write report of compilation parameters
 #ifdef MPIP

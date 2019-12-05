@@ -42,7 +42,7 @@ contains
 
     use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
     use globals, only : u, primit, dt_CFL
-    use difrad, only : ph, phCold, phHot
+    use difrad,  only : ph
 
     implicit none
     real    :: dt_seconds
@@ -55,13 +55,8 @@ contains
         do i=1,nx
 
           if (dif_rad) then
-            if (.not.charge_exchange) then
-              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      &
-                                 ph(i,j,k))
-            else
-              call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      *
-                                 phCold(i,j,k)+phHot(i,j,k))
-            end if
+            call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds,      &
+                               ph(i,j,k))
           else
             call cooling_h_neq(primit(:,i,j,k), u(:,i,j,k), dt_seconds, 0.)
           end if

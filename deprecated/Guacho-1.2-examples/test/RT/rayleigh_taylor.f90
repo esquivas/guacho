@@ -29,7 +29,7 @@ contains
     integer,parameter :: seed = 86456
     real :: r
     call srand(seed)
-    !CALL init_random_seed()         ! see example of RANDOM_SEED
+    !CALL init_difradom_seed()         ! see example of RANDOM_SEED
     do i=nxmin,nxmax
        do j=nymin,nymax
           do k=nzmin,nzmax

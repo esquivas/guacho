@@ -25,7 +25,7 @@
 !> @brief Ray tracing Radiative Trasnport
 !> @details Ray tracing Radiative Trasnport
 
-module difrad
+module difradHe
 
   use exoplanet, only: Rstar,S0
   !use constants, only: Rsun
@@ -54,7 +54,7 @@ contains
   !=======================================================================
   !> @brief initializes random number generation
   !> @details initializes random number generation
-  subroutine init_rand()
+  subroutine init_difradHe()
     implicit none
     integer :: rand_size
     integer, allocatable, dimension(:) :: rand_seed
@@ -96,7 +96,7 @@ contains
     call random_seed(put=rand_seed)
     deallocate(rand_seed)
 
-  end subroutine init_rand
+  end subroutine init_difradHe
 
   !=======================================================================
   !> @brief returns the 3 components of a random versor
@@ -623,7 +623,7 @@ contains
   !> @brief  Diffuse radiation driver
   !> @details Upper level wrapper to compute the diffuse photoionization
   !!rate
-  subroutine diffuse_rad()
+  subroutine diffuse_radHe()
 
     implicit none
     real :: f, dirx,diry,dirz,srad
@@ -717,8 +717,8 @@ contains
 
     return
 
-  end subroutine diffuse_rad
+  end subroutine diffuse_radHe
 
   !=======================================================================
 
-end module difrad
+end module difradHe

@@ -110,7 +110,7 @@ end subroutine write_header
 
 subroutine write_BIN(itprint)
 
-  use difrad
+  use difradHe
   use radpress, only : beta
   implicit none
   integer, intent(in) :: itprint
@@ -174,7 +174,7 @@ subroutine write_BIN(itprint)
 
      !   write the emissvity and photoionizing rate
      !   if diffuse radiation enabled
-  if (dif_rad) then
+  if (dif_radHe) then
     if (.not. charge_exchange) then
       ! take turns
       do ip=0, np-1

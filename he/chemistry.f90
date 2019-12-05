@@ -43,7 +43,7 @@ contains
     use globals,    only : u, primit, dt_CFL, coords, dx, dy, dz, rank
     use network,    only : n_elem, iHI, iHII, iHeI, iHeII, iHeIII, iH, iHe
     use hydro_core, only : u2prim
-    use difrad,     only : phHI, phHeI, phHeII
+    use difradHe,   only : phHI, phHeI, phHeII
     use exoplanet,  only : RSW, RPW, xp, yp, zp
     implicit none
     real :: dt_seconds, T, y(n_spec), y0(n_elem)

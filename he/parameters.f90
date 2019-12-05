@@ -120,8 +120,9 @@ module parameters
   !> Enable Saturation in thermal conduction
   logical, parameter :: tc_saturation = .false.
 
-  !> Enable 'diffuse' radiation
-  logical, parameter :: dif_rad = .true.
+  !> Enable 'diffuse' radiation (pick at most one)
+  logical, parameter :: dif_rad = .false.
+  logical, parameter :: dif_radHe = .true.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
   logical, parameter :: user_source_terms = .true.
