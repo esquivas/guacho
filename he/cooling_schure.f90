@@ -101,7 +101,7 @@ end subroutine read_table_schure
     if(T.gt.1e8) then
       get_lambda=0.21e-26*sqrt(T)
     else
-      if1=int(( log10(T)- logTmin) /deltaTemp) +1
+      if1=int(( log10(T)- logTmin) /deltaTemp) + 1
       if (if1 < 1) then
         get_lambda = cooltab(2,1)
         return
