@@ -104,7 +104,7 @@ contains
   !> @brief Inject sources of wind
   !> @details Imposes the sources of wond from the star and planet
   !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-  !! conserver variables
+  !! conserved variables
   !> @param real [time] time : current integration timr
   !--------------------------------------------------------------------
   subroutine impose_stars(u,time)
@@ -135,9 +135,9 @@ contains
               densw=((mdots(l)/rw)/(4*pi*rw*vws(l)))   ! stellar wind density
               densw=densw/(rhosc*rsc**2)
 
-              velx=vws(l)*x/rad/vsc
-              vely=vws(l)*y/rad/vsc
-              velz=vws(l)*z/rad/vsc
+              velx = vws(l) * ( x - xstar(l) )/rad/vsc
+              vely = vws(l) * ( y - ystar(l) )/rad/vsc
+              velz = vws(l) * ( z - zstar(l) )/rad/vsc
 
               dens=densw!*rw**2/rad**2
 
@@ -148,9 +148,9 @@ contains
               u(4,i,j,k) = dens*velz
               ! total energy
               u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
-              + cv*dens*1.9999*Tsw
+                        + cv*dens*1.9999*Tsw
 
-              u(6,i,j,k) = 1.E-4*dens
+              u(6,i,j,k) = 1.0E-4*dens
               u(7,i,j,k) = dens
             end if
           end do
@@ -158,8 +158,6 @@ contains
         end do
       end do
     end do
-
-
 
   end subroutine impose_stars
 
