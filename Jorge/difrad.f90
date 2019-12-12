@@ -451,28 +451,33 @@ contains
     !   entire domain
     do ip=1,int( sqrt(real(MPI_NBX)**2+real(MPI_NBY)**2+real(MPI_NBZ)**2) )
 
-      !print'(a,2i3, 6i7)','**',rank,np,buffersize
+      !print'(a,i0,a,i0,a,6i7)','**',rank,'/',np,':',buffersize
       call mpi_allgather(buffersize(:)   , 6, mpi_integer,                     &
                          Allbuffersize(:), 6, mpi_integer, comm3d ,err)
-      !print'(a,25i5)','**',rank,allBuffersize
+      !print'(a,i0,a,24i7)','+++',rank,':',allBuffersize
+
       !  to and from the left
-      if (left > 0) then
+      if (left >= 0) then
         sizeSend=Allbuffersize(6*rank+1)
         if(sizeSend > 0) then
           call mpi_send(photL(1,1:7,1:sizeSend),7*sizeSend,mpi_real_kind,      &
                         left,100,comm3d,err)
-          print*,rank,'send -> L:',SizeSend,'to   ',left
+          !print*,rank,'send -> L:',SizeSend,'to   ',left
         end if
         sizeRecv=Allbuffersize(6*left+2)
         if(sizeRecv > 0) then
           call mpi_recv(photL(2,1:7,1:sizeRecv),7*sizeRecv, mpi_real_kind,     &
                         left,102, comm3d, status,err)
-           print*,rank,'recv <- L:',SizeRecv,'from ',left
+           !print*,rank,'recv <- L:',SizeRecv,'from ',left
          end if
        end if
 
+       !print*, rank,left,right,bottom,top,out,in
+       !CALL mpi_finalize(err)
+       !STOP
+
        !  from and to the right
-       if (right > 0) then
+       if (right >= 0) then
          sizeRecv=Allbuffersize(6*right+1)
          if(sizeRecv > 0 ) then
            call mpi_recv(photR(2,1:7,1:sizeRecv),7*sizeRecv, mpi_real_kind,    &
@@ -488,7 +493,7 @@ contains
        end if
 
        !  to and from the bottom
-       if (bottom > 0) then
+       if (bottom >= 0) then
          sizeSend=Allbuffersize(6*rank+3)
          if(sizeSend > 0) then
            call mpi_send(photB(1,1:7,1:sizeSend),7*sizeSend,mpi_real_kind,     &
@@ -504,7 +509,7 @@ contains
       end if
 
       !  from and to the top
-      if (top > 0) then
+      if (top >= 0) then
         sizeRecv=Allbuffersize(6*top+3)
         if(sizeRecv > 0 ) then
           call mpi_recv(photT(2,1:7,1:sizeRecv),7*sizeRecv, mpi_real_kind,     &
@@ -520,7 +525,7 @@ contains
       end if
 
       !  to and from the out
-      if (out > 0) then
+      if (out >= 0) then
         sizeSend=Allbuffersize(6*rank+5)
         if(sizeSend > 0) then
           call mpi_send(photO(1,1:7,1:sizeSend),7*sizeSend,mpi_real_kind,      &
@@ -536,7 +541,7 @@ contains
       end if
 
       !  from and to the in
-      if (in > 0) then
+      if (in >= 0) then
         sizeRecv=Allbuffersize(6*in+5)
         if(sizeRecv > 0 ) then
           call mpi_recv(photI(2,1:7,1:sizeRecv),7*sizeRecv, mpi_real_kind,     &
@@ -556,7 +561,7 @@ contains
       buffersize(:)=0
 
       !  left face
-      if(left > 0) then
+      if(left >= 0) then
         do niter=1,Allbuffersize(6*left+2)
           call photons(photL(2,1,niter),photL(2,2,niter),photL(2,3,niter), &
           photL(2,4,niter),photL(2,5,niter),photL(2,6,niter),photL(2,7,niter) )
@@ -564,7 +569,7 @@ contains
       endif
 
       !  right face
-      if(right > 0) then
+      if(right >= 0) then
         do niter=1,Allbuffersize(6*right+1)
           call photons(photR(2,1,niter),photR(2,2,niter),photR(2,3,niter), &
           photR(2,4,niter),photR(2,5,niter),photR(2,6,niter),photR(2,7,niter) )
@@ -572,7 +577,7 @@ contains
       end if
 
       !  bottom face
-      if(bottom > 0) then
+      if(bottom >= 0) then
         do niter=1,Allbuffersize(6*bottom+4)
           call photons(photB(2,1,niter),photB(2,2,niter),photB(2,3,niter), &
           photB(2,4,niter),photB(2,5,niter),photB(2,6,niter),photB(2,7,niter) )
@@ -580,7 +585,7 @@ contains
       end if
 
       !  top face
-      if(top > 0) then
+      if(top >= 0) then
         do niter=1,Allbuffersize(6*top+3)
           call photons(photT(2,1,niter),photT(2,2,niter),photT(2,3,niter), &
           photT(2,4,niter),photT(2,5,niter),photT(2,6,niter),photT(2,7,niter) )
@@ -588,7 +593,7 @@ contains
       end if
 
       !  out face
-      if(out > 0) then
+      if(out >= 0) then
         do niter=1,Allbuffersize(6*out+6)
           call photons(photO(2,1,niter),photO(2,2,niter),photO(2,3,niter), &
           photO(2,4,niter),photO(2,5,niter),photO(2,6,niter),photO(2,7,niter) )
@@ -596,7 +601,7 @@ contains
       end if
 
       !  in face
-      if(in > 0) then
+      if(in >= 0) then
         do niter=1,Allbuffersize(6*in+5)
           call photons(photI(2,1,niter),photI(2,2,niter),photI(2,3,niter), &
           photI(2,4,niter),photI(2,5,niter),photI(2,6,niter),photI(2,7,niter) )
@@ -650,18 +655,18 @@ contains
 
     !nmax = nxtot*nytot*nztot/10000/np
     !resets the photoionization rate
-    ph (:,:,:)=0.
+    ph(:,:,:)     = 0.0
     !em (:,:,:)=0.
-    buffersize(:)=0
+    buffersize(:) = 0
 
 
     in=0  ! number or rays successfully injected
 
     do ist=1, Nstars
-      !   posicion de la fuente ionizante
-      xc= xstar(ist)  ! real(nxtot/2)*dx
-      yc= ystar(ist)  ! real(nytot/2)*dy
-      zc= zstar(ist)  ! real(nztot/2)*dz
+      xc= xstar(ist) + real(nxtot/2)*dx  ! real(nxtot/2)*dx
+      yc= ystar(ist) + real(nytot/2)*dy  ! real(nytot/2)*dy
+      zc= zstar(ist) + real(nztot/2)*dz  ! real(nztot/2)*dz
+      !   posicion de la fuente ionizante respecto de la esquina del dominio
 
       ! To  impose the photoionizing field of a star
       ! this is the radius of the actual star [cm]
@@ -693,8 +698,8 @@ contains
           !call progress(niter,nrays)
         end if
 
-      end do
-    end do
+      end do  !  nrays
+    end do    !  Nstars
 
     !determine the actual number of photons injected, !
     !and divide ph among them
@@ -706,7 +711,7 @@ contains
     ! trace photons across boundaries)
     call radbounds()
 
-!    em=ph
+    !em=ph
     ph(:,:,:)=ph(:,:,:)/real(nmax)
 
     return
