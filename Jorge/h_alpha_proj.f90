@@ -317,17 +317,17 @@ contains
           call rotation_z(theta_z,x,y,z,xn,yn,zn)
           ! This is the position on the target (centered)
           ! Integration is along Z
-          iobs=xn/dxT + nxmap/2
-          jobs=yn/dyT + nymap/2
+          iobs= int( xn/dxT + nxmap/2 )
+          jobs= int( yn/dyT + nymap/2 )
 
           !  get the Temperature
           call u2prim(u(:,i,j,k),prim,T)
+          T = max(10.0, T)
           T4 = T*1.e-4
 
           !  Halpha emission coefficient.
           !  Radiative recombination (Aller) and collisional excitation
           !  from the n=1 state (Giovanardi and Palla 1989) are considered.
-          print*,  prim(1), prim(neqdyn+1), T, T4
           erec = (prim(1)-prim(neqdyn+1))**2 * 4.161e-25/                      &
                  (T4**0.983*10.**(0.0424/T4))
 
@@ -437,7 +437,7 @@ program h_alpha_proj
   use mpi
 #endif
   implicit none
-  character (len=128) :: pathin, filepath, fileout_rg
+  character (len=128) :: filepath, fileout_rg
   integer :: err
   integer :: itprint
   logical, parameter :: rg_out = .false.
@@ -460,7 +460,7 @@ program h_alpha_proj
 
   filepath=trim(outputpath)
 
-  loop_over_outputs : do itprint=10,10
+  loop_over_outputs : do itprint=0,20
 
     !  read u from file
     call read_data(u,itprint,filepath)
