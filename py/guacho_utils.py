@@ -267,8 +267,6 @@ def get_2d_cut(cut,pos,nout,neq,path='',base='points',verbose=False,mhd=False, e
 '''
 def minmax(q):
     print('min=',q.min(),' max=', q.max())
-<<<<<<< HEAD
-=======
 
 
 '''
@@ -336,4 +334,4 @@ def read_lmp(nout,path='', base='lmp',trim=True):
         return array, SED, P1, P2
     else:
         return array
->>>>>>> origin/pic
+
