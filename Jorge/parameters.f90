@@ -37,7 +37,7 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./'
+  character (len=128),parameter ::  outputpath='./N70-NR/'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -121,7 +121,7 @@ module parameters
   logical, parameter :: tc_saturation = .false.
 
   !> Enable 'diffuse' radiation
-  logical, parameter :: dif_rad = .true.
+  logical, parameter :: dif_rad = .false.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
   logical, parameter :: user_source_terms = .false.
@@ -188,11 +188,11 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 2.0e4*yr/tsc
+  real, parameter :: tmax    = 5.0e5*yr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1.0e3*yr/tsc
+  real, parameter :: dtprint = 1.0e4*yr/tsc
   real, parameter :: cfl=0.5         !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.001       !< artificial viscosity
+  real, parameter :: eta=0.005       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
