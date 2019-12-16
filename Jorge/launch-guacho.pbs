@@ -1,7 +1,7 @@
 #!/bin/bash
-#PBS -N N70
-#PBS -e N70.err
-#PBS -o N70.out
+#PBS -N N70-NR
+#PBS -e N70-NR.err
+#PBS -o N70-NR.out
 #PBS -r n
 
 ##PBS -m aeb
