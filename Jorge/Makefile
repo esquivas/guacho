@@ -103,6 +103,11 @@ difrad.o \
 init.o \
 coldens.o #   not updated to Guacho V1.3
 
+HALPHA = \
+user_mod.o \
+hydro_core.o \
+h_alpha_proj.o
+
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 network.o \
@@ -113,6 +118,8 @@ lyman_alpha_tau.o  #   not updated to Guacho V1.3
 OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_HALPHA  = ${MODULES_MAIN} ${MODULES_USER} ${HALPHA}
+
 #---------------------------------------------------
 # Set flags
 # Set flags
@@ -166,6 +173,13 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
+h_alpha :prebuild ${OBJECTS_HALPHA}
+	@echo Linking object files ...
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_HALPHA) -o $@
+	@echo Cleaning up ...
+	@rm -f *.o *.mod
+	@echo "Done! (`date`)"
+
 prebuild :
 	@echo "Guacho build started `date`"
 	@echo Compiling flags used: $(FLAGS)
@@ -191,4 +205,4 @@ prebuild :
 
 clean :
 	rm -f *.o *.mod
-	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau h_alpha coldens *.out *.err

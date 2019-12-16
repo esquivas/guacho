@@ -481,38 +481,42 @@ contains
 
       print'(i3,a,a)',rank,' read: ',trim(file1)
 
-      !   Read Lagrangian Particles info if they are enabled
+      if(enable_lmp) then
+        !   Read Lagrangian Particles info if they are enabled
 #ifdef MPIP
-      write(file1,'(a,i3.3,a,i3.3,a)')                                       &
-            trim(outputpath)//'BIN/lmp',rank,'.',itprint,'.bin'
+        write(file1,'(a,i3.3,a,i3.3,a)')                                       &
+              trim(outputpath)//'BIN/lmp',rank,'.',itprint,'.bin'
 #else
-      write(file1,'(a,i3.3,a)') trim(outputpath)//'BIN/lmp',itprint,'.bin'
+        write(file1,'(a,i3.3,a)') trim(outputpath)//'BIN/lmp',itprint,'.bin'
 #endif
 
-      unitin=10
-      open(unit=unitin,file=file1,status='unknown',access='stream')
+        unitin=10
+        open(unit=unitin,file=file1,status='unknown',access='stream')
 
-      read(unitin) npp, n_mpp, n_activeMP, NBinsSEDMPP
+        read(unitin) npp, n_mpp, n_activeMP, NBinsSEDMPP
 
-      do i_mp=1,n_activeMP
+        do i_mp=1,n_activeMP
 
-        partOwner(i_mp) = rank
-        read(unitin) partID(i_mp)
-        read(unitin) Q_MP0(i_mp,1:3)
+          partOwner(i_mp) = rank
+          read(unitin) partID(i_mp)
+          read(unitin) Q_MP0(i_mp,1:3)
 
-        if(lmp_distf) then
-          read(unitin) Q_MP0(i_mp,11:12)
-          read(unitin) MP_SED(1,:,i_mp)
-          read(unitin) MP_SED(2,:,i_mp)
-          read(unitin) P_DSA(i_mp,:,:)
-        end if
+          if(lmp_distf) then
+            read(unitin) Q_MP0(i_mp,11:12)
+            read(unitin) MP_SED(1,:,i_mp)
+            read(unitin) MP_SED(2,:,i_mp)
+            read(unitin) P_DSA(i_mp,:,:)
+          end if
 
-      end do
+        end do
 
-      close(unitin)
+        close(unitin)
 
-      print'(i3,a,a,a,i0,a)',rank,' read: ',trim(file1), ' (',n_activeMP,             &
-                    ' active particles)'
+        print'(i3,a,a,a,i0,a)',rank,' read: ',trim(file1), ' (',n_activeMP,             &
+                              ' active particles)'
+
+
+      end if
 
       itprint=itprint+1
 
