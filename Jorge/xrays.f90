@@ -390,7 +390,7 @@ end module xrays_utilities
 !! is along the Z axis
 program xrays
   use constants, only : pi
-  use parameters, only : xmax,master, mpi_real_kind
+  use parameters, only : xmax,master, mpi_real_kind, outputpath, nxtot, nytot
   use globals, only : u, rank, comm3d
   use xrays_utilities
 #ifdef MPIP
@@ -406,16 +406,19 @@ program xrays
   real, parameter :: theta_y = 0.*pi/180.
   real, parameter :: theta_z = 0.*pi/180.
   !   map and its dimensions
-  integer, parameter :: nxmap=256, nymap=256
   real :: dxT, dyT
-  real :: map(nxmap,nymap), map1(nxmap,nymap)
+  real, allocatable :: map(:,:), map1(:,:)
 
   ! initializes program
   call init_xray()
 
   !  Target pixel size, relative to the simulation
+  nxmap = nxtot
+  nymap = nytot
   dxT= xmax/float(nxmap)
   dyT= dxT
+  allocate(  map(nxmap, nymap) )
+  allocate( map1(nxmap, nymap) )
 
   ! chose output (fix later to input form screen)
 !  filepath='/datos/esquivel/EXO-GUACHO/P1c/'
