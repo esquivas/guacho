@@ -422,9 +422,9 @@ program xrays
 !  filepath='../alicia/outputRuidoby/'
 !  filepath='../tycho/output_run_ek01_vbpar/'
 !    filepath='../ran/output/M1/'
-  filepath='./'
+  filepath=trim(outputpath)
 
-  loop_over_outputs : do itprint=45,50
+  loop_over_outputs : do itprint=0,50
 
     !  read u from file
     call read_data(u,itprint,filepath)
