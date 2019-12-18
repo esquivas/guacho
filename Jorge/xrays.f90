@@ -402,11 +402,12 @@ program xrays
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x = 0.*pi/180.
-  real, parameter :: theta_y = 0.*pi/180.
-  real, parameter :: theta_z = 0.*pi/180.
+  real, parameter   :: theta_x = 0.*pi/180.
+  real, parameter   :: theta_y = 0.*pi/180.
+  real, parameter   :: theta_z = 0.*pi/180.
   !   map and its dimensions
-  real :: dxT, dyT
+  real              :: dxT, dyT
+  integer           :: nxmap, nymap
   real, allocatable :: map(:,:), map1(:,:)
 
   ! initializes program
