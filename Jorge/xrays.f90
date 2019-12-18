@@ -365,7 +365,7 @@ contains
     character (len=128) file1
     integer ::  unitout
 
-    write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/xray_',itprint,'.bin'
+    write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/xray-',itprint,'.bin'
     unitout=11
 
     open(unit=unitout,file=file1,status='unknown',access='stream', &
