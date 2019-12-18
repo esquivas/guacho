@@ -293,7 +293,8 @@ contains
   subroutine fill_map(nxmap, nymap, u, map, dxT, dyT, theta_x, theta_y, theta_z)
     use constants, only : clight, pi
     use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax,           &
-                           neq, nx, ny, nz, vsc2, rsc, rhosc,nztot, neqdyn
+                           neq, nx, ny, nz, rsc,nztot, neqdyn
+    use globals,    only : dz
     use hydro_core, only : u2prim
     implicit none
     integer, intent(in) :: nxmap, nymap
@@ -336,14 +337,14 @@ contains
           if( (iobs >=1    ).and.(jobs >=1    ).and. &
               (iobs <=nxmap).and.(jobs <=nymap) ) then
              !Rx
-             map(iobs,jobs)= map(iobs,jobs) + prim(1)**2 * crx
+             map(iobs,jobs)= map(iobs,jobs) + prim(1)**2 * crx *dz*rsc
           end if
 
         end do
       end do
     end do
 
-    map(:,:)= map(:,:)*rsc/dxT/dyT
+    map(:,:)= map(:,:)
 
   end subroutine fill_map
 
