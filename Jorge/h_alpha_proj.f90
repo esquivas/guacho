@@ -156,8 +156,6 @@ contains
            unitin=10
 #endif
 
-           PRINT*, file1
-
            open(unit=unitin,file=file1,status='unknown', access='stream')
 
            !   discard the ascii header
@@ -460,7 +458,7 @@ program h_alpha_proj
 
   filepath=trim(outputpath)
 
-  loop_over_outputs : do itprint=0,20
+  loop_over_outputs : do itprint=0,50
 
     !  read u from file
     call read_data(u,itprint,filepath)
