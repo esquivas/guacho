@@ -41,10 +41,10 @@ subroutine read_table_beta()
 
   use parameters, only : workdir, master, nx, ny, nz
   use globals, only : rank
-  implicit none
 #ifdef MPIP
-  include "mpif.h"
+    use mpi
 #endif
+  implicit none
   integer :: i, err
   real (kind=8) :: a, b
   allocate( Beta(nx,ny,nz) )

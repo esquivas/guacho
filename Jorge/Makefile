@@ -108,6 +108,11 @@ user_mod.o \
 hydro_core.o \
 h_alpha_proj.o
 
+RX = \
+user_mod.o \
+hydro_core.o \
+xrays.o
+
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 network.o \
@@ -119,6 +124,7 @@ OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
 OBJECTS_HALPHA  = ${MODULES_MAIN} ${MODULES_USER} ${HALPHA}
+OBJECTS_RX      = ${MODULES_MAIN} ${MODULES_USER} ${RX}
 
 #---------------------------------------------------
 # Set flags
@@ -180,6 +186,13 @@ h_alpha :prebuild ${OBJECTS_HALPHA}
 	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
+xrays   :prebuild ${OBJECTS_RX}
+	@echo Linking object files ...
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_RX) -o $@
+	@echo Cleaning up ...
+	@rm -f *.o *.mod
+	@echo "Done! (`date`)"
+
 prebuild :
 	@echo "Guacho build started `date`"
 	@echo Compiling flags used: $(FLAGS)
@@ -205,4 +218,4 @@ prebuild :
 
 clean :
 	rm -f *.o *.mod
-	rm -f $(PROGRAM) lyman_alpha_tau h_alpha coldens *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau h_alpha coldens xrays *.out *.err
