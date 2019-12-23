@@ -1,7 +1,7 @@
 #!/bin/bash
-#PBS -N N70-NR
-#PBS -e N70-NR.err
-#PBS -o N70-NR.out
+#PBS -N N70-Ha-NR
+#PBS -e N70-Ha-NR.err
+#PBS -o N70-Ha-NR.out
 #PBS -r n
 
 ##PBS -m aeb
@@ -17,7 +17,7 @@ cd $WORKDIR
 ### EXEPATH is the directory where your executable resides
 EXEPATH=$WORKDIR
 ###EXE is the name of your executable (compiled mpi program)
-EXE="fes"
+EXE="h_alpha"
 ### ARGS is optional. If you don't need it simply leave it empty
 ARGS=""
 ### ARGS is also optional.
