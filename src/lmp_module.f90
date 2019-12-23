@@ -449,9 +449,9 @@ contains
     real    :: q_NR, Emin, Emax, chi0
     !> RH term eq (7) Vaidya +
     real, parameter :: Tcmb = 2.278
-    real, parameter :: Urad = sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
+    real, parameter :: Urad = 4.0*sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
     !> constant in front of eq(7) in cgs
-    real, parameter ::Cr0= ( 4.*sigma_T )/(3.* emass**2 * clight**3 )
+    real, parameter ::Cr0= ( 4.0*sigma_T )/(3.0* emass**2 * clight**3 )
 
     ! initialize send and recv lists
     dataLoc(:)    =  0
