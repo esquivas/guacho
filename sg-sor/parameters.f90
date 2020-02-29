@@ -28,16 +28,14 @@
 
 module parameters
   use constants
-#ifdef MPIP
-  use mpi
-#endif
   implicit none
 #ifdef MPIP
+  include "mpif.h"
   logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./N70/'
+  character (len=128),parameter ::  outputpath='./'
   !> working directory
   character (len=128),parameter ::  workdir='./'
 
@@ -62,7 +60,7 @@ module parameters
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave = .false.
   !>  Enable field-CD cleaning of div B
-  logical, parameter :: enable_flux_cd = .false.
+  logical, parameter :: enable_field_cd = .false.
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb = .false.
 
@@ -75,7 +73,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_H_RATE
+  integer, parameter :: eq_of_state = EOS_CHEM
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -123,8 +121,11 @@ module parameters
   !> Enable 'diffuse' radiation
   logical, parameter :: dif_rad = .true.
 
+  !> Enable self-gravity (SOR)
+  logical, parameter :: self_gravity = .true.
+
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .false.
+  logical, parameter :: user_source_terms = .true.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -133,43 +134,44 @@ module parameters
   logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange = .false.
+  logical, parameter :: charge_exchange = .true.
 
   !> Include Lagrangian Macro Particles (tracers)
-  logical, parameter :: enable_lmp = .false.
+  logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
   integer, parameter :: N_MP =4096
   !>  Enable following SED of each MP
-  logical, parameter :: lmp_distf  = .false.
+  logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
 
+
 #ifdef PASSIVES
-  integer, parameter :: npas    = 2     !< num. of passive scalars
-  integer, parameter :: n_spec  = 5     !< num. of species (chemistry enabled)
-  integer, parameter :: n1_chem = 7     !< position of 1st index of  chem spec.
+  integer, parameter :: npas=7         !< num. of passive scalars
+  integer, parameter :: n_spec =5      !< num of species for chemistry
+  integer, parameter :: n1_chem=7      !< 1st index for chemistry
 #else
   integer, parameter :: npas=0        !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=512      !< Total grid size in X
-  integer, parameter :: nytot=512      !< Total grid size in Y
-  integer, parameter :: nztot=512      !< Total grid size in Z
+  integer, parameter :: nxtot=400      !< Total grid size in X
+  integer, parameter :: nytot=100      !< Total grid size in Y
+  integer, parameter :: nztot=400      !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBX=8     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
   !> total number of MPI processes
   integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
   !  set box size
-  real, parameter :: xmax=1.0          !< grid extent in X (code units)
-  real, parameter :: ymax=1.0          !< grid extent in Y (code units)
-  real, parameter :: zmax=1.0          !< grid extent in Z (code units)
-  real, parameter :: xphys=110.0*pc    !< grid extent in X (physical units, cgs)
+  real, parameter :: xmax=1.          !< grid extent in X (code units)
+  real, parameter :: ymax=0.25        !< grid extent in Y (code units)
+  real, parameter :: zmax=1.          !< grid extent in Z (code units)
+  real, parameter :: xphys=0.2*au     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv=1.5            !< Specific heat at constant volume (/R)
@@ -188,11 +190,11 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 5.0e5*yr/tsc
+  real, parameter :: tmax    = 3.8*day/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1.0e4*yr/tsc
-  real, parameter :: cfl=0.5         !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.005       !< artificial viscosity
+  real, parameter :: dtprint = 0.035 *day/tsc
+  real, parameter :: cfl=0.35       !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.01       !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.

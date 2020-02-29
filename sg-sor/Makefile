@@ -2,11 +2,10 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=fes
+PROGRAM=M9a
 
 #  Seaerh Path, object files are searched in the order below
-#VPATH = . : ../ : ../../src
-VPATH = ../src
+VPATH = . : ../ : ../src/ :../../src
 
 #   Choice of compiler: ifort and gfortran are the only implemented
 #   if MPI enabled, do not use mpif90, but rather the base compiler
@@ -15,7 +14,7 @@ VPATH = ../src
 COMPILER= ifort
 
 ### ifortran ###
-#FLAGS= -O3 -cpp -mcmodel=large
+#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
 FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
@@ -24,8 +23,8 @@ FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 #FLAGS = -cpp -O3
 # For DEBUG, suggestions:
 #FLAGS = -cpp -ggdb -O0 -pedantic -Wall -Waliasing -fbacktrace \
-        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
-        -fbounds-check -fimplicit-none -fstack-protector-all
+#        -Wsurprising -Wconversion -Wunderflow -ffpe-trap=invalid,zero,overflow \
+#        -fbounds-check -fimplicit-none -fstack-protector-all
 
 #---------------------------------------------------
 #   compilation time parameters (Y=on, N=off)
@@ -54,7 +53,7 @@ SILO = N
 # Additional USER modules to compile (they can only call constants,
 # parameters and globals)
 MODULES_USER= \
-stars.o  \
+exoplanet.o  \
 radp.o
 
 #####################################################
@@ -64,7 +63,7 @@ radp.o
 MODULES_MAIN = \
 constants.o  \
 parameters.o \
-globals.o \
+globals.o    \
 utils.o
 
 OBJECTS_MAIN=\
@@ -76,6 +75,7 @@ hydro_core.o \
 linear_system.o \
 difrad.o \
 hrate.o \
+chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
@@ -103,16 +103,6 @@ difrad.o \
 init.o \
 coldens.o #   not updated to Guacho V1.3
 
-HALPHA = \
-user_mod.o \
-hydro_core.o \
-h_alpha_proj.o
-
-RX = \
-user_mod.o \
-hydro_core.o \
-xrays.o
-
 #  For the Lyman Alpha Tau calculation
 LYAT = \
 network.o \
@@ -123,9 +113,6 @@ lyman_alpha_tau.o  #   not updated to Guacho V1.3
 OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
-OBJECTS_HALPHA  = ${MODULES_MAIN} ${MODULES_USER} ${HALPHA}
-OBJECTS_RX      = ${MODULES_MAIN} ${MODULES_USER} ${RX}
-
 #---------------------------------------------------
 # Set flags
 # Set flags
@@ -179,20 +166,6 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
-h_alpha :prebuild ${OBJECTS_HALPHA}
-	@echo Linking object files ...
-	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_HALPHA) -o $@
-	@echo Cleaning up ...
-	@rm -f *.o *.mod
-	@echo "Done! (`date`)"
-
-xrays   :prebuild ${OBJECTS_RX}
-	@echo Linking object files ...
-	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_RX) -o $@
-	@echo Cleaning up ...
-	@rm -f *.o *.mod
-	@echo "Done! (`date`)"
-
 prebuild :
 	@echo "Guacho build started `date`"
 	@echo Compiling flags used: $(FLAGS)
@@ -218,4 +191,4 @@ prebuild :
 
 clean :
 	rm -f *.o *.mod
-	rm -f $(PROGRAM) lyman_alpha_tau h_alpha coldens xrays *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err

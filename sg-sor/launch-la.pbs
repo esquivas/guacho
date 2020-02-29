@@ -1,0 +1,86 @@
+#!/bin/bash
+#PBS -N M9a-LA
+#PBS -e M9a-LA.err
+#PBS -o M9a-LA.out
+#PBS -r n
+
+##PBS -m aeb
+#PBS -M esquivel@nucleares.unam.mx
+#PBS -l nodes=2:gen3:ppn=32
+#PBS -q default
+
+### Switch to the job's working directory, provided by PBS in PBS_O_WORKDIR
+WORKDIR="/home/esquivel/guacho-dev/CE/M9a/"
+#PBS_O_WORKDIR="/home/esquivel/guacho-dev/CE/"
+cd $WORKDIR
+
+### EXEPATH is the directory where your executable resides
+EXEPATH=$WORKDIR
+###EXE is the name of your executable (compiled mpi program)
+EXE="M9a"
+### ARGS is optional. If you don't need it simply leave it empty
+ARGS=""
+### ARGS is also optional.
+INFILE=""
+
+#############################################################################
+# Define number of processors to send to mpirun for MPICH
+#NPROCS=`wc -l < $PBS_NODEFILE`
+#NPROCS="40"
+export NPROCS=`wc -l $PBS_NODEFILE |gawk '//{print $1}'`
+echo This job has allocated $NPROCS nodes
+export TMP_MACHINES="$WORKDIR/$EXE-machines-file.out"
+cat $PBS_NODEFILE | uniq > $TMP_MACHINES
+NP_MPD=`wc -l $TMP_MACHINES |gawk '//{print $1}'`
+
+##############################################################################
+# A little useful information for the log file...
+echo Master process running on `hostname`
+echo Directory is `pwd`
+echo PBS has allocated the following nodes:
+echo The node file is $PBS_NODEFILE
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+echo This job runs on the following nodes:
+echo `cat $TMP_MACHINES`
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+echo This job has allocated $NPROCS nodes
+echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+echo
+
+##############################################################################
+# Specify CPU time needed
+## Specify 48 hours of CPU Time
+##PBS -l cput=48:00:00
+##############################################################################
+# Put in a timestamp
+echo Starting executation at `date`
+##############################################################################
+### ---------------------------------------
+### BEGINNING OF EXECUTION
+### ---------------------------------------
+### end of information preample
+### echo  "mpirun -np $NPROCS $EXEPATH/$EXE"
+echo "ulimit"
+ulimit -l
+ulimit -s
+echo "C0"
+echo "mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-c0 $ARGS $INFILE"
+mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-c0 $ARGS $INFILE
+
+echo "H0"
+echo "mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-h0 $ARGS $INFILE"
+mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-h0 $ARGS $INFILE
+
+echo "C0-2T"
+echo "mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-c02t $ARGS $INFILE"
+mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-c02t $ARGS $INFILE
+
+echo "H0-2T"
+echo "mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-h02t $ARGS $INFILE"
+mpiexec.hydra -f $TMP_MACHINES -n $NPROCS ${EXEPATH}\/lyman_alpha_tau-h02t $ARGS $INFILE
+
+rm -f $TMP_MACHINES
+######i########################################################################
+# Print the date again -- when finished
+echo Finished at `date`
+##############################################################################
