@@ -46,7 +46,7 @@ subroutine initmain(tprint, itprint)
   use cooling_chi
   use difrad
   use thermal_cond
-  use field_cd_module
+  use flux_cd_module
   use user_mod
   use radpress
 
@@ -161,7 +161,7 @@ subroutine initmain(tprint, itprint)
   allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
 
 #ifdef BFIELD
-  if (enable_field_cd) &
+  if (enable_flux_cd) &
   allocate ( e(3,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 #endif
 
@@ -277,7 +277,7 @@ subroutine initmain(tprint, itprint)
     stop
   end if
 
-  if (enable_field_cd) then
+  if (enable_flux_cd) then
     print'(a)', 'div(B) constrained with field-CD method'
     print'(a)', ''
   end if
