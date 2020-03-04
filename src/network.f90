@@ -128,6 +128,7 @@ subroutine get_jacobian(y,jacobian,rate)
   jacobian(ie, hp) =  1.d0
   jacobian(ie, h2) =  0.d0
   jacobian(ie, ie) = -1.d0
+  
 end subroutine get_jacobian
 
 !=======================================================================
