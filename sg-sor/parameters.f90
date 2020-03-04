@@ -122,7 +122,7 @@ module parameters
   logical, parameter :: dif_rad = .true.
 
   !> Enable self-gravity (SOR)
-  logical, parameter :: self_gravity = .true.
+  logical, parameter :: enable_self_gravity = .true.
 
   !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
   logical, parameter :: user_source_terms = .true.
