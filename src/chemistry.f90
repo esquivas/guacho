@@ -82,7 +82,7 @@ contains
   subroutine chemstep(y,y0,T, deltt)
 
     use linear_system
-    use network, only : n_spec, n_reac, n_elem, get_reaction_rates,         &
+    use network, only : n_spec, n_reac, n_elem, get_reaction_rates,            &
                         derv, get_jacobian, n_nequ, check_no_conservation
     implicit none
     real (kind=8), intent(inout) :: y(n_spec)
