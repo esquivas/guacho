@@ -24,7 +24,6 @@
 
 !> @brief Advances the simulation one timestep
 !> @details Advances the solution from @f$ t @f$ to @f$ t + \Delta t @f$
-
 module hydro_solver
 
   use hll
@@ -41,7 +40,6 @@ contains
 !> @details Adds artificial viscosity to the conserved variables
 !! @n Takes the variables from the globals module and it assumes
 !! that the up are the stepped variables, while u are unstepped
-
   subroutine viscosity()
 
   use parameters, only : nx, ny, nz, eta
@@ -75,7 +73,7 @@ end subroutine viscosity
 subroutine step(dt)
   use parameters, only : nx, ny, nz, neqdyn, &
                          user_source_terms, radiation_pressure, &
-                         eight_wave, enable_field_cd
+                         eight_wave, enable_flux_cd
 
   use globals, only : up, u, primit,f, g, h, dx, dy, dz
   use flux_cd_module
@@ -91,14 +89,14 @@ subroutine step(dt)
   dtdz=dt/dz
 
 #ifdef BFIELD
-  if (enable_field_cd) call get_current()
+  if (enable_flux_cd) call get_current()
 #endif
 
   do k=1,nz
     do j=1,ny
       do i=1,nx
 
-        if (.not.enable_field_cd) then
+        if (.not.enable_flux_cd) then
           !  upwind step for all variables
           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
@@ -106,7 +104,7 @@ subroutine step(dt)
         else
 
 #ifdef BFIELD
-          call field_cd_update(i,j,k,dt)
+          call flux_cd_update(i,j,k,dt)
 #endif
         endif
 
