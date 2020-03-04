@@ -79,7 +79,7 @@ OBJECTS_MAIN=\
 user_mod.o \
 two_fluid.o \
 network.o \
-field_cd_module.o \
+flux_cd_module.o \
 hydro_core.o \
 linear_system.o \
 chemistry.o \

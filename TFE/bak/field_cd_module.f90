@@ -1,5 +1,5 @@
 !=======================================================================
-!> @file field_cd_module.f90
+!> @file flux_cd_module.f90
 !> @brief Constrained Transport module
 !> @author C. Villareal D'Angelo, M. Schneiter, A. Esquivel
 !> @date 26/Apr/2016
@@ -27,7 +27,7 @@
 !> central difference scheme 
 !> See. Sect. 4.5 of Toth 2000, Journal of Computational Physics 161, 605
 
-module field_cd_module
+module flux_cd_module
 
 #ifdef BFIELD
 
@@ -282,7 +282,7 @@ end subroutine get_current
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] dt : timestep
 
-subroutine field_cd_update(u,up,i,j,k,dt)
+subroutine flux_cd_update(u,up,i,j,k,dt)
 
   use parameters, only : passives, neqdyn, neq, nxmin, nxmax, &
                         nymin, nymax, nzmin, nzmax
@@ -323,8 +323,8 @@ subroutine field_cd_update(u,up,i,j,k,dt)
               -0.5*dtdx*(e(2,i+1,j,k)-e(2,i-1,j,k))         &
               +0.5*dtdy*(e(1,i,j+1,k)-e(1,i,j-1,k))
 
-end subroutine field_cd_update
+end subroutine flux_cd_update
 
 #endif
 
-end module field_cd_module
+end module flux_cd_module

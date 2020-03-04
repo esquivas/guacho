@@ -78,12 +78,12 @@ end subroutine viscosity
 subroutine step(u,up,primit,dt)
   use parameters, only : nx, ny, nz, neqdyn, &
                          user_source_terms, radiation_pressure, &
-                         eight_wave, enable_field_cd, twofluid, &
+                         eight_wave, enable_flux_cd, twofluid, &
                          neq, nxmin, nymin, nzmin, &
                          nxmax, nymax, nzmax
 
   use globals, only : f, g, h, dx, dy, dz
-  use field_cd_module
+  use flux_cd_module
   use sources
   implicit none
   real, intent(in)   ::       u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
@@ -99,14 +99,14 @@ subroutine step(u,up,primit,dt)
   dtdz=dt/dz
 
 #ifdef BFIELD
-  if (enable_field_cd) call get_current()
+  if (enable_flux_cd) call get_current()
 #endif
 
   do k=1,nz
     do j=1,ny
       do i=1,nx
         
-        if (.not.enable_field_cd) then
+        if (.not.enable_flux_cd) then
           !  upwind step for all variables
           up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
                                 -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
@@ -114,7 +114,7 @@ subroutine step(u,up,primit,dt)
         else
 
 #ifdef BFIELD
-          call field_cd_update(u,up,i,j,k,dt)
+          call flux_cd_update(u,up,i,j,k,dt)
 #endif
         endif
 
