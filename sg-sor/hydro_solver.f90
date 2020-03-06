@@ -159,7 +159,6 @@ subroutine tstep()
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
 
-
   !   upwind timestep
   call step(dtm)
 
@@ -234,11 +233,13 @@ subroutine tstep()
     call calcprim(u,primit,only_ghost=.true.)
   end if
 
+  !  Should it be in step routine???
   !  Self-gravity
   if (self_gravity) then
     call solve_poisson()
     call add_self_gravity()
   end if
+
   !  Thermal conduction
   if (th_cond /= 0 ) call thermal_conduction()
 
