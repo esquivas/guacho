@@ -45,8 +45,8 @@ module parameters
   !  If integer, choose from list provided
   !----------------------------------------
 
-  logical, parameter :: pmhd     = .false.   !<  enadble passive mhd
-  logical, parameter :: mhd      = .false.   !<  Enable full MHD
+  logical, parameter :: pmhd = .false.   !<  enadble passive mhd
+  logical, parameter :: mhd  = .false.   !<  Enable full MHD
 
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
