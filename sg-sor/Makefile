@@ -2,7 +2,7 @@
 #   for Guacho 3D
 #---------------------------------------------------
 #   Name of the executable
-PROGRAM=M9a
+PROGRAM=guacho
 
 #  Seaerh Path, object files are searched in the order below
 VPATH = . : ../ : ../src/ :../../src
@@ -69,6 +69,7 @@ utils.o
 OBJECTS_MAIN=\
 lmp_module.o \
 user_mod.o \
+self_gravity. o \
 network.o \
 flux_cd_module.o \
 hydro_core.o \
