@@ -1,0 +1,12 @@
+cosas que habria que hacer pa lo del SOR
+- inicializar modulo (allocatear variables globales llamr desde init.f90
+- mandar llamar solve_poison desde el main (precalcular la phi)
+   escribir en pantalla el progreso (iteraciones
+
+Aca ya se pueden hacer pruebas de que la phi sea la buena, se puede escribir a disco el laplaciano de phi y comparar con la densidad, esto ayuda a verificar unidades 
+)
+- agregar en el output que escriba grav_phi
+_ mandar llamar solve poisson a partir de las primitivas (dentro de step (en hydro_solver.f90)
+  Agregar la fuerza de gravedad en dentro de tstep (subrutina source en sources.f90)
+
+- buscar alguna prueba en la literatura que se pueda reproducir (algo vi del colapso de una nube con rotacion?)
