@@ -372,8 +372,8 @@ subroutine initmain(tprint, itprint)
   print'(a)', ''
 
   print'(a)', '----- OTHER STUFF -----------'
-  
-  if (self_gravity) print'(a)', 'self-gravity enabled'
+
+  if (enable_self_gravity) print'(a)', 'self-gravity enabled'
   print'(a)', ''
   if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
   print'(a)', ''
