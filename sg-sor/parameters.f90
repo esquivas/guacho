@@ -27,10 +27,12 @@
 !! can be moved later to a runtime input file
 
 module parameters
+#ifdef MPIP
+    use mpi
+#endif
   use constants
   implicit none
 #ifdef MPIP
-  include "mpif.h"
   logical, parameter :: mpip     = .true.   !<  enable mpi parallelization
 #endif
 
@@ -137,7 +139,7 @@ module parameters
   logical, parameter :: charge_exchange = .true.
 
   !> Include Lagrangian Macro Particles (tracers)
-  logical, parameter :: enable_lmp = .true.
+  logical, parameter :: enable_lmp = .false.
   !> Max number of macro particles followed by each processor
   integer, parameter :: N_MP =4096
   !>  Enable following SED of each MP
