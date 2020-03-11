@@ -33,8 +33,8 @@ module difrad
   real, parameter    :: a0=6.3e-18    !< Fotoionization cross section
   integer, parameter :: nrays=1000000 !< Number of rays
   real, allocatable  :: ph(:,:,:)     !< Photoionizing rate
-  real, allocatable  :: phCold(:,:,:)     !< Photoionizing rate
-  real, allocatable  :: phHot(:,:,:)     !< Photoionizing rate
+  real, allocatable  :: phCold(:,:,:) !< Photoionizing rate
+  real, allocatable  :: phHot(:,:,:)  !< Photoionizing rate
   real, allocatable  :: em(:,:,:)     !< Photoionizing emissivity
   !  auxiliary MPI arrays
   real, allocatable  :: photL(:,:,:)  !< Auxiliary buffer for MPI
