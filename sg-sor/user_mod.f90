@@ -73,9 +73,9 @@ subroutine initial_conditions(u)
       do k=nzmin,nzmax
 
         ! Position measured from the centre of the grid (star)
-        x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
-        y=(real(j+coords(1)*ny-nytot/2)+0.5)*dy
-        z=(real(k+coords(2)*nz-nztot/2)+0.5)*dz
+        x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
+        y=(real(j+coords(1)*ny-nytot/2)-0.5)*dy
+        z=(real(k+coords(2)*nz-nztot/2)-0.5)*dz
 
         ! Distance from the centre of the star
         rads=sqrt(x**2+y**2+z**2)
@@ -94,20 +94,11 @@ subroutine initial_conditions(u)
         u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
         + cv*dens*1.9999*Tsw
 
-        !   Here the number density of the wind and planet
-        !   components separately
-        u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
-        u(neqdyn+3,i,j,k) =  1.E-4*dens   ! xhn*rho S neutro
-        u(neqdyn+4,i,j,k) =     0.*dens   ! xci*rho P ion
-        u(neqdyn+5,i,j,k) =     0.*dens   ! xcn*rho P neutro
-
-        ! ne
         u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
         !density of neutrals
-        u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-
+        u(neqdyn+1,i,j,k) = 1.E-4*dens
         !   passive scalar (tag) for stellar material
-        u(neqdyn+7,i,j,k)= 1000*dens
+        u(neqdyn+2,i,j,k)= 1000*dens
 
       end do
     end do
