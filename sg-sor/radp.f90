@@ -22,7 +22,7 @@
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
 
-!The locations of tableis is in src/Beta_bourrier.dat
+!The locations of tableis is in ./Beta_bourrier.dat
 
 module radpress
 
