@@ -69,7 +69,7 @@ utils.o
 OBJECTS_MAIN=\
 lmp_module.o \
 user_mod.o \
-self_gravity. o \
+self_gravity.o \
 network.o \
 flux_cd_module.o \
 hydro_core.o \
