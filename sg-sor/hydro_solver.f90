@@ -24,14 +24,8 @@
 
 !> @brief Advances the simulation one timestep
 !> @details Advances the solution from @f$ t @f$ to @f$ t + \Delta t @f$
-
 module hydro_solver
 
-  use hll
-  use hllc
-  use hllE
-  use hlld
-  use hlleSplitAll
   implicit none
 
 contains
@@ -133,8 +127,13 @@ contains
     use constants
     use globals
     use hydro_core,   only : calcprim
-    use hrate,        only : update_neutral_fraction
+    use hll
+    use hllc
+    use hllE
+    use hlld
+    use hlleSplitAll
     use boundaries
+    use hrate,        only : update_neutral_fraction
     use chemistry,    only : update_chem
     use cooling_H
     use cooling_DMC
@@ -215,9 +214,6 @@ contains
     !case(COOL_CHEM)
       ! Chemistry network cooling (primitives are already updated in update_chem)
       !call chem_cool()
-
-    !case (COOL_NONE)
-    !  call calcprim(u,primit)
 
     end select
 
