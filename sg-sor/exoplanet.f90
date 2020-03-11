@@ -67,7 +67,7 @@ subroutine init_exo()
 
   TSW   = 1.3E6 !3.0E6     !************      ! Stellar temperature (K)
   !  Stellar wind, imposed at the 1.5x  sonic point (cm)
-  RSW   = 1.1*Ggrav*MassS/2./(Rg*Tsw/0.6) !********************
+  RSW   = 2.* 1.1*Ggrav*MassS/2./(Rg*Tsw/0.6) !********************
 
   vsw   = 205.e5   !*************       ! Stellar wind velocity (cm/s)
   dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
@@ -78,7 +78,7 @@ subroutine init_exo()
   AMPDOT= 5.e10 !1.5E10   !***********         ! Planetary Mass Loss rate (g/s)
 
   TPW   = 1.E4                        ! Planets temperature
-  RPW   = 3.*1.38*Rjup                 ! Planetary wind radius (cm)
+  RPW   = 2.* 3.*1.38*Rjup                 ! Planetary wind radius (cm)
   vpw   = 10.e5                       ! Planets wind velocity (cm/s)
   dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))   ! Planetary wind density
 
@@ -139,9 +139,9 @@ subroutine impose_exo(u,time)
   vzorb=  omega*Rorb*cos(omega*TIME+phi)
   vyorb=0.
 
-  do i=nxmin,nxmax
+  do k=nzmin,nzmax
     do j=nymin,nymax
-      do k=nzmin,nzmax
+      do i=nxmin,nxmax
 
         ! Position measured from the centre of the grid (star)
         x=(real(i+coords(0)*nx-nxtot/2)-0.5)*dx
@@ -175,18 +175,11 @@ subroutine impose_exo(u,time)
           ! total energy
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
           + cv*dens*1.9999*Tsw
-          !   Here the number density of the wind and planet
-          !   components separately
-          u(neqdyn+2,i,j,k) = 0.9999*dens   ! xhi*rho S ion
-          u(neqdyn+3,i,j,k) =  1.E-4*dens   ! xhn*rho S neutro
-          u(neqdyn+4,i,j,k) = 0.*dens   ! xci*rho P ion
-          u(neqdyn+5,i,j,k) = 0.*dens   ! xcn*rho P neutro
-          ! ne
-          u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
-          !density of neutrals
-          u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
-          !   passive scalar (tag) for stellar material
-          u(neqdyn+7,i,j,k)= 1000*dens
+
+          !  density of neutrals
+          u(neqdyn+1,i,j,k) =  1.E-4*dens
+          !  passive scalar (tag) for stellar material
+          u(neqdyn+2,i,j,k)= 1000*dens
 
           ! IF INSIDE THE PLANET
         else if(radp <= rpw) then
@@ -207,20 +200,10 @@ subroutine impose_exo(u,time)
           u(5,i,j,k)=0.5*dens*(velx**2+vely**2+velz**2) &
           + cv*dens*1.5*Tpw
 
-          !   Here the number density of the wind and planet
-          !   components separately
-          u(neqdyn+2,i,j,k) =  0.*dens     ! xhi*rho S ion
-          u(neqdyn+3,i,j,k) =  0.*dens     ! xhn*rho S neutro
-          u(neqdyn+4,i,j,k) =  0.5*dens     ! xci*rho P ion
-          u(neqdyn+5,i,j,k) =  0.5*dens     ! xcn*rho P neutro
-
-          ! ne
-          u(neqdyn+6,i,j,k) = u(neqdyn+2,i,j,k)+u(neqdyn+4,i,j,k)
-          !density of neutrals
-          u(neqdyn+1,i,j,k) = u(neqdyn+3,i,j,k)+u(neqdyn+5,i,j,k)
+          u(neqdyn+1,i,j,k) = 0.5*dens
 
           !   passive scalar (tag) for planetary material
-          u(neqdyn+7,i,j,k)= -1000*dens
+          u(neqdyn+2,i,j,k)= -1000*dens
 
         end if
 
