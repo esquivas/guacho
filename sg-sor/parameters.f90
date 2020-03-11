@@ -37,9 +37,9 @@ module parameters
 #endif
 
   !> Path used to write the output
-  character (len=128),parameter ::  outputpath='./'
+  character (len=128),parameter ::  outputpath= './'
   !> working directory
-  character (len=128),parameter ::  workdir='./'
+  character (len=128),parameter ::  workdir   = './'
 
   !----------------------------------------
   !  setup parameters
@@ -60,11 +60,11 @@ module parameters
   integer, parameter :: riemann_solver = SOLVER_HLLC
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
-  logical, parameter :: eight_wave = .false.
+  logical, parameter :: eight_wave     = .false.
   !>  Enable flux-CD cleaning of div B
   logical, parameter :: enable_flux_cd = .false.
   !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .false.
+  logical, parameter :: dump_divb      = .false.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -75,7 +75,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_CHEM
+  integer, parameter :: eq_of_state = EOS_H_RATE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -116,18 +116,19 @@ module parameters
   !> TC_OFF         : No thermal conduction
   !> TC_ISOTROPIC   : Isotropic thermal conduction
   !> TC_ANISOTROPIC : Anisotropic thermal conduction (requires B field)
-  integer, parameter :: th_cond = TC_OFF
+  integer, parameter :: th_cond       = TC_OFF
   !> Enable Saturation in thermal conduction
   logical, parameter :: tc_saturation = .false.
 
   !> Enable 'diffuse' radiation
-  logical, parameter :: dif_rad = .true.
+  logical, parameter :: dif_rad = .false.
 
   !> Enable self-gravity (SOR)
   logical, parameter :: enable_self_gravity = .true.
 
-  !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
-  logical, parameter :: user_source_terms = .true.
+  !> Include user defined source terms
+  !> (e.g. gravity point sources, has to be set in usr_mod)
+  logical, parameter :: user_source_terms   = .true.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
@@ -136,37 +137,35 @@ module parameters
   logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange = .true.
+  logical, parameter :: charge_exchange = .false.
 
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .false.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =4096
+  integer, parameter :: N_MP = 4096
   !>  Enable following SED of each MP
-  logical, parameter :: lmp_distf  = .true.
+  logical, parameter :: lmp_distf  = .false.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
 
 
 #ifdef PASSIVES
-  integer, parameter :: npas=7         !< num. of passive scalars
-  integer, parameter :: n_spec =5      !< num of species for chemistry
-  integer, parameter :: n1_chem=7      !< 1st index for chemistry
+  integer, parameter :: npas    = 7    !< num. of passive scalars
+  integer, parameter :: n_spec  = 5    !< num of species for chemistry
+  integer, parameter :: n1_chem = 7    !< 1st index for chemistry
 #else
-  integer, parameter :: npas=0        !< num. of passive scalars
+  integer, parameter :: npas    = 0    !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=400      !< Total grid size in X
-  integer, parameter :: nytot=100      !< Total grid size in Y
-  integer, parameter :: nztot=400      !< Total grid size in Z
+  integer, parameter :: nxtot = 200    !< Total grid size in X
+  integer, parameter :: nytot =  50    !< Total grid size in Y
+  integer, parameter :: nztot = 200    !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX=8     !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY=2     !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
-  !> total number of MPI processes
-  integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
+  integer, parameter :: MPI_NBX=2     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY=1     !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ=2     !< number of MPI blocks in Z
 #endif
 
   !  set box size
@@ -208,29 +207,31 @@ module parameters
   !*********************************************************************
 
 #ifdef PASSIVES
-  logical, parameter :: passives = .true.   !<  enable passive scalars
+  logical, parameter :: passives = .true.    !<  enable passive scalars
 #else
-  logical, parameter :: passives = .false.  !<  enable passive scalars
+  logical, parameter :: passives = .false.   !<  enable passive scalars
 #endif
-  integer, parameter :: ndim=3         !< num. of dimensions
-  integer, parameter :: nghost=2      !< num. of ghost cells
+  integer, parameter :: ndim   = 3           !< num. of dimensions
+  integer, parameter :: nghost = 2           !< num. of ghost cells
 
   !> number of dynamical equations
 #ifdef BFIELD
-  integer, parameter :: neqdyn=8      !< num. of eqs  (+scal)
+  integer, parameter :: neqdyn = 8           !< num. of eqs  (+scal)
 #else
-  integer, parameter :: neqdyn=5      !< num. of eqs  (+scal)
+  integer, parameter :: neqdyn = 5           !< num. of eqs  (+scal)
 #endif
 
-  integer, parameter :: neq=neqdyn + npas  !< number of equations
+  integer, parameter :: neq=neqdyn + npas    !< number of equations
 
 #ifdef SILO
-  logical, parameter :: out_silo = .true.  !< silo (needs hdf/silo libraries)
+  logical, parameter :: out_silo = .true.    !< silo (needs hdf/silo libraries)
 #else
-  logical, parameter :: out_silo = .false.  !< silo (needs hdf/silo libraries)
+  logical, parameter :: out_silo = .false.   !< silo (needs hdf/silo libraries)
 #endif
 
 #ifdef MPIP
+  !> total number of MPI processes
+  integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
   !>  number of physical cells in x in each MPI block
   integer, parameter :: nx=nxtot/MPI_NBX
   !>  number of physical cells in y in each MPI block
