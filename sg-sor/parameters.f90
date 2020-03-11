@@ -150,7 +150,8 @@ module parameters
 
 
 #ifdef PASSIVES
-  integer, parameter :: npas    = 7    !< num. of passive scalars
+  integer, parameter :: npas    = 2    !< num. of passive scalars
+  !> The following must be consistent with the contents in network.f90
   integer, parameter :: n_spec  = 5    !< num of species for chemistry
   integer, parameter :: n1_chem = 7    !< 1st index for chemistry
 #else
