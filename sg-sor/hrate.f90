@@ -107,7 +107,7 @@ contains
     use parameters
     use hydro_core, only : u2prim
     implicit none
-    real, intent(in)                   :: dt, tau, radphi
+    real, intent(in)                   :: dt, radphi
     real, intent(inout),dimension(neq) :: uu, prim
     real                               :: T
     real (kind=8) :: dh, y0, g0, e, y1
