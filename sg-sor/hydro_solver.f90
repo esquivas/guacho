@@ -230,10 +230,10 @@ contains
 
     !  Should it be in step routine???
     !  Self-gravity
-    if (self_gravity) then
-      call solve_poisson()
-      call add_self_gravity()
-    end if
+    !if (enable_self_gravity) then
+    !  call solve_poisson()
+    !  call add_self_gravity()
+    !end if
 
     !  Thermal conduction
     if (th_cond /= 0 ) call thermal_conduction()
