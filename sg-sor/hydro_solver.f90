@@ -36,214 +36,212 @@ module hydro_solver
 
 contains
 
-!> @brief Adds artificial viscosity to the conserved variables
-!> @details Adds artificial viscosity to the conserved variables
-!! @n Takes the variables from the globals module and it assumes
-!! that the up are the stepped variables, while u are unstepped
+  !=======================================================================
+  !> @brief Adds artificial viscosity to the conserved variables
+  !> @details Adds artificial viscosity to the conserved variables
+  !! @n Takes the variables from the globals module and it assumes
+  !! that the up are the stepped variables, while u are unstepped
   subroutine viscosity()
+    use parameters, only : nx, ny, nz, eta
+    use globals, only: u, up
+    implicit none
+    integer :: i, j, k
 
-  use parameters, only : nx, ny, nz, eta
-  use globals, only: u, up
-  implicit none
-  integer :: i, j, k
-
-  do k=1,nz
-     do j=1,ny
+    do k=1,nz
+      do j=1,ny
         do i=1,nx
-           up(:,i,j,k)=up(:,i,j,k)+eta*( u(:,i+1,j,k)+u(:,i-1,j,k)       &
-                                        +u(:,i,j+1,k)+u(:,i,j-1,k)       &
-                                        +u(:,i,j,k+1)+u(:,i,j,k-1)       &
-                                     -6.*u(:,i,j,k) )
+          up(:,i,j,k)=up(:,i,j,k)+eta*( u(:,i+1,j,k)+u(:,i-1,j,k)              &
+                                       +u(:,i,j+1,k)+u(:,i,j-1,k)              &
+                                       +u(:,i,j,k+1)+u(:,i,j,k-1)              &
+                                       -6.*u(:,i,j,k) )
         end do
-     end do
-  end do
+      end do
+    end do
 
-end subroutine viscosity
+  end subroutine viscosity
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Upwind timestep
+  !> @details Performs the upwind timestep according to
+  !! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x}
+  !!\left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] @f]
+  !! (in 3D), it takes @f$ U^{n+1} @f$=up from the global variables
+  !! and @f$ U^{n} @f$=u
+  !> @param real [in] dt : timestep
+  subroutine step(dt)
+    use parameters, only : nx, ny, nz, neqdyn, &
+    user_source_terms, radiation_pressure, &
+    eight_wave, enable_flux_cd
 
-!> @brief Upwind timestep
-!> @details Performs the upwind timestep according to
-!! @f[ U^{n+1}_i= U^n_i -\frac{\Delta t}{\Delta x}
-!!\left[F^{n+1/2}_{i+1/2}-F^{n+1/2}_{i-1/2} \right] @f]
-!! (in 3D), it takes @f$ U^{n+1} @f$=up from the global variables
-!! and @f$ U^{n} @f$=u
-!> @param real [in] dt : timestep
+    use globals, only : up, u, primit,f, g, h, dx, dy, dz
+    use flux_cd_module
+    use sources
+    implicit none
+    real :: s(neq)
+    real, intent(in) :: dt
+    integer :: i, j, k
+    real :: dtdx, dtdy, dtdz
 
-subroutine step(dt)
-  use parameters, only : nx, ny, nz, neqdyn, &
-                         user_source_terms, radiation_pressure, &
-                         eight_wave, enable_flux_cd
-
-  use globals, only : up, u, primit,f, g, h, dx, dy, dz
-  use flux_cd_module
-  use sources
-  implicit none
-  real :: s(neq)
-  real, intent(in) :: dt
-  integer :: i, j, k
-  real :: dtdx, dtdy, dtdz
-
-  dtdx=dt/dx
-  dtdy=dt/dy
-  dtdz=dt/dz
+    dtdx=dt/dx
+    dtdy=dt/dy
+    dtdz=dt/dz
 
 #ifdef BFIELD
-  if (enable_flux_cd) call get_current()
+    if (enable_flux_cd) call get_current()
 #endif
 
-  do k=1,nz
-    do j=1,ny
-      do i=1,nx
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
 
-        if (.not.enable_flux_cd) then
-          !  upwind step for all variables
-          up(:,i,j,k)=u(:,i,j,k)-dtdx*(f(:,i,j,k)-f(:,i-1,j,k))     &
-                                -dtdy*(g(:,i,j,k)-g(:,i,j-1,k))     &
-                                -dtdz*(h(:,i,j,k)-h(:,i,j,k-1))
-        else
+          if (.not.enable_flux_cd) then
+            !  upwind step for all variables
+            up(:,i,j,k)=u(:,i,j,k) - dtdx*( f(:,i,j,k) - f(:,i-1,j,k) )        &
+                                   - dtdy*( g(:,i,j,k) - g(:,i,j-1,k) )        &
+                                   - dtdz*( h(:,i,j,k) - h(:,i,j,k-1) )
+          else
 
 #ifdef BFIELD
-          call flux_cd_update(i,j,k,dt)
+            call flux_cd_update(i,j,k,dt)
 #endif
-        endif
+          endif
 
-        if (user_source_terms     .or. &
-            radiation_pressure    .or. &
-            eight_wave) then
-          call source(i,j,k,primit(:,i,j,k),s)
-          up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
+          if (user_source_terms  .or.                                          &
+              radiation_pressure .or.                                          &
+              eight_wave ) then
 
-        end if
+            call source(i,j,k,primit(:,i,j,k),s)
+            up(:,i,j,k)= up(:,i,j,k)+dt*s(:)
+
+          end if
 
         end do
-     end do
-  end do
+      end do
+    end do
 
-end subroutine step
+  end subroutine step
 
+  !=======================================================================
+  !> @brief High level wrapper to advancce the simulation
+  !> @details High level wrapper to advancce the simulation
+  !! @n The variables are taken from the globals module.
+  subroutine tstep()
 
-!> @brief High level wrapper to advancce the simulation
-!> @details High level wrapper to advancce the simulation
-!! @n The variables are taken from the globals module.
+    use parameters, only : tsc, riemann_solver, eq_of_state, &
+    dif_rad, cooling, &
+    th_cond
+    use constants
+    use globals
+    use hydro_core, only : calcprim
+    use hrate,      only : update_neutral_fraction
+    use boundaries
+    use cooling_H
+    use cooling_DMC
+    use cooling_CHI
+    use difrad
+    use self_gravity, only : solve_poisson, add_self_gravity
+    use thermal_cond
+    implicit none
+    real :: dtm
 
-subroutine tstep()
+    !  1st half timestep ========================
+    dtm=dt_CFL/2.
+    !   calculate the fluxes using the primitives
+    !   (piecewise constant)
+    if (riemann_solver == SOLVER_HLL ) call hllfluxes(1)
+    if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
+    if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
+    if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
+    !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
+    !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
+    !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
 
-  use parameters, only : tsc, riemann_solver, eq_of_state, &
-                         dif_rad, cooling, &
-                         th_cond
-  use constants
-  use globals
-  use hydro_core, only : calcprim
-  use hrate,      only : update_neutral_fraction
-  use boundaries
-  use cooling_H
-  use cooling_DMC
-  use cooling_CHI
-  use difrad
-  use self_gravity, only : solve_poisson, add_self_gravity
-  use thermal_cond
-  implicit none
-  real :: dtm
+    !   upwind timestep
+    call step(dtm)
 
-  !  1st half timestep ========================
-  dtm=dt_CFL/2.
-  !   calculate the fluxes using the primitives
-  !   (piecewise constant)
-  if (riemann_solver == SOLVER_HLL ) call hllfluxes(1)
-  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
-  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
-  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
-  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
-  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
-  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
+    !   add viscosity
+    !call viscosity()
 
-  !   upwind timestep
-  call step(dtm)
+    !  2nd half timestep ========================
+    !  boundaries in up and  primitives up ---> primit
+    call boundaryII()
+    call calcprim(up,primit)
 
-  !   add viscosity
-  !call viscosity()
+    !   calculate the fluxes using the primitives
+    !   with linear reconstruction (piecewise linear)
+    if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
+    if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
+    if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
+    if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
+    !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
+    !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
+    if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
+    !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
 
-  !  2nd half timestep ========================
-  !  boundaries in up and  primitives up ---> primit
-  call boundaryII()
-  call calcprim(up,primit)
+    !  upwind timestep
+    call step(dt_CFL)
 
-  !   calculate the fluxes using the primitives
-  !   with linear reconstruction (piecewise linear)
-  if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
-  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
-  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
-  !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
-  !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
-  if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
-  !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
+    !  add viscosity
+    call viscosity()
 
-  !  upwind timestep
-  call step(dt_CFL)
+    !  copy the up's on the u's
+    u=up
 
-  !  add viscosity
-  call viscosity()
+    !  Do the Radiation transfer (Monte Carlo type)
+    if (dif_rad) call diffuse_rad()
 
-  !  copy the up's on the u's
-  u=up
+    !  Advance neutral fraction (only Us) if H rate is used, updates the
+    !  rest of the primitives
+    if (eq_of_state == EOS_H_RATE) call update_neutral_fraction()
 
-  !  Do the Radiation transfer (Monte Carlo type)
-  if (dif_rad) call diffuse_rad()
+    ! update the chemistry network
+    ! at this point is in cgs
+    !  the primitives in the physical domain are upated
+    if (eq_of_state == EOS_CHEM) call update_chem()
 
-  !  Advance neutral fraction (only Us) if H rate is used, updates the
-  !  rest of the primitives
-  if (eq_of_state == EOS_H_RATE) call update_neutral_fraction()
+    !-------------------------
+    !   apply cooling/heating terms
 
-  ! update the chemistry network
-  ! at this point is in cgs
-  !  the primitives in the physical domain are upated
-  if (eq_of_state == EOS_CHEM) call update_chem()
+    !   add cooling (H rat e)to the conserved variables
+    !   and updates the primitives in physical domain
+    if (cooling == COOL_H) then
+      call coolingh()
+    end if
 
-  !-------------------------
-  !   apply cooling/heating terms
+    ! DMC cooling (the primitives are updated in the cooling routine)
+    if (cooling == COOL_DMC) call coolingdmc()
 
-  !   add cooling (H rat e)to the conserved variables
-  !   and updates the primitives in physical domain
-  if (cooling == COOL_H) then
-    call coolingh()
-  end if
+    ! Chianti cooling (the primitives are updated in the cooling routine)
+    if (cooling == COOL_CHI) call coolingchi()
 
-  ! DMC cooling (the primitives are updated in the cooling routine)
-  if (cooling == COOL_DMC) call coolingdmc()
+    ! Chemistry network cooling (primitives are already updated in update_chem)
+    if (cooling == COOL_CHEM) call cooling_chem()
 
-  ! Chianti cooling (the primitives are updated in the cooling routine)
-  if (cooling == COOL_CHI) call coolingchi()
+    if (cooling == COOL_NONE) call calcprim(u,primit)
 
-  ! Chemistry network cooling (primitives are already updated in update_chem)
-  if (cooling == COOL_CHEM) call cooling_chem()
+    !   boundary contiditions on u
+    call boundaryI()
 
-  if (cooling == COOL_NONE) call calcprim(u,primit)
+    if (cooling == COOL_NONE) then
+      !  must update primitives in all the domain
+      call calcprim(u,primit)
+    else
+      !  update primitives on the boundaries
+      call calcprim(u,primit,only_ghost=.true.)
+    end if
+    
+    !  Should it be in step routine???
+    !  Self-gravity
+    if (self_gravity) then
+      call solve_poisson()
+      call add_self_gravity()
+    end if
 
-  !   boundary contiditions on u
-  call boundaryI()
+    !  Thermal conduction
+    if (th_cond /= 0 ) call thermal_conduction()
 
-  if (cooling == COOL_NONE) then
-    !  must update primitives in all the domain
-        call calcprim(u,primit)
-  else
-    !  update primitives on the boundaries
-    call calcprim(u,primit,only_ghost=.true.)
-  end if
-
-  !  Should it be in step routine???
-  !  Self-gravity
-  if (self_gravity) then
-    call solve_poisson()
-    call add_self_gravity()
-  end if
-
-  !  Thermal conduction
-  if (th_cond /= 0 ) call thermal_conduction()
-
-end subroutine tstep
+  end subroutine tstep
 
 end module hydro_solver
 
