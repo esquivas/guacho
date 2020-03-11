@@ -126,7 +126,8 @@ module parameters
   !> Enable self-gravity (SOR)
   logical, parameter :: enable_self_gravity =
 
-  !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
+  !> Include user defined source terms
+  !> (e.g. gravity point sources, has to be set in usr_mod)
   logical, parameter :: user_source_terms =
 
   !> Include radiative pressure
