@@ -119,11 +119,12 @@ end subroutine initial_conditions
 subroutine impose_user_bc(u,order)
 
   use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals,    only: time
+  use globals,    only: time, rank
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   integer, intent(in) :: order
 
+  print*, rank, "about to impose exo"
   !  In this case the boundary is the same for 1st and second order)
   if (order >= 1) then
     call impose_exo(u,time)
