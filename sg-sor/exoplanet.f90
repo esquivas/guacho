@@ -74,11 +74,9 @@ subroutine init_exo()
 
   !----------------PLANET PARAMETERS------------------
   MassP =0.67*mjup
-
   AMPDOT= 5.e10 !1.5E10   !***********         ! Planetary Mass Loss rate (g/s)
-
-  TPW   = 1.E4                        ! Planets temperature
-  RPW   = 2.* 3.*1.38*Rjup                 ! Planetary wind radius (cm)
+  TPW   = 1.E4                        ! Planet temperature
+  RPW   = 2.* 3.*1.38*Rjup            ! Planetary wind radius (cm)
   vpw   = 10.e5                       ! Planets wind velocity (cm/s)
   dpw=((AMPDOT/RPW)/(4*pi*RPW*VPW))   ! Planetary wind density
 
@@ -183,6 +181,8 @@ subroutine impose_exo(u,time)
 
           ! IF INSIDE THE PLANET
         else if(radp <= rpw) then
+
+          print*, "inside planet"
 
           if(radp == 0.) radp=dx*0.10
 
