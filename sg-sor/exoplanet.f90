@@ -60,21 +60,19 @@ subroutine init_exo()
   implicit none
   real :: amdot  ! mdot_star (MSUN/yr)
   real :: ampdot ! mdot_planet (g/s)
-  !----------------STAR PARAMETERS ------------------
 
+  !----------------STAR PARAMETERS ------------------
   MassS = 1.1*msun
   AMDOT = 2.E-14*msun/yr              ! Stellar Mass Loss rate (g s^-1)
-
-  TSW   = 1.3E6 !3.0E6     !************      ! Stellar temperature (K)
+  TSW   = 1.3E6 !3.0E6                ! Stellar temperature (K)
   !  Stellar wind, imposed at the 1.5x  sonic point (cm)
-  RSW   = 2.* 1.1*Ggrav*MassS/2./(Rg*Tsw/0.6) !********************
-
-  vsw   = 205.e5   !*************       ! Stellar wind velocity (cm/s)
-  dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW))   ! Stellar density @RS (g cm^-3)
+  RSW   = 1.1*Ggrav*MassS/2./(Rg*Tsw/0.6)
+  vsw   = 200.e5                      ! Stellar wind velocity (cm/s)
+  dsw   =((AMDOT/RSW)/(4*pi*RSW*VSW)) ! Stellar density @RS (g cm^-3)
 
   !----------------PLANET PARAMETERS------------------
   MassP =0.67*mjup
-  AMPDOT= 5.e10 !1.5E10   !***********         ! Planetary Mass Loss rate (g/s)
+  AMPDOT= 5.e10                       ! Planetary Mass Loss rate (g/s)
   TPW   = 1.E4                        ! Planet temperature
   RPW   = 2.* 3.*1.38*Rjup            ! Planetary wind radius (cm)
   vpw   = 10.e5                       ! Planets wind velocity (cm/s)
@@ -181,8 +179,6 @@ subroutine impose_exo(u,time)
 
           ! IF INSIDE THE PLANET
         else if(radp <= rpw) then
-
-          print*, "inside planet"
 
           if(radp == 0.) radp=dx*0.10
 
