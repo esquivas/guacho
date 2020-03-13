@@ -76,7 +76,7 @@ contains
     real               :: omega, relative_error
     real    :: residue, max_error, e_ijk, ph0
     logical :: need_more=.false.
-    integer :: iter, ipass, i,j,k, ksw, jsw, kpass
+    integer :: iter, ipass, i,j,k, ksw, jsw
 
     omega=1.99
 
@@ -121,7 +121,7 @@ contains
 
       phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
       phi_grav(nx+1,:   , :  ) = phi_grav(nx,: , : )
-      phi_grav(:   ,0   , :  ) = phi_grav(  ,1 , : )
+      phi_grav(:   ,0   , :  ) = phi_grav(: ,1 , : )
       phi_grav(:   ,ny+1, :  ) = phi_grav(: ,ny, : )
       phi_grav(:   , :  ,0   ) = phi_grav(: , :,1  )
       phi_grav(:   , :  ,nz+1) = phi_grav(: , :,nz )
