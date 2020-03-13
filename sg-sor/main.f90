@@ -81,6 +81,7 @@ program guacho
   !  update primitives with u
   call calcprim(u,primit, only_ghost=.false.)
 
+  !  calculate phi_grav (1st time need more iterations)
   if(enable_self_gravity) call solve_poisson()
 
   if (dif_rad) call diffuse_rad()
