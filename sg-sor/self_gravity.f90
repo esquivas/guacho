@@ -31,7 +31,7 @@ module self_gravity
   implicit none
 
   real, allocatable :: phi_grav(:,:,:)
-  real, parameter :: four_pi_G = 4.*pi*Ggrav
+  real, parameter   :: four_pi_G = 4.*pi*Ggrav
 
 contains
 
@@ -47,12 +47,98 @@ contains
 
   end subroutine init_self_gravity
 
+
+  ! ======================================================================
+  ! Computes the residue $\chi= \nabla^2 \phi - 4\pi G \rho$
+  ! at a given cell
+  subroutine get_residue(i,j,k,residue)
+    use globals, only : dx, dy, dz, primit
+    implicit none
+    integer, intent(in)  :: i,j,k
+    real,    intent(out) :: residue
+
+    residue= ( phi_grav(i+1, j,  k   )+phi_grav(i-1,j,  k  ) -2.*phi_grav(i,j,k) )/dx**2      &
+            +( phi_grav(i  , j+1,k   )+phi_grav(i  ,j-1,k  ) -2.*phi_grav(i,j,k) )/dy**2      &
+            +( phi_grav(i  , j , k+1 )+phi_grav(i  ,j  ,k-1) -2.*phi_grav(i,j,k) )/dz**2      &
+            - four_pi_G*primit(1,i,j,k)
+
+  end subroutine get_residue
+
   !================================================================
   !> @brief Solve Poisson equation
   !> @details Compute the gravitational potential with a SOR mehtod
   subroutine solve_poisson()
-
+    use parameters, only : nx, ny, nz
+    use globals,    only : dx, dy, dz, primit, rank
     implicit none
+    integer, parameter :: max_iterations=100
+    real, parameter    :: Tol = 1E-4  !  Relative error tolerance
+    real               :: omega, relative_error
+    real    :: residue, max_error, e_ijk, ph0
+    logical :: need_more=.false.
+    integer :: iter, ipass, i,j,k, ksw, jsw, kpass
+
+    omega=1.99
+
+    e_ijk = -2.*( 1./dx**2 +1./dy**2 + 1./dz**2 )
+
+    main_loop : do iter=1, max_iterations
+
+      isw=1
+
+      black_red: do ipass=1,2
+
+        max_error=-10.
+        do ipass=1,2
+          jsw=ksw
+          do k=1, nz
+            do j=jsw,ny,2
+              do i=ipass,nx,2
+
+                call get_residue(i,j,k,residue)
+                !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
+                ph0             = phi_grav(i,j,k)
+                phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
+
+                !call get_phi_star(rho,phi,i,j,k,dx,residue)
+                !ph0=phi(i,j,k)
+                !phi(i,j,k)=omega*residue + (1.-omega)*ph0
+
+                relative_error= abs(phi_grav(i,j,k)-ph0)/abs(ph0)
+                max_error     = max(max_error,relative_error)
+
+                !if(relative_error > Tol)
+                need_more=.true.
+
+              end do
+            end do
+            jsw=3-jsw
+          end do
+          ksw=3-ksw
+        end do
+
+      end do black_red
+
+      phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
+      phi_grav(nx+1,:   , :  ) = phi_grav(nx,: , : )
+      phi_grav(:   ,0   , :  ) = phi_grav(  ,1 , : )
+      phi_grav(:   ,ny+1, :  ) = phi_grav(: ,ny, : )
+      phi_grav(:   , :  ,0   ) = phi_grav(: , :,1  )
+      phi_grav(:   , :  ,nz+1) = phi_grav(: , :,nz )
+
+      print*,rank, 'errror:',max_error
+
+      if(.not.need_more) then
+        print*, 'Converged in ', iter, 'iterations',max_error
+        return
+      end if
+      !  reset convergence flag
+      need_more=.false.
+
+    end do main_loop
+
+    print'(a)', 'SOR exceeded maximum number of iterations'
+
 
   end subroutine solve_poisson
 
