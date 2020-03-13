@@ -76,7 +76,7 @@ contains
     real               :: omega, relative_error
     real    :: residue, max_error, e_ijk, ph0
     logical :: need_more=.false.
-    integer :: iter, ipass, i,j,k, ksw, jsw
+    integer :: iter, ipass, i,j,k, ksw, jsw, kpass
 
     omega=1.99
 
@@ -86,7 +86,7 @@ contains
 
       ksw=1
 
-      black_red: do ipass=1,2
+      black_red: do kpass=1,2
 
         max_error=-10.
         do ipass=1,2
