@@ -82,7 +82,7 @@ contains
     integer, parameter :: max_iterations=100
     real, parameter    :: Tol = 1E-4  !  Relative error tolerance
     real               :: omega, relative_error
-    real :: residue, max_error, e_ijk, ph0
+    real    :: residue, max_error, e_ijk, ph0
     logical :: need_more=.false.
     integer :: iter, ipass, i,j,k, isw, jsw, kpass
     !real :: phiP(nx,ny,nz)
@@ -204,7 +204,6 @@ contains
 
   ! =====================================================================
   !  computes laplacian
-
   subroutine get_laplacian(nx,ny,nz,dx,dy,dz,phi,laplacian)
     implicit none
     integer, intent(in) :: nx, ny, nz
@@ -216,19 +215,20 @@ contains
     do i=2,nx-1
       do j=2,ny-1
         do k=2,nz-1
-          laplacian(i,j,k) = ( phi(i+1,j  ,k  )+phi(i-1,j  ,k  )-2.*phi(i,j,k) )/ dx**2 &
-          + ( phi(i  ,j+1,k  )+phi(i  ,j-1,k  )-2.*phi(i,j,k) )/ dy**2 &
-          + ( phi(i  ,j  ,k+1)+phi(i  ,j  ,k-1)-2.*phi(i,j,k) )/ dz**2
+          laplacian(i,j,k) =                                                   &
+              ( phi(i+1,j  ,k  ) + phi(i-1,j  ,k  ) - 2.*phi(i,j,k) ) / dx**2  &
+            + ( phi(i  ,j+1,k  ) + phi(i  ,j-1,k  ) - 2.*phi(i,j,k) ) / dy**2  &
+            + ( phi(i  ,j  ,k+1) + phi(i  ,j  ,k-1) - 2.*phi(i,j,k) ) / dz**2
         end do
       end do
     end do
 
-    laplacian(1 ,: ,: )=laplacian(2   ,:   ,:   )
-    laplacian(nx,: ,: )=laplacian(nx-1,:   ,:   )
-    laplacian(: ,1, : )=laplacian(:   ,2   ,:   )
-    laplacian(: ,ny,: )=laplacian(:   ,ny-1,:   )
-    laplacian(: ,: ,1 )=laplacian(:   ,:   ,2   )
-    laplacian(: ,: ,nz)=laplacian(:   ,:   ,nz-1)
+    laplacian(1 ,: ,: ) = laplacian(2   ,:   ,:   )
+    laplacian(nx,: ,: ) = laplacian(nx-1,:   ,:   )
+    laplacian(: ,1, : ) = laplacian(:   ,2   ,:   )
+    laplacian(: ,ny,: ) = laplacian(:   ,ny-1,:   )
+    laplacian(: ,: ,1 ) = laplacian(:   ,:   ,2   )
+    laplacian(: ,: ,nz) = laplacian(:   ,:   ,nz-1)
 
   end subroutine get_laplacian
 
@@ -246,19 +246,19 @@ contains
     do i=2,nx-1
       do j=2,ny-1
         do k=2,nz-1
-          gradient(i,j,k) =  ( phi(i+1 ,j ,k  )-phi(i-1,j  ,k  ) )/ (2.*dx) &
-          + ( phi(i  ,j+1,k  )-phi(i  ,j-1,k  ) )/ (2.*dy) &
-          + ( phi(i  ,j  ,k+1)-phi(i  ,j  ,k-1) )/ (2.*dz)
+          gradient(i,j,k) =  ( phi(i+1 ,j ,k  )-phi(i-1,j  ,k  ) )/ (2.*dx)    &
+                           + ( phi(i  ,j+1,k  )-phi(i  ,j-1,k  ) )/ (2.*dy)    &
+                           + ( phi(i  ,j  ,k+1)-phi(i  ,j  ,k-1) )/ (2.*dz)
         end do
       end do
     end do
 
-    gradient(1 ,: ,: )=gradient(2   ,:   ,:   )
-    gradient(nx,: ,: )=gradient(nx-1,:   ,:   )
-    gradient(: ,1, : )=gradient(:   ,2   ,:   )
-    gradient(: ,ny,: )=gradient(:   ,ny-1,:   )
-    gradient(: ,: ,1 )=gradient(:   ,:   ,2   )
-    gradient(: ,: ,nz)=gradient(:   ,:   ,nz-1)
+    gradient(1 ,: ,: ) = gradient(2   ,:   ,:   )
+    gradient(nx,: ,: ) = gradient(nx-1,:   ,:   )
+    gradient(: ,1, : ) = gradient(:   ,2   ,:   )
+    gradient(: ,ny,: ) = gradient(:   ,ny-1,:   )
+    gradient(: ,: ,1 ) = gradient(:   ,:   ,2   )
+    gradient(: ,: ,nz) = gradient(:   ,:   ,nz-1)
 
 
   end subroutine get_gradient
