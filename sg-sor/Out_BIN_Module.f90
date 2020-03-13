@@ -106,11 +106,10 @@ end subroutine write_header
 !> @brief  Writes Data, one file per processor
 !> @details  Writes Data in BIN format one file per processor
 !> @param integer [in] itprint : number of output
-
-
 subroutine write_BIN(itprint)
 
   use difrad
+  use self_gravity, only : phi_grav
   use radpress, only : beta
   implicit none
   integer, intent(in) :: itprint
@@ -203,6 +202,30 @@ subroutine write_BIN(itprint)
         call mpi_barrier(mpi_comm_world, err)
 #endif
     end do
+
+  end if
+
+
+  if (enable_self_gravity) then
+
+           ! take turns
+        do ip=0, np-1
+          if(rank == ip) then
+
+            write(file1,'(a,i3.3,a,i3.3,a)') &
+                  trim(outputpath)//'BIN/phi_grav-',rank,'.',itprint,'.bin'
+            unitout=10+rank
+            open(unit=unitout,file=file1,status='replace',access='stream')
+            call write_header(unitout,1,0)
+            write (unitout) phi_grav(1:nx,1:ny,1:nz)
+            close(unitout)
+            print'(i3,a,a)',rank," wrote file:",trim(file1)
+
+          end if
+    #ifdef MPIP
+            call mpi_barrier(mpi_comm_world, err)
+    #endif
+        end do
 
   end if
 
