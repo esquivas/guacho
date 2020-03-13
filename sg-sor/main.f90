@@ -136,6 +136,8 @@ program guacho
       dump_out = .false.
     end if
 
+    time = tmax
+
     currentIteration = currentIteration + 1
 
   end do
