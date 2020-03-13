@@ -49,7 +49,7 @@ contains
     use flux_cd_module
     use user_mod
     use radpress
-    use self gravity, only : init_self_gravity()
+    use self_gravity, only : init_self_gravity
 
     implicit none
     real,    intent(out) ::tprint
