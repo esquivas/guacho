@@ -40,8 +40,10 @@ contains
   !> @details Allocates memory for all global variables that correspond
   !> to the module
   subroutine init_self_gravity()
-
+    use paramters, only : nx, ny, nz
     implicit none
+    !  allocate one ghost cell (needed for gradient/laplacian)
+    allocate( phi_grav(0:nx+1,0:ny+1,0:nz+1) )
 
   end subroutine init_self_gravity
 
