@@ -84,7 +84,7 @@ contains
 
     main_loop : do iter=1, max_iterations
 
-      isw=1
+      ksw=1
 
       black_red: do ipass=1,2
 
