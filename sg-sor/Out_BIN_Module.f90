@@ -222,9 +222,9 @@ subroutine write_BIN(itprint)
             print'(i3,a,a)',rank," wrote file:",trim(file1)
 
           end if
-    #ifdef MPIP
+#ifdef MPIP
             call mpi_barrier(mpi_comm_world, err)
-    #endif
+#endif
         end do
 
   end if
