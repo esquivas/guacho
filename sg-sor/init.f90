@@ -49,6 +49,7 @@ contains
     use flux_cd_module
     use user_mod
     use radpress
+    use self gravity, only : init_self_gravity()
 
     implicit none
     real,    intent(out) ::tprint
@@ -154,6 +155,8 @@ contains
 
     if (riemann_solver == SOLVER_HLLE_SPLIT_ALL )                              &
     allocate (primit0(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax))
+
+    if (enable_self_gravity) call init_self_gravity()
 
 #ifdef BFIELD
     if (enable_flux_cd)                                                        &
@@ -383,7 +386,9 @@ contains
       end if
 
       print'(a)', '----- OTHER STUFF -----------'
-      if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
+      if (enable_self_gravity) print'(a)', 'Self gravity enabled (SOR)'
+      print'(a)', ''
+            if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
       print'(a)', ''
       if (th_cond == TC_ISOTROPIC) then
         print'(a)', 'Thermal conduction enabled (isotropic)'
