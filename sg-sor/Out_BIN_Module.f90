@@ -109,7 +109,7 @@ end subroutine write_header
 subroutine write_BIN(itprint)
 
   use difrad
-  use self_gravity, only : phi_grav
+  use self_gravity, only : phi_grav, four_pi_G
   use radpress, only : beta
   implicit none
   integer, intent(in) :: itprint
@@ -124,6 +124,8 @@ subroutine write_BIN(itprint)
 #ifdef BFIELD
   real, allocatable :: divB(:,:,:)
 #ENDIF
+  real, allocatable :: rho_grav(:,:,:)
+
 
 #ifdef MPIP
   write(file1,'(a,i3.3,a,i3.3,a)')  &
@@ -208,9 +210,33 @@ subroutine write_BIN(itprint)
 
   if (enable_self_gravity) then
 
+       allocate ( rho_grav(nx,ny,nz) )
+       do i=1,nx
+         do j=1,ny
+           do k=1,nz
+              rho_grav(i,j,k) =                                                &
+          (   ( phi_grav(i+1,j  ,k  ) + phi_grav(i-1,j  ,k  ) - 2.*phi_grav(i,j,k) ) / dx**2  &
+           +  ( phi_grav(i  ,j+1,k  ) + phi_grav(i  ,j-1,k  ) - 2.*phi_grav(i,j,k) ) / dy**2   &
+           +  ( phi_grav(i  ,j  ,k+1) + phi_grav(i  ,j  ,k-1) - 2.*phi_grav(i,j,k) ) / dz**2  )&
+           /  four_pi_G
+
+           end do
+         end do
+       end do
+
            ! take turns
         do ip=0, np-1
           if(rank == ip) then
+
+            write(file1,'(a,i3.3,a,i3.3,a)') &
+                  trim(outputpath)//'BIN/rho_grav-',rank,'.',itprint,'.bin'
+            unitout=10+rank
+            open(unit=unitout,file=file1,status='replace',access='stream')
+            call write_header(unitout,1,0)
+            write (unitout) phi_grav(1:nx,1:ny,1:nz)
+            close(unitout)
+            print'(i3,a,a)',rank," wrote file:",trim(file1)
+            deallocate ( rho_grav )
 
             write(file1,'(a,i3.3,a,i3.3,a)') &
                   trim(outputpath)//'BIN/phi_grav-',rank,'.',itprint,'.bin'
