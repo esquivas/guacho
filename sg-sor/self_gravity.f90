@@ -133,9 +133,9 @@ contains
 
               end do
             end do
-            jsw=1-jsw
+            jsw=2-jsw
           end do
-          ksw=1-ksw
+          ksw=2-ksw
         end do
 
       end do black_red
