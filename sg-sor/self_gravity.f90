@@ -268,7 +268,7 @@ contains
     use parameters, only : nx, ny, nz
     use globals,    only : dx, dy, dz, primit, rank
     implicit none
-    integer, parameter :: max_iterations=1000
+    integer, parameter :: max_iterations=100
     real, parameter    :: Tol = 1E-4  !  Relative error tolerance
     real               :: omega, relative_error
     real    :: residue, max_error, e_ijk, ph0
