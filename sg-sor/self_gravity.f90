@@ -71,7 +71,7 @@ contains
     use parameters, only : nx, ny, nz
     use globals,    only : dx, dy, dz, primit, rank
     implicit none
-    integer, parameter :: max_iterations=100
+    integer, parameter :: max_iterations=1000
     real, parameter    :: Tol = 1E-4  !  Relative error tolerance
     real               :: omega, relative_error
     real    :: residue, max_error, e_ijk, ph0
@@ -84,7 +84,7 @@ contains
     e_ijk = -2.*( 1./dx**2 +1./dy**2 + 1./dz**2 )
 
     main_loop : do iter=1, max_iterations
-      ! 
+      !
       ! do k = 1,nz
       !   do j = 1, ny
       !     do i = 1, nx
