@@ -191,6 +191,8 @@ contains
       end if
     end if
 
+    print*, 'pase fronteras'
+
   end subroutine phi_grav_boundaries
 
 
