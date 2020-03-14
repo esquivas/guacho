@@ -223,7 +223,6 @@ contains
     real    :: residue, max_error, e_ijk, ph0
     logical :: need_more=.false.
     integer :: iter, ipass, i,j,k, ksw, jsw, kpass
-    real    :: phip(0:nx+1,0:ny+1,0:nz+1)
 
     omega=1.99
 
@@ -262,7 +261,7 @@ contains
             do j=jsw,ny,2
               do i=ipass,nx,2
 
-                call get_residuphi_grav(i,j,k,residue)
+                call get_residue(i,j,k,residue)
                 !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
                 ph0             = phi_grav(i,j,k)
                 phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
