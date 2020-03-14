@@ -90,14 +90,14 @@ contains
           do i = 1, nx
             call get_residue(i,j,k,residue)
             !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
-            ph0             = phi_grav(i,j,k)
+            ph0         = phi_grav(i,j,k)
             phip(i,j,k) = ph0 - omega*residue/e_ijk
 
             !call get_phi_star(rho,phi,i,j,k,dx,residue)
             !ph0=phi(i,j,k)
             !phi(i,j,k)=omega*residue + (1.-omega)*ph0
 
-            relative_error= abs(phi_grav(i,j,k)-ph0)/abs(ph0)
+            relative_error= abs(phip(i,j,k)-ph0)/abs(ph0)
             max_error     = max(max_error,relative_error)
 
             !if(relative_error > Tol)
