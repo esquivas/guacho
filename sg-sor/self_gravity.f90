@@ -60,12 +60,12 @@ contains
     integer, parameter :: nym1=ny-1, nyp1=ny+1
     integer, parameter :: nzm1=nz-1, nzp1=nz+1
     integer:: status(MPI_STATUS_SIZE), err
-    real, dimension(3,1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
-    real, dimension(3,0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
-    real, dimension(3,0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
-    integer, parameter :: bxsize=3*(ny+2)*(nz+2)
-    integer, parameter :: bysize=3*(nx+2)*(nz+2)
-    integer, parameter :: bzsize=3*(nx+2)*(ny+2)
+    real, dimension(1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
+    real, dimension(0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
+    real, dimension(0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
+    integer, parameter :: bxsize=(ny+2)*(nz+2)
+    integer, parameter :: bysize=(nx+2)*(nz+2)
+    integer, parameter :: bzsize=(nx+2)*(ny+2)
 
 #ifdef MPIP
 
@@ -73,12 +73,12 @@ contains
     !   -------------------------------------------------------------
 
     !   boundaries to procs: right, left, top, bottom, in and out
-    sendr(:,1,:,:)=phi_grav(:,nx    ,0:nyp1,0:nzp1)
-    sendl(:,1,:,:)=phi_grav(:,1     ,0:nyp1,0:nzp1)
-    sendt(:,:,1,:)=phi_grav(:,0:nxp1,ny    ,0:nzp1)
-    sendb(:,:,1,:)=phi_grav(:,0:nxp1,1     ,0:nzp1)
-    sendi(:,:,:,1)=phi_grav(:,0:nxp1,0:nyp1,nz    )
-    sendo(:,:,:,1)=phi_grav(:,0:nxp1,0:nyp1,1     )
+    sendr(1,:,:)=phi_grav(nx    ,0:nyp1,0:nzp1)
+    sendl(1,:,:)=phi_grav(1     ,0:nyp1,0:nzp1)
+    sendt(:,1,:)=phi_grav(0:nxp1,ny    ,0:nzp1)
+    sendb(:,1,:)=phi_grav(0:nxp1,1     ,0:nzp1)
+    sendi(:,:,1)=phi_grav(0:nxp1,0:nyp1,nz    )
+    sendo(:,:,1)=phi_grav(0:nxp1,0:nyp1,1     )
 
     call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  ,0,                 &
                       recvl, bxsize, mpi_real_kind, left   ,0,                 &
@@ -104,12 +104,12 @@ contains
                       recvi, bzsize, mpi_real_kind, in    , 0,                 &
                       comm3d, status , err)
 
-    if (left  .ne. -1) phi_grav(:,0     ,0:nyp1,0:nzp1)=recvl(:,1,:,:)
-    if (right .ne. -1) phi_grav(:,nxp1  ,0:nyp1,0:nzp1)=recvr(:,1,:,:)
-    if (bottom.ne. -1) phi_grav(:,0:nxp1,0     ,0:nzp1)=recvb(:,:,1,:)
-    if (top   .ne. -1) phi_grav(:,0:nxp1,nyp1  ,0:nzp1)=recvt(:,:,1,:)
-    if (out   .ne. -1) phi_grav(:,0:nxp1,0:nyp1,0     )=recvo(:,:,:,1)
-    if (in    .ne. -1) phi_grav(:,0:nxp1,0:nyp1,nzp1  )=recvi(:,:,:,1)
+    if (left  .ne. -1) phi_grav(0     ,0:nyp1,0:nzp1)=recvl(1,:,:)
+    if (right .ne. -1) phi_grav(nxp1  ,0:nyp1,0:nzp1)=recvr(1,:,:)
+    if (bottom.ne. -1) phi_grav(0:nxp1,0     ,0:nzp1)=recvb(:,1,:)
+    if (top   .ne. -1) phi_grav(0:nxp1,nyp1  ,0:nzp1)=recvt(:,1,:)
+    if (out   .ne. -1) phi_grav(0:nxp1,0:nyp1,0     )=recvo(:,:,1)
+    if (in    .ne. -1) phi_grav(0:nxp1,0:nyp1,nzp1  )=recvi(:,:,1)
 
 #else
 
@@ -117,32 +117,32 @@ contains
     if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
       !   Left BC
       if (coords(0).eq.0) then
-        phi_grav(:,0,:,:)=phi_grav(:,nx,:,:)
+        phi_grav(0,:,:)=phi_grav(nx,:,:)
       end if
       !   Right BC
       if (coords(0).eq.MPI_NBX-1) then
-        phi_grav(:,nxp1,:,:)=phi_grav(:,1,:,:)
+        phi_grav(nxp1,:,:)=phi_grav(1,:,:)
       end if
     end if
 
     if ( bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
       !   bottom BC
       if (coords(1).eq.0) then
-        phi_grav(:,:,0,:)= phi_grav(:,:,ny,:)
+        phi_grav(:,0,:)= phi_grav(:,ny,:)
       end if
       !   top BC
       if (coords(1).eq.MPI_NBY-1) then
-        phi_grav(:,:,nyp1,:)= phi_grav(:,:,1,:)
+        phi_grav(:,nyp1,:)= phi_grav(:,1,:)
       end if
 
       if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
         !   out BC
         if (coords(2).eq.0) then
-          phi_grav(:,:,:,0)= phi_grav(:,:,:,nz)
+          phi_grav(:,:,0)= phi_grav(:,:,nz)
         end if
         !   in BC
         if (coords(2).eq.MPI_NBZ-1) then
-          phi_grav(:,:,:,nzp1)= phi_grav(:,:,:,1)
+          phi_grav(:,:,nzp1)= phi_grav(:,:,1)
         end if
       end if
 
@@ -203,42 +203,42 @@ contains
     !   left
     if (bc_left == BC_OUTFLOW) then
       if (coords(0).eq.0) then
-        phi_grav(:,0,0:nyp1,0:nzp1)=phi_grav(:,1 ,0:nyp1,0:nzp1)
+        phi_grav(0,0:nyp1,0:nzp1)=phi_grav(1 ,0:nyp1,0:nzp1)
       end if
     end if
 
     !   right
     if (bc_right == BC_OUTFLOW) then
       if (coords(0).eq.MPI_NBX-1) then
-        phi_grav(:,nxp1,0:nyp1,0:nzp1)=phi_grav(:,nx,0:nyp1,0:nzp1)
+        phi_grav(nxp1,0:nyp1,0:nzp1)=phi_grav(nx,0:nyp1,0:nzp1)
       end if
     end if
 
     !   bottom
     if (bc_bottom == BC_OUTFLOW) then
       if (coords(1).eq.0) then
-        phi_grav(:,0:nxp1,0,0:nzp1)=phi_grav(:,0:nxp1,1 ,0:nzp1)
+        phi_grav(0:nxp1,0,0:nzp1)=phi_grav(0:nxp1,1 ,0:nzp1)
       end if
     end if
 
     !   top
     if (bc_top == BC_OUTFLOW) then
       if (coords(1).eq.MPI_NBY-1) then
-        phi_grav(:,0:nxp1,nyp1,0:nzp1)=phi_grav(:,0:nxp1,ny,0:nzp1)
+        phi_grav(0:nxp1,nyp1,0:nzp1)=phi_grav(0:nxp1,ny,0:nzp1)
       end if
     end if
 
     !   out
     if (bc_out == BC_OUTFLOW) then
       if (coords(2).eq.0) then
-        phi_grav(:,0:nxp1,0:nyp1,0)=phi_grav(:,0:nxp1,0:nyp1,1 )
+        phi_grav(0:nxp1,0:nyp1,0)=phi_grav(0:nxp1,0:nyp1,1 )
       end if
     end if
 
     !   in
     if (bc_in == BC_OUTFLOW) then
       if (coords(2).eq.MPI_NBZ-1) then
-        phi_grav(:,0:nxp1,0:nyp1,nzp1)=phi_grav(:,0:nxp1,0:nyp1,nz)
+        phi_grav(0:nxp1,0:nyp1,nzp1)=phi_grav(0:nxp1,0:nyp1,nz)
       end if
     end if
 
