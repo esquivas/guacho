@@ -84,62 +84,61 @@ contains
     e_ijk = -2.*( 1./dx**2 +1./dy**2 + 1./dz**2 )
 
     main_loop : do iter=1, max_iterations
-
-      do k = 1,nz
-        do j = 1, ny
-          do i = 1, nx
-            call get_residue(i,j,k,residue)
-            !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
-            ph0         = phi_grav(i,j,k)
-            phip(i,j,k) = ph0 - omega*residue/e_ijk
-
-            !call get_phi_star(rho,phi,i,j,k,dx,residue)
-            !ph0=phi(i,j,k)
-            !phi(i,j,k)=omega*residue + (1.-omega)*ph0
-
-            relative_error= abs(phip(i,j,k)-ph0)/abs(ph0)
-            max_error     = max(max_error,relative_error)
-
-            !if(relative_error > Tol)
-            need_more=.true.
-          end do
-        end do
-      end do
-
-      ! ksw=1
-
-      ! black_red: do kpass=1,2
+      ! 
+      ! do k = 1,nz
+      !   do j = 1, ny
+      !     do i = 1, nx
+      !       call get_residue(i,j,k,residue)
+      !       !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
+      !       ph0         = phi_grav(i,j,k)
+      !       phip(i,j,k) = ph0 - omega*residue/e_ijk
       !
-      !   max_error=-10.
-      !   do ipass=1,2
-      !     jsw=ksw
-      !     do k=1, nz
-      !       do j=jsw,ny,2
-      !         do i=ipass,nx,2
+      !       !call get_phi_star(rho,phi,i,j,k,dx,residue)
+      !       !phi(i,j,k)=omega*residue + (1.-omega)*ph0
       !
-      !           call get_residue(i,j,k,residue)
-      !           !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
-      !           ph0             = phi_grav(i,j,k)
-      !           phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
+      !       relative_error= abs(phip(i,j,k)-ph0)/abs(ph0)
+      !       max_error     = max(max_error,relative_error)
       !
-      !           !call get_phi_star(rho,phi,i,j,k,dx,residue)
-      !           !ph0=phi(i,j,k)
-      !           !phi(i,j,k)=omega*residue + (1.-omega)*ph0
-      !
-      !           relative_error= abs(phi_grav(i,j,k)-ph0)/abs(ph0)
-      !           max_error     = max(max_error,relative_error)
-      !
-      !           !if(relative_error > Tol)
-      !           need_more=.true.
-      !
-      !         end do
-      !       end do
-      !       jsw=3-jsw
+      !       !if(relative_error > Tol)
+      !       need_more=.true.
       !     end do
-      !     ksw=3-ksw
       !   end do
-      !
-      ! end do black_red
+      ! end do
+
+      ksw=1
+
+      black_red: do kpass=1,2
+
+        max_error=-10.
+        do ipass=1,2
+          jsw=ksw
+          do k=1, nz
+            do j=jsw,ny,2
+              do i=ipass,nx,2
+
+                call get_residue(i,j,k,residue)
+                !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
+                ph0             = phi_grav(i,j,k)
+                phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
+
+                !call get_phi_star(rho,phi,i,j,k,dx,residue)
+                !ph0=phi(i,j,k)
+                !phi(i,j,k)=omega*residue + (1.-omega)*ph0
+
+                relative_error= abs(phi_grav(i,j,k)-ph0)/abs(ph0)
+                max_error     = max(max_error,relative_error)
+
+                !if(relative_error > Tol)
+                need_more=.true.
+
+              end do
+            end do
+            jsw=1-jsw
+          end do
+          ksw=1-ksw
+        end do
+
+      end do black_red
 
       phi_grav = phip
       phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
