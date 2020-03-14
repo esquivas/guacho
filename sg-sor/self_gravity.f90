@@ -148,57 +148,6 @@ contains
 
 #endif
 
-    !   Reflecting BCs (not tested)
-    !     left
-    if (bc_left == BC_CLOSED) then
-      if (coords(0).eq.0) then
-        phi_grav(1  ,0,0:nyp1,0:nzp1) =-phi_grav(1  ,1,0:nyp1,0:nzp1)
-        phi_grav(2:3,0,0:nyp1,0:nzp1) = phi_grav(2:3,1,0:nyp1,0:nzp1)
-      end if
-    end if
-
-    !   right
-    if (bc_right == BC_CLOSED) then
-      if (coords(0).eq.(MPI_NBX-1)) then
-        phi_grav(1  ,nxp1,0:nyp1,0:nzp1) =-phi_grav(1  ,nx,0:nyp1,0:nzp1)
-        phi_grav(2:3,nxp1,0:nyp1,0:nzp1) = phi_grav(2:3,nx,0:nyp1,0:nzp1)
-      end if
-    end if
-
-    !   bottom
-    if (bc_bottom == BC_CLOSED) then
-      if (coords(1).eq.0) then
-        phi_grav(1,0:nxp1,0,0:nzp1) = phi_grav(1,0:nxp1,1,0:nzp1)
-        phi_grav(2,0:nxp1,0,0:nzp1) =-phi_grav(2,0:nxp1,1,0:nzp1)
-        phi_grav(3,0:nxp1,0,0:nzp1) = phi_grav(3,0:nxp1,1,0:nzp1)
-      end if
-    end if
-
-    !   top
-    if (bc_top == BC_CLOSED) then
-      if (coords(1).eq.(MPI_NBY-1)) then
-        phi_grav(1,0:nxp1,nyp1,0:nzp1) = phi_grav(1,0:nxp1,ny,0:nzp1)
-        phi_grav(2,0:nxp1,nyp1,0:nzp1) =-phi_grav(2,0:nxp1,ny,0:nzp1)
-        phi_grav(3,0:nxp1,nyp1,0:nzp1) = phi_grav(3,0:nxp1,ny,0:nzp1)
-      end if
-    end if
-
-    !   out
-    if (bc_out == BC_CLOSED) then
-      if (coords(2).eq.0) then
-        phi_grav(1:2,0:nxp1,0:nyp1,0) = phi_grav(1:2,0:nxp1,0:nyp1,1)
-        phi_grav(3  ,0:nxp1,0:nyp1,0) = phi_grav(3  ,0:nxp1,0:nyp1,1)
-      end if
-    end if
-
-    !   in
-    if (bc_in == BC_CLOSED) then
-      if (coords(2).eq.MPI_NBZ-1) then
-        phi_grav(1:2,0:nxp1,0:nyp1,nzp1) = phi_grav(1:2,0:nxp1,0:nyp1,nz)
-        phi_grav(3  ,0:nxp1,0:nyp1,nzp1) = phi_grav(3  ,0:nxp1,0:nyp1,nz)
-      end if
-    end if
-
     !   outflow BCs
     !   left
     if (bc_left == BC_OUTFLOW) then
