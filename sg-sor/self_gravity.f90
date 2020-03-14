@@ -77,6 +77,7 @@ contains
     real    :: residue, max_error, e_ijk, ph0
     logical :: need_more=.false.
     integer :: iter, ipass, i,j,k, ksw, jsw, kpass
+    real    :: phip(0:nx+1,0:ny+1,0:nz+1)
 
     omega=1.99
 
@@ -90,7 +91,7 @@ contains
             call get_residue(i,j,k,residue)
             !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
             ph0             = phi_grav(i,j,k)
-            phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
+            phip(i,j,k) = ph0 - omega*residue/e_ijk
 
             !call get_phi_star(rho,phi,i,j,k,dx,residue)
             !ph0=phi(i,j,k)
@@ -140,6 +141,7 @@ contains
       !
       ! end do black_red
 
+      phi_grav = phip
       phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
       phi_grav(nx+1,:   , :  ) = phi_grav(nx,: , : )
       phi_grav(:   ,0   , :  ) = phi_grav(: ,1 , : )
