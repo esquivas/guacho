@@ -43,15 +43,212 @@ contains
     use parameters, only : nx, ny, nz
     implicit none
     !  allocate one ghost cell (needed for gradient/laplacian)
-    allocate( phi_grav(0:nx+1,0:ny+1,0:nz+1) )
+    allocatphi_grav( phi_grav(0:nx+1,0:ny+1,0:nz+1) )
 
   end subroutine init_self_gravity
+
+  !=======================================================================
+  !>@brief Boundary conditions (one cell) for flux-CD
+  !>@details Boundary conditions applied to E, used
+  !> in the flux-CD calculation
+  subroutine phi_grav_boundaries()
+    use parameters
+    use globals
+    implicit none
+
+    integer, parameter :: nxm1=nx-1 ,nxp1=nx+1
+    integer, parameter :: nym1=ny-1, nyp1=ny+1
+    integer, parameter :: nzm1=nz-1, nzp1=nz+1
+    integer:: status(MPI_STATUS_SIZE), err
+    real, dimension(3,1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
+    real, dimension(3,0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
+    real, dimension(3,0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
+    integer, parameter :: bxsize=3*(ny+2)*(nz+2)
+    integer, parameter :: bysize=3*(nx+2)*(nz+2)
+    integer, parameter :: bzsize=3*(nx+2)*(ny+2)
+
+#ifdef MPIP
+
+    !   Exchange boundaries between processors
+    !   -------------------------------------------------------------
+
+    !   boundaries to procs: right, left, top, bottom, in and out
+    sendr(:,1,:,:)=phi_grav(:,nx    ,0:nyp1,0:nzp1)
+    sendl(:,1,:,:)=phi_grav(:,1     ,0:nyp1,0:nzp1)
+    sendt(:,:,1,:)=phi_grav(:,0:nxp1,ny    ,0:nzp1)
+    sendb(:,:,1,:)=phi_grav(:,0:nxp1,1     ,0:nzp1)
+    sendi(:,:,:,1)=phi_grav(:,0:nxp1,0:nyp1,nz    )
+    sendo(:,:,:,1)=phi_grav(:,0:nxp1,0:nyp1,1     )
+
+    call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  ,0,                 &
+                      recvl, bxsize, mpi_real_kind, left   ,0,                 &
+                      comm3d, status , err)
+
+    call mpi_sendrecv(sendt, bysize, mpi_real_kind, top    ,0,                 &
+                      recvb, bysize, mpi_real_kind, bottom ,0,                 &
+                      comm3d, status , err)
+
+    call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in     ,0,                 &
+                      recvo, bzsize, mpi_real_kind, out    ,0,                 &
+                      comm3d, status , err)
+
+    call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left  , 0,                 &
+                      recvr, bxsize, mpi_real_kind, right , 0,                 &
+                      comm3d, status , err)
+
+    call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,                 &
+                      recvt, bysize, mpi_real_kind, top   , 0,                 &
+                      comm3d, status , err)
+
+    call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out   , 0,                 &
+                      recvi, bzsize, mpi_real_kind, in    , 0,                 &
+                      comm3d, status , err)
+
+    if (left  .ne. -1) phi_grav(:,0     ,0:nyp1,0:nzp1)=recvl(:,1,:,:)
+    if (right .ne. -1) phi_grav(:,nxp1  ,0:nyp1,0:nzp1)=recvr(:,1,:,:)
+    if (bottom.ne. -1) phi_grav(:,0:nxp1,0     ,0:nzp1)=recvb(:,:,1,:)
+    if (top   .ne. -1) phi_grav(:,0:nxp1,nyp1  ,0:nzp1)=recvt(:,:,1,:)
+    if (out   .ne. -1) phi_grav(:,0:nxp1,0:nyp1,0     )=recvo(:,:,:,1)
+    if (in    .ne. -1) phi_grav(:,0:nxp1,0:nyp1,nzp1  )=recvi(:,:,:,1)
+
+#else
+
+    !   periodic BCs
+    if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
+      !   Left BC
+      if (coords(0).eq.0) then
+        phi_grav(:,0,:,:)=phi_grav(:,nx,:,:)
+      end if
+      !   Right BC
+      if (coords(0).eq.MPI_NBX-1) then
+        phi_grav(:,nxp1,:,:)=phi_grav(:,1,:,:)
+      end if
+    end if
+
+    if ( bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
+      !   bottom BC
+      if (coords(1).eq.0) then
+        phi_grav(:,:,0,:)= phi_grav(:,:,ny,:)
+      end if
+      !   top BC
+      if (coords(1).eq.MPI_NBY-1) then
+        phi_grav(:,:,nyp1,:)= phi_grav(:,:,1,:)
+      end if
+
+      if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
+        !   out BC
+        if (coords(2).eq.0) then
+          phi_grav(:,:,:,0)= phi_grav(:,:,:,nz)
+        end if
+        !   in BC
+        if (coords(2).eq.MPI_NBZ-1) then
+          phi_grav(:,:,:,nzp1)= phi_grav(:,:,:,1)
+        end if
+      end if
+
+#endif
+
+    !   Reflecting BCs (not tested)
+    !     left
+    if (bc_left == BC_CLOSED) then
+      if (coords(0).eq.0) then
+        phi_grav(1  ,0,0:nyp1,0:nzp1) =-phi_grav(1  ,1,0:nyp1,0:nzp1)
+        phi_grav(2:3,0,0:nyp1,0:nzp1) = phi_grav(2:3,1,0:nyp1,0:nzp1)
+      end if
+    end if
+
+    !   right
+    if (bc_right == BC_CLOSED) then
+      if (coords(0).eq.(MPI_NBX-1)) then
+        phi_grav(1  ,nxp1,0:nyp1,0:nzp1) =-phi_grav(1  ,nx,0:nyp1,0:nzp1)
+        phi_grav(2:3,nxp1,0:nyp1,0:nzp1) = phi_grav(2:3,nx,0:nyp1,0:nzp1)
+      end if
+    end if
+
+    !   bottom
+    if (bc_bottom == BC_CLOSED) then
+      if (coords(1).eq.0) then
+        phi_grav(1,0:nxp1,0,0:nzp1) = phi_grav(1,0:nxp1,1,0:nzp1)
+        phi_grav(2,0:nxp1,0,0:nzp1) =-phi_grav(2,0:nxp1,1,0:nzp1)
+        phi_grav(3,0:nxp1,0,0:nzp1) = phi_grav(3,0:nxp1,1,0:nzp1)
+      end if
+    end if
+
+    !   top
+    if (bc_top == BC_CLOSED) then
+      if (coords(1).eq.(MPI_NBY-1)) then
+        phi_grav(1,0:nxp1,nyp1,0:nzp1) = phi_grav(1,0:nxp1,ny,0:nzp1)
+        phi_grav(2,0:nxp1,nyp1,0:nzp1) =-phi_grav(2,0:nxp1,ny,0:nzp1)
+        phi_grav(3,0:nxp1,nyp1,0:nzp1) = phi_grav(3,0:nxp1,ny,0:nzp1)
+      end if
+    end if
+
+    !   out
+    if (bc_out == BC_CLOSED) then
+      if (coords(2).eq.0) then
+        phi_grav(1:2,0:nxp1,0:nyp1,0) = phi_grav(1:2,0:nxp1,0:nyp1,1)
+        phi_grav(3  ,0:nxp1,0:nyp1,0) = phi_grav(3  ,0:nxp1,0:nyp1,1)
+      end if
+    end if
+
+    !   in
+    if (bc_in == BC_CLOSED) then
+      if (coords(2).eq.MPI_NBZ-1) then
+        phi_grav(1:2,0:nxp1,0:nyp1,nzp1) = phi_grav(1:2,0:nxp1,0:nyp1,nz)
+        phi_grav(3  ,0:nxp1,0:nyp1,nzp1) = phi_grav(3  ,0:nxp1,0:nyp1,nz)
+      end if
+    end if
+
+    !   outflow BCs
+    !   left
+    if (bc_left == BC_OUTFLOW) then
+      if (coords(0).eq.0) then
+        phi_grav(:,0,0:nyp1,0:nzp1)=phi_grav(:,1 ,0:nyp1,0:nzp1)
+      end if
+    end if
+
+    !   right
+    if (bc_right == BC_OUTFLOW) then
+      if (coords(0).eq.MPI_NBX-1) then
+        phi_grav(:,nxp1,0:nyp1,0:nzp1)=phi_grav(:,nx,0:nyp1,0:nzp1)
+      end if
+    end if
+
+    !   bottom
+    if (bc_bottom == BC_OUTFLOW) then
+      if (coords(1).eq.0) then
+        phi_grav(:,0:nxp1,0,0:nzp1)=phi_grav(:,0:nxp1,1 ,0:nzp1)
+      end if
+    end if
+
+    !   top
+    if (bc_top == BC_OUTFLOW) then
+      if (coords(1).eq.MPI_NBY-1) then
+        phi_grav(:,0:nxp1,nyp1,0:nzp1)=phi_grav(:,0:nxp1,ny,0:nzp1)
+      end if
+    end if
+
+    !   out
+    if (bc_out == BC_OUTFLOW) then
+      if (coords(2).eq.0) then
+        phi_grav(:,0:nxp1,0:nyp1,0)=phi_grav(:,0:nxp1,0:nyp1,1 )
+      end if
+    end if
+
+    !   in
+    if (bc_in == BC_OUTFLOW) then
+      if (coords(2).eq.MPI_NBZ-1) then
+        phi_grav(:,0:nxp1,0:nyp1,nzp1)=phi_grav(:,0:nxp1,0:nyp1,nz)
+      end if
+    end if
+
+  end subroutine phi_grav_boundaries
 
 
   ! ======================================================================
   ! Computes the residue $\chi= \nabla^2 \phi - 4\pi G \rho$
   ! at a given cell
-  subroutine get_residue(i,j,k,residue)
+  subroutine get_residuphi_grav(i,j,k,residue)
     use globals, only : dx, dy, dz, primit
     implicit none
     integer, intent(in)  :: i,j,k
@@ -88,7 +285,7 @@ contains
       ! do k = 1,nz
       !   do j = 1, ny
       !     do i = 1, nx
-      !       call get_residue(i,j,k,residue)
+      !       call get_residuphi_grav(i,j,k,residue)
       !       !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
       !       ph0         = phi_grav(i,j,k)
       !       phip(i,j,k) = ph0 - omega*residue/e_ijk
@@ -116,7 +313,7 @@ contains
             do j=jsw,ny,2
               do i=ipass,nx,2
 
-                call get_residue(i,j,k,residue)
+                call get_residuphi_grav(i,j,k,residue)
                 !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
                 ph0             = phi_grav(i,j,k)
                 phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
@@ -140,13 +337,7 @@ contains
 
       end do black_red
 
-      !phi_grav = phip
-      phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
-      phi_grav(nx+1,:   , :  ) = phi_grav(nx,: , : )
-      phi_grav(:   ,0   , :  ) = phi_grav(: ,1 , : )
-      phi_grav(:   ,ny+1, :  ) = phi_grav(: ,ny, : )
-      phi_grav(:   , :  ,0   ) = phi_grav(: , :,1  )
-      phi_grav(:   , :  ,nz+1) = phi_grav(: , :,nz )
+      call phi_grav_boundaries()
 
       print*,rank, 'errror:',max_error
 
