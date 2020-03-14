@@ -140,7 +140,7 @@ contains
 
       end do black_red
 
-      phi_grav = phip
+      !phi_grav = phip
       phi_grav(0   ,:   , :  ) = phi_grav(1 ,: , : )
       phi_grav(nx+1,:   , :  ) = phi_grav(nx,: , : )
       phi_grav(:   ,0   , :  ) = phi_grav(: ,1 , : )
