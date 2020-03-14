@@ -197,7 +197,7 @@ contains
   ! ======================================================================
   ! Computes the residue $\chi= \nabla^2 \phi - 4\pi G \rho$
   ! at a given cell
-  subroutine get_residuphi_grav(i,j,k,residue)
+  subroutine get_residue(i,j,k,residue)
     use globals, only : dx, dy, dz, primit
     implicit none
     integer, intent(in)  :: i,j,k
