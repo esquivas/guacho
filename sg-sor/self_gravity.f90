@@ -219,7 +219,7 @@ contains
     use parameters, only : nx, ny, nz
     use globals,    only : dx, dy, dz, primit, rank
     implicit none
-    integer, parameter :: max_iterations=100
+    integer, parameter :: max_iterations=200
     real, parameter    :: Tol = 1E-4  !  Relative error tolerance
     real               :: omega, relative_error
     real    :: residue, max_error, e_ijk, ph0
@@ -289,7 +289,7 @@ contains
 
       call phi_grav_boundaries()
 
-      print*,rank, 'errror:',max_error
+      !print*,rank, 'errror:',max_error
 
       if(.not.need_more) then
         print*, 'Converged in ', iter, 'iterations',max_error
