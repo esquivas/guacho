@@ -214,7 +214,7 @@ subroutine write_BIN(itprint)
        do i=1,nx
          do j=1,ny
            do k=1,nz
-              rho_grav(i,j,k) =  -                                             &
+              rho_grav(i,j,k) =                                                               &
           (   ( phi_grav(i+1,j  ,k  ) + phi_grav(i-1,j  ,k  ) - 2.*phi_grav(i,j,k) ) / dx**2  &
            +  ( phi_grav(i  ,j+1,k  ) + phi_grav(i  ,j-1,k  ) - 2.*phi_grav(i,j,k) ) / dy**2   &
            +  ( phi_grav(i  ,j  ,k+1) + phi_grav(i  ,j  ,k-1) - 2.*phi_grav(i,j,k) ) / dz**2  )&
@@ -233,7 +233,7 @@ subroutine write_BIN(itprint)
             unitout=10+rank
             open(unit=unitout,file=file1,status='replace',access='stream')
             call write_header(unitout,1,0)
-            write (unitout) phi_grav(1:nx,1:ny,1:nz)
+            write (unitout) rho_grav(1:nx,1:ny,1:nz)
             close(unitout)
             print'(i3,a,a)',rank," wrote file:",trim(file1)
             deallocate ( rho_grav )
