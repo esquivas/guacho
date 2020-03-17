@@ -38,7 +38,7 @@ module exoplanet
   real :: dpw     ! Planetary wind density
 
   real :: torb    !< planet: orbital period
-  real :: rorb     !<  orbital radius
+  real :: rorb    !<  orbital radius
   real :: MassS   !< Mass of the Star
   real :: MassP   !< Mass of the Planet
   real :: xp      !< X position of the planet
