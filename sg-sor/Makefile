@@ -149,8 +149,8 @@ $(PROGRAM)  : prebuild ${OBJECTS_ALL}
 	@echo Linking object files ...
 	@echo Linking flags used: $(LINKFLAGS)
 	@$(COMPILER) $(FLAGS) $(LINKFLAGS)  $(OBJECTS_ALL) -o $@
-	@echo Cleaning up ...
-	@rm -f *.o *.mod
+	#@echo Cleaning up ...
+	#@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
 coldens : prebuild ${OBJECTS_COLDENS}
