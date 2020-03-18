@@ -49,7 +49,6 @@ subroutine init_user_mod()
 end subroutine init_user_mod
 
 !=====================================================================
-
 !> @brief Here the domain is initialized at t=0
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
