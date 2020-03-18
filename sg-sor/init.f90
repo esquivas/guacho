@@ -386,16 +386,21 @@ contains
       end if
 
       print'(a)', '----- OTHER STUFF -----------'
-      if (enable_self_gravity) print'(a)', 'Self gravity enabled (SOR)'
-      print'(a)', ''
-            if (dif_rad) print'(a)', 'Diffuse radiation (local+MPI) enabled'
-      print'(a)', ''
+      if (enable_self_gravity) then
+        print'(a)', 'Self gravity enabled (SOR)'
+        print'(a)', ''
+      end if
+      if (dif_rad) then
+        print'(a)', 'Diffuse radiation (local+MPI) enabled'
+        print'(a)', ''
+      endif
       if (th_cond == TC_ISOTROPIC) then
         print'(a)', 'Thermal conduction enabled (isotropic)'
+        print'(a)', ''
       else if (th_cond == TC_ANISOTROPIC) then
         print'(a)', 'Thermal conduction enabled (Anisotropic)'
+        print'(a)', ''
       endif
-      print'(a)', ''
       if (slope_limiter == LIMITER_NO_AVERAGE) then
         print'(a)', 'No average in the limiter (reduces to 1st order)'
       else if (slope_limiter == LIMITER_NO_LIMIT) then
