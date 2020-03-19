@@ -48,9 +48,10 @@ contains
   end subroutine init_self_gravity
 
   !=======================================================================
-  !>@brief Boundary conditions (one cell) for flux-CD
-  !>@details Boundary conditions applied to E, used
-  !> in the flux-CD calculation
+  !>@brief Boundary conditions (one cell) for SOR itrations
+  !>@details Boundary conditions applied to phi_grav, used in the SOR method to
+  !>to solve the Poisson eq. requiered to add self-gravity.
+  !>@nAt the moment works only with open and perdiodic boundaries
   subroutine phi_grav_boundaries()
     use parameters
     use globals
@@ -60,9 +61,6 @@ contains
     integer, parameter :: nym1=ny-1, nyp1=ny+1
     integer, parameter :: nzm1=nz-1, nzp1=nz+1
     integer:: status(MPI_STATUS_SIZE), err
-    real, dimension(1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
-    real, dimension(0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
-    real, dimension(0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
     integer, parameter :: bxsize=(ny+2)*(nz+2)
     integer, parameter :: bysize=(nx+2)*(nz+2)
     integer, parameter :: bzsize=(nx+2)*(ny+2)
@@ -71,45 +69,29 @@ contains
 
     !   Exchange boundaries between processors
     !   -------------------------------------------------------------
-
-    !   boundaries to procs: right, left, top, bottom, in and out
-    sendr(1,:,:)=phi_grav(nx    ,0:nyp1,0:nzp1)
-    sendl(1,:,:)=phi_grav(1     ,0:nyp1,0:nzp1)
-    sendt(:,1,:)=phi_grav(0:nxp1,ny    ,0:nzp1)
-    sendb(:,1,:)=phi_grav(0:nxp1,1     ,0:nzp1)
-    sendi(:,:,1)=phi_grav(0:nxp1,0:nyp1,nz    )
-    sendo(:,:,1)=phi_grav(0:nxp1,0:nyp1,1     )
-
-    call mpi_sendrecv(sendr, bxsize, mpi_real_kind, right  ,0,                 &
-                      recvl, bxsize, mpi_real_kind, left   ,0,                 &
+    call mpi_sendrecv(phi_grav(nx, :, :), bxsize, mpi_real_kind, right  ,0,    &
+                      phi_grav( 0, :, :), bxsize, mpi_real_kind, left   ,0,    &
                       comm3d, status , err)
 
-    call mpi_sendrecv(sendt, bysize, mpi_real_kind, top    ,0,                 &
-                      recvb, bysize, mpi_real_kind, bottom ,0,                 &
+    call mpi_sendrecv(phi_grav( :,ny, :), bysize, mpi_real_kind, top    ,1,    &
+                      phi_grav( :, 0, :), bysize, mpi_real_kind, bottom ,1,    &
                       comm3d, status , err)
 
-    call mpi_sendrecv(sendi, bzsize, mpi_real_kind, in     ,0,                 &
-                      recvo, bzsize, mpi_real_kind, out    ,0,                 &
+    call mpi_sendrecv(phi_grav( :, :,nz), bzsize, mpi_real_kind, in     ,2,    &
+                      phi_grav( :, :, 0), bzsize, mpi_real_kind, out    ,2,    &
                       comm3d, status , err)
 
-    call mpi_sendrecv(sendl, bxsize, mpi_real_kind, left  , 0,                 &
-                      recvr, bxsize, mpi_real_kind, right , 0,                 &
+    call mpi_sendrecv(phi_grav(   1, :, :), bxsize, mpi_real_kind, left  , 3,  &
+                      phi_grav(nxp1, :, :), bxsize, mpi_real_kind, right , 3,  &
                       comm3d, status , err)
 
-    call mpi_sendrecv(sendb, bysize, mpi_real_kind, bottom, 0,                 &
-                      recvt, bysize, mpi_real_kind, top   , 0,                 &
+    call mpi_sendrecv(phi_grav( :,   1, :), bysize, mpi_real_kind, bottom, 4,  &
+                      phi_grav( :,nyp1, :), bysize, mpi_real_kind, top   , 4,  &
                       comm3d, status , err)
 
-    call mpi_sendrecv(sendo, bzsize, mpi_real_kind, out   , 0,                 &
-                      recvi, bzsize, mpi_real_kind, in    , 0,                 &
+    call mpi_sendrecv(phi_grav( :, :,    1), bzsize, mpi_real_kind, out  , 5,  &
+                      phi_grav( :, :, nzp1), bzsize, mpi_real_kind, in   , 5,  &
                       comm3d, status , err)
-
-    if (left  .ne. -1) phi_grav(0     ,0:nyp1,0:nzp1)=recvl(1,:,:)
-    if (right .ne. -1) phi_grav(nxp1  ,0:nyp1,0:nzp1)=recvr(1,:,:)
-    if (bottom.ne. -1) phi_grav(0:nxp1,0     ,0:nzp1)=recvb(:,1,:)
-    if (top   .ne. -1) phi_grav(0:nxp1,nyp1  ,0:nzp1)=recvt(:,1,:)
-    if (out   .ne. -1) phi_grav(0:nxp1,0:nyp1,0     )=recvo(:,:,1)
-    if (in    .ne. -1) phi_grav(0:nxp1,0:nyp1,nzp1  )=recvi(:,:,1)
 
 #else
 
@@ -152,63 +134,66 @@ contains
     !   left
     if (bc_left == BC_OUTFLOW) then
       if (coords(0).eq.0) then
-        phi_grav(0,0:nyp1,0:nzp1)=phi_grav(1 ,0:nyp1,0:nzp1)
+        phi_grav(0,:,:)=phi_grav(1,:,:)
       end if
     end if
 
     !   right
     if (bc_right == BC_OUTFLOW) then
       if (coords(0).eq.MPI_NBX-1) then
-        phi_grav(nxp1,0:nyp1,0:nzp1)=phi_grav(nx,0:nyp1,0:nzp1)
+        phi_grav(nxp1,:,:)=phi_grav(nx,:,:)
       end if
     end if
 
     !   bottom
     if (bc_bottom == BC_OUTFLOW) then
       if (coords(1).eq.0) then
-        phi_grav(0:nxp1,0,0:nzp1)=phi_grav(0:nxp1,1 ,0:nzp1)
+        phi_grav(:,0,:)=phi_grav(:,1 ,:)
       end if
     end if
 
     !   top
     if (bc_top == BC_OUTFLOW) then
       if (coords(1).eq.MPI_NBY-1) then
-        phi_grav(0:nxp1,nyp1,0:nzp1)=phi_grav(0:nxp1,ny,0:nzp1)
+        phi_grav(:,nyp1,:)=phi_grav(:,ny,:)
       end if
     end if
 
     !   out
     if (bc_out == BC_OUTFLOW) then
       if (coords(2).eq.0) then
-        phi_grav(0:nxp1,0:nyp1,0)=phi_grav(0:nxp1,0:nyp1,1 )
+        phi_grav(:,:,0)=phi_grav(:,:,1 )
       end if
     end if
 
     !   in
     if (bc_in == BC_OUTFLOW) then
       if (coords(2).eq.MPI_NBZ-1) then
-        phi_grav(0:nxp1,0:nyp1,nzp1)=phi_grav(0:nxp1,0:nyp1,nz)
+        phi_grav(:,:,nzp1)=phi_grav(:,:,nz)
       end if
     end if
-
-    print*, 'pase fronteras'
 
   end subroutine phi_grav_boundaries
 
 
   ! ======================================================================
-  ! Computes the residue $\chi= \nabla^2 \phi - 4\pi G \rho$
-  ! at a given cell
-  subroutine get_residue(i,j,k,residue)
+  !> @brief Computes residue in a given cell
+  !> @details Computes the residue at a given cell from the density taken from
+  !> the global variable in primit
+  !> @param integer [in] i : index in the x direction
+  !> @param integer [in] j : index in the y direction
+  !> @param integer [in] k : index in the z direction
+  !> @param real [out] xi  : residue $\xi= \nabla^2 \phi - 4\pi G \rho$
+  subroutine get_residue(i,j,k,xi)
     use globals, only : dx, dy, dz, primit
     implicit none
     integer, intent(in)  :: i,j,k
-    real,    intent(out) :: residue
+    real,    intent(out) :: xi
 
-    residue= ( phi_grav(i+1, j,  k   )+phi_grav(i-1,j,  k  ) -2.*phi_grav(i,j,k) )/dx**2      &
-            +( phi_grav(i  , j+1,k   )+phi_grav(i  ,j-1,k  ) -2.*phi_grav(i,j,k) )/dy**2      &
-            +( phi_grav(i  , j , k+1 )+phi_grav(i  ,j  ,k-1) -2.*phi_grav(i,j,k) )/dz**2      &
-            - four_pi_G*primit(1,i,j,k)
+    xi = ( phi_grav(i+1,j,k) + phi_grav(i-1,j,k) - 2.*phi_grav(i,j,k) )/dx**2  &
+       + ( phi_grav(i,j+1,k) + phi_grav(i,j-1,k) - 2.*phi_grav(i,j,k) )/dy**2  &
+       + ( phi_grav(i,j,k+1) + phi_grav(i,j,k-1) - 2.*phi_grav(i,j,k) )/dz**2  &
+       - four_pi_G*primit(1,i,j,k)
 
   end subroutine get_residue
 
@@ -216,87 +201,93 @@ contains
   !> @brief Solve Poisson equation
   !> @details Compute the gravitational potential with a SOR mehtod
   subroutine solve_poisson()
-    use parameters, only : nx, ny, nz
-    use globals,    only : dx, dy, dz, primit, rank
+    use parameters, only : nx, ny, nz, mpi_real_kind, master
+#ifdef MPIP
+    use mpi
+#endif
+    use globals,    only : dx, dy, dz, primit, comm3d, rank,time
     implicit none
-    integer, parameter :: max_iterations=200
-    real, parameter    :: Tol = 1E-4  !  Relative error tolerance
+    integer, parameter :: max_iterations=10000
+    real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
-    real    :: residue, max_error, e_ijk, ph0
-    logical :: need_more=.false.
-    integer :: iter, ipass, i,j,k, ksw, jsw, kpass
+    real    :: xi , max_error, e_ijk, ph0, max_error_local
+    logical :: converged
+    integer :: iter, err
+    integer :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
 
+    converged = .false.
     omega=1.99
-
-    e_ijk = -2.*( 1./dx**2 +1./dy**2 + 1./dz**2 )
+    e_ijk = -2.0*( 1.0/dx**2 +1.0/dy**2 + 1.0/dz**2 )
 
     main_loop : do iter=1, max_iterations
-      !
-      ! do k = 1,nz
-      !   do j = 1, ny
-      !     do i = 1, nx
-      !       call get_residuphi_grav(i,j,k,residue)
-      !       !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
-      !       ph0         = phi_grav(i,j,k)
-      !       phip(i,j,k) = ph0 - omega*residue/e_ijk
-      !
-      !       !call get_phi_star(rho,phi,i,j,k,dx,residue)
-      !       !phi(i,j,k)=omega*residue + (1.-omega)*ph0
-      !
-      !       relative_error= abs(phip(i,j,k)-ph0)/abs(ph0)
-      !       max_error     = max(max_error,relative_error)
-      !
-      !       !if(relative_error > Tol)
-      !       need_more=.true.
-      !     end do
-      !   end do
-      ! end do
+
+      ! max_error_local = -1.0
+      ! max_error       = 1e20
+      ! black_red: do i_rb=1,2
+
+        ! jsw = i_rb
+        ! do k=1,nz
+        !   isw =jsw
+        !   do j=1,ny
+        !     do i=isw,nx,2
+        !
+        !       call get_residue(i,j,k,xi)
+        !
+        !       ph0             = phi_grav(i,j,k)
+        !       phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+        !
+        !       relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
+        !       max_error_local = max(max_error_local,relative_error)
+        !
+        !     end do
+        !     isw = 3 - isw
+        !   end do
+        !   jsw = 3 - jsw
+        ! end do
 
       ksw=1
-
+      max_error_local = -1.0
+      max_error       = 1e20
       black_red: do kpass=1,2
 
-        max_error=-10.
         do ipass=1,2
           jsw=ksw
-          do k=1, nz
+          do k=1,nz
             do j=jsw,ny,2
               do i=ipass,nx,2
 
-                call get_residue(i,j,k,residue)
-                !relative_error= omega*abs(residue)/abs(phi(i,j,k)*e_ijk)
+                call get_residue(i,j,k,xi)
+
                 ph0             = phi_grav(i,j,k)
-                phi_grav(i,j,k) = ph0 - omega*residue/e_ijk
+                phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
 
-                !call get_phi_star(rho,phi,i,j,k,dx,residue)
-                !ph0=phi(i,j,k)
-                !phi(i,j,k)=omega*residue + (1.-omega)*ph0
-
-                relative_error= abs(phi_grav(i,j,k)-ph0)/abs(ph0)
-                max_error     = max(max_error,relative_error)
-
-                !if(relative_error > Tol)
-                need_more=.true.
+                relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
+                max_error_local = max(max_error_local,relative_error)
 
               end do
             end do
-            jsw=2-jsw
+            jsw=3-jsw
           end do
-          ksw=2-ksw
+          ksw=3-ksw
         end do
 
       end do black_red
 
+      !  need to share the error among the different cores
+      call mpi_allreduce(max_error_local, max_error, 1, mpi_real_kind, mpi_max,&
+                         comm3d, err)
+
+      if(max_error < Tol) converged = .true.
+
+      !print*, max_error_local, max_error
+
       call phi_grav_boundaries()
 
-      !print*,rank, 'errror:',max_error
-
-      if(.not.need_more) then
-        print*, 'Converged in ', iter, 'iterations',max_error
+      if(converged) then
+        if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter, &
+                                    ' iterations with an error of', max_error, max_error_local
         return
       end if
-      !  reset convergence flag
-      need_more=.false.
 
     end do main_loop
 
