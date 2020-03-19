@@ -309,20 +309,21 @@ contains
 
       if(max_error < Tol) converged = .true.
 
-      !print*, max_error_local, max_error
+      print*, max_error_local, max_error
 
       call phi_grav_boundaries()
 
       if(converged) then
         if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter, &
                                     ' iterations with an error of', max_error, max_error_local
+        deallocate (phiP)
         return
       end if
 
     end do main_loop
 
     print'(a)', 'SOR exceeded maximum number of iterations'
-
+    deallocate(phiP)
 
   end subroutine solve_poisson
 
