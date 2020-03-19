@@ -316,8 +316,9 @@ contains
       call phi_grav_boundaries()
 
       if(converged) then
-        if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter, &
-                                    ' iterations with an error of', max_error, max_error_local
+        if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter,&
+                                    ' iterations with an error of', max_error, &
+                                    max_error_local
         if (.not.enable_chebyshev_accel) deallocate (phiP)
         return
       end if
