@@ -218,7 +218,7 @@ contains
     real, allocatable  :: phiP(:,:,:)
 
     converged = .false.
-    omega=0.9
+    omega=1.5
     e_ijk = -2.0*( 1.0/dx**2 +1.0/dy**2 + 1.0/dz**2 )
 
     if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
