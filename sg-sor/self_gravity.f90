@@ -210,16 +210,25 @@ contains
     integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
-    real    :: xi , max_error, e_ijk, ph0, max_error_local
-    logical :: converged
-    integer :: iter, err
-    integer :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
+    real               :: xi , max_error, e_ijk, ph0, max_error_local
+    logical, parameter :: enable_chebyshev_accel = .false.
+    logical            :: converged
+    integer            :: iter, err
+    integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
+    real, allocatable  :: phiP(:,:,:)
 
     converged = .false.
     omega=1.99
     e_ijk = -2.0*( 1.0/dx**2 +1.0/dy**2 + 1.0/dz**2 )
 
+    if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
+
     main_loop : do iter=1, max_iterations
+
+      max_error_local = -1.0
+      max_error       = 1e20
+
+      if( enable_chebyshev_accel ) then
 
       ! max_error_local = -1.0
       ! max_error       = 1e20
@@ -245,34 +254,55 @@ contains
         !   jsw = 3 - jsw
         ! end do
 
-      ksw=1
-      max_error_local = -1.0
-      max_error       = 1e20
-      black_red: do kpass=1,2
+        !  this shouldn't work but the code commented above should, and it
+        !  doesn't hav to check this later
+        ksw=1
+        black_red: do kpass=1,2
 
-        do ipass=1,2
-          jsw=ksw
-          do k=1,nz
-            do j=jsw,ny,2
-              do i=ipass,nx,2
+          do ipass=1,2
+            jsw=ksw
+            do k=1,nz
+              do j=jsw,ny,2
+                do i=ipass,nx,2
 
-                call get_residue(i,j,k,xi)
+                  call get_residue(i,j,k,xi)
 
-                ph0             = phi_grav(i,j,k)
-                phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+                  ph0             = phi_grav(i,j,k)
+                  phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
 
-                relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
-                max_error_local = max(max_error_local,relative_error)
+                  relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
+                  max_error_local = max(max_error_local,relative_error)
 
+                end do
               end do
+              jsw=3-jsw
             end do
-            jsw=3-jsw
+            ksw=3-ksw
           end do
-          ksw=3-ksw
+
+        end do black_red
+      else
+
+        do k=1,nz
+          do j=1,ny
+            do i=1,nx
+
+              call get_residue(i,j,k,xi)
+
+              phiP(i,j,k)     = phi_grav(i,j,k) - omega*xi/e_ijk
+
+              relative_error  = abs(phiP(i,j,k)-phi_grav(i,j,k)) /             &
+                                abs(phi_grav(i,j,k) + 1e-30)
+
+              max_error_local = max(max_error_local,relative_error)
+
+            end do
+          end do
         end do
 
-      end do black_red
+        phi_grav(:,:,:) = phiP(:,:,:)
 
+      end if
       !  need to share the error among the different cores
       call mpi_allreduce(max_error_local, max_error, 1, mpi_real_kind, mpi_max,&
                          comm3d, err)
