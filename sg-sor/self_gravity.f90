@@ -233,12 +233,12 @@ contains
       ! max_error_local = -1.0
       ! max_error       = 1e20
       ! black_red: do i_rb=1,2
-
-        jsw = i_rb
-        do k=1,nz
-          isw =jsw
-          do j=1,ny
-            do i=isw,nx,2
+    	do i_rb =1,2
+    		jsw = i_rb
+    		do k=1,nz
+    			isw =jsw
+    			do j=1,ny
+    				do i=isw,nx,2
 
               call get_residue(i,j,k,xi)
 
@@ -253,6 +253,7 @@ contains
           end do
           jsw = 3 - jsw
         end do
+      end do
 
         !  this shouldn't work but the code commented above should, and it
         !  doesn't hav to check this later
@@ -303,7 +304,7 @@ contains
         phi_grav(:,:,:) = phiP(:,:,:)
 
       end if
-      
+
       !  need to share the error among the different cores
       call mpi_allreduce(max_error_local, max_error, 1, mpi_real_kind, mpi_max,&
                          comm3d, err)
