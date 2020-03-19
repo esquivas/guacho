@@ -234,53 +234,53 @@ contains
       ! max_error       = 1e20
       ! black_red: do i_rb=1,2
 
-        ! jsw = i_rb
-        ! do k=1,nz
-        !   isw =jsw
-        !   do j=1,ny
-        !     do i=isw,nx,2
-        !
-        !       call get_residue(i,j,k,xi)
-        !
-        !       ph0             = phi_grav(i,j,k)
-        !       phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
-        !
-        !       relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
-        !       max_error_local = max(max_error_local,relative_error)
-        !
-        !     end do
-        !     isw = 3 - isw
-        !   end do
-        !   jsw = 3 - jsw
-        ! end do
+        jsw = i_rb
+        do k=1,nz
+          isw =jsw
+          do j=1,ny
+            do i=isw,nx,2
+
+              call get_residue(i,j,k,xi)
+
+              ph0             = phi_grav(i,j,k)
+              phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+
+              relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
+              max_error_local = max(max_error_local,relative_error)
+
+            end do
+            isw = 3 - isw
+          end do
+          jsw = 3 - jsw
+        end do
 
         !  this shouldn't work but the code commented above should, and it
         !  doesn't hav to check this later
-        ksw=1
-        black_red: do kpass=1,2
-
-          do ipass=1,2
-            jsw=ksw
-            do k=1,nz
-              do j=jsw,ny,2
-                do i=ipass,nx,2
-
-                  call get_residue(i,j,k,xi)
-
-                  ph0             = phi_grav(i,j,k)
-                  phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
-
-                  relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
-                  max_error_local = max(max_error_local,relative_error)
-
-                end do
-              end do
-              jsw=3-jsw
-            end do
-            ksw=3-ksw
-          end do
-
-        end do black_red
+        ! ksw=1
+        ! black_red: do kpass=1,2
+        !
+        !   do ipass=1,2
+        !     jsw=ksw
+        !     do k=1,nz
+        !       do j=jsw,ny,2
+        !         do i=ipass,nx,2
+        !
+        !           call get_residue(i,j,k,xi)
+        !
+        !           ph0             = phi_grav(i,j,k)
+        !           phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+        !
+        !           relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
+        !           max_error_local = max(max_error_local,relative_error)
+        !
+        !         end do
+        !       end do
+        !       jsw=3-jsw
+        !     end do
+        !     ksw=3-ksw
+        !   end do
+        !
+        ! end do black_red
       else
 
         do k=1,nz
@@ -303,6 +303,7 @@ contains
         phi_grav(:,:,:) = phiP(:,:,:)
 
       end if
+      
       !  need to share the error among the different cores
       call mpi_allreduce(max_error_local, max_error, 1, mpi_real_kind, mpi_max,&
                          comm3d, err)
