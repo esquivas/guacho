@@ -297,18 +297,20 @@ contains
 
               max_error_local = max(max_error_local,relative_error)
 
-              !phiP(i,j,k) = phiP(i,j,k) + 0.000*(   phi_grav(i+1,j  ,k  )       &
-              !                                   + phi_grav(i-1,j  ,k  )       &
-              !                                   + phi_grav(i  ,j+1,k  )       &
-              !                                   + phi_grav(i  ,j-1,k  )       &
-              !                                   + phi_grav(i  ,j  ,k+1)       &
-              !                                   + phi_grav(i  ,j  ,k-1)       &
-              !                                   - 6.0*phi_grav(i,j,k)   )
+              phiP(i,j,k) = phiP(i,j,k) + 0.001*(   phi_grav(i+1,j  ,k  )       &
+                                                  + phi_grav(i-1,j  ,k  )       &
+                                                  + phi_grav(i  ,j+1,k  )       &
+                                                  + phi_grav(i  ,j-1,k  )       &
+                                                  + phi_grav(i  ,j  ,k+1)       &
+                                                  + phi_grav(i  ,j  ,k-1)       &
+                                                  - 6.0*phi_grav(i,j,k)   )
 
 
             end do
           end do
         end do
+
+        phi_grav(:,:,:) = phiP(:,:,:)
 
       end if
 
