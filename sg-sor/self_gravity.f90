@@ -239,10 +239,8 @@ contains
 
       if( enable_chebyshev_accel ) then
 
-      ! max_error_local = -1.0
-      ! max_error       = 1e20
-      ! black_red: do i_rb=1,2
-    	do i_rb =1,2
+      black_red: do i_rb=1,2
+
     		jsw = i_rb
     		do k=1,nz
     			isw =jsw
@@ -265,7 +263,7 @@ contains
           end do
           jsw = 3 - jsw
         end do
-      end do
+      end do black_red
 
         !  this shouldn't work but the code commented above should, and it
         !  doesn't hav to check this later
