@@ -249,7 +249,7 @@ contains
 
               !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( ph0,  1e-30 )
+                                max( abs(ph0),  1e-30 )
 
               max_error_local = max(max_error_local,relative_error)
 
