@@ -228,14 +228,6 @@ contains
 
       omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
-      if (iter < 1000) then
-        omega = 0.99
-      else if (iter < 5000)
-        omega = 1.5
-      else
-        omega = 1.99
-      endif
-
       max_error_local = -1.0
       max_error       = 1e20
 
