@@ -1,22 +1,25 @@
 cosas que habria que hacer pa lo del SOR
 
 Dentro del modulo self_gravity
-1- solve poisson (wrapper que calcula phi_grav, a partir de variables primitivas, en realidad densidad solamente)
-2- add_self_gravity (calcula el gradiente de phi_grav) y agrega la fuerza correspondiente.
+*** 1- solve poisson (wrapper que calcula phi_grav, a partir de variables primitivas, en realidad densidad solamente)
+
+2- add_self_gravity (calcula el gradiente de phi_grav) y agrega la fuerza correspondiente al vector S.
    al interior del modulo va a haber mas subroutinas, pero que no seran usadas por el resto del guacho.
    solo hay unb avariable global nueva phi_grav con el potencial gravitacional, requiere cveldas fantasmas para poder cal   cular el gradiente
-
+   Ojo la fuente calculada es para una sola celda, el barrido del dominio ya lo hacen lo do (lineas 92:94 del hydrosolver.f90)
 
 En el guacho
 
-1- inicializar modulo (allocatear variables globales llamr desde init.f90
-2- mandar llamar solve_poison desde el main (precalcular la phi)
+*** 1- inicializar modulo (allocatear variables globales llamr desde init.f90
+*** 2- mandar llamar solve_poison desde el main (precalcular la phi)
    escribir en pantalla el progreso (iteraciones) y verificar convergencia
+*** 3 - modificar output
 
 Aca ya se pueden hacer pruebas de que la phi sea la buena, se puede escribir a disco el laplaciano de phi y comparar con la densidad, esto ayuda a verificar unidades
 
-3- agregar en el output que escriba grav_phi
-4- mandar llamar solve poisson a partir de las primitivas (dentro de step (en hydro_solver.f90)
-  Agregar la fuerza de gravedad en dentro de tstep (subrutina source en sources.f90)
+*** 3- agregar en el output que escriba grav_phi
+*** 4- mandar llamar solve poisson a partir de las primitivas (dentro de step (en hydro_solver.f90)
+
+-Agregar la fuerza de gravedad en dentro de tstep (subrutina source en sources.f90)
 
 - buscar alguna prueba en la literatura que se pueda reproducir (algo vi del colapso de una nube con rotacion?)
