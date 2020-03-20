@@ -336,7 +336,7 @@ contains
 
     if(rank==master) print'(a,i0,a,es12.5)',                                   &
                                  'SOR exceeded maximum number of iterations ', &
-                                  max_iterations, 'with an error of', max_error'
+                                  max_iterations, 'with an error of', max_error
 
   end subroutine solve_poisson
 
