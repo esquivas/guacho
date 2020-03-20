@@ -209,7 +209,7 @@ contains
     use constants,  only : pi
     implicit none
     integer, parameter :: max_iterations=10000
-    real, parameter    :: Tol = 1E-4   !  Relative error tolerance
+    real, parameter    :: Tol = 1E-5   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
     logical, parameter :: enable_chebyshev_accel = .false.
@@ -240,14 +240,23 @@ contains
 
               call get_residue(i,j,k,xi)
 
-              ph0             = phi_grav(i,j,k)
-              phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
 
-              !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( abs(ph0),  1e-30 )
+                                max( abs(phi_grav(i,j,k)), 1e-30 )
 
               max_error_local = max(max_error_local,relative_error)
+
+              phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
+
+              !
+              ! ph0             = phi_grav(i,j,k)
+              ! phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+              !
+              ! !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
+              ! relative_error  = abs( omega*xi/e_ijk ) /                        &
+              !                   max( abs(ph0),  1e-30 )
+              !
+              ! max_error_local = max(max_error_local,relative_error)
 
             end do
             isw = 3 - isw
@@ -295,9 +304,11 @@ contains
               relative_error  = abs( omega*xi/e_ijk ) /                        &
                                 max( abs(phi_grav(i,j,k)), 1e-30 )
 
+              max_error_local = max(max_error_local,relative_error)
+
               phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
 
-              max_error_local = max(max_error_local,relative_error)
+
 
             end do
           end do
@@ -316,17 +327,16 @@ contains
       call phi_grav_boundaries()
 
       if(converged) then
-        if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter,&
-                                    ' iterations with an error of', max_error, &
-                                    max_error_local
+        if (rank == master) print'(a,i0,a,es12.5)', 'SOR converged in ', iter, &
+                                    ' iterations with an error of', max_error
         return
       end if
 
     end do main_loop
 
-    if(rank==master) print'(a,i0)',                                            &
+    if(rank==master) print'(a,i0,a,es12.5)',                                   &
                                  'SOR exceeded maximum number of iterations ', &
-                                  max_iterations
+                                  max_iterations, 'with an error of', max_error'
 
   end subroutine solve_poisson
 
