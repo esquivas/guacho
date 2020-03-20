@@ -212,7 +212,7 @@ contains
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
-    logical, parameter :: enable_chebyshev_accel = .true.
+    logical, parameter :: enable_chebyshev_accel = .false.
     logical            :: converged
     integer            :: iter, err
     integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
@@ -245,7 +245,7 @@ contains
               call get_residue(i,j,k,xi)
 
               ph0             = phi_grav(i,j,k)
-              phi_grav(i,j,k) = ph0 + omega*xi/e_ijk
+              phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
 
               !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
               relative_error  = abs( omega*xi/e_ijk ) /                        &
