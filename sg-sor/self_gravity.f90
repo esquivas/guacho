@@ -212,7 +212,7 @@ contains
     real, parameter    :: Tol = 1E-5   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
-    logical, parameter :: enable_chebyshev_accel = .false.
+    logical, parameter :: enable_chebyshev_accel = .true.
     logical            :: converged
     integer            :: iter, err
     integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
@@ -248,15 +248,6 @@ contains
 
               phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
 
-              !
-              ! ph0             = phi_grav(i,j,k)
-              ! phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
-              !
-              ! !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
-              ! relative_error  = abs( omega*xi/e_ijk ) /                        &
-              !                   max( abs(ph0),  1e-30 )
-              !
-              ! max_error_local = max(max_error_local,relative_error)
 
             end do
             isw = 3 - isw
@@ -264,35 +255,6 @@ contains
           jsw = 3 - jsw
         end do
       end do black_red
-
-        !  this shouldn't work but the code commented above should, and it
-        !  doesn't hav to check this later
-        ! ksw=1
-        ! black_red: do kpass=1,2
-        !
-        !   do ipass=1,2
-        !     jsw=ksw
-        !     do k=1,nz
-        !       do j=jsw,ny,2
-        !         do i=ipass,nx,2
-        !
-        !           call get_residue(i,j,k,xi)
-        !
-        !           ph0             = phi_grav(i,j,k)
-        !           phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
-        !
-        !           relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
-        !           max_error_local = max(max_error_local,relative_error)
-        !
-        !         end do
-        !       end do
-        !       jsw=3-jsw
-        !     end do
-        !     ksw=3-ksw
-        !   end do
-        !
-        ! end do black_red
-      else
 
         !  This is equivalent to a Gaus Siedel method with omega = 1
         do k=1,nz
@@ -308,8 +270,6 @@ contains
 
               phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
 
-
-
             end do
           end do
         end do
@@ -322,7 +282,7 @@ contains
 
       if(max_error < Tol) converged = .true.
 
-      !print*, max_error_local, max_error, omega
+      print*, max_error_local, max_error, omega
 
       call phi_grav_boundaries()
 
@@ -336,7 +296,7 @@ contains
 
     if(rank==master) print'(a,i0,a,es12.5)',                                   &
                                  'SOR exceeded maximum number of iterations ', &
-                                  max_iterations, 'with an error of', max_error
+                                  max_iterations, ' with an error of', max_error
 
   end subroutine solve_poisson
 
