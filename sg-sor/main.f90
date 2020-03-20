@@ -116,9 +116,6 @@ program guacho
     !   advances the HD/MHD solution
     call tstep()
 
-    !  I'm placing this here just to test the convergence in every outputs
-    if(enable_self_gravity) call solve_poisson()
-
     !  if lmp enabled compute corrector for particle positions
     if(enable_lmp) then
       if (lmp_distf) call flag_shock()
