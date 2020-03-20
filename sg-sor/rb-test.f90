@@ -61,3 +61,31 @@ program test
 	PRINT*,'=============================='
 
 end program test
+!  this shouldn't work but the code commented above should, and it
+!  doesn't hav to check this later
+! ksw=1
+! black_red: do kpass=1,2
+!
+!   do ipass=1,2
+!     jsw=ksw
+!     do k=1,nz
+!       do j=jsw,ny,2
+!         do i=ipass,nx,2
+!
+!           call get_residue(i,j,k,xi)
+!
+!           ph0             = phi_grav(i,j,k)
+!           phi_grav(i,j,k) = ph0 - omega*xi/e_ijk
+!
+!           relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0 + 1e-30)
+!           max_error_local = max(max_error_local,relative_error)
+!
+!         end do
+!       end do
+!       jsw=3-jsw
+!     end do
+!     ksw=3-ksw
+!   end do
+!
+! end do black_red
+else
