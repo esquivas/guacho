@@ -211,7 +211,7 @@ contains
     integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
-    real               :: xi , max_error, e_ijk, ph0, max_error_local
+    real               :: xi , max_error, e_ijk, max_error_local, ph0
     logical, parameter :: enable_chebyshev_accel = .true.
     logical            :: converged
     integer            :: iter, err
@@ -226,8 +226,8 @@ contains
 
     main_loop : do iter=1, max_iterations
 
-      omega = 1.5
-      !omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
+      !omega = 1.5
+      omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       max_error_local = -1.0
       max_error       = 1e20
@@ -249,7 +249,7 @@ contains
 
               !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( abs( phi_grav(i,j,k) ),  1e-30 )
+                                max( ph0,  1e-30 )
 
               max_error_local = max(max_error_local,relative_error)
 
