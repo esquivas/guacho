@@ -218,7 +218,7 @@ contains
     real, allocatable  :: phiP(:,:,:)
 
     converged = .false.
-    omega=1.0
+    omega=1.5
     e_ijk = -2.0*( 1.0/dx**2 +1.0/dy**2 + 1.0/dz**2 )
 
     if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
@@ -297,7 +297,7 @@ contains
 
               max_error_local = max(max_error_local,relative_error)
 
-              phiP(i,j,k) = phiP(i,j,k) + 0.001*(   phi_grav(i+1,j  ,k  )       &
+              phiP(i,j,k) = phiP(i,j,k) + 0.0001*(   phi_grav(i+1,j  ,k  )       &
                                                   + phi_grav(i-1,j  ,k  )       &
                                                   + phi_grav(i  ,j+1,k  )       &
                                                   + phi_grav(i  ,j-1,k  )       &
