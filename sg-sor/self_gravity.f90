@@ -207,7 +207,7 @@ contains
 #endif
     use globals,    only : dx, dy, dz, primit, comm3d, rank,time
     implicit none
-    integer, parameter :: max_iterations=1000
+    integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, ph0, max_error_local
