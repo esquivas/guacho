@@ -212,7 +212,7 @@ contains
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, ph0, max_error_local
-    logical, parameter :: enable_chebyshev_accel = .false.
+    logical, parameter :: enable_chebyshev_accel = .true.
     logical            :: converged
     integer            :: iter, err
     integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
