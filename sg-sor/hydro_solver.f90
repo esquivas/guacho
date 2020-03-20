@@ -68,9 +68,10 @@ contains
   subroutine step(dt)
     use parameters, only : nx, ny, nz, neqdyn,                                 &
                            user_source_terms, radiation_pressure,              &
-                           eight_wave, enable_flux_cd
+                           eight_wave, enable_flux_cd, enable_self_gravity
     use globals, only : up, u, primit,f, g, h, dx, dy, dz
     use flux_cd_module
+    use self_gravity, only : solve_poisson
     use sources
     implicit none
     real :: s(neq)
@@ -85,6 +86,8 @@ contains
 #ifdef BFIELD
     if (enable_flux_cd) call get_efield()
 #endif
+
+    if(enable_self_gravity) call solve_poisson()
 
     do k=1,nz
       do j=1,ny
