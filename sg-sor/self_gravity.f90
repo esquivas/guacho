@@ -244,8 +244,8 @@ contains
 
               call get_residue(i,j,k,xi)
 
-              !ph0             = phi_grav(i,j,k)
-              phi_grav(i,j,k) = xi/e_ijk !ph0 - omega*xi/e_ijk
+              ph0             = phi_grav(i,j,k)
+              phi_grav(i,j,k) = ph0 + omega*xi/e_ijk
 
               !relative_error  = abs(phi_grav(i,j,k)-ph0)/abs(ph0+1e-30)
               relative_error  = abs( omega*xi/e_ijk ) /                        &
