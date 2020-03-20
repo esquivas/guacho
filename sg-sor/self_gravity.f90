@@ -307,7 +307,7 @@ contains
           end do
         end do
 
-        phi_grav(:,:,:) = phiP(:,:,:)
+        !phi_grav(:,:,:) = phiP(:,:,:)
 
       end if
 
