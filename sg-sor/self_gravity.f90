@@ -297,7 +297,7 @@ contains
 
               max_error_local = max(max_error_local,relative_error)
 
-              phiP(:,:,:) = phiP(:,:,:) + 0.01*(   phi_grav(i+1,j  ,k  )       &
+              phiP(i,j,k) = phiP(i,j,k) + 0.01*(   phi_grav(i+1,j  ,k  )       &
                                                  + phi_grav(i-1,j  ,k  )       &
                                                  + phi_grav(i  ,j+1,k  )       &
                                                  + phi_grav(i  ,j-1,k  )       &
