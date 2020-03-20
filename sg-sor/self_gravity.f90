@@ -226,7 +226,8 @@ contains
 
     main_loop : do iter=1, max_iterations
 
-      omega = 3.0 / ( 1.0 + sin( pi/real(iter+1) ) )
+      omega = 1.5
+      !omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       max_error_local = -1.0
       max_error       = 1e20
