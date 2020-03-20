@@ -208,7 +208,7 @@ contains
     use globals,    only : dx, dy, dz, primit, comm3d, rank,time
     use constants,  only : pi
     implicit none
-    integer, parameter :: max_iterations=1000
+    integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
@@ -222,7 +222,7 @@ contains
 
     main_loop : do iter=1, max_iterations
 
-      omega = 1.0
+      omega = 1.5
       !omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       max_error_local = -1.0
@@ -324,7 +324,9 @@ contains
 
     end do main_loop
 
-    print'(a)', 'SOR exceeded maximum number of iterations'
+    if(rank==master) print'(a,i0)',                                            &
+                                 'SOR exceeded maximum number of iterations ', &
+                                  max_iterations
 
   end subroutine solve_poisson
 
