@@ -216,13 +216,9 @@ contains
     logical            :: converged
     integer            :: iter, err
     integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
-    real, allocatable  :: phiP(:,:,:)
-
 
     converged = .false.
     e_ijk = -( 2.0/dx**2 + 2.0/dy**2 + 2.0/dz**2 )
-
-    if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
 
     main_loop : do iter=1, max_iterations
 
@@ -289,25 +285,23 @@ contains
         ! end do black_red
       else
 
+        !  This is equivalent to a Gaus Siedel method with omega = 1
         do k=1,nz
           do j=1,ny
             do i=1,nx
 
               call get_residue(i,j,k,xi)
 
-              ph0             = phi_grav(i,j,k)
-              phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
-
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( abs(ph0), 1e-30 )
+                                max( abs(phi_grav(i,j,k)), 1e-30 )
+
+              phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
 
               max_error_local = max(max_error_local,relative_error)
 
             end do
           end do
         end do
-
-        !phi_grav(:,:,:) = phiP(:,:,:)
 
       end if
 
@@ -325,14 +319,12 @@ contains
         if (rank == master) print'(a,i0,a,2es12.5)', 'SOR converged in ', iter,&
                                     ' iterations with an error of', max_error, &
                                     max_error_local
-        if (.not.enable_chebyshev_accel) deallocate (phiP)
         return
       end if
 
     end do main_loop
 
     print'(a)', 'SOR exceeded maximum number of iterations'
-    if (.not.enable_chebyshev_accel) deallocate(phiP)
 
   end subroutine solve_poisson
 
