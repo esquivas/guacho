@@ -208,7 +208,7 @@ contains
     use globals,    only : dx, dy, dz, primit, comm3d, rank,time
     use constants,  only : pi
     implicit none
-    integer, parameter :: max_iterations=10000
+    integer, parameter :: max_iterations=1000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
@@ -295,8 +295,8 @@ contains
 
               call get_residue(i,j,k,xi)
 
-              ph0  = phi_grav(i,j,k)
-              phi_grav(i,j,k)     = phi_grav(i,j,k) - omega*xi/e_ijk
+              ph0             = phi_grav(i,j,k)
+              phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
 
               relative_error  = abs( omega*xi/e_ijk ) /                        &
                                 max( abs(ph0), 1e-30 )
@@ -317,7 +317,7 @@ contains
 
       if(max_error < Tol) converged = .true.
 
-      print*, max_error_local, max_error, omega
+      !print*, max_error_local, max_error, omega
 
       call phi_grav_boundaries()
 
