@@ -295,10 +295,10 @@ contains
 
               call get_residue(i,j,k,xi)
 
-              phiP(i,j,k)     = phi_grav(i,j,k) - omega*xi/e_ijk
+              phi_grav(i,j,k)     = phi_grav(i,j,k) - omega*xi/e_ijk
 
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                              max(  abs(phi_grav(i,j,k)),  1e-30 )
+                                max(  abs(phi_grav(i,j,k)),  1e-30 )
 
               max_error_local = max(max_error_local,relative_error)
 
