@@ -206,6 +206,7 @@ contains
     use mpi
 #endif
     use globals,    only : dx, dy, dz, primit, comm3d, rank,time
+    use constants,  only : pi
     implicit none
     integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-4   !  Relative error tolerance
@@ -217,14 +218,15 @@ contains
     integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
     real, allocatable  :: phiP(:,:,:)
 
+
     converged = .false.
-    omega=0.99
     e_ijk = -2.0*( 1.0/dx**2 +1.0/dy**2 + 1.0/dz**2 )
 
     if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
 
     main_loop : do iter=1, max_iterations
 
+      omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       if (iter < 1000) then
         omega = 0.99
@@ -321,7 +323,7 @@ contains
 
       if(max_error < Tol) converged = .true.
 
-      print*, max_error_local, max_error
+      print*, max_error_local, max_error, omega
 
       call phi_grav_boundaries()
 
