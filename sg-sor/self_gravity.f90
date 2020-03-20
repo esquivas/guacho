@@ -220,14 +220,14 @@ contains
 
 
     converged = .false.
-    e_ijk = ( 2.0/dx**2 + 2.0/dy**2 + 2.0/dz**2 )
+    e_ijk = -( 2.0/dx**2 + 2.0/dy**2 + 2.0/dz**2 )
 
     if(.not.enable_chebyshev_accel) allocate( phiP(0:nx+1,0:ny+1,0:nz+1) )
 
     main_loop : do iter=1, max_iterations
 
-      !omega = 1.5
-      omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
+      omega = 1.5
+      !omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       max_error_local = -1.0
       max_error       = 1e20
