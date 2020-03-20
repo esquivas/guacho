@@ -297,12 +297,16 @@ contains
 
               max_error_local = max(max_error_local,relative_error)
 
+              phiP(i,j,k) =
+
             end do
           end do
         end do
 
-        phi_grav(:,:,:) = phiP(:,:,:)
-
+        phi_grav(:,:,:) = phiP(:,:,:) + 0.01*( phi_grav(i+1,j,k) + phi_grav(i-1,j,k)) &
+                                              + phi_grav(i,j+1,k) + phi_grav(i,j-1,k)) &
+                                              + phi_grav(i,j,k+1) + phi_grav(i,j,k-1)) &
+                                              -6.*phi_grav(i,j,k)
       end if
 
       !  need to share the error among the different cores
