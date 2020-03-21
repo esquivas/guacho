@@ -32,7 +32,7 @@
   use parameters, only : neq, nxtot, nytot, nztot, &
                          rsc, rhosc, vsc2, nx, ny, nz, &
                          user_source_terms, radiation_pressure, &
-                         eight_wave
+                         eight_wave, enable_self_gravity
 
   use globals,    only : dx, dy, dz, coords
 
@@ -189,7 +189,8 @@ end subroutine divbcorr_8w_source
 
 subroutine source(i,j,k,prim,s)
 
-  use user_mod, only : get_user_source_terms
+  use user_mod, only     : get_user_source_terms
+  use self_gravity, only : add_self_gravity
   implicit none
   integer, intent(in)  :: i, j, k
   real, intent(in)     :: prim(neq)
@@ -204,6 +205,8 @@ subroutine source(i,j,k,prim,s)
 
   !  user source terms (such as gravity)
   if (user_source_terms) call get_user_source_terms(prim,s,i,j,k)
+
+  if (enable_self_gravity) call add_self_gravity(i,j,k,prim,s)
 
 #ifdef PASSIVES
   !  photoionization radiation pressure
