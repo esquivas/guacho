@@ -229,32 +229,33 @@ contains
 
       if( enable_checkerboard ) then
 
-      black_red: do i_rb=1,2
+        black_red: do i_rb=1,2
 
-        jsw = i_rb
-        do k=1,nz
-          isw =jsw
-          do j=1,ny
-            do i=isw,nx,2
+          jsw = i_rb
+          do k=1,nz
+            isw =jsw
+            do j=1,ny
+              do i=isw,nx,2
 
-              call get_residue(i,j,k,xi)
-
-
-              relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( abs(phi_grav(i,j,k)), 1e-30 )
-
-              max_error_local = max(max_error_local,relative_error)
-
-              phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
+                call get_residue(i,j,k,xi)
 
 
+                relative_error  = abs( omega*xi/e_ijk ) /                      &
+                max( abs(phi_grav(i,j,k)), 1e-30 )
+
+                max_error_local = max(max_error_local,relative_error)
+
+                phi_grav(i,j,k) = phi_grav(i,j,k) - omega*xi/e_ijk
+
+
+              end do
+              isw = 3 - isw
             end do
-            isw = 3 - isw
+            jsw = 3 - jsw
           end do
-          jsw = 3 - jsw
-        end do
-      end do black_red
+        end do black_red
 
+      else
         !  This is equivalent to a Gaus Siedel method with omega = 1
         do k=1,nz
           do j=1,ny
@@ -263,7 +264,7 @@ contains
               call get_residue(i,j,k,xi)
 
               relative_error  = abs( omega*xi/e_ijk ) /                        &
-                                max( abs(phi_grav(i,j,k)), 1e-30 )
+              max( abs(phi_grav(i,j,k)), 1e-30 )
 
               max_error_local = max(max_error_local,relative_error)
 
@@ -281,7 +282,7 @@ contains
 
       if(max_error < Tol) converged = .true.
 
-      print*, max_error_local, max_error, omega
+      !print*, max_error_local, max_error, omega
 
       call phi_grav_boundaries()
 
