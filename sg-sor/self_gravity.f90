@@ -303,6 +303,11 @@ contains
   !> @brief Add self gravity sources
   !> @details Adds the sources due to the gravitationl potential, the gradient
   !> of the potential (gravityationa force), and the work done by it.
+  !> @param integer [in] i : cell index in the X direction
+  !> @param integer [in] j : cell index in the Y direction
+  !> @param integer [in] k : cell index in the Z direction
+  !> @param real [in] prim(neq) : vector of primitive variables
+  !> @param real [out] s(neq) : vector with source terms
   subroutine add_self_gravity(i,j,k,prim,s)
     use parameters, only : neq
     implicit none
