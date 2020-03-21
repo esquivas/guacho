@@ -41,7 +41,6 @@
 contains
 
 !=======================================================================
-
 !> @brief Gets position in the grid
 !> @details Gets the position and spherical radius calculated with
 !! respect to the center of the grid
@@ -53,7 +52,6 @@ contains
 !> @param real [out] z : Z position form the center of the grid (code units)
 !> @param real [out] r : Spherical radius form the center of the grid
 !! (code units)
-
 subroutine getpos(i,j,k,x,y,z,r)
 
   implicit none
@@ -69,7 +67,6 @@ subroutine getpos(i,j,k,x,y,z,r)
 end subroutine getpos
 
 !=======================================================================
-
 !> @brief Radiation pressure force
 !> @details Adds the radiaiton pressure force due to photo-ionization
 !> @param integer [in] i : cell index in the X direction
@@ -81,7 +78,6 @@ end subroutine getpos
 !> @param reak [in] rc : @f$ \sqrt{x^2+y^2+z^2} @f$
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
-
 #ifdef PASSIVES
 
 subroutine radpress_source(i,j,k,xc,yc,zc,rc,pp,s)
@@ -111,14 +107,12 @@ end subroutine radpress_source
 #endif
 
 !=======================================================================
-
 !> @brief Computes div(B)
 !> @details Computes div(B)
 !> @param integer [in] i : cell index in the X direction
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [out] d :: div(B)
-
 #ifdef BFIELD
 
 subroutine divergence_B(i,j,k,d)
@@ -136,7 +130,6 @@ end subroutine divergence_B
 #endif
 
 !=======================================================================
-
 !> @brief 8 Wave source terms for div(B) correction
 !> @details  Adds terms proportional to div B in Faraday's Law,
 !! momentum equation and energy equation as propoes in Powell et al. 1999
@@ -145,7 +138,6 @@ end subroutine divergence_B
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] pp(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
-
 #ifdef BFIELD
 
 subroutine divbcorr_8w_source(i,j,k,pp,s)
@@ -177,7 +169,6 @@ end subroutine divbcorr_8w_source
 #endif
 
 !=======================================================================
-
 !> @brief Upper level wrapper for sources
 !> @details Upper level wrapper for sources
 !! @n Main driver, this is called from the upwind stepping
@@ -186,7 +177,6 @@ end subroutine divbcorr_8w_source
 !> @param integer [in] k : cell index in the Z direction
 !> @param real [in] prim(neq) : vector of primitive variables
 !> @param real [out] s(neq) : vector with source terms
-
 subroutine source(i,j,k,prim,s)
 
   use user_mod, only     : get_user_source_terms
