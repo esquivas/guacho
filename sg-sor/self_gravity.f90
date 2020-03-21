@@ -212,10 +212,10 @@ contains
     real, parameter    :: Tol = 1E-5   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local, ph0
-    logical, parameter :: enable_chebyshev_accel = .true.
+    logical, parameter :: enable_checkerboard = .true.
     logical            :: converged
     integer            :: iter, err
-    integer            :: i_rb, isw, jsw, i, j,k, ksw, kpass, ipass
+    integer            :: i_rb, isw, jsw, i, j, k
 
     converged = .false.
     e_ijk = -( 2.0/dx**2 + 2.0/dy**2 + 2.0/dz**2 )
@@ -223,12 +223,11 @@ contains
     main_loop : do iter=1, max_iterations
 
       omega = 1.5
-      !omega = 2.0 / ( 1.0 + sin( pi/real(iter+1) ) )
 
       max_error_local = -1.0
       max_error       = 1e20
 
-      if( enable_chebyshev_accel ) then
+      if( enable_checkerboard ) then
 
       black_red: do i_rb=1,2
 
