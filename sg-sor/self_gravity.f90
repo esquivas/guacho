@@ -231,11 +231,11 @@ contains
 
       black_red: do i_rb=1,2
 
-    		jsw = i_rb
-    		do k=1,nz
-    			isw =jsw
-    			do j=1,ny
-    				do i=isw,nx,2
+        jsw = i_rb
+        do k=1,nz
+          isw =jsw
+          do j=1,ny
+            do i=isw,nx,2
 
               call get_residue(i,j,k,xi)
 
