@@ -304,9 +304,12 @@ contains
   !> @brief Add self gravity sources
   !> @details Adds the sources due to the gravitationl potential, the gradient
   !> of the potential (gravityationa force), and the work done by it.
-  subroutine add_self_gravity()
-
+  subroutine add_self_gravity(i,j,k,prim,s)
+    use parameters, only : neq
     implicit none
+    integer, intent( in) :: i, j, k
+    real,    intent( in) :: prim(neq)
+    real,    intent(out) :: s(neq)
 
   end subroutine add_self_gravity
 
