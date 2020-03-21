@@ -250,7 +250,7 @@ contains
         end do black_red
 
       else
-        !  This is equivalent to a Gaus Siedel method with omega = 1
+        !  This is equivalent to a Gauss-Siedel method with omega = 1
         do k=1,nz
           do j=1,ny
             do i=1,nx
