@@ -211,7 +211,7 @@ contains
     integer, parameter :: max_iterations=10000
     real, parameter    :: Tol = 1E-5   !  Relative error tolerance
     real               :: omega, relative_error
-    real               :: xi , max_error, e_ijk, max_error_local, ph0
+    real               :: xi , max_error, e_ijk, max_error_local
     logical, parameter :: enable_checkerboard = .true.
     logical            :: converged
     integer            :: iter, err
