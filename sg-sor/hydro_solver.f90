@@ -105,10 +105,10 @@ contains
 #endif
           endif
 
-          if (user_source_terms     .or.                                       &
-              radiation_pressure    .or.                                       &
-              eight_wave            .or.                                       &
-              enable_self_gravity  ) then
+          if (   user_source_terms     .or.                                    &
+                 radiation_pressure    .or.                                    &
+                 eight_wave            .or.                                    &
+                 enable_self_gravity       ) then
 
             call source(i,j,k,primit(:,i,j,k),s)
             up(:,i,j,k)= up(:,i,j,k) + dt*s(:)
