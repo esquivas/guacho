@@ -212,7 +212,7 @@ contains
     real, parameter    :: Tol = 1E-5   !  Relative error tolerance
     real               :: omega, relative_error
     real               :: xi , max_error, e_ijk, max_error_local
-    logical, parameter :: enable_checkerboard = .true.
+    logical, parameter :: enable_checkerboard = .false.
     logical            :: converged
     integer            :: iter, err
     integer            :: i_rb, isw, jsw, i, j, k
@@ -250,7 +250,7 @@ contains
         end do black_red
 
       else
-        
+
         !  This is equivalent to a Gauss-Siedel method with omega = 1
         do k=1,nz
           do j=1,ny
