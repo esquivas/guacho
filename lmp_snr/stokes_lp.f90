@@ -447,7 +447,10 @@ end subroutine fill_map
 !=======================================================================
 subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   use parameters, only : NBinsSEDMP
-  use globals,    only : MP_SED      , Q_MP0
+  use globals,    only : MP_SED      , Q_MP0, partID
+
+  use utilities, isInDomain
+
   implicit none
   integer, intent(in)  :: i_mp
   real,    intent(in)  :: freq_obs, Bx, By
@@ -474,8 +477,8 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
 
     if(isnan(x)) then
 
-      print*, '*****',MP_SED(1,:,i_mp),Bperp, Bx, By
-      print*, '*****',MP_SED(2,:,i_mp)
+      print*, '*****',partID(i_mp)
+      print*, isInDomain(Q_MP0(i_mp,1:3))
       print*, '=====',Q_MP0(i_mp, :)
 
     endif
