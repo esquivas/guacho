@@ -36,15 +36,14 @@ contains
 
 !> @brief Initializes data
 !> @details Initializes data, MPI and other stuff
-
 subroutine init_stokes()
 
-!  Initializes MPI, data arrays, etc
-use parameters
-use globals, only : u, dx, dy, dz, coords, rank, left, right,                  &
-                    top, bottom, out, in, rank, comm3d,                        &
-                    Q_MP0, MP_SED, P_DSA, partID, partOwner
-implicit none
+  !  Initializes MPI, data arrays, etc
+  use parameters
+  use globals, only : u, dx, dy, dz, coords, rank, left, right,                &
+                      top, bottom, out, in, rank, comm3d,                      &
+                      Q_MP0, MP_SED, P_DSA, partID, partOwner
+  implicit none
   integer :: nps, err, i, inp
   integer, dimension(0:ndim-1) :: dims
   logical, dimension(0:ndim-1) :: period
@@ -103,12 +102,11 @@ implicit none
      print '(a)' ,'*******************************************'
      print '(a)', 'Calculating Stokes Parameters'
   end if
-  call mpi_cart_create(mpi_comm_world, ndim, dims, period,.true.               &
-       , comm3d, err)
+  call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true., comm3d, err)
   call mpi_comm_rank(comm3d, rank, err)
   call mpi_cart_coords(comm3d, rank, ndim, coords, err)
-  print '(a,i3,a,3i4)', 'processor ', rank                                     &
-       ,' ready w/coords',coords(0),coords(1),coords(2)
+  print '(a,i3,a,3i4)', 'processor ', rank,                                    &
+        ' ready w/coords',coords(0),coords(1),coords(2)
   call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
   call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
   call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
