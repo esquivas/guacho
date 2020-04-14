@@ -251,6 +251,7 @@ subroutine read_data(u,itprint,filepath)
          open(unit=unitin2,file=file2,status='unknown', access='stream')
          read(unitin2) npP, N_MPP, i_activeP, NBinsSEDMPP
          n_activeMP = i_activeP
+         print*,'*****', npP, N_MPP, i_activeP, NBinsSEDMPP
          do i_mp=1,i_activeP
            read(unitin2) partID(i_mp)
            read(unitin2) Q_MP0(i_mp,1:3)
