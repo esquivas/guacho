@@ -449,7 +449,7 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   use parameters, only : NBinsSEDMP
   use globals,    only : MP_SED      , Q_MP0, partID
 
-  use utilities, isInDomain
+  use utilities, only : isInDomain
 
   implicit none
   integer, intent(in)  :: i_mp
