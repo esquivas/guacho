@@ -549,6 +549,7 @@ subroutine getBessels(x, F, G)
       log10(x/stokesTab(1,1))/log10(stokesTab(1,nTabLines)/stokesTab(1,1)) )
   !i = max(i,    1      )
   !i = min(i,nTabLines-1)
+  if (i < 1) print*, i, x, stokesTab(1,1), stokesTab(1,nTabLines)
   if (i==nTabLines-1) then
     F = stokesTab(2,i+1)
     G = stokesTab(3,i+1)
