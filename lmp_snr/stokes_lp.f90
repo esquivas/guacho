@@ -121,67 +121,67 @@ implicit none
   print '(a)', 'Calculating Stokes Parameters'
 #endif
 
-!   grid spacing
+  !   grid spacing
   dx=xmax/nxtot
   dy=ymax/nytot
   dz=zmax/nztot
 
-!   allocate big arrays in memory
+  !   allocate big arrays in memory
 
-!  MHD
-allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+  !  MHD
+  allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
-!  LP
-if (lmp_distf) then
-  allocate( Q_MP0(N_MP,12) )
-  !Q_MP0(i, eq) has the following info:
-  ! eq = 1-3 : x, y, z
-  ! eq = 4-6 : vx, vy, vz
-  ! eq = 7   : b**2/2 = (bx**2+by**2+bz**2)/2
-  ! eq = 8   : rho
-  ! eq = 9   : P
-  ! eq = 10  : shock flag (1 if shocked)
-  ! eq = 11  : compression ratio (does not reset)
-  ! eq = 12  : angle between the shock normal and the preshock field
-  allocate( MP_SED(2,NBinsSEDMP,N_MP) )
-  ! MP_SED(1,:,i) :  Energy (Lagrangian) bins
-  ! MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
-  allocate( P_DSA(N_MP,2,8))
-  ! P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
-  ! P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
-  allocate( partID   (N_MP) )  ! Individual particle identifier
-  allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
+  !  LP
+  if (lmp_distf) then
+    allocate( Q_MP0(N_MP,12) )
+    !Q_MP0(i, eq) has the following info:
+    ! eq = 1-3 : x, y, z
+    ! eq = 4-6 : vx, vy, vz
+    ! eq = 7   : b**2/2 = (bx**2+by**2+bz**2)/2
+    ! eq = 8   : rho
+    ! eq = 9   : P
+    ! eq = 10  : shock flag (1 if shocked)
+    ! eq = 11  : compression ratio (does not reset)
+    ! eq = 12  : angle between the shock normal and the preshock field
+    allocate( MP_SED(2,NBinsSEDMP,N_MP) )
+    ! MP_SED(1,:,i) :  Energy (Lagrangian) bins
+    ! MP_SED(1,:,i) :  Number of MP with Energy E_i +- Delta E
+    allocate( P_DSA(N_MP,2,8))
+    ! P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
+    ! P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
+    allocate( partID   (N_MP) )  ! Individual particle identifier
+    allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
 
-  do inp=0,np-1  ! take turns to read tables
-    if (rank==inp) then
+    do inp=0,np-1  ! take turns to read tables
+      if (rank==inp) then
 
-      open(unit=10,file= trim(workdir)//'../src/LPlib/SynchroBessels.tab',     &
-          status='old')
-       read(10,*) nTabLines
-       !print*, nlines
-       allocate(stokesTab(3,nTabLines))
+        open(unit=10,file= trim(workdir)//'../src/LPlib/SynchroBessels.tab',   &
+             status='old')
+        read(10,*) nTabLines
+        !print*, nlines
+        allocate(stokesTab(3,nTabLines))
 
-       do i=1,nTabLines
-         read(10,*) xTab, fTab, gTab
-         stokesTab(1,i)=xTab
-         stokesTab(2,i)=fTab
-         stokesTab(3,i)=gTab
-       end do
+        do i=1,nTabLines
+          read(10,*) xTab, fTab, gTab
+          stokesTab(1,i)=xTab
+          stokesTab(2,i)=fTab
+          stokesTab(3,i)=gTab
+        end do
 
-       close(unit=10)
-       print*, 'rank: ',rank,'  nTablines: ',nTabLines
-     end if
+        close(unit=10)
+        print*, 'rank: ',rank,'  nTablines: ',nTabLines
+      end if
 #ifdef MPIP
-     call mpi_barrier(mpi_comm_world, err)
+      call mpi_barrier(mpi_comm_world, err)
 #endif
 
-   end do
+    end do
 
-else
-  print '(a)', "The SED of the Lagraingian particles is not enabled"
-  call mpi_finalize(err)
-  stop
-end if
+  else
+    print '(a)', "The SED of the Lagraingian particles is not enabled"
+    call mpi_finalize(err)
+    stop
+  end if
 
 end subroutine init_stokes
 
