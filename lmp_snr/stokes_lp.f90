@@ -651,7 +651,7 @@ program stokes_lp
 
   freq_obs  =  1.40e9 !< frequency of observation (Hz)
 
-  loop_over_outputs : do itprint=0,10
+  loop_over_outputs : do itprint=3,10
 
     !  read MHD and particles data
     call read_data(u,itprint,filepath)
