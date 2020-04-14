@@ -251,7 +251,6 @@ subroutine read_data(u,itprint,filepath)
          open(unit=unitin2,file=file2,status='unknown', access='stream')
          read(unitin2) npP, N_MPP, i_activeP, NBinsSEDMPP
          n_activeMP = i_activeP
-         print*,'*****', npP, N_MPP, i_activeP, NBinsSEDMPP
          do i_mp=1,i_activeP
            read(unitin2) partID(i_mp)
            read(unitin2) Q_MP0(i_mp,1:3)
@@ -448,10 +447,7 @@ end subroutine fill_map
 !=======================================================================
 subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   use parameters, only : NBinsSEDMP
-  use globals,    only : MP_SED      , Q_MP0, partID
-
-  use utilities, only : isInDomain
-
+  use globals,    only : MP_SED
   implicit none
   integer, intent(in)  :: i_mp
   real,    intent(in)  :: freq_obs, Bx, By
@@ -669,7 +665,7 @@ program stokes_lp
 
   freq_obs  =  1.40e9 !< frequency of observation (Hz)
 
-  loop_over_outputs : do itprint=10,10
+  loop_over_outputs : do itprint=0,10
 
     !  read MHD and particles data
     call read_data(u,itprint,filepath)
