@@ -475,6 +475,7 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
     if(isnan(x)) then
 
       print*, '*****',MP_SED(1,:,i_mp),Bperp, Bx, By
+      print*, '*****',MP_SED(2,:,i_mp)
       print*, '=====',Q_MP0(i_mp, :)
 
     endif
