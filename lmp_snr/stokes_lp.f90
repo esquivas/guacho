@@ -471,7 +471,13 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
 
     !x = xconst*freq_obs / (x0*x1*Bperp)
     x = xconst*freq_obs / (MP_SED(1,ibin  ,i_mp)**2*Bperp)
-    if(isnan(x)) print*, '*****',MP_SED(1,ibin  ,i_mp),Bperp
+
+    if(isnan(x)) then
+
+      print*, '*****',MP_SED(1,ibin  ,i_mp),Bperp, Q_MP0(i_mp, :)
+
+    endif
+
     call getBessels(x, F, G)
     Fsyn0 = MP_SED(2,ibin  ,i_mp)*F
     Fpol0 = MP_SED(2,ibin  ,i_mp)*G
