@@ -481,6 +481,7 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
       I = 0.0
       Q = 0.0
       Y = 0.0
+      return
       
     endif
 
