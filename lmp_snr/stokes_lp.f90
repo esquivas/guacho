@@ -477,10 +477,11 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
 
     if(isnan(x)) then
 
-      print*, '*****',partID(i_mp)
-      print*, isInDomain(Q_MP0(i_mp,1:3))
-      print*, '=====',Q_MP0(i_mp, :)
-
+      print*, 'Invalid SED for particle', i_mp, ' ignoring it'
+      I = 0.0
+      Q = 0.0
+      Y = 0.0
+      
     endif
 
     call getBessels(x, F, G)
