@@ -171,6 +171,10 @@ if (lmp_distf) then
        close(unit=10)
        print*, 'rank: ',rank,'  nTablines: ',nTabLines
      end if
+#ifdef MPIP
+     call mpi_barrier(mpi_comm_world, err)
+#endif
+
    end do
 
 else
