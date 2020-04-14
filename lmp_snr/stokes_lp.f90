@@ -480,9 +480,9 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
       print*, 'Invalid SED for particle', i_mp, ' ignoring it'
       I = 0.0
       Q = 0.0
-      Y = 0.0
+      U = 0.0
       return
-      
+
     endif
 
     call getBessels(x, F, G)
