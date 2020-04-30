@@ -302,7 +302,7 @@ contains
   !> @param integer [in] j : cell index in the Y direction
   !> @param integer [in] k : cell index in the Z direction
   subroutine get_user_source_terms(pp,s, i, j , k)
-    use parameters, only : neq
+    use parameters, only : neq, nxtot, nytot, nztot, nx, ny, nz
     use globals,    only : dx, dy, dz, coords
     implicit none
     real, intent(in)   :: pp(neq)
