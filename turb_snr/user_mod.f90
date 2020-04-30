@@ -70,7 +70,7 @@ contains
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     !logical ::  isInDomain
     integer :: i,j,k,ip, err
-    real, allocatable   :: data(:,:,:,:)
+    real (kind=4),  allocatable   :: data(:,:,:,:)
     real, parameter     :: rho_env=0.005, T_env=1000.0/Tempsc, B_env=2.e-6/bsc
     ! real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
@@ -113,7 +113,6 @@ contains
               read(14) data(5,i,j,k)
               read(15) data(6,i,j,k)
               read(16) data(7,i,j,k)
-
             end do
           end do
         end do
@@ -131,15 +130,15 @@ contains
           do j=1,ny
             do i=1,nx
               !  density
-              u(1,i,j,k) = data(1,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * rho_env
+              u(1,i,j,k) = real( data(1,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * rho_env
               !  momenta
-              u(2,i,j,k) = data(2,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
-              u(3,i,j,k) = data(3,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
-              u(4,i,j,k) = data(4,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
+              u(2,i,j,k) = real( data(2,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
+              u(3,i,j,k) = real( data(3,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
+              u(4,i,j,k) = real( data(4,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
               !  B field
-              u(6,i,j,k) = data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
-              u(7,i,j,k) = data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
-              u(8,i,j,k) = data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
+              u(6,i,j,k) = real( data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
+              u(7,i,j,k) = real( data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
+              u(8,i,j,k) = real( data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
               !  Total energy
               u(5,i,j,k) = 0.5*( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2 )/ u(1,i,j,k) &                                    &
                          + 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )  &
