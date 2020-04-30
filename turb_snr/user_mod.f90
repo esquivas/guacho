@@ -154,7 +154,7 @@ contains
       call mpi_barrier(comm3d, err)
 
     end do
-
+    deallocate(data)
 
     xc = 12.* pc/rsc
     yc = 12.* pc/rsc
