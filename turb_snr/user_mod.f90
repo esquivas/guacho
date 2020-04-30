@@ -267,12 +267,12 @@ contains
   !> @param integer [in] order : order (mum of cells to be filled in case
   !> domain boundaries are being set)
   subroutine impose_user_bc(u,order)
-    use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, tsc
-    use globals,    only: time, dt_CFL
-    implicit none
-    real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-    integer, intent(in)  :: order
-    integer              :: i, j, k
+    ! use parameters, only:  neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, tsc
+    ! use globals,    only: time, dt_CFL
+    ! implicit none
+    ! real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    ! integer, intent(in)  :: order
+    ! integer              :: i, j, k
 
   end subroutine impose_user_bc
 
@@ -287,11 +287,11 @@ contains
   !> @param integer [in] j : cell index in the Y direction
   !> @param integer [in] k : cell index in the Z direction
   subroutine get_user_source_terms(pp,s, i, j , k)
-    use parameters, only : neq, NBinsSEDMP
-    implicit none
-    real, intent(in)   :: pp(neq)
-    real, intent(out)  :: s(neq)
-    integer :: i, j, k
+    ! use parameters, only : neq, NBinsSEDMP
+    ! implicit none
+    ! real, intent(in)   :: pp(neq)
+    ! real, intent(out)  :: s(neq)
+    ! integer :: i, j, k
 
   end subroutine get_user_source_terms
 
