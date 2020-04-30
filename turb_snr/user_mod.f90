@@ -271,7 +271,6 @@ contains
     use globals,    only: time, dt_CFL
     implicit none
     real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-    real, save           :: w(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     integer, intent(in)  :: order
     integer              :: i, j, k
 
