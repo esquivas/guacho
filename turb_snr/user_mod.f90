@@ -85,15 +85,16 @@ contains
     real    :: weights(8), rhoI
 
     !ENVIRONMENT  (Read data anf fill only physical domain)
-    allocate (  rho(nxtot,nytot,nztot) )
-    allocate ( velx(nxtot,nytot,nztot) )
-    allocate ( vely(nxtot,nytot,nztot) )
-    allocate ( velz(nxtot,nytot,nztot) )
-    allocate ( magx(nxtot,nytot,nztot) )
-    allocate ( magy(nxtot,nytot,nztot) )
-    allocate ( magz(nxtot,nytot,nztot) )
     do ip=0, np-1
       if(rank == ip) then
+
+        allocate (  rho(nxtot,nytot,nztot) )
+        allocate ( velx(nxtot,nytot,nztot) )
+        allocate ( vely(nxtot,nytot,nztot) )
+        allocate ( velz(nxtot,nytot,nztot) )
+        allocate ( magx(nxtot,nytot,nztot) )
+        allocate ( magy(nxtot,nytot,nztot) )
+        allocate ( magz(nxtot,nytot,nztot) )
 
         ! Read entire input
         open(unit=10,file='/storage2/esquivel/turb-mhd-sims/b1p.01/dens.bin',  &
@@ -141,7 +142,8 @@ contains
             end do
           end do
         end do
-
+        
+        deallocate(rho, velx, vely, velz, magx, magy, magz)
         print*, 'rank: ', rank, ' finished reading turbulent ICs from disk'
 
       end if
@@ -149,7 +151,7 @@ contains
       call mpi_barrier(comm3d, err)
 
     end do
-    deallocate(rho, velx, vely, velz, magx, magy, magz)
+
 
     xc = 12.* pc/rsc
     yc = 12.* pc/rsc
