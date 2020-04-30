@@ -85,7 +85,13 @@ contains
     real    :: weights(8), rhoI
 
     !ENVIRONMENT  (Read data anf fill only physical domain)
-    allocate (data(7,nxtot,nytot,nztot))
+    allocate (  rho(nxtot,nytot,nztot) )
+    allocate ( velx(nxtot,nytot,nztot) )
+    allocate ( vely(nxtot,nytot,nztot) )
+    allocate ( velz(nxtot,nytot,nztot) )
+    allocate ( magx(nxtot,nytot,nztot) )
+    allocate ( magy(nxtot,nytot,nztot) )
+    allocate ( magz(nxtot,nytot,nztot) )
     do ip=0, np-1
       if(rank == ip) then
 
@@ -143,7 +149,7 @@ contains
       call mpi_barrier(comm3d, err)
 
     end do
-    deallocate(data)
+    deallocate(rho, velx, vely, velz, magx, magy, magz)
 
     xc = 12.* pc/rsc
     yc = 12.* pc/rsc
