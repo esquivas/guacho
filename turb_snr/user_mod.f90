@@ -317,7 +317,7 @@ contains
 
     ! this is here only to avoid comppiling warnings
     stop 'Trying to add user_source terms, not implemented'
-    ss(:) = pp(:)
+    s(:) = pp(:)
 
   end subroutine get_user_source_terms
 
