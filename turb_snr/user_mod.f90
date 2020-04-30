@@ -59,30 +59,101 @@ contains
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,      &
           pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
           gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP,            &
-          np, xmax, ymax, zmax, vsc2, bsc
+          np, xmax, ymax, zmax, vsc2, vsc, bsc, np
 
     use globals,    only : coords, dx ,dy ,dz, rank,                           &
-                           Q_MP0, partID, partOwner, n_activeMP, MP_SED
+                           Q_MP0, partID, partOwner, n_activeMP, MP_SED, comm3d
     use constants,  only : pi, eV
     use lmp_module, only : interpBD
     use utilities,  only : isInDomain
     implicit none
-    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    real, intent(out) :: u(neq,nxmin,nymin:nymax,nzmin:nzmax)
     !logical ::  isInDomain
-    integer :: i,j,k
-    real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
+    integer :: i,j,k,ip, err
+    real, allocatable   :: data(:,:,:,:)
+    real, parameter     :: rho_env=0.005, T_env=1000.0/Tempsc, B_env=2.e-6/bsc
+    ! real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
     real    :: pos(3)
     !  initial MP spectra parameters
     real    :: emin, emax, deltaE, gamma_lmp, N0, chi0
     logical, parameter :: uniform = .false. ! place the MPs uniformly
-    real    :: rho_env, T_env, B_env, xc, yc, zc
+    real    :: xc, yc, zc
     integer :: ind(3), l
     real    :: weights(8), rhoI
 
-    !ENVIRONMENT
-     
+    !ENVIRONMENT  (Read data anf fill only physical domain)
+    allocate (data(7,nxtot,nytot,nztot))
+    do ip=0, np-1
+      if(rank == ip) then
 
+        ! Read entire input
+        open(unit=10,file='/storage2/esquivel/turb-mhd-sims/b1p.01/dens.bin',  &
+             access='stream')
+        open(unit=11,file='/storage2/esquivel/turb-mhd-sims/b1p.01/velx.bin',  &
+             access='stream')
+        open(unit=12,file='/storage2/esquivel/turb-mhd-sims/b1p.01/vely.bin',  &
+             access='stream')
+        open(unit=13,file='/storage2/esquivel/turb-mhd-sims/b1p.01/velz.bin',  &
+             access='stream')
+        open(unit=14,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magx.bin',  &
+             access='stream')
+        open(unit=15,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magy.bin',  &
+             access='stream')
+        open(unit=16,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magz.bin',  &
+             access='stream')
+
+        do k=1,nztot
+          do j=1,nytot
+            do i=1,nxtot
+              read(10) data(1,i,j,k)
+              read(11) data(2,i,j,k)
+              read(12) data(3,i,j,k)
+              read(13) data(4,i,j,k)
+              read(14) data(5,i,j,k)
+              read(15) data(6,i,j,k)
+              read(16) data(7,i,j,k)
+
+            end do
+          end do
+        end do
+
+        close(10)
+        close(11)
+        close(12)
+        close(13)
+        close(14)
+        close(15)
+        close(16)
+
+        !   Fill physical domain
+        do k=1,nz
+          do j=1,ny
+            do i=1,nx
+              !  density
+              u(1,i,j,k) = data(1,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * rho_env
+              !  momenta
+              u(2,i,j,k) = data(2,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
+              u(3,i,j,k) = data(3,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
+              u(4,i,j,k) = data(4,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
+              !  B field
+              u(6,i,j,k) = data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
+              u(7,i,j,k) = data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
+              u(8,i,j,k) = data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
+              !  Total energy
+              u(5,i,j,k) = 0.5*( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2 )/ u(1,i,j,k) &                                    &
+                         + 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )  &
+                         + cv * u(1,i,j,k) * T_env
+
+            end do
+          end do
+        end do
+
+      end if
+
+      call mpi_barrier(comm3d, err)
+
+    end do
 
 
     xc = 12.* pc/rsc
@@ -90,6 +161,7 @@ contains
     zc = 12.* pc/rsc
 
     call impose_snr(u,xc,yc,zc)
+
 
     !  TRACER PARTICLES
     !  initialize Owners (-1 means no body has claimed the particle)
