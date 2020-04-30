@@ -76,7 +76,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> CHEM              : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_ADIABATIC
+  integer, parameter :: eq_of_state = EOS_SINGLE_SPECIE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -168,7 +168,7 @@ module parameters
   real, parameter :: xphys=24.*pc     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv=10./3.         !gamma=1.5 !< Specific heat at constant volume (/R)
+  real, parameter :: cv=1.5         !gamma=1.5 !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
 
