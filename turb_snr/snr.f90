@@ -55,7 +55,7 @@ subroutine impose_snr(u, xc, yc, zc)
   real, intent(inout) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   real, intent(in)    :: xc, yc, zc
   integer :: i, j, k
-  real    :: x, y, z, r,  dens, vr, Eth
+  real    :: x, y, z, r,  dens, vr, Eth, Emag
 
  !   inside SN (converted to code units)
   dens=(3./4./pi)*Msn/(Rsn**3)/rhosc
@@ -77,12 +77,12 @@ subroutine impose_snr(u, xc, yc, zc)
 
           ! |v(r)| in code units
           vr=(R/Rsn)*Sqrt(10.*chi*Esn/(3.*Msn)) / vsc
-
+          Emag = 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )
           u(1,i,j,k)= dens
           u(2,i,j,k)= dens*vr*(x-xc) / r
           u(3,i,j,k)= dens*vr*(y-yc) / r
           u(4,i,j,k)= dens*vr*(z-yc) / r
-          u(5,i,j,k)= 0.5*dens*vr**2 + Eth
+          u(5,i,j,k)= 0.5*dens*vr**2 + Eth + Emag
 
         endif
 
