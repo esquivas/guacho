@@ -137,9 +137,9 @@ contains
               u(3,i,j,k) = data(3,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
               u(4,i,j,k) = data(4,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * u(1,i,j,k)
               !  B field
-              u(6,i,j,k) = data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
-              u(7,i,j,k) = data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
-              u(8,i,j,k) = data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * Benv
+              u(6,i,j,k) = data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
+              u(7,i,j,k) = data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
+              u(8,i,j,k) = data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz) * B_env
               !  Total energy
               u(5,i,j,k) = 0.5*( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2 )/ u(1,i,j,k) &                                    &
                          + 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )  &
