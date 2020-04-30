@@ -276,13 +276,13 @@ contains
     integer, intent(in)  :: order
     integer              :: i, j, k
 
+    ! this is here only to avoid comppiling warnings
     stop 'Trying to add user_source BC, not enabled'
 
     if (order >=1 ) then
       do k=nzmin, nzmax
         do j=nymin,nymax
           do i=nxmin,nxmax
-            ! this is here only to avoid comppiling warnings
             u(:,i,j,k) = 0.0
           end do
         end do
@@ -310,13 +310,13 @@ contains
     real    :: x, y, z
     integer :: i, j, k
 
+    ! this is here only to avoid comppiling warnings
+    stop 'Trying to add user_source terms, not implemented'
+
     !   get cell position
     x = ( real(i+coords(0)*nx-nxtot/2) - 0.5 )*dx
     y = ( real(j+coords(1)*ny-nytot/2) - 0.5 )*dy
     z = ( real(k+coords(2)*nz-nztot/2) - 0.5 )*dz
-
-    ! this is here only to avoid comppiling warnings
-    stop 'Trying to add user_source terms, not implemented'
     s(:) = pp(:)
 
   end subroutine get_user_source_terms
