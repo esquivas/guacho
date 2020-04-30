@@ -79,27 +79,11 @@ contains
     real    :: rho_env, T_env, B_env, xc, yc, zc
     integer :: ind(3), l
     real    :: weights(8), rhoI
-    !---------------------------------------------------------------------------
-    !       HIDRODINAMICA : MEDIO AMBIENTE
-    !       BLAST PROBLEM
-    !       (high Order Finite Difference and Finite Volume WENO Schemes
-    !       and Discontinuous Galerkin Methodsfor CFDChi-Wang Shu)
-    !---------------------------------------------------------------------------
 
     !ENVIRONMENT
+     
 
-    rho_env = 0.005   !this is rho/rhosc
-    T_env   = 1000./Tempsc
-    B_env   = 2.e-6/bsc
 
-    u(1,:,:,:) = rho_env
-    u(2,:,:,:) = 0.
-    u(3,:,:,:) = 0.
-    u(4,:,:,:) = 0.
-    u(5,:,:,:) = cv*rho_env*T_env
-    u(6,:,:,:) = 0.
-    u(7,:,:,:) = B_env
-    u(8,:,:,:) = 0.
 
     xc = 12.* pc/rsc
     yc = 12.* pc/rsc
