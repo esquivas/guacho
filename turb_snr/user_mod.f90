@@ -149,6 +149,8 @@ contains
           end do
         end do
 
+        print*, 'rank: ', rank, ' finished reading turbulent ICs from disk'
+
       end if
 
       call mpi_barrier(comm3d, err)
