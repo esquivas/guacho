@@ -70,7 +70,9 @@ contains
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     !logical ::  isInDomain
     integer :: i,j,k,ip, err
-    real (kind=4),  allocatable   :: data(:,:,:,:)
+    real (kind=4),  allocatable   :: rho(:,:,:),  velx(:,:,:), vely(:,:,:),    &
+                                     velz(:,:,:), magx(:,:,:), magy(:,:,:),    &
+                                     magz(:,:,:)
     real, parameter     :: rho_env=0.005, T_env=1000.0/Tempsc, B_env=2.e-6/bsc
     ! real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
@@ -103,27 +105,13 @@ contains
         open(unit=16,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magz.bin',  &
              access='stream')
 
-        do k=1,nztot
-          do j=1,nytot
-            do i=1,nxtot
-              read(10) data(1,i,j,k)
-              read(11) data(2,i,j,k)
-              read(12) data(3,i,j,k)
-              read(13) data(4,i,j,k)
-              read(14) data(5,i,j,k)
-              read(15) data(6,i,j,k)
-              read(16) data(7,i,j,k)
-            end do
-          end do
-        end do
-
-        close(10)
-        close(11)
-        close(12)
-        close(13)
-        close(14)
-        close(15)
-        close(16)
+        read(10) rho  ; close(10)
+        read(11) velx ; close(11)
+        read(12) vely ; close(12)
+        read(13) velz ; close(13)
+        read(14) magx ; close(14)
+        read(15) magy ; close(15)
+        read(16) magz ; close(16)
 
         !   Fill physical domain
         do k=1,nz
