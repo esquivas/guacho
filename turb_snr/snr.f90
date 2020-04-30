@@ -30,7 +30,7 @@ module snr
   implicit none
   !   SN parameters
   real :: Esn = 1.e51    !<  Energy in the SN
-  real :: Rsn = 3.0*pc   !<  Initial radius of the SN
+  real :: Rsn = 1.0*pc   !<  Initial radius of the SN
   real :: Msn = 1.4*Msun !<  Mass inside Rsn
   real, parameter :: chi =0.5       !<  Fraction of kinetic to total energy
 
@@ -46,8 +46,8 @@ contains
 !--------------------------------------------------------------------
 
 subroutine impose_snr(u, xc, yc, zc)
-  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         nxtot, nytot, nztot, neq, nx, ny, nz, &
+  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax,             &
+                         nxtot, nytot, nztot, neq, nx, ny, nz,                 &
                          rsc, rhosc, vsc, Psc
   use globals,    only : dx, dy, dz, coords
   use constants,  only : pi
