@@ -118,15 +118,15 @@ contains
           do j=1,ny
             do i=1,nx
               !  density
-              u(1,i,j,k) = real( data(1,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * rho_env
+              u(1,i,j,k) = real(  rho(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * rho_env
               !  momenta
-              u(2,i,j,k) = real( data(2,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
-              u(3,i,j,k) = real( data(3,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
-              u(4,i,j,k) = real( data(4,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
+              u(2,i,j,k) = real( velx(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
+              u(3,i,j,k) = real( vely(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
+              u(4,i,j,k) = real( velz(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * u(1,i,j,k)
               !  B field
-              u(6,i,j,k) = real( data(5,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
-              u(7,i,j,k) = real( data(6,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
-              u(8,i,j,k) = real( data(7,i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
+              u(6,i,j,k) = real( magx(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
+              u(7,i,j,k) = real( magy(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
+              u(8,i,j,k) = real( magz(i+coords(0)*nx,j+coords(1)*ny,k+coords(2)*nz), 8 ) * B_env
               !  Total energy
               u(5,i,j,k) = 0.5*( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2 )/ u(1,i,j,k) &                                    &
                          + 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )  &
