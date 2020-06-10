@@ -28,10 +28,11 @@
 !> The sources are added in 'sources.f90'
 module self_gravity
   use constants, only : pi, Ggrav
+  use parameters, only : rhosc, tsc
   implicit none
 
   real, allocatable :: phi_grav(:,:,:)
-  real, parameter   :: four_pi_G = 4.*pi*Ggrav
+  real, parameter   :: four_pi_G = 4.*pi*Ggrav/(rhosc*tsc**2)
 
 contains
 
