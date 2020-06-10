@@ -178,7 +178,6 @@ contains
 
   end subroutine phi_grav_boundaries
 
-
   ! ======================================================================
   !> @brief Computes residue in a given cell
   !> @details Computes the residue at a given cell from the density taken from
