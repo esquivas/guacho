@@ -95,7 +95,7 @@ contains
 
 #else
 
-    !   periodic BCs
+    !   periodic BCs (no MPI)
     if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
       !   Left BC
       if (coords(0).eq.0) then
@@ -116,62 +116,65 @@ contains
       if (coords(1).eq.MPI_NBY-1) then
         phi_grav(:,nyp1,:)= phi_grav(:,1,:)
       end if
+    end if
 
-      if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
-        !   out BC
-        if (coords(2).eq.0) then
-          phi_grav(:,:,0)= phi_grav(:,:,nz)
-        end if
-        !   in BC
-        if (coords(2).eq.MPI_NBZ-1) then
-          phi_grav(:,:,nzp1)= phi_grav(:,:,1)
-        end if
+    if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
+      !   out BC
+      if (coords(2).eq.0) then
+        phi_grav(:,:,0)= phi_grav(:,:,nz)
       end if
+      !   in BC
+      if (coords(2).eq.MPI_NBZ-1) then
+        phi_grav(:,:,nzp1)= phi_grav(:,:,1)
+      end if
+    end if
 
 #endif
 
     !   outflow BCs
     !   left
     if (bc_left == BC_OUTFLOW) then
-      if (coords(0).eq.0) then
+      if ( coords(0) == 0 ) then
         phi_grav(0,:,:)=phi_grav(1,:,:)
       end if
     end if
 
     !   right
     if (bc_right == BC_OUTFLOW) then
-      if (coords(0).eq.MPI_NBX-1) then
+      if ( coords(0) == (MPI_NBX-1) ) then
         phi_grav(nxp1,:,:)=phi_grav(nx,:,:)
       end if
     end if
 
     !   bottom
     if (bc_bottom == BC_OUTFLOW) then
-      if (coords(1).eq.0) then
+      if ( coords(1) == 0 ) then
         phi_grav(:,0,:)=phi_grav(:,1 ,:)
       end if
     end if
 
     !   top
     if (bc_top == BC_OUTFLOW) then
-      if (coords(1).eq.MPI_NBY-1) then
+      if ( coords(1) == (MPI_NBY-1) ) then
         phi_grav(:,nyp1,:)=phi_grav(:,ny,:)
       end if
     end if
 
     !   out
     if (bc_out == BC_OUTFLOW) then
-      if (coords(2).eq.0) then
+      if ( coords(2) == 0 ) then
         phi_grav(:,:,0)=phi_grav(:,:,1 )
       end if
     end if
 
     !   in
     if (bc_in == BC_OUTFLOW) then
-      if (coords(2).eq.MPI_NBZ-1) then
+      if ( coords(2) == (MPI_NBZ-1) ) then
         phi_grav(:,:,nzp1)=phi_grav(:,:,nz)
       end if
     end if
+
+    return
 
   end subroutine phi_grav_boundaries
 
