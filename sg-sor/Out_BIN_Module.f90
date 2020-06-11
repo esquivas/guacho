@@ -214,7 +214,7 @@ subroutine write_BIN(itprint)
        do i=1,nx
          do j=1,ny
            do k=1,nz
-              rho_grav(i,j,k) =  -                                             &
+              rho_grav(i,j,k) =                                                &
           (   ( phi_grav(i+1,j  ,k  ) + phi_grav(i-1,j  ,k  ) - 2.*phi_grav(i,j,k) ) / dx**2   &
            +  ( phi_grav(i  ,j+1,k  ) + phi_grav(i  ,j-1,k  ) - 2.*phi_grav(i,j,k) ) / dy**2   &
            +  ( phi_grav(i  ,j  ,k+1) + phi_grav(i  ,j  ,k-1) - 2.*phi_grav(i,j,k) ) / dz**2  )&
