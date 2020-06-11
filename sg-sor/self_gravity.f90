@@ -32,7 +32,7 @@ module self_gravity
   implicit none
 
   real, allocatable :: phi_grav(:,:,:)
-  real, parameter   :: four_pi_G = 4.*pi*Ggrav/(rhosc*tsc**2)
+  real, parameter   :: four_pi_G = 4.*pi*Ggrav*(rhosc*tsc**2) !x Gsc = 1/(1/Gsc)
 
 contains
 
