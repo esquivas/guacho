@@ -40,3 +40,6 @@ En el guacho
 
 - buscar alguna prueba en la literatura que se pueda reproducir (algo vi del
   colapso de una nube con rotacion?)
+
+- agregar soporte para warmstart sin necesidad de siempre calcular el phi desde
+  cero
