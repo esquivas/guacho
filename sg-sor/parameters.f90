@@ -189,7 +189,7 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc = rsc/vsc          !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !<  magnetic field scaling
 
   !> Maximum integration time
   real, parameter :: tmax    = 3.8*day/tsc
