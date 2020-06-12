@@ -33,6 +33,7 @@ En el guacho
     verificar unidades
 
 *** 3- agregar en el output que escriba grav_phi
+
 *** 4- mandar llamar solve poisson a partir de las primitivas (dentro de step
    en hydro_solver.f90)
 
