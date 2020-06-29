@@ -26,7 +26,7 @@ En el guacho
 *** 1- inicializar modulo (allocatear variables globales llamr desde init.f90
 *** 2- mandar llamar solve_poison desde el main (precalcular la phi)
       escribir en pantalla el progreso (iteraciones) y verificar convergencia
-*** 3 - modificar output
+*** 3- modificar output
 
 *** Aca ya se pueden hacer pruebas de que la phi sea la buena, se puede escribir
     a disco el laplaciano de phi y comparar con la densidad, esto ayuda a
@@ -44,3 +44,13 @@ En el guacho
 
 - agregar soporte para warmstart sin necesidad de siempre calcular el phi desde
   cero
+
+Lista de archivos fuente que han sido modificados:
+  self_gravity.f90   : agregado
+  Makefile           : *** cambios ya estan integrados al template en blanco
+  Out_BIN_Module.f90 : incorporar los cambios a 'src', pero no lo de 'radpress'
+  hydro_solver.f90   : revisar dependencia con hrate.f90 antes de incoporar a 'src'
+  init.f90           : incorporar al src sin 'radpress'
+  main.f90           : se puede mover al src 'as is'
+  parameters.f90     : *** cambios ya integrados al template en blanco
+  sources.f90        : *** incorporar al src sin 'radpress'
