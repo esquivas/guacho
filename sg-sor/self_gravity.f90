@@ -32,6 +32,7 @@ module self_gravity
   implicit none
 
   real, allocatable :: phi_grav(:,:,:)
+  real, parameter   :: grad_phi_grav(:,:,:,:)
   real, parameter   :: four_pi_G = 4.*pi*Ggrav*(rhosc*tsc**2) !x Gsc = 1/(1/Gsc)
 
 contains
@@ -45,6 +46,7 @@ contains
     implicit none
     !  allocate one ghost cell (needed for gradient/laplacian)
     allocate( phi_grav(0:nx+1,0:ny+1,0:nz+1) )
+    allocate( grad_phi_grav(3,nx,ny,nz) )
 
   end subroutine init_self_gravity
 
@@ -284,6 +286,18 @@ contains
       if(converged) then
         if (rank == master) print'(a,i0,a,es12.5)', 'SOR converged in ', iter, &
                                     ' iterations with an error of', max_error
+
+        ! compute grad(phi)
+        do k=1,nz
+          do j=1,ny
+            do i=1,nx
+              grad_phi_grav(1,i,j,k)= ( phi_grav(i+1,j,k)-phi_grav(i-1,j,k) ) /(2.0*dx)
+              grad_phi_grav(2,i,j,k)= ( phi_grav(i,j+1,k)-phi_grav(i,j-1,k) ) /(2.0*dy)
+              grad_phi_grav(3,i,j,k)= ( phi_grav(i,j,k+1)-phi_grav(i,j,k-1) ) /(2.0*dz)
+            end do
+          end do
+        end do
+
         return
       end if
 
@@ -292,6 +306,16 @@ contains
     if(rank==master) print'(a,i0,a,es12.5)',                                   &
                                  'SOR exceeded maximum number of iterations ', &
                                   max_iterations, ' with an error of', max_error
+    ! compute grad(phi)
+    do k=1,nz
+      do j=1,ny
+        do i=1,nx
+          grad_phi_grav(1,i,j,k)= ( phi_grav(i+1,j,k)-phi_grav(i-1,j,k) ) /(2.0*dx)
+          grad_phi_grav(2,i,j,k)= ( phi_grav(i,j+1,k)-phi_grav(i,j-1,k) ) /(2.0*dy)
+          grad_phi_grav(3,i,j,k)= ( phi_grav(i,j,k+1)-phi_grav(i,j,k-1) ) /(2.0*dz)
+        end do
+      end do
+    end do
 
   end subroutine solve_poisson
 
@@ -310,6 +334,15 @@ contains
     integer, intent( in) :: i, j, k
     real,    intent( in) :: prim(neq)
     real,    intent(out) :: s(neq)
+
+    ! momenta
+    s(2)= s(2)-pp(1)*div_grad_phi(1,i,j,k)
+    s(3)= s(3)-pp(1)*div_grad_phi(2,i,j,k)
+    s(4)= s(4)-pp(1)*div_grad_phi(3,i,j,k)
+    ! energy
+    s(5)= s(5)-pp(1)*(  div_grad_phi(1,i,j,k)*pp(2) &
+                      + div_grad_phi(2,i,j,k)*pp(3) &
+                      + div_grad_phi(3,i,j,k)*pp(4)  )
 
   end subroutine add_self_gravity
 
