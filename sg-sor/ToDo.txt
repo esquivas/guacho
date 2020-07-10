@@ -13,7 +13,7 @@ Dentro del modulo self_gravity
    hacen lo do (lineas 92:94 del hydrosolver.f90)
 
    - Se me ocurre que quizá valga la pena hacer una variable global
-     sg_force=-Div(phi_grav), que se calcule una vez que converja la phi_grav.
+     grad_phi_grav = grad(phi_grav), que se calcule una vez que converja la phi_grav.
      Esto para luego agregar los terminos fuente a la hidro. Esto no necesario
      para la hidro sola ya que se puede calcular el gradiente al vuelo en las
      fuentes, pero sera necesario cuando querramos agregar la fuerza a las
@@ -45,12 +45,13 @@ En el guacho
 - agregar soporte para warmstart sin necesidad de siempre calcular el phi desde
   cero
 
+********************************************************************************
 Lista de archivos fuente que han sido modificados:
   self_gravity.f90   : agregado
   Makefile           : *** cambios ya estan integrados al template en blanco
+  parameters.f90     : *** cambios ya integrados al template en blanco
+  sources.f90        : incorporar al src sin 'radpress'
   Out_BIN_Module.f90 : incorporar los cambios a 'src', pero no lo de 'radpress'
   hydro_solver.f90   : revisar dependencia con hrate.f90 antes de incoporar a 'src'
   init.f90           : incorporar al src sin 'radpress'
   main.f90           : se puede mover al src 'as is'
-  parameters.f90     : *** cambios ya integrados al template en blanco
-  sources.f90        : *** incorporar al src sin 'radpress'
