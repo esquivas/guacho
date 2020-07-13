@@ -340,9 +340,9 @@ contains
     s(3)= s(3)-prim(1)*div_grad_phi(2,i,j,k)
     s(4)= s(4)-prim(1)*div_grad_phi(3,i,j,k)
     ! energy
-    s(5)= s(5)-prim(1)*(  div_grad_phi(1,i,j,k)*prim(2)                        &
-                        + div_grad_phi(2,i,j,k)*prim(3)                        &
-                        + div_grad_phi(3,i,j,k)*prim(4)  )
+    s(5)= s(5)-prim(1)*(  grad_phi_grav(1,i,j,k)*prim(2)                        &
+                        + grad_phi_grav(2,i,j,k)*prim(3)                        &
+                        + grad_phi_grav(3,i,j,k)*prim(4)  )
 
   end subroutine add_self_gravity
 
