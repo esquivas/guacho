@@ -67,6 +67,8 @@ contains
     tau   = 535.*yr/tsc               !  period of variability
     omega = 2.*pi/tau                 !  initial position
 
+    !  Falta poner el omega orbital, o un tau_orb, que remplazaria el tau de arruba
+
 
   end subroutine init_jet
 
