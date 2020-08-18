@@ -58,7 +58,7 @@ contains
 
     !  jet orientation parameters
     alpha =6.*pi/180.
-    omegaP=2.*pi/(2142.*yr/tsc)       !  orbital period 2142 yr
+    omegaP=2.*pi/(2142.*yr/tsc)       !  precesion (not orbital) period 2142 yr
 
     denj  = 300.                      !  density
     Tempj = 1000./Tempsc              !  jet temperature
