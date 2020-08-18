@@ -28,13 +28,14 @@ module jet
 
   use parameters
   implicit none
-  real, save :: Rj, Lj, denj, Tempj, vj0, dvj, tau, omega
+  real, save :: Rj, Lj, denj, Tempj, vj0, dvj, tau
   real, save :: posj(3)
   !  the direction can be obtained with the following parameters
   !  alpha is the angle with respect to z at t=0
   !  the angle can be adjusted by rotating it by a precesion
   !  angle (omegaP x t)
-  real, save :: alpha, omegaP
+  real  :: alpha, omegaP
+  real  :: tau_orb, phi_0, omega_orb, R_orb
 
 contains
 
@@ -42,7 +43,6 @@ contains
   !   Here the parameters of the jet are initialized, and scaled to
   !   code units
   !--------------------------------------------------------------------
-
   subroutine init_jet()
 
     use constants, only : au, pi, deg
@@ -76,7 +76,6 @@ contains
   end subroutine init_jet
 
   !--------------------------------------------------------------------
-
   subroutine impose_jet(u,time)
     use globals, only : coords, dx, dy, dz
     implicit none
