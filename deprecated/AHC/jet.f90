@@ -28,7 +28,7 @@ module jet
 
   use parameters
   implicit none
-  real, save :: Rj, Lj, denj, Tempj, vj0, dvj, tau, omega 
+  real, save :: Rj, Lj, denj, Tempj, vj0, dvj, tau, omega
   real, save :: posj(3)
   !  the direction can be obtained with the following parameters
   !  alpha is the angle with respect to z at t=0
@@ -47,18 +47,18 @@ contains
 
     use constants, only : au, pi
     implicit none
-    
+
     Rj    = 400.*au/rsc   !  jet radius
     Lj    = 400.*au/rsc   !  jet length
-    
+
     !  jet position
     posj(1)= 7.5e3*au /rsc
     posj(2)= 7.5e3*au /rsc
     posj(3)= 0.!e3*au /rsc
-    
+
     !  jet orientation parameters
     alpha =6.*pi/180.
-    omegaP=2.*pi/(2142.*yr/tsc)
+    omegaP=2.*pi/(2142.*yr/tsc)       !  orbital period 2142 yr
 
     denj  = 300.                      !  density
     Tempj = 1000./Tempsc              !  jet temperature
@@ -66,12 +66,12 @@ contains
     dVj   = (200./3.)*1e5/vsc         !  amplitude of variability
     tau   = 535.*yr/tsc               !  period of variability
     omega = 2.*pi/tau                 !  initial position
-    
+
 
   end subroutine init_jet
- 
+
   !--------------------------------------------------------------------
- 
+
   subroutine impose_jet(u,time)
     use globals, only : coords, dx, dy, dz
     implicit none
@@ -86,7 +86,7 @@ contains
 
     sina= sin(alpha)
     cosa= cos(alpha)
-    
+
     sino= sin(omegaP*time)
     coso= cos(omegaP*time)
 
@@ -95,7 +95,7 @@ contains
     do i=nxmin,nxmax
        do j=nymin,nymax
           do k=nzmin,nzmax
-           
+
            !   measured from the corner of the computational mesh
            x=(real(i+coords(0)*nx) - 0.5)*dx
            y=(real(j+coords(1)*ny) - 0.5)*dy
@@ -108,8 +108,8 @@ contains
            rx= xp*coso      - yp*sino
            ry= xp*cosa*sino + yp*cosa*coso - zp*sina
            rz= xp*sina*sino + yp*sina*coso + zp*cosa
-           
-           rad=sqrt(rx**2+ry**2)          
+
+           rad=sqrt(rx**2+ry**2)
 
            !if( (j.eq.0).and.(i.eq.0).and.(rank.eq.0)) print*,k,z,zp
 
@@ -117,7 +117,7 @@ contains
 
               !  inside the jet source
               vjet= vj0 + dvj*sin(omegat)
-              !vjet=sign(vjet,rz)
+              vjet=sign(vjet,rz)
               !
               !   total density and momenta
               u(1,i,j,k) = denj
@@ -137,7 +137,7 @@ contains
 #endif
 
            endif
-             
+
           end do
        end do
     end do
