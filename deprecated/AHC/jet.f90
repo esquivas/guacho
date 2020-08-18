@@ -45,7 +45,7 @@ contains
 
   subroutine init_jet()
 
-    use constants, only : au, pi
+    use constants, only : au, pi, deg
     implicit none
 
     Rj    = 400.*au/rsc   !  jet radius
@@ -56,19 +56,22 @@ contains
     posj(2)= 7.5e3*au /rsc
     posj(3)= 0.!e3*au /rsc
 
-    !  jet orientation parameters
+    !  jet orientation/precession parameters
     alpha =6.*pi/180.
     omegaP=2.*pi/(2142.*yr/tsc)       !  precesion (not orbital) period 2142 yr
 
+    ! injection  parameters
     denj  = 300.                      !  density
     Tempj = 1000./Tempsc              !  jet temperature
     vj0   = 200.e5/vsc                !  mean velocity
     dVj   = (200./3.)*1e5/vsc         !  amplitude of variability
-    tau   = 535.*yr/tsc               !  period of variability
-    omega = 2.*pi/tau                 !  initial position
+    tau   = 535.*yr/tsc               !  period of jet variability
 
-    !  Falta poner el omega orbital, o un tau_orb, que remplazaria el tau de arruba
-
+    !  orbital parameters
+    tau_orb   = 600.0*yr/tsc          !  orbital period (escogido al azar)
+    phi_0     = -30.0*deg             !  initial position in the ecuatorial plane
+    omega_orb = 2.*pi/tau_orb         !  orbital angular velocity (big omega in paper)
+    R_orb     = 0.5*AU                !  orbital radius (ojo la escogi al azar)
 
   end subroutine init_jet
 
@@ -79,12 +82,12 @@ contains
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     real, intent (in)   :: time
-    real :: omegat, x, y, z, rad, xp, yp, zp, rx, ry, rz, vjet
+    real :: omegat, x, y, z, rad, xp, yp, zp, rx, ry, rz, vjet, vx_orb, vy_orb &
+            vz_orb
     !  precesion opening angle (or initial direction, repect to the z axis)
     real :: sina, cosa
     real :: coso, sino
     integer ::  i,j,k
-
 
     sina= sin(alpha)
     cosa= cos(alpha)
@@ -93,6 +96,11 @@ contains
     coso= cos(omegaP*time)
 
     omegat = omega*time   ! for jet variability
+
+    !  orbital velocity (orbital plane is XY)
+    vx_orb= -omega_orb*R_orb*sin(omega_orb*time+phi_0)
+    vy_orb=  omega_orb*R_orb*cos(omega_orb*time+phi_0)
+    vz_orb=0.
 
     do i=nxmin,nxmax
        do j=nymin,nymax
@@ -123,9 +131,9 @@ contains
               !
               !   total density and momenta
               u(1,i,j,k) = denj
-              u(2,i,j,k) = denj*vjet*sina*coso
-              u(3,i,j,k) = denj*vjet*sina*sino
-              u(4,i,j,k) = denj*vjet*cosa
+              u(2,i,j,k) = denj*( vjet*sina*coso + vx_orb )
+              u(3,i,j,k) = denj*( vjet*sina*sino + vy_orb )
+              u(4,i,j,k) = denj*( vjet*cosa      + vz_orb )
               !   energy
               u(5,i,j,k)=0.5*denj*vjet**2 + cv*denj*0.9951*Tempj
 
