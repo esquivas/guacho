@@ -23,7 +23,7 @@
 
 !> @brief Boundary conditions
 !> @details Sets boundary conditions, the type of boundaries is
-!> set in the Makefile
+!! set in the Makefile
 
 module boundaries
 
@@ -36,10 +36,10 @@ module boundaries
 contains
 
   !=======================================================================
-  !>@brief Boundary conditions for 1st order half timestep
-  !>@details Boundary conditions for 1st order half timestep
+  !> @brief Boundary conditions for 1st order half timestep
+  !> @details Boundary conditions for 1st order half timestep
   !> @n The conditions only are imposed at the innermost ghost cell,
-  !> on the u (unstepped) variables
+  !! on the u (unstepped) variables
   subroutine boundaryI()
 
 #ifdef MPIP
@@ -246,8 +246,8 @@ contains
   end subroutine boundaryI
 
   !=======================================================================
-  !>@brief Boundary conditions for 2nd order half timestep
-  !>@details Boundary conditions for 2nd order half timestep
+  !> @brief Boundary conditions for 2nd order half timestep
+  !> @details Boundary conditions for 2nd order half timestep
   !! @n The conditions only are imposed in two ghost cells
   !! on the up (stepped) variables
   subroutine boundaryII()
