@@ -439,7 +439,7 @@ end module coldens_utilities
 !=======================================================================
 !> @brief Computes the H-alpha emission
 !> @details Computes the H-alpha apbsorption
-!! @n It rotates the data along each of the coordinates axis
+!> @n It rotates the data along each of the coordinates axis
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and  projectcs the
 !! map along the the LOS, which is taken to be the Z axis
 program coldens
