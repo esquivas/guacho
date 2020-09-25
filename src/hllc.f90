@@ -3,8 +3,7 @@
 !> @brief HLLC approximate Riemann solver module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -84,7 +83,7 @@ contains
       uuk(2)=rhost*sst
       uuk(3)=rhost*priml(3)
       uuk(4)=rhost*priml(4)
-      uuk(5)=rhost*( ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)) )
+      uuk(5)=rhost*(ek/priml(1)+(sst-priml(2))*(sst+priml(5)/(priml(1)*slmul)))
 
       if (pmhd) then
 #ifdef BFIELD
@@ -141,11 +140,11 @@ contains
 
   !=======================================================================
   !> @brief Calculates HLLC fluxes from the primitive variables
-  !>   on all the domain
+  !! on all the domain
   !> @details Calculates HLLC fluxes from the primitive variables
   !> on all the domain
   !> @param integer [in] choice : 1, uses primit for the 1st half of
-  !> timestep (first order)
+  !! timestep (first order)
   !> @n 2 uses primit for second order timestep
   subroutine hllcfluxes(choice)
 
