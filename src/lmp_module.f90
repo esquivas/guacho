@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel & Matias Schneiter
 !> @date 7/Ago/2019
 !
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -35,8 +35,9 @@ contains
   !================================================================
   !> @brief Initialization of module
   !> @details Allocates memory for all global variables that correspond
-  !> to the particle module
+  !! to the particle module
   subroutine init_lmp()
+
     use parameters, only : nx, ny, nz, lmp_distf, N_MP, NBinsSEDMP
     use globals, only : Q_MP0, Q_MP1, MP_SED, P_DSA, shockF, partID, partOwner
     implicit none
@@ -82,6 +83,7 @@ contains
   !> updates the n_activeMP variable if needed
   !> @param integer [in] i_mp : local position of the particle to be deactivated
   subroutine deactivateMP(i_mp)
+
     use globals,    only : partID, n_activeMP
     implicit none
     integer, intent(in) :: i_mp
@@ -104,6 +106,7 @@ contains
   !> @param integer [in ] Qdata(ndata) : Data to be loaded into Q_MP0
   !> @param integer [out] i_mp  : local position of the particle added
   subroutine addMP(ID, ndata, Qdata, i_mp)
+
     use parameters, only : N_MP
     use globals,    only : partID,Q_MP0, n_activeMP
     implicit none
@@ -130,6 +133,7 @@ contains
   !> It also implements the required update of the SED of each MP, including
   !> the Diffuse Shock Acceleration treatment
   subroutine LMPpredictor()
+
     use globals,   only : primit, dt_CFL, rank, comm3d, &
                           Q_MP0, Q_MP1, P_DSA, MP_SED, partID
     use parameters
@@ -433,6 +437,7 @@ contains
   !> It also implements the required update of the SED of each MP, including
   !> the Diffuse Shock Acceleration treatment
   subroutine LMPcorrector()
+
     use globals,   only : primit, dt_CFL, rank, comm3d,                        &
                           MP_SED, Q_MP0, Q_MP1, partID, P_DSA
     use parameters
@@ -804,8 +809,9 @@ contains
   !> param real [out] r        : compression ratio (rho2/rho1)
   !> param real [out] thB1     : angle between shock normal and B1
   !> param real [out] thB2     : angle between shock normal and B2
+  !see equation 26 to 27 Vaidya 2018
   subroutine get_NRth(prim1,prim2,nsh,r,thB1,thb2)
-    !see equation 26 to 27 Vaidya 2018
+
     implicit none
     real, intent(in) :: prim1(8), prim2(8)
     real, intent(out) :: nsh(3), r, thB1, thB2
@@ -905,6 +911,7 @@ contains
   !> @param real    [in] Emin : lower end energy in the spectrum
   !> @param real    [in] Emax : Upper end energy in the spectrun
   subroutine inject_PL_spectrum(i_mp, chi0, q, Emin, Emax)
+
     use globals,    only : MP_SED
     use parameters, only : NBinsSEDMP
     implicit none
@@ -949,6 +956,7 @@ contains
   !> @param real [out] Emin     : minimum energy (e0, Vaidya et al 2018)
   !> @param real [out] Emax     : maximum energy (e1, Vaidya et al 2018)
   subroutine get_PL_parameters(i_mp,prim1,prim2,rhoI,EI,BI,chi0,qNR,Emin,Emax)
+
     use parameters, only : rhosc, rsc, vsc2, NBinsSEDMP, Bsc, vsc2, Psc
     use constants,  only : eV, clight, echarge
     use globals, only : MP_SED, dx
@@ -1064,5 +1072,3 @@ contains
   !================================================================
 
 end module lmp_module
-
-!================================================================
