@@ -3,8 +3,7 @@
 !> @brief chemistry  module
 !> @author A. Castellanos, P. Rivera A. Rodriguez, A. Raga  and A. Esquivel
 !> @date 10/Mar/2016
-
-! Copyright (c) 2016 A. Esquivel et al.
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -17,6 +16,7 @@
 ! but WITHOUT ANY WARRANTY; without even the implied warranty of
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ! GNU General Public License for more details.
+!
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
@@ -54,14 +54,17 @@ contains
 
           !   get the primitives (and T)
           call u2prim(u(:,i,j,k),primit(:,i,j,k),T)
+
           y(1:n_spec) = primit(neqdyn+1:neqdyn+n_spec,i,j,k)
-          y0(1      ) = primit(1,i,j,k)
+          y0(1) = primit(1,i,j,k)
+
           !  update the passive primitives (should not work in single precision)
           call chemstep(y, y0, T, dt_seconds)
+
           !  update the primitives and conserved variables
           do l = 1, n_spec
-            primit(l+neqdyn, i,j,k) = y(l)
-            u      (l+neqdyn,i,j,k) = y(l)
+            primit(l+neqdyn,i,j,k) = y(l)
+            u     (l+neqdyn,i,j,k) = y(l)
           end do
 
         end do
@@ -86,7 +89,7 @@ contains
                         derv, get_jacobian, n_nequ, check_no_conservation
     implicit none
     real (kind=8), intent(inout) :: y(n_spec)
-    real (kind=8), intent(in) ::    y0(n_elem), T, deltt
+    real (kind=8), intent(in)    ::    y0(n_elem), T, deltt
     real (kind=8) :: dtm
     real (kind=8) :: y1(n_spec),yt(n_spec),yin(n_spec), y0_in(n_elem)
     real (kind=8) :: rate(n_reac),dydt(n_spec),jacobian(n_spec,n_spec)
@@ -143,6 +146,6 @@ contains
 
   end subroutine chemstep
 
-!=======================================================================
+  !=======================================================================
 
-  end module chemistry
+end module chemistry
