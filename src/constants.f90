@@ -3,8 +3,7 @@
 !> @brief Constants module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -58,10 +57,10 @@ module constants
   !  Named constants
 
   !  Approximate Riemann solvers
-  integer, parameter :: SOLVER_HLL  = 1
-  integer, parameter :: SOLVER_HLLC = 2
-  integer, parameter :: SOLVER_HLLE = 3
-  integer, parameter :: SOLVER_HLLD = 4
+  integer, parameter :: SOLVER_HLL            = 1
+  integer, parameter :: SOLVER_HLLC           = 2
+  integer, parameter :: SOLVER_HLLE           = 3
+  integer, parameter :: SOLVER_HLLD           = 4
   integer, parameter :: SOLVER_HLLE_SPLIT_B   = 5
   integer, parameter :: SOLVER_HLLD_SPLIT_B   = 6
   integer, parameter :: SOLVER_HLLE_SPLIT_ALL = 7
