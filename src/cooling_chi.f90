@@ -3,8 +3,7 @@
 !> @brief Cooling module with CHIANTI generated cooling curves
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -25,7 +24,7 @@
 !> @brief Cooling module with CHIANTI generated cooling curves
 !> @details Cooling module with CHIANTI generated cooling curves
 !> @n The location of the tables is assumed to be in
-!! src/cool_lib/coolingCHIANTI.tab
+!> src/cool_lib/coolingCHIANTI.tab
 
 module cooling_chi
 
@@ -53,16 +52,16 @@ contains
   subroutine read_table_chianti()
 
     use parameters, only : workdir, master
-    use globals, only : rank
+    use globals,    only : rank
 #ifdef MPIP
     use mpi
 #endif
     implicit none
-    integer :: i, err
+    integer       :: i, err
     real (kind=8) :: a, b
 
     if(rank == master) then
-      open(unit=10,file= trim(workdir)//'../src/cool_lib/coolingCHIANTI.tab',&
+      open(unit=10,file = trim(workdir)//'../src/cool_lib/coolingCHIANTI.tab', &
            status='old')
       do i=1,41
         read(10,*) a, b
