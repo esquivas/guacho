@@ -3,8 +3,7 @@
 !> @brief Output in BIN Format
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-!
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -24,6 +23,7 @@
 
 !> @brief Output in BIN format
 !> @details This module writes the ouput in BIN format
+
 module  Out_BIN_Module
 
   use parameters
@@ -242,8 +242,8 @@ contains
 #endif
 
     if (enable_lmp .and. dump_shock) then
-      !   This is a hack to write div V and alpha for now
-      ! take turns to write to disk
+      !  This is a hack to write div V and alpha for now
+      !  take turns to write to disk
       do ip=0, np-1
         if(rank == ip) then
           write(file1,'(a,i3.3,a,i3.3,a)')                                     &
@@ -269,5 +269,3 @@ contains
   !=======================================================================
 
 end module Out_BIN_Module
-
-!=======================================================================
