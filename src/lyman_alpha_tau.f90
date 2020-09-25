@@ -3,8 +3,7 @@
 !> @brief Lyman_alpha_utilities
 !> @author M. Schneiter, Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -29,178 +28,171 @@ module lyman_alpha_utilities
 
 contains
 
-!> @brief Initializes data
-!> @details Initializes data, MPI and other stuff
+  !> @brief Initializes data
+  !> @details Initializes data, MPI and other stuff
 
-subroutine init_LA()
+  subroutine init_LA()
 
-!  Initializes MPI, data arrays, etc
-use parameters
-use globals, only : u, dx, dy, dz, coords, rank, left, right   &
-                     , top, bottom, out, in, rank, comm3d
-implicit none
-  integer :: nps, err
-  integer, dimension(0:ndim-1) :: dims
-  logical, dimension(0:ndim-1) :: period
+    !  Initializes MPI, data arrays, etc
+    use parameters
+    use globals, only : u, dx, dy, dz, coords, rank, left, right,              &
+                        top, bottom, out, in, rank, comm3d
+    implicit none
+    integer :: nps, err
+    integer, dimension(0:ndim-1) :: dims
+    logical, dimension(0:ndim-1) :: period
 
   !initializes MPI
 #ifdef MPIP
 #ifdef PERIODX
-  logical, parameter :: perx=.true.
+    logical, parameter :: perx = .true.
 #else
-  logical, parameter :: perx=.false.
+    logical, parameter :: perx = .false.
 #endif
 #ifdef PERIODY
-  logical, parameter :: pery=.true.
+    logical, parameter :: pery = .true.
 #else
-  logical, parameter :: pery=.false.
+    logical, parameter :: pery = .false.
 #endif
 #ifdef PERIODZ
-  logical, parameter :: perz=.true.
+    logical, parameter :: perz = .true.
 #else
-  logical, parameter :: perz=.false.
+    logical, parameter :: perz = .false.
 #endif
-  period(0)=perx
-  period(1)=pery
-  period(2)=perz
-  dims(0)  =MPI_NBX
-  dims(1)  =MPI_NBY
-  dims(2)  =MPI_NBZ
+    period(0) = perx
+    period(1) = pery
+    period(2) = perz
+    dims(0)   = MPI_NBX
+    dims(1)   = MPI_NBY
+    dims(2)   = MPI_NBZ
 
-  call mpi_init (err)
-  call mpi_comm_rank (mpi_comm_world,rank,err)
-  call mpi_comm_size (mpi_comm_world,nps,err)
-  if (nps.ne.np) then
-     print*, 'processor number (',nps,') is not equal to pre-defined number (',np,')'
-     call mpi_finalize(err)
-     stop
-  endif
+    call mpi_init (err)
+    call mpi_comm_rank (mpi_comm_world,rank,err)
+    call mpi_comm_size (mpi_comm_world,nps,err)
+    if (nps.ne.np) then
+      print*, 'processor number (',nps,                                        &
+              ') is not equal to pre-defined number (',np,')'
+      call mpi_finalize(err)
+      stop
+    endif
 #else
-  rank=0
-  coords(:)=0
+    rank=0
+    coords(:)=0
 #endif
-  if(rank.eq.master) then
-  print '(a)' ,"*******************************************"
-     print '(a)' ,"                        _                 *"
-     print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
-     print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
-     print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
-     print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
-     print '(a)' ," |___/                                    *"
-     print '(a)' ,"                                          *"
-  endif
+    if(rank.eq.master) then
+        print '(a)' ,"*********************************************"
+        print '(a)' ,"*                         _                 *"
+        print '(a)' ,"*   __   _   _  __ _  ___| |__   ___    3   *"
+        print '(a)' ,"*  / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
+        print '(a)' ,"* | (_| | |_| | (_| | (__| | | | (_) |      *"
+        print '(a)' ,"*  \__, |\__,_|\__,_|\___|_| |_|\___/       *"
+        print '(a)' ,"*  |___/                                    *"
+    endif
 #ifdef MPIP
-  if(rank.eq.master) then
-     print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
-     print '(a)' ,'*******************************************'
-     print '(a)', 'Calculating Lyman Alpha Tau'
-  end if
-  call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1            &
-       , comm3d, err)
-  call mpi_comm_rank(comm3d, rank, err)
-  call mpi_cart_coords(comm3d, rank, ndim, coords, err)
-  print '(a,i3,a,3i4)', 'processor ', rank                              &
-       ,' ready w/coords',coords(0),coords(1),coords(2)
-  call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
-  call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
-  call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
-  call mpi_barrier(mpi_comm_world, err)
-  !
+    if(rank.eq.master) then
+      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
+      print '(a)' ,'*********************************************'
+      print '(a)', 'Calculating Lyman Alpha Tau'
+    end if
+    call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true., comm3d, err)
+    call mpi_comm_rank(comm3d, rank, err)
+    call mpi_cart_coords(comm3d, rank, ndim, coords, err)
+    print '(a,i3,a,3i4)', 'processor ', rank,                                  &
+          ' ready w/coords',coords(0),coords(1),coords(2)
+    call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
+    call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
+    call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
+    call mpi_barrier(mpi_comm_world, err)
+
 #else
-  print '(a)' ,'*******************************************'
-  print '(a)' ,'*     running on a single processor       *'
-  print '(a)' ,'*******************************************'
-  print '(a)', 'Calculating Lyman Alpha Tau'
+    print '(a)' ,'*********************************************'
+    print '(a)' ,'*      running on a single processor        *'
+    print '(a)' ,'*********************************************'
+    print '(a)', 'Calculating Lyman Alpha Tau'
 #endif
 
-!   grid spacing
-  dx=xmax/nxtot
-  dy=ymax/nytot
-  dz=zmax/nztot
+    !   grid spacing
+    dx = xmax/nxtot
+    dy = ymax/nytot
+    dz = zmax/nztot
 
-!   allocate big arrays in memory
-allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
+    !   allocate big arrays in memory
+    allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
 
-end subroutine init_LA
+  end subroutine init_LA
 
-!=======================================================================
+  !=======================================================================
+  !> @brief reads data from file
+  !> @details reads data from file
+  !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
+  !! conserved variables
+  !> @param integer [in] itprint : number of output
+  !> @param string [in] filepath : path where the output is
+  subroutine read_data(u,itprint,filepath)
 
-!> @brief reads data from file
-!> @details reads data from file
-!> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
-!! conserved variables
-!> @param integer [in] itprint : number of output
-!> @param string [in] filepath : path where the output is
-
-subroutine read_data(u,itprint,filepath)
-
-  use parameters, only : &
-                       np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
-  use globals, only : rank, comm3d
-  implicit none
-  real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-  integer, intent(in) :: itprint
-  character (len=128), intent(in) :: filepath
-  character                       :: byte_read
-  integer :: nxp, nyp, nzp, x0p, y0p, z0p, &
-             mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
-  integer :: unitin, ip, err
+    use parameters, only : np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
+    use globals, only : rank, comm3d
+    implicit none
+    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    integer, intent(in) :: itprint
+    character (len=128), intent(in) :: filepath
+    character                       :: byte_read
+    integer :: nxp, nyp, nzp, x0p, y0p, z0p, &
+              mpi_xp, mpi_yp, mpi_zp,neqp, neqdynp, nghostp
+    integer :: unitin, ip, err
     real :: dxp, dyp, dzp, scal(3), cvp
-  character (len=128) file1
+    character (len=128) file1
 
-  take_turns : do ip=0,np-1
-    if (rank == ip) then
+    take_turns : do ip=0,np-1
+      if (rank == ip) then
 
 #ifdef MPIP
-        write(file1,'(a,i3.3,a,i3.3,a)')  &
-             trim(filepath)//'BIN/points',rank,'.',itprint,'.bin'
+        write(file1,'(a,i3.3,a,i3.3,a)')                                       &
+              trim(filepath)//'BIN/points',rank,'.',itprint,'.bin'
         unitin=rank+10
 #else
-         write(file1,'(a,i3.3,a)')         &
-              trim(filepath)//'BIN/points',itprint,'.bin'
-         unitin=10
+        write(file1,'(a,i3.3,a)') trim(filepath)//'BIN/points',itprint,'.bin'
+        unitin=10
 #endif
-         open(unit=unitin,file=file1,status='unknown', access='stream')
+        open(unit=unitin,file=file1,status='unknown', access='stream')
 
-         !   discard the ascii header
-         do while (byte_read /= achar(255) )
-           read(unitin) byte_read
-           !print*, byte_read
-         end do
-         !  read bin header, sanity check to do
-         read(unitin) byte_read
-         read(unitin) byte_read
-         read(unitin) nxp, nyp, nzp
-         read(unitin) dxp, dyp, dzp
-         read(unitin) x0p, y0p, z0p
-         read(unitin) mpi_xp, mpi_yp, mpi_zp
-         read(unitin) neqp, neqdynp
-         read(unitin) nghostp
-         read(unitin) scal(1:3)
-         read(unitin) cvp
-         read(unitin) u(:,:,:,:)
-         close(unitin)
+        !   discard the ascii header
+        do while (byte_read /= achar(255) )
+          read(unitin) byte_read
+          !print*, byte_read
+        end do
+        !  read bin header, sanity check to do
+        read(unitin) byte_read
+        read(unitin) byte_read
+        read(unitin) nxp, nyp, nzp
+        read(unitin) dxp, dyp, dzp
+        read(unitin) x0p, y0p, z0p
+        read(unitin) mpi_xp, mpi_yp, mpi_zp
+        read(unitin) neqp, neqdynp
+        read(unitin) nghostp
+        read(unitin) scal(1:3)
+        read(unitin) cvp
+        read(unitin) u(:,:,:,:)
+        close(unitin)
 
-         print'(i3,a,a)',rank,' read file:',trim(file1)
+        print'(i3,a,a)',rank,' read file:',trim(file1)
 
-    end if
-    call mpi_barrier(comm3d,err)
-  end do take_turns
+      end if
+      call mpi_barrier(comm3d,err)
+    end do take_turns
 
-end subroutine read_data
+  end subroutine read_data
 
-!=======================================================================
-
-!> @brief gets position of a cell
-!> @details Returns the position and spherical radius calculated with
-!! respect to  the center of the grid
-!> @param integer [in] i : cell index in the x direction
-!> @param integer [in] j : cell index in the y direction
-!> @param integer [in] k : cell index in the z direction
-!> @param real    [in] x : x position in the grid
-!> @param real    [in] y : y position in the grid
-!> @param real    [in] z : z position in the grid
-
+  !=======================================================================
+  !> @brief gets position of a cell
+  !> @details Returns the position and spherical radius calculated with
+  !! respect to  the center of the grid
+  !> @param integer [in] i : cell index in the x direction
+  !> @param integer [in] j : cell index in the y direction
+  !> @param integer [in] k : cell index in the z direction
+  !> @param real    [in] x : x position in the grid
+  !> @param real    [in] y : y position in the grid
+  !> @param real    [in] z : z position in the grid
   subroutine getXYZ(i,j,k,x,y,z)
 
     use globals,    only : dx, dy, dz, coords
@@ -215,114 +207,104 @@ end subroutine read_data
 
   end subroutine getXYZ
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Rotation around the X axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
+  subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 
-!> @brief Rotation around the X axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    reaL, intent(out) :: xn, yn, zn
+    xn =   x
+    yn =   y*cos(theta) - z*sin(theta)
+    zn =   y*sin(theta) + z*cos(theta)
 
-subroutine rotation_x(theta,x,y,z,xn,yn,zn)
+  end subroutine rotation_x
 
-   ! rotation around the x axis by an angle theta
+  !=======================================================================
+  !> @brief Rotation around the Y axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
+  subroutine rotation_y(theta,x,y,z,xn,yn,zn)
 
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   reaL, intent(out) :: xn, yn, zn
-   xn =   x
-   yn =   y*cos(theta) - z*sin(theta)
-   zn =   y*sin(theta) + z*cos(theta)
- end subroutine rotation_x
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    real, intent(out) :: xn, yn, zn
+    xn =   x*cos(theta) + z*sin(theta)
+    yn =   y
+    zn = - x*sin(theta) + z*cos(theta)
 
-!=======================================================================
+  end subroutine rotation_y
 
-!> @brief Rotation around the Y axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
+  !=======================================================================
+  !> @brief Rotation around the Z axis
+  !> @details Does a rotation around the x axis
+  !> @param real [in], theta : Angle of rotation (in radians)
+  !> @param real [in], x : original x position in the grid
+  !> @param real [in], y : original y position in the grid
+  !> @param real [in], x : original z position in the grid
+  !> @param real [out], x : final x position in the grid
+  !> @param real [out], y : final y position in the grid
+  !> @param real [out], x : final z position in the grid
+  subroutine rotation_z(theta,x,y,z,xn,yn,zn)
 
- subroutine rotation_y(theta,x,y,z,xn,yn,zn)
+    implicit none
+    real, intent(in ) :: theta, x, y, z
+    real, intent(out) :: xn, yn, zn
+    xn =   x*cos(theta) - y*sin(theta)
+    yn =   x*sin(theta) + y*cos(theta)
+    zn =   z
 
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   real, intent(out) :: xn, yn, zn
-   xn =   x*cos(theta) + z*sin(theta)
-   yn =   y
-   zn = - x*sin(theta) + z*cos(theta)
- end subroutine rotation_y
+  end subroutine rotation_z
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Fill target map
+  !> @details Fills the target map of one MPI block
+  !> @param integer [in] nxmap : Number of X cells in target
+  !> @param integer [in] nymap : Number of Y cells in target
+  !> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
+  !! conserved variables
+  !> @param real [out] map(nxmap,mymap) : Target map
+  !> @param real [in] dxT : target pixel width
+  !> @param real [in] dyT : target pixel height
+  !> @param real [in] thetax : Rotation around X
+  !> @param real [in] thetay : Rotation around Y
+  !> @param real [in] thetaz : Rotation around Z
+  subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
+                      theta_x,theta_y,theta_z)
 
-!> @brief Rotation around the Z axis
-!> @details Does a rotation around the x axis
-!> @param real [in], theta : Angle of rotation (in radians)
-!> @param real [in], x : original x position in the grid
-!> @param real [in], y : original y position in the grid
-!> @param real [in], x : original z position in the grid
-!> @param real [out], x : final x position in the grid
-!> @param real [out], y : final y position in the grid
-!> @param real [out], x : final z position in the grid
-
- subroutine rotation_z(theta,x,y,z,xn,yn,zn)
-
-   implicit none
-   real, intent(in ) :: theta, x, y, z
-   real, intent(out) :: xn, yn, zn
-   xn =   x*cos(theta) - y*sin(theta)
-   yn =   x*sin(theta) + y*cos(theta)
-   zn =   z
- end subroutine rotation_z
-
-!=======================================================================
-
-!> @brief Fill target map
-!> @details Fills the target map of one MPI block
-!> @param integer [in] nxmap : Number of X cells in target
-!> @param integer [in] nymap : Number of Y cells in target
-!> @param real [in] u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax) :
-!! conserved variables
-!> @param real [out] map(nxmap,mymap) : Target map
-!> @param real [in] dxT : target pixel width
-!> @param real [in] dyT : target pixel height
-!> @param real [in] thetax : Rotation around X
-!> @param real [in] thetay : Rotation around Y
-!> @param real [in] thetaz : Rotation around Z
-
-
-subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
-                   theta_x,theta_y,theta_z)
-
-  use constants, only : clight
-  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+    use constants, only : clight
+    use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax,           &
                          neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn
-  use globals, only : dz
-  use hydro_core, only : u2prim
+    use globals, only : dz
+    use hydro_core, only : u2prim
+    implicit none
+    integer, intent(in) :: nxmap,nymap,nvmap
+    real, intent(in) :: vmin, vmax
+    real, intent(in) :: u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax)
+    real , intent(in) :: dxT, dyT, theta_x, theta_y, theta_z
+    real, intent(out) :: map(nxmap,nymap,nvmap)
+    integer :: i,j,k, iobs, jobs
+    real :: x,y,z,xn,yn,zn, vx, vy, vz,vxn, vyn, vzn, velsc
+    real :: T, prim(neq), profile(nvmap)
+    real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
+    velsc=sqrt(vsc2)
 
-  implicit none
-
-  integer, intent(in) :: nxmap,nymap,nvmap
-  real, intent(in) :: vmin, vmax
-  real, intent(in) :: u(neq,nxmin:nxmax,nymin:nymax, nzmin:nzmax)
-  real , intent(in) :: dxT, dyT, theta_x, theta_y, theta_z
-  real, intent(out) :: map(nxmap,nymap,nvmap)
-  integer :: i,j,k, iobs, jobs
-  real :: x,y,z,xn,yn,zn, vx, vy, vz,vxn, vyn, vzn, velsc
-  real :: T, prim(neq), profile(nvmap)
-  real, parameter :: sigmaLA = 0.01105, lambdaLA=1.215668e-5 !(c/nu0=lambda)
-  velsc=sqrt(vsc2)
-
-  do k=1,nz
-     do j=1,ny
+    do k=1,nz
+      do j=1,ny
         do i=1,nx
 
           !  obtain original position
@@ -359,85 +341,79 @@ subroutine fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,&
               !end if
             end if
           end if
+        end do
       end do
     end do
-  end do
 
-end subroutine fill_map
+  end subroutine fill_map
 
-!=======================================================================
+  !=======================================================================
+  !> @brief Writes projection to file
+  !> @details Writes projection to file
+  !> @param integer [in] itprint : number of output
+  !> @param string [in] filepath : path where to write
+  !> @param integer [in] nxmap : Number of X cells in target
+  !> @param integer [in] nymap : Number of Y cells in target
+  !> @param integer [in] nvmap : Number of velocity channels
+  !> @param real [in] map(nxmap,mymap) : Target map
+  subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
 
-!> @brief Writes projection to file
-!> @details Writes projection to file
-!> @param integer [in] itprint : number of output
-!> @param string [in] filepath : path where to write
-!> @param integer [in] nxmap : Number of X cells in target
-!> @param integer [in] nymap : Number of Y cells in target
-!> @param integer [in] nvmap : Number of velocity channels
-!> @param real [in] map(nxmap,mymap) : Target map
+    implicit none
+    integer, intent(in) :: nxmap, nymap,nvmap,itprint
+    character (len=128), intent(in) :: filepath
+    real, intent(in) :: map(nxmap,nymap,nvmap)
+    character (len=128) file1
+    integer ::  unitout
 
-subroutine  write_LA(itprint,filepath,nxmap,nymap,nvmap,map)
-  implicit none
-  integer, intent(in) :: nxmap, nymap,nvmap,itprint
-  character (len=128), intent(in) :: filepath
-  real, intent(in) :: map(nxmap,nymap,nvmap)
-  character (len=128) file1
-  integer ::  unitout
+    write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
+    unitout=11
+    open(unit=unitout,file=file1,status='unknown',access='stream')
 
-  write(file1,'(a,i3.3,a)')  trim(filepath)//'BIN/LA_tau-',itprint,'.bin'
-  unitout=11
-  open(unit=unitout,file=file1,status='unknown',access='stream')
+    write (unitout) map(:,:,:)
+    close(unitout)
 
-  write (unitout) map(:,:,:)
-  close(unitout)
+    print'(a,a)'," wrote file:",trim(file1)
 
-  print'(a,a)'," wrote file:",trim(file1)
+  end subroutine write_LA
 
-end subroutine write_LA
+  !=======================================================================
+  !> @brief This routine computes a gaussian line profile
+  !> @details This routine computes a gaussian line profile
+  subroutine phigauss(T,vzn,vmin,vmax,nvmap,profile)
 
-!=======================================================================
+    use constants, only: amh, pi, kB, clight
+    implicit none
+    real, intent(in) :: T, vzn, vmin, vmax
+    integer, intent(in) :: nvmap
+    real, intent(out) :: profile(nvmap)
+    integer :: i
+    real :: coef, dv, vr
 
-!> @brief This routine computes a gaussian line profile
-!> @details This routine computes a gaussian line profile
+    profile(:)=0.
+    dv=(vmax-vmin)/real(nvmap)
 
-subroutine phigauss(T,vzn,vmin,vmax,nvmap,profile)
+    coef=amh/(2.*kB*T)
 
-  use constants, only: amh, pi, kB, clight
-  implicit none
-  real, intent(in) :: T, vzn, vmin, vmax
-  integer, intent(in) :: nvmap
-  real, intent(out) :: profile(nvmap)
-  integer :: i
-  real :: coef, dv, vr
+    do i=1,nvmap
+      vr=(real(i)-0.5)*dv+vmin
+      profile(i)=sqrt(coef/pi)*exp(-coef*((vr-vzn)**2) )
+    end do
 
-  profile(:)=0.
-  dv=(vmax-vmin)/real(nvmap)
+  end subroutine phigauss
 
-  coef=amh/(2.*kB*T)
-
-  do i=1,nvmap
-     vr=(real(i)-0.5)*dv+vmin
-     profile(i)=sqrt(coef/pi)*exp(-coef*((vr-vzn)**2) )
-  end do
-
-end subroutine phigauss
-
-!=======================================================================
-
+  !=======================================================================
 end module lyman_alpha_utilities
 
 !=======================================================================
-
 !> @brief Computes the Ly-alpha apbsorption
 !> @details Computes the Ly-alpha apbsorption
 !! @n It rotates the data along each of the coordinates axis
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and the LOS
 !! is along the Z axis
-
 program lyman_alpha_tau
 
   use constants, only : pi
-  use parameters, only : xmax,master, mpi_real_kind, &
+  use parameters, only : xmax,master, mpi_real_kind,                           &
                          outputpath, nxtot, nytot
   use globals, only : u, rank, comm3d
   use lyman_alpha_utilities
@@ -445,11 +421,9 @@ program lyman_alpha_tau
   use mpi
 #endif
   implicit none
-
   character (len=128) :: filepath
   integer :: err
   integer :: itprint
-  !
   real, parameter :: theta_x =-3.33 *pi/180.
   real, parameter :: theta_y = 0.00 *pi/180.
   real, parameter :: theta_z = 0.00 *pi/180.
@@ -458,7 +432,6 @@ program lyman_alpha_tau
   integer            :: nxmap, nymap
   real :: dxT, dyT, vmin,vmax
   real, allocatable :: map(:,:,:), map1(:,:,:)
-  !real :: map(nxmap, nymap,nvmap), map1(nxmap, nymap,nvmap)
 
   nxmap = nxtot
   nymap = nytot
@@ -489,15 +462,17 @@ program lyman_alpha_tau
     !
     if (rank == master) then
        print'(a)', 'Calculating projection with angles of rotaton'
-       print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, ' &
-                                    ,theta_y*180./pi,'° around Y, '&
+       print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, '            &
+                                    ,theta_y*180./pi,'° around Y, '            &
                                     ,theta_z*180./pi,'° around Z, '
     end if
 
     !  add info to the map
-    call fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT, theta_x, theta_y, theta_z)
+    call fill_map(nxmap,nymap,nvmap,vmin,vmax,u,map,dxT,dyT,                   &
+                  theta_x, theta_y, theta_z)
     !  sum all the partial sums
-    call mpi_reduce(map,map1,nxmap*nymap*nvmap, mpi_real_kind, mpi_sum, master, comm3d, err)
+    call mpi_reduce(map,map1,nxmap*nymap*nvmap, mpi_real_kind, mpi_sum, master,&
+                   comm3d, err)
 
     !  write result
     if (rank == master) then
@@ -510,9 +485,7 @@ program lyman_alpha_tau
 #ifdef MPIP
   call mpi_finalize(err)
 #endif
-  !
+
   stop
 
 end program lyman_alpha_tau
-
-!=======================================================================
