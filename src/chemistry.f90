@@ -34,8 +34,8 @@ contains
   !=======================================================================
   !> @brief Advances the chemistry network
   !> @details Advances the chemistry network on the entire domain
-  !> (except ghost cells), updates primitives and conserved variables
-  !> in globals
+  !! (except ghost cells), updates primitives and conserved variables
+  !! in globals
   subroutine update_chem()
 
     use parameters, only : neq, neqdyn, n_spec, nx, ny, nz, tsc, rhosc
@@ -79,7 +79,7 @@ contains
   !> @param real [inout] y(n_spec) : number densities of the species
   !> to be updated by the chemistry
   !> @param real [in] y[n_elem] : total number density of each of the
-  !> elements involved in the reactions
+  !! elements involved in the reactions
   !> @param real [in] T : Temperature [K]
   !> @param real [in] deltt : time interval (from the hydro, in seconds)
   subroutine chemstep(y,y0,T, deltt)
