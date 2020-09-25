@@ -24,6 +24,7 @@
 !> @brief Boundary conditions
 !> @details Sets boundary conditions, the type of boundaries is
 !> set in the Makefile
+
 module boundaries
 
   use parameters
