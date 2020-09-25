@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
 
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -46,26 +46,26 @@ contains
   !initializes MPI
 #ifdef MPIP
 #ifdef PERIODX
-    logical, parameter :: perx=.true.
+    logical, parameter :: perx = .true.
 #else
-    logical, parameter :: perx=.false.
+    logical, parameter :: perx = .false.
 #endif
 #ifdef PERIODY
-    logical, parameter :: pery=.true.
+    logical, parameter :: pery = .true.
 #else
-    logical, parameter :: pery=.false.
+    logical, parameter :: pery = .false.
 #endif
 #ifdef PERIODZ
-    logical, parameter :: perz=.true.
+    logical, parameter :: perz = .true.
 #else
-    logical, parameter :: perz=.false.
+    logical, parameter :: perz = .false.
 #endif
-    period(0)=perx
-    period(1)=pery
-    period(2)=perz
-    dims(0)  =MPI_NBX
-    dims(1)  =MPI_NBY
-    dims(2)  =MPI_NBZ
+    period(0) = perx
+    period(1) = pery
+    period(2) = perz
+    dims(0)   = MPI_NBX
+    dims(1)   = MPI_NBY
+    dims(2)   = MPI_NBZ
 
     call mpi_init (err)
     call mpi_comm_rank (mpi_comm_world,rank,err)
@@ -81,25 +81,25 @@ contains
     coords(:)=0
 #endif
     if(rank.eq.master) then
-      print '(a)' ,"*******************************************"
-      print '(a)' ,"                        _                 *"
-      print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
-      print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
-      print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
-      print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
-      print '(a)' ," |___/                                    *"
+      print '(a)' ,"*********************************************"
+      print '(a)' ,"*                         _                 *"
+      print '(a)' ,"*   __   _   _  __ _  ___| |__   ___    3   *"
+      print '(a)' ,"*  / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
+      print '(a)' ,"* | (_| | |_| | (_| | (__| | | | (_) |      *"
+      print '(a)' ,"*  \__, |\__,_|\__,_|\___|_| |_|\___/       *"
+      print '(a)' ,"*  |___/                                    *"
     endif
 #ifdef MPIP
     if(rank.eq.master) then
-      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
+      print '(a,i3,a)','*    running with mpi in ', np, ' processors     *'
       print '(a)' ,'*******************************************'
       print '(a)', 'Calculating Lyman Alpha Tau'
     end if
-    call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true.,comm3d, err)
+    call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true., comm3d,err)
     call mpi_comm_rank(comm3d, rank, err)
     call mpi_cart_coords(comm3d, rank, ndim, coords, err)
     print '(a,i3,a,3i4)', 'processor ', rank,                                  &
-          ' ready w/coords',coords(0),coords(1),coords(2)
+    ' ready w/coords',coords(0),coords(1),coords(2)
     call mpi_cart_shift(comm3d, 0, 1, left  , right, err)
     call mpi_cart_shift(comm3d, 1, 1, bottom, top  , err)
     call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
@@ -112,9 +112,9 @@ contains
 #endif
 
     !  grid spacing
-    dx=xmax/nxtot
-    dy=ymax/nytot
-    dz=zmax/nztot
+    dx = xmax/nxtot
+    dy = ymax/nytot
+    dz = zmax/nztot
 
     !  allocate big arrays in memory
     allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -485,7 +485,8 @@ program h_alpha_proj
   !  add info to the map
   call fill_map(nxmap,nymap,u,map,dxT,dyT, theta_x, theta_y, theta_z)
   !  sum all the partial sums
-  call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master, comm3d, err)
+  call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master,        &
+                 comm3d, err)
 
   !  write result
   if (rank == master) then
@@ -499,7 +500,7 @@ program h_alpha_proj
 #ifdef MPIP
   call mpi_finalize(err)
 #endif
-  !
+
   stop
 
 end program h_alpha_proj
