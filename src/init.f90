@@ -86,18 +86,18 @@ contains
     coords(:)=0
 #endif
     if(rank.eq.master) then
-      print '(a)' ,"*******************************************"
-      print '(a)' ,"                        _                 *"
-      print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
-      print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
-      print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
-      print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
-      print '(a)' ," |___/                                    *"
+      print '(a)' ,"*********************************************"
+      print '(a)' ,"*                         _                 *"
+      print '(a)' ,"*   __   _   _  __ _  ___| |__   ___    3   *"
+      print '(a)' ,"*  / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
+      print '(a)' ,"* | (_| | |_| | (_| | (__| | | | (_) |      *"
+      print '(a)' ,"*  \__, |\__,_|\__,_|\___|_| |_|\___/       *"
+      print '(a)' ,"*  |___/                                    *"
     endif
 #ifdef MPIP
     if(rank.eq.master) then
-      print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
-      print '(a)' ,'*******************************************'
+      print '(a,i3,a)','*    running with mpi in ', np, ' processors     *'
+      print '(a)' '*********************************************'
     end if
     call mpi_cart_create(mpi_comm_world, ndim, dims, period,.true., comm3d, err)
     call mpi_comm_rank(comm3d, rank, err)
@@ -109,9 +109,9 @@ contains
     call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
     call mpi_barrier(mpi_comm_world, err)
 #else
-    print '(a)' ,'*******************************************'
-    print '(a)' ,'*     running on a single processor       *'
-    print '(a)' ,'*******************************************'
+    print '(a)' ,'*********************************************'
+    print '(a)' ,'*      running on a single processor        *'
+    print '(a)' ,'*********************************************'
 #endif
 
     !   grid spacing
