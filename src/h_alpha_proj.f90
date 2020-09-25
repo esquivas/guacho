@@ -3,7 +3,6 @@
 !> @brief H alpha projection
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
 ! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
@@ -88,11 +87,11 @@ contains
       print '(a)' ,"* | (_| | |_| | (_| | (__| | | | (_) |      *"
       print '(a)' ,"*  \__, |\__,_|\__,_|\___|_| |_|\___/       *"
       print '(a)' ,"*  |___/                                    *"
-    endif
+    endif,
 #ifdef MPIP
     if(rank.eq.master) then
       print '(a,i3,a)','*    running with mpi in ', np, ' processors     *'
-      print '(a)' ,'*******************************************'
+      print '(a)' ,'*********************************************'
       print '(a)', 'Calculating Lyman Alpha Tau'
     end if
     call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true., comm3d,err)
@@ -105,9 +104,9 @@ contains
     call mpi_cart_shift(comm3d, 2, 1, out   , in   , err)
     call mpi_barrier(mpi_comm_world, err)
 #else
-    print '(a)' ,'*******************************************'
-    print '(a)' ,'*     running on a single processor       *'
-    print '(a)' ,'*******************************************'
+    print '(a)' ,'*********************************************'
+    print '(a)' ,'*      running on a single processor        *'
+    print '(a)' ,'*********************************************'
     print '(a)', 'Calculating Lyman Alpha Tau'
 #endif
 
