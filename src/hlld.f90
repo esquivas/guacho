@@ -3,8 +3,7 @@
 !> @brief HLLD approximate Riemann solver module
 !> @author  C. Villarreal  D'Angelo, A. Esquivel, M. Schneiter
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -39,7 +38,7 @@ contains
   !> @details Solves the Riemann problem at the interface betweem
   !! PL and PR using the HLLD solver
   !> @n The fluxes are computed in the X direction, to obtain the
-  !! y ans z directions a swap is performed
+  !! y and z directions a swap is performed
   !> @param real [in] primL : primitives at the Left state
   !> @param real [in] primR : primitives at the Right state
   !> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
@@ -133,7 +132,7 @@ contains
       vdotbl    = priml(2)*bx + priml(3)*priml(7) + priml(4)*priml(8)!vL dot BL
       vstdotbstl= sM*bx + vstl*bystl + wstl*bzstl                   !vL* dot BL*
 
-      estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM !eL*
+      estl= ( slmul*el -pTL*priml(2) +pst*sM +bx*(vdotbl-vstdotbstl) )/slmsM!eL*
 
       ff(1) = rhostl*sM
       ff(2) = rhostl*SM**2+pst-bx**2
@@ -178,10 +177,10 @@ contains
 
       end if
 
-      vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8) !vR dot BR
-      vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                     !vR* dot BR*
+      vdotbr    = primr(2)*bx + primr(3)*primr(7) + primr(4)*primr(8)!vR dot BR
+      vstdotbstr= sM*bx + vstr*bystr + wstr*bzstr                   !vR* dot BR*
 
-      estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM !eR*
+      estr= ( srmur*er -pTR*primr(2) +pst*sM +bx*(vdotbr-vstdotbstr) )/srmsM!eR*
 
       ff(1) = rhostr*sM
       ff(2) = rhostr*SM**2+pst-bx**2
@@ -318,12 +317,12 @@ contains
 
   !=======================================================================
   !> @brief Calculates HLLD fluxes from the primitive variables
-  !>   on all the domain
+  !! on all the domain
   !> @details Calculates HLLD fluxes from the primitive variables
-  !>   on all the domain
+  !! on all the domain
   !> @param integer [in] choice : 1, uses primit for the 1st half of timestep
   !> (first order)
-  !>                  @n 2 uses primit for second order timestep
+  !> @n 2 uses primit for second order timestep
   subroutine hlldfluxes(choice)
 
     use parameters, only : neq, nx, ny, nz
