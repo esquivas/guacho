@@ -3,8 +3,7 @@
 !> @brief Guacho-3D initialization module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-!
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -48,7 +47,6 @@ contains
     use thermal_cond
     use flux_cd_module
     use user_mod
-
     implicit none
     real,    intent(out) ::tprint
     integer, intent(out) :: itprint
@@ -166,20 +164,6 @@ contains
 
     !   CHIANTI COOLING
     if (cooling == COOL_CHI) call init_cooling_chianti()
-
-    !  Deprecated soon to be removed
-    !   BBC COOLING
-    !#ifdef COOLINGBBC
-    !  do ii=0,(nps-1)
-    !     if (rank.eq.ii) then
-    !        call bbcrd
-    !        print'(a,i4,a)','rank:',rank,' Just read the tables'
-    !     endif
-    !#ifdef MPIP
-    !     call mpi_barrier (mpi_comm_world, err)
-    !#endif
-    !  end do
-    !#endif
 
     !  Thermal conduction
     if (th_cond /= TC_OFF) call init_thermal_cond()
@@ -449,16 +433,15 @@ contains
 
       !   read from previous (.bin) output
 #ifdef MPIP
-      write(file1,'(a,i3.3,a,i3.3,a)')                                           &
-                    trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
-      unitin=10  !*rank  (not needed)
+    write(file1,'(a,i3.3,a,i3.3,a)')                                           &
+          trim(outputpath)//'BIN/points',rank,'.',itprint,'.bin'
+    unitin=10  !*rank  (not needed)
 #else
-      write(file1,'(a,i3.3,a)')         &
-            trim(outputpath)//'BIN/points',itprint,'.bin'
-      unitin=10
+    write(file1,'(a,i3.3,a)')                                                  &
+          trim(outputpath)//'BIN/points',itprint,'.bin'
+    unitin=10
 #endif
       open(unit=unitin,file=file1,status='old', access='stream' )
-      !, &     convert='LITTLE_ENDIAN')  !< GNU EXTENSION check later
 
       !   discard the ascii header
       do while (byte_read /= achar(255) )
