@@ -39,6 +39,7 @@ contains
   !> @details  Writes Data in silo format one file per processor
   !> @param integer [in] itprint : number of output
   subroutine writeblocks(itprint)
+
     use globals
     use parameters
     implicit none
@@ -318,7 +319,7 @@ contains
       end do
       oldlen = dbget2dstrlen()
       err = dbset2dstrlen(lnames(1))
-      err = dbputmvar(unitout, "bx", 2, np, names,lnames,types, DB_F77NULL,ierr)
+      err = dbputmvar(unitout,"bx",2, np, names, lnames, types, DB_F77NULL,ierr)
       err = dbset2dstrlen(oldlen)
       !B_y
       do i=0, np-1
@@ -331,7 +332,7 @@ contains
       end do
       oldlen = dbget2dstrlen()
       err = dbset2dstrlen(lnames(1))
-      err = dbputmvar(unitout, "by", 2, np, names, lnames,types, DB_F77NULL, ierr)
+      err = dbputmvar(unitout,"by",2, np, names, lnames, types, DB_F77NULL,ierr)
       err = dbset2dstrlen(oldlen)
       !B_z
       do i=0, np-1
@@ -344,7 +345,7 @@ contains
       end do
       oldlen = dbget2dstrlen()
       err = dbset2dstrlen(lnames(1))
-      err = dbputmvar(unitout, "bz", 2, np, names, lnames,types, DB_F77NULL, ierr)
+      err = dbputmvar(unitout,"bz",2, np, names, lnames, types, DB_F77NULL,ierr)
       err = dbset2dstrlen(oldlen)
     endif
 

@@ -4,7 +4,7 @@
 !> @author P. Rivera, A. Rodriguez, A. Castellanos,  A. Raga and A. Esquivel
 !> @date 4/May/2016
 
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !

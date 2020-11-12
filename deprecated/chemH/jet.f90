@@ -4,7 +4,7 @@
 !> @author A. Esquivel
 !> @date 24/Nov/2014
 
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !

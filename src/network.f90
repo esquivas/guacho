@@ -3,8 +3,7 @@
 !> @brief chemical network module
 !> @author P. Rivera, A. Rodriguez, A. Castellanos,  A. Raga and A. Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -17,6 +16,7 @@
 ! but WITHOUT ANY WARRANTY; without even the implied warranty of
 ! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ! GNU General Public License for more details.
+!
 ! You should have received a copy of the GNU General Public License
 ! along with this program.  If not, see http://www.gnu.org/licenses/.
 !=======================================================================
@@ -128,7 +128,7 @@ subroutine get_jacobian(y,jacobian,rate)
   jacobian(ie, hp) =  1.d0
   jacobian(ie, h2) =  0.d0
   jacobian(ie, ie) = -1.d0
-  
+
 end subroutine get_jacobian
 
 !=======================================================================
