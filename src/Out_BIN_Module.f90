@@ -82,7 +82,7 @@ contains
     if (time_sec > 1.0e6*yr) then
       write(cbuffer, '("Output time is:",f7.2, Myr' ) time_sec/1.0e6/yr
     else if (time_sec > 1.0e3*yr) then
-      write(cbuffer, '("Output time is:",f7.2, Kyr' ) time_sec/1.0e3/yr
+      write(cbuffer, '("Output time is:",f7.2, kyr' ) time_sec/1.0e3/yr
     else if (time_sec > yr) then
       write(cbuffer, '("Output time is:",f7.2, yr'  ) time_sec/yr
     else if (time_sec > day) then
@@ -90,7 +90,7 @@ contains
     else if (time_sec > hr) then
       write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
     else
-      write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
+      write(cbuffer, '("Output time is:",f7.2, sec' ) time_sec
     end if
 
 #ifdef DOUBLEP
