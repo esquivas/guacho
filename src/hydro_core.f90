@@ -3,8 +3,7 @@
 !> @brief Hydrodynamical and Magnetohidrodynamocal bacic module
 !> @author Alejandro Esquivel, V. Sieyra, M. Shneiter
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -602,7 +601,9 @@ contains
   !> @param real [in] tprint : time for the next programed disk dump
   !> @param real [out] : @f$ \Delta t@f$ allowed by the CFL condition
   !> @param logical [out] dump_flag : Flag to write to disk
-  subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt, dump_flag)
+  subroutine get_timestep(current_iter, n_iter, current_time, tprint, dt,      &
+                          dump_flag)
+
     use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
     use parameters, only : nx, ny, nz, cfl, mpi_real_kind, mhd, riemann_solver
     use globals, only : primit, dx, dy, dz, primit0

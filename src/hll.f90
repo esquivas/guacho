@@ -3,8 +3,7 @@
 !> @brief HLL approximate Riemann solver module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -37,7 +36,7 @@ contains
   !> @details Solves the Riemann problem at the interface betweem
   !! PL and PR using the HLL solver
   !> @n The fluxes are computed in the X direction, to obtain the
-  !> y and z directions a swap is performed
+  !! y and z directions a swap is performed
   !> @param real [in] primL : primitives at the Left state
   !> @param real [in] primR : primitives at the Right state
   !> @param real [out] ff : fluxes at the interface (@f$ F_{i+1/2} @f$)
@@ -82,9 +81,10 @@ contains
   !> @brief Calculates HLL fluxes from the primitive variables
   !>   on all the domain
   !> @details Calculates HLL fluxes from the primitive variables
-  !>   on all the domain
-  !> @param integer [in] choice : 1, uses primit for the 1st half of timestep (first order)
-  !>                  @n 2 uses primit for second order timestep
+  !! on all the domain
+  !> @param integer [in] choice : 1, uses primit for the 1st half of timestep
+  !! (first order)
+  !> @n 2 uses primit for second order timestep
   subroutine hllfluxes(choice)
 
     use parameters, only : neq, nx, ny, nz

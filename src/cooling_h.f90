@@ -3,8 +3,7 @@
 !> @brief Cooling with hydrogen rate parametrized cooling
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -73,7 +72,6 @@ contains
   function alpha(T)
 
     implicit none
-
     real (kind=8) :: alpha
     real (kind=8), intent(in) :: T
 
@@ -86,8 +84,8 @@ contains
   !> @details calculates the recombination rate to level 1
   !> @param real8 [in] T : Temperature K
   function alpha1(T)
-    implicit none
 
+    implicit none
     real (kind=8) :: alpha1
     real (kind=8), intent(in) :: T
 
@@ -102,7 +100,6 @@ contains
   function colf(T)
 
     implicit none
-
     real (kind=8) :: colf
     real (kind=8), intent(in) :: T
 
@@ -117,7 +114,6 @@ contains
   function betah(T)
 
     implicit none
-
     real (kind=8) ::  betah
     real (kind=8), intent(in) ::  T
     real (kind=8)             ::  a
@@ -145,95 +141,94 @@ contains
   !> @param real8 [in] den : total density of hydrogen
   !> @param real8 [in] dh0 : density of neutral hydrogen
   !> @param real8 [in] Te0 : Temperature
-
-  FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
+  function aloss(x1,x2,dt,den,dh0,te0)
 
     implicit none
 
-    real (kind=8) :: ALOSS
-    real, intent(in)          :: DT
-    !real (kind=8), intent(in) :: X1,X2,DEN,DH0,TE0
-    real (kind=8), intent(in) :: X1,X2,DEN,DH0,TE0
-    real, parameter :: XION=2.179e-11, XH=0.9,XO=1.e-3
-    real, parameter :: C0=0.5732,C1=1.8288e-5,C2=-1.15822e-10,C3=9.4288e-16
-    real, parameter :: D0=0.5856,D1=1.55083e-5,D2=-9.669e-12, D3=5.716e-19
-    real, parameter :: ENK=118409.,EN=1.634E-11
-    real (kind=8) :: SHP
-    !real (kind=8) :: TE, DH,DHP,DE,DOI,DOII,OMEGA,OMEGAL,OMEGAH,FRAC,QLA
-    !real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
-    !real (kind=8) :: BETAH, BETAF, HIICOOL
-    real (kind=8) :: TE, DH,DHP,DE,DOI,DOII,OMEGA,OMEGAL,OMEGAH,FRAC,QLA
-    real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
-    real (kind=8) :: BETAF, HIICOOL!, BETAH
+    real (kind=8) :: aloss
+    real, intent(in)          :: dt
+    !real (kind=8), intent(in) :: x1,x2,den,dh0,te0
+    real (kind=8), intent(in) :: x1,x2,den,dh0,te0
+    real, parameter :: xion=2.179e-11, xh=0.9,xo=1.e-3
+    real, parameter :: c0=0.5732,c1=1.8288e-5,c2=-1.15822e-10,c3=9.4288e-16
+    real, parameter :: d0=0.5856,d1=1.55083e-5,d2=-9.669e-12, d3=5.716e-19
+    real, parameter :: enk=118409.,en=1.634e-11
+    real (kind=8) :: shp
+    !real (kind=8) :: te, dh,dhp,de,doi,doii,omega,omegal,omegah,frac,qla
+    !real (kind=8) :: ecoll,cion,eion,erec,tm,t2,eoi,eoii,equil,fr,ex2,tanh
+    !real (kind=8) :: betah, betaf, hiicool
+    real (kind=8) :: te, dh,dhp,de,doi,doii,omega,omegal,omegah,frac,qla
+    real (kind=8) :: ecoll,cion,eion,erec,tm,t2,eoi,eoii,equil,fr,ex2,tanh
+    real (kind=8) :: betaf, hiicool!, betah
 
-    Te=MAX(Te0,10.)
-    DH=DEN
-    DHP=(1.-X1)*DH
-    DE=DHP+1.E-4*DH
-    DOI=XO*DH0
-    DOII=XO*DHP
+    te=max(te0,10.)
+    dh=den
+    dhp=(1.-x1)*dh
+    de=dhp+1.e-4*dh
+    doi=xo*dh0
+    doii=xo*dhp
 
-    SHP=-DH*(X1-X2)/DT  !  ?```
-    if(TE <= 1e4 ) then
-      ALOSS = 0.
+    shp=-dh*(x1-x2)/dt  !  ?```
+    if(te <= 1e4 ) then
+      aloss = 0.
       return
     end if
 
-    !   Collisionally excited Lyman alpha
-    IF(TE.LE.55000.) OMEGA=C0+TE*(C1+TE*(C2+TE*C3))
-    IF(TE.GE.72000.) OMEGA=D0+TE*(D1+TE*(D2+TE*D3))
-    IF(TE.GT.55000..AND.TE.LT.72000.) THEN
-       OMEGAL=C0+TE*(C1+TE*(C2+TE*C3))
-       OMEGAH=D0+TE*(D1+TE*(D2+TE*D3))
-       FRAC=(TE-55000.)/17000.
-       OMEGA=(1.-FRAC)*OMEGAL+FRAC*OMEGAH
-    END IF
-    QLA=8.6287E-6/(2.*SQRT(TE))*OMEGA*EXP(-ENK/TE)
-    ECOLL=DE*DH0*QLA*EN
-    ECOLL=MAX(ECOLL,0.)
+    !   collisionally excited lyman alpha
+    if(te.le.55000.) omega=c0+te*(c1+te*(c2+te*c3))
+    if(te.ge.72000.) omega=d0+te*(d1+te*(d2+te*d3))
+    if(te.gt.55000..and.te.lt.72000.) then
+       omegal=c0+te*(c1+te*(c2+te*c3))
+       omegah=d0+te*(d1+te*(d2+te*d3))
+       frac=(te-55000.)/17000.
+       omega=(1.-frac)*omegal+frac*omegah
+    end if
+    qla=8.6287e-6/(2.*sqrt(te))*omega*exp(-enk/te)
+    ecoll=de*dh0*qla*en
+    ecoll=max(ecoll,0.)
 
-    !   Hydrogen recombination and collisional ionization
+    !   hydrogen recombination and collisional ionization
 
-    CION=5.834E-11*SQRT(TE)*EXP(-1.579E5/TE)
-    !     AREC=2.61E-10/TE**0.7
-    !     EREC=DE*DHP*(BETAH(TE)+AREC*XION)
-    !     EION=SHP*XION
-    EION=DE*DH0*CION*XION
-    !     EION=0.
-    EREC=DE*DHP*(BETAH(TE))
-    EREC=MAX(EREC,0.)
+    cion=5.834e-11*sqrt(te)*exp(-1.579e5/te)
+    !     arec=2.61e-10/te**0.7
+    !     erec=de*dhp*(betah(te)+arec*xion)
+    !     eion=shp*xion
+    eion=de*dh0*cion*xion
+    !     eion=0.
+    erec=de*dhp*(betah(te))
+    erec=max(erec,0.)
 
-    !   [O I] and [O II] coll. excited lines
+    !   [o i] and [o ii] coll. excited lines
 
-    TM=1./TE
-    T2=TM*TM
-    EOI=DE*DOI*10.**(1381465*T2-12328.69*TM-19.82621)
-    EOII=DE*DOII*10.**(-2061075.*T2-14596.24*TM-19.01402)
-    EOI=MAX(EOI,0.)
-    EOII=MAX(EOII,0.)
+    tm=1./te
+    t2=tm*tm
+    eoi=de*doi*10.**(1381465*t2-12328.69*tm-19.82621)
+    eoii=de*doii*10.**(-2061075.*t2-14596.24*tm-19.01402)
+    eoi=max(eoi,0.)
+    eoii=max(eoii,0.)
 
     !   free-free cooling
 
-    BETAF=1.3*1.42E-27*TE**0.5
-    HIICOOL=DE*DHP*BETAF
+    betaf=1.3*1.42e-27*te**0.5
+    hiicool=de*dhp*betaf
 
-    !   Equilibrium cooling (for high Te)
+    !   equilibrium cooling (for high te)
 
-    EQUIL=(1.0455E-18/TE**0.63)*(1.-EXP(-(TE*1.E-5)**1.63))*DE*DEN+HIICOOL
+    equil=(1.0455e-18/te**0.63)*(1.-exp(-(te*1.e-5)**1.63))*de*den+hiicool
 
     !   switch between non-equil. and equil. ionization cooling
 
-    IF(TE.LE.44770.) FR=0.
-    IF(TE.GE.54770.) FR=1.
-    IF(TE.GT.44770..AND.TE.LT.54770.) THEN
-       EX2=EXP(-2.*(TE-49770.)/500.)
-       TANH=(1.-EX2)/(1.+EX2)
-       FR=0.5*(1.+TANH)
-    END IF
+    if(te.le.44770.) fr=0.
+    if(te.ge.54770.) fr=1.
+    if(te.gt.44770..and.te.lt.54770.) then
+       ex2=exp(-2.*(te-49770.)/500.)
+       tanh=(1.-ex2)/(1.+ex2)
+       fr=0.5*(1.+tanh)
+    end if
 
-    ALOSS=ECOLL+EION+(EREC+7.033*(EOI+EOII))*(1.-FR)+EQUIL*FR
+    aloss=ecoll+eion+(erec+7.033*(eoi+eoii))*(1.-fr)+equil*fr
     !
-  END FUNCTION ALOSS
+  end function aloss
 
   !=======================================================================
   !> @brief Updates the ionization fraction and applpies cooling
@@ -249,22 +244,17 @@ contains
     use parameters
     use hydro_core, only : u2prim
     implicit none
-
     real, intent(in)                 :: dt, tau, radphi
     real, intent(out),dimension(neq) :: uu
     real, dimension(neq)             :: prim
-    real                             :: T !, radphi0, psi0
-    !real (kind=16) :: etau, psi, dh, y0, fpn, g0, e, y1, t1,dh0, al
-    !real (kind=16) :: gain, tprime, ce, ALOSS
+    real                             :: T
     real (kind=8) :: etau, dh, y0, g0, e, y1, t1,dh0, al
     real (kind=8) :: tprime, ce  !, ALOSS
     real(kind=8) :: fpn, gain
 
     !    these need to be double precision in order for
     !      the ionization calculation to work
-
-    !  real (kind=8) :: te, col,rec,a,b,c,d,colf,alpha
-    real (kind=8) :: col,rec,a,b,c,d  !,colf,alpha
+    real (kind=8) :: col,rec,a,b,c,d
     !
     !    parameters
     !      xi - neutral carbon abundance (for non-zero electron density
@@ -283,9 +273,9 @@ contains
 
     !   solve for the ionization fraction and the internal energy
 
-    call u2prim(uu,prim,T)            !# temperature
-    col=colf(real(t,8))                 !# collisional ionization rate
-    rec=alpha(real(t,8))                !# rad. recombination rate
+    call u2prim(uu,prim,T)               !# temperature
+    col=colf(real(t,8))                  !# collisional ionization rate
+    rec=alpha(real(t,8))                 !# rad. recombination rate
     y0=real( uu(neqdyn+1)/uu(1), 8 )     !# neutral H fraction
     dh=real( uu(1), 8 )                  !# H density
     fpn=real(radphi, 8)/dh               !# ionizing flux per nucleus

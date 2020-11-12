@@ -3,8 +3,7 @@
 !> @brief Constants module
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -37,7 +36,7 @@ module constants
   real, parameter :: echarge=4.8032e-10   !< electron charge statcoulomb (cgs)
   real, parameter :: emass=9.10938e-28    !< electron mass (g)
   real, parameter :: sigma_SB=5.6704e-5   !< Stephan Boltzmann constant (cgs)
-  real, parameter :: sigma_T=6.65245e-25  !< Thompson-scattering cross section
+  real, parameter :: sigma_T =6.65245e-25 !< Thompson-scattering cross section
 
   real, parameter :: Msun=1.99E33         !< solar radius (cgs)
   real, parameter :: Rsun=6.955e10        !< solar mass (cgs)
@@ -58,10 +57,10 @@ module constants
   !  Named constants
 
   !  Approximate Riemann solvers
-  integer, parameter :: SOLVER_HLL  = 1
-  integer, parameter :: SOLVER_HLLC = 2
-  integer, parameter :: SOLVER_HLLE = 3
-  integer, parameter :: SOLVER_HLLD = 4
+  integer, parameter :: SOLVER_HLL            = 1
+  integer, parameter :: SOLVER_HLLC           = 2
+  integer, parameter :: SOLVER_HLLE           = 3
+  integer, parameter :: SOLVER_HLLD           = 4
   integer, parameter :: SOLVER_HLLE_SPLIT_B   = 5
   integer, parameter :: SOLVER_HLLD_SPLIT_B   = 6
   integer, parameter :: SOLVER_HLLE_SPLIT_ALL = 7

@@ -3,8 +3,7 @@
 !> @brief Boundary conditions
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -37,9 +36,9 @@ module boundaries
 contains
 
   !=======================================================================
-  !>@brief Boundary conditions for 1st order half timestep
-  !>@details Boundary conditions for 1st order half timestep
-  !! @n The conditions only are imposed at the innermost ghost cell,
+  !> @brief Boundary conditions for 1st order half timestep
+  !> @details Boundary conditions for 1st order half timestep
+  !> @n The conditions only are imposed at the innermost ghost cell,
   !! on the u (unstepped) variables
   subroutine boundaryI()
 
@@ -52,7 +51,7 @@ contains
     integer, parameter :: nym1=ny-1, nyp1=ny+1
     integer, parameter :: nzm1=nz-1, nzp1=nz+1
 #ifdef MPIP
-    integer:: status(MPI_STATUS_SIZE), err
+    integer :: status(MPI_STATUS_SIZE), err
     real, dimension(neq,1,0:nyp1,0:nzp1)::sendr,recvr,sendl,recvl
     real, dimension(neq,0:nxp1,1,0:nzp1)::sendt,recvt,sendb,recvb
     real, dimension(neq,0:nxp1,0:nyp1,1)::sendi,recvi,sendo,recvo
@@ -110,34 +109,34 @@ contains
        !   periodic BCs
     if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
       !   Left BC
-      if (coords(0).eq.0) then
-        u(:,0,:,:)=u(:,nx,:,:)
+      if (coords(0) == 0) then
+        u(:,0,:,:) = u(:,nx,:,:)
       end if
       !   Right BC
-      if (coords(0).eq.MPI_NBX-1) then
-        u(:,nxp1,:,:)=u(:,1,:,:)
+      if (coords(0) == MPI_NBX-1) then
+        u(:,nxp1,:,:) = u(:,1,:,:)
       end if
     end if
 
     if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
       !   bottom BC
-      if (coords(1).eq.0) then
-        u(:,:,0,:)= u(:,:,ny,:)
+      if (coords(1) == 0) then
+        u(:,:,0,:) =  u(:,:,ny,:)
       end if
       !   top BC
-      if (coords(1).eq.MPI_NBY-1) then
-        u(:,:,nyp1,:)= u(:,:,1,:)
+      if (coords(1) == MPI_NBY-1) then
+        u(:,:,nyp1,:) = u(:,:,1,:)
       end if
     end if
 
     if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
       !   out BC
-      if (coords(2).eq.0) then
-        u(:,:,:,0)= u(:,:,:,nz)
+      if (coords(2) == 0) then
+        u(:,:,:,0)=  u(:,:,:,nz)
       end if
       !   in BC
-      if (coords(2).eq.MPI_NBZ-1) then
-        u(:,:,:,nzp1)= u(:,:,:,1)
+      if (coords(2) == MPI_NBZ-1) then
+        u(:,:,:,nzp1) = u(:,:,:,1)
       end if
     end if
 
@@ -146,54 +145,54 @@ contains
     !   Reflecting BCs
     !     left
     if (bc_left == BC_CLOSED) then
-      if (coords(0).eq.0) then
-        u(1       ,0,0:nyp1,0:nzp1) = u(1       ,1,0:nyp1,0:nzp1)
-        u(2       ,0,0:nyp1,0:nzp1) =-u(2       ,1,0:nyp1,0:nzp1)
-        u(3:neq,0,0:nyp1,0:nzp1) = u(3:neq,1,0:nyp1,0:nzp1)
+      if (coords(0) == 0) then
+        u(1    ,0,0:nyp1,0:nzp1) =  u(1    ,1,0:nyp1,0:nzp1)
+        u(2    ,0,0:nyp1,0:nzp1) = -u(2    ,1,0:nyp1,0:nzp1)
+        u(3:neq,0,0:nyp1,0:nzp1) =  u(3:neq,1,0:nyp1,0:nzp1)
       end if
     end if
 
     !   right
     if (bc_right == BC_CLOSED) then
-      if (coords(0).eq.(MPI_NBX-1)) then
-        u(1       ,nxp1,0:nyp1,0:nzp1) = u(1       ,nx,0:nyp1,0:nzp1)
-        u(2       ,nxp1,0:nyp1,0:nzp1) =-u(2       ,nx,0:nyp1,0:nzp1)
-        u(3:neq,nxp1,0:nyp1,0:nzp1) = u(3:neq,nx,0:nyp1,0:nzp1)
+      if (coords(0) == (MPI_NBX-1)) then
+        u(1    ,nxp1,0:nyp1,0:nzp1) =  u(1    ,nx,0:nyp1,0:nzp1)
+        u(2    ,nxp1,0:nyp1,0:nzp1) = -u(2    ,nx,0:nyp1,0:nzp1)
+        u(3:neq,nxp1,0:nyp1,0:nzp1) =  u(3:neq,nx,0:nyp1,0:nzp1)
       end if
     end if
 
     !   bottom
     if (bc_bottom == BC_CLOSED) then
-      if (coords(1).eq.0) then
-        u(1:2     ,0:nxp1,0,0:nzp1) = u(1:2     ,0:nxp1,1,0:nzp1)
-        u(3       ,0:nxp1,0,0:nzp1) =-u(3       ,0:nxp1,1,0:nzp1)
-        u(4:neq,0:nxp1,0,0:nzp1) = u(4:neq,0:nxp1,1,0:nzp1)
+      if (coords(1) == 0) then
+        u(1:2  ,0:nxp1,0,0:nzp1) =  u(1:2  ,0:nxp1,1,0:nzp1)
+        u(3    ,0:nxp1,0,0:nzp1) = -u(3    ,0:nxp1,1,0:nzp1)
+        u(4:neq,0:nxp1,0,0:nzp1) =  u(4:neq,0:nxp1,1,0:nzp1)
       end if
     end if
 
     !   top
     if (bc_top == BC_CLOSED) then
-      if (coords(1).eq.(MPI_NBY-1)) then
-        u(1:2     ,0:nxp1,nyp1,0:nzp1) = u(1:2     ,0:nxp1,ny,0:nzp1)
-        u(3       ,0:nxp1,nyp1,0:nzp1) =-u(3       ,0:nxp1,ny,0:nzp1)
-        u(4:neq,0:nxp1,nyp1,0:nzp1) = u(4:neq,0:nxp1,ny,0:nzp1)
+      if (coords(1) == (MPI_NBY-1)) then
+        u(1:2  ,0:nxp1,nyp1,0:nzp1) =  u(1:2  ,0:nxp1,ny,0:nzp1)
+        u(3    ,0:nxp1,nyp1,0:nzp1) = -u(3    ,0:nxp1,ny,0:nzp1)
+        u(4:neq,0:nxp1,nyp1,0:nzp1) =  u(4:neq,0:nxp1,ny,0:nzp1)
       end if
     end if
 
     !   out
     if (bc_out == BC_CLOSED) then
-      if (coords(2).eq.0) then
-        u(1:3     ,0:nxp1,0:nyp1,0) = u(1:3     ,0:nxp1,0:nyp1,1)
-        u(4       ,0:nxp1,0:nyp1,0) =-u(4       ,0:nxp1,0:nyp1,1)
-        u(5:neq,0:nxp1,0:nyp1,0) = u(5:neq,0:nxp1,0:nyp1,1)
+      if (coords(2) == 0) then
+        u(1:3  ,0:nxp1,0:nyp1,0) =  u(1:3  ,0:nxp1,0:nyp1,1)
+        u(4    ,0:nxp1,0:nyp1,0) = -u(4    ,0:nxp1,0:nyp1,1)
+        u(5:neq,0:nxp1,0:nyp1,0) =  u(5:neq,0:nxp1,0:nyp1,1)
       end if
     end if
 
     !   in
     if (bc_in == BC_CLOSED) then
-      if (coords(2).eq.MPI_NBZ-1) then
-        u(1:3     ,0:nxp1,0:nyp1,nzp1) = u(1:3     ,0:nxp1,0:nyp1,nz)
-        u(4       ,0:nxp1,0:nyp1,nzp1) =-u(4       ,0:nxp1,0:nyp1,nz)
+      if (coords(2) == MPI_NBZ-1) then
+        u(1:3  ,0:nxp1,0:nyp1,nzp1) = u(1:3  ,0:nxp1,0:nyp1,nz)
+        u(4    ,0:nxp1,0:nyp1,nzp1) =-u(4    ,0:nxp1,0:nyp1,nz)
         u(5:neq,0:nxp1,0:nyp1,nzp1) = u(5:neq,0:nxp1,0:nyp1,nz)
       end if
     end if
@@ -201,43 +200,43 @@ contains
     !   outflow BCs
     !   left
     if (bc_left == BC_OUTFLOW) then
-      if (coords(0).eq.0) then
-        u(:,0,   0:nyp1,0:nzp1)=u(:,1 ,0:nyp1,0:nzp1)
+      if (coords(0) == 0) then
+        u(:,0,0:nyp1,0:nzp1) = u(:,1 ,0:nyp1,0:nzp1)
        end if
     end if
 
     !   right
     if (bc_right == BC_OUTFLOW) then
-      if (coords(0).eq.MPI_NBX-1) then
-        u(:,nxp1,0:nyp1,0:nzp1)=u(:,nx,0:nyp1,0:nzp1)
+      if (coords(0) == MPI_NBX-1) then
+        u(:,nxp1,0:nyp1,0:nzp1) = u(:,nx,0:nyp1,0:nzp1)
       end if
     end if
 
     !   bottom
     if (bc_bottom == BC_OUTFLOW) then
-      if (coords(1).eq.0) then
-        u(:,0:nxp1,0   ,0:nzp1)=u(:,0:nxp1,1 ,0:nzp1)
+      if (coords(1) == 0) then
+        u(:,0:nxp1,0,0:nzp1) = u(:,0:nxp1,1 ,0:nzp1)
       end if
     end if
 
     !   top
     if (bc_top == BC_OUTFLOW) then
-      if (coords(1).eq.MPI_NBY-1) then
-        u(:,0:nxp1,nyp1,0:nzp1)=u(:,0:nxp1,ny,0:nzp1)
+      if (coords(1) == MPI_NBY-1) then
+        u(:,0:nxp1,nyp1,0:nzp1) = u(:,0:nxp1,ny,0:nzp1)
       end if
     end if
 
     !   out
     if (bc_out == BC_OUTFLOW) then
-      if (coords(2).eq.0) then
-        u(:,0:nxp1,0:nyp1,0   )=u(:,0:nxp1,0:nyp1,1 )
+      if (coords(2) == 0) then
+        u(:,0:nxp1,0:nyp1,0) = u(:,0:nxp1,0:nyp1,1)
       end if
     end if
 
     !   in
     if (bc_in == BC_OUTFLOW) then
-      if (coords(2).eq.MPI_NBZ-1) then
-        u(:,0:nxp1,0:nyp1,nzp1)=u(:,0:nxp1,0:nyp1,nz)
+      if (coords(2) == MPI_NBZ-1) then
+        u(:,0:nxp1,0:nyp1,nzp1) = u(:,0:nxp1,0:nyp1,nz)
       end if
     end if
 
@@ -247,11 +246,10 @@ contains
   end subroutine boundaryI
 
   !=======================================================================
-  !>@brief Boundary conditions for 2nd order half timestep
-  !>@details Boundary conditions for 2nd order half timestep
+  !> @brief Boundary conditions for 2nd order half timestep
+  !> @details Boundary conditions for 2nd order half timestep
   !! @n The conditions only are imposed in two ghost cells
   !! on the up (stepped) variables
-
   subroutine boundaryII()
 
 #ifdef MPIP
@@ -324,34 +322,34 @@ contains
     !   periodic BCs
     if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
       !   Left BC
-      if (coords(0).eq.0) then
-        up(:,nxmin:0,:,:)=up(:,nxmg:nx,:,:)
+      if (coords(0) == 0) then
+        up(:,nxmin:0,:,:) = up(:,nxmg:nx,:,:)
       end if
       !   Right BC
-      if (coords(0).eq.MPI_NBX-1) then
-        up(:,nxp:nxmax,:,:)=up(:,1:nghost,:,:)
+      if (coords(0) == MPI_NBX-1) then
+        up(:,nxp:nxmax,:,:) = up(:,1:nghost,:,:)
       end if
     end if
 
     if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
       !   bottom BC
-      if (coords(1).eq.0) then
-        up(:,:,nymin:0,:)= up(:,:,nymg:ny,:)
+      if (coords(1) == 0) then
+        up(:,:,nymin:0,:) = up(:,:,nymg:ny,:)
       end if
       !   top BC
-      if (coords(1).eq.MPI_NBY-1) then
-        up(:,:,nyp:nymax,:)= up(:,:,1:nghost,:)
+      if (coords(1) == MPI_NBY-1) then
+        up(:,:,nyp:nymax,:) = up(:,:,1:nghost,:)
       end if
     end if
 
     if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
       !   out BC
-      if (coords(2).eq.0) then
-        up(:,:,:,nzmin:0)= up(:,:,:,nzmg:nz)
+      if (coords(2) == 0) then
+        up(:,:,:,nzmin:0) = up(:,:,:,nzmg:nz)
       end if
       !   in BC
-      if (coords(2).eq.MPI_NBZ-1) then
-        up(:,:,:,nzp:nzmax)= up(:,:,:,1:nghost)
+      if (coords(2) == MPI_NBZ-1) then
+        up(:,:,:,nzp:nzmax) = up(:,:,:,1:nghost)
       end if
     end if
 
@@ -360,12 +358,12 @@ contains
     !   Reflecting BCs
     !     left
     if (bc_left == BC_CLOSED) then
-      if (coords(0).eq.0) then
+      if (coords(0) == 0) then
         j=nghost
         do i=nxmin,0
-          up(1  ,i,:,:) = up(1  ,j,:,:)
-          up(2  ,i,:,:) =-up(2  ,j,:,:)
-          up(3:neq,i,:,:) = up(3:neq,j,:,:)
+          up(1    ,i,:,:) =  up(1    ,j,:,:)
+          up(2    ,i,:,:) = -up(2    ,j,:,:)
+          up(3:neq,i,:,:) =  up(3:neq,j,:,:)
           j=j-1
         enddo
       end if
@@ -373,12 +371,12 @@ contains
 
     !   right
     if (bc_right == BC_CLOSED) then
-      if (coords(0).eq.MPI_NBX-1) then
+      if (coords(0) == MPI_NBX-1) then
         j=nx
         do i=nxp,nxmax
-          up(1  ,i,:,:) = up(1  ,j,:,:)
-          up(2  ,i,:,:) =-up(2  ,j,:,:)
-          up(3:neq,i,:,:) = up(3:neq,j,:,:)
+          up(1    ,i,:,:) =  up(1    ,j,:,:)
+          up(2    ,i,:,:) = -up(2    ,j,:,:)
+          up(3:neq,i,:,:) =  up(3:neq,j,:,:)
           j=j-1
         enddo
       end if
@@ -386,12 +384,12 @@ contains
 
     !   bottom
     if (bc_bottom == BC_CLOSED) then
-      if (coords(1).eq.0) then
+      if (coords(1) == 0) then
         j=nghost
         do i=nymin,0
-          up(1:2,:,i,:) = up(1:2,:,j,:)
-          up(3  ,:,i,:) =-up(3  ,:,j,:)
-          up(4:neq,:,i,:) = up(4:neq,:,j,:)
+          up(1:2  ,:,i,:) =   up(1:2  ,:,j,:)
+          up(3    ,:,i,:) =  -up(3    ,:,j,:)
+          up(4:neq,:,i,:) =   up(4:neq,:,j,:)
           j=j-1
         enddo
       end if
@@ -399,12 +397,12 @@ contains
 
     !   top
     if (bc_top == BC_CLOSED) then
-      if (coords(1).eq.(MPI_NBY-1)) then
+      if (coords(1) == (MPI_NBY-1)) then
         j=ny
         do i=nyp,nymax
-          up(1:2,:,i,:) = up(1:2,:,j,:)
-          up(3  ,:,i,:) =-up(3  ,:,j,:)
-          up(4:neq,:,i,:) = up(4:neq,:,j,:)
+          up(1:2  ,:,i,:) =  up(1:2  ,:,j,:)
+          up(3    ,:,i,:) = -up(3    ,:,j,:)
+          up(4:neq,:,i,:) =  up(4:neq,:,j,:)
           j=j-1
         enddo
       end if
@@ -412,12 +410,12 @@ contains
 
     !   out
     if (bc_out == BC_CLOSED) then
-      if (coords(2).eq.0) then
+      if (coords(2) == 0) then
         j=nghost
         do i=nzmin,0
-          up(1:3,:,:,i) = up(1:3,:,:,j)
-          up(4  ,:,:,i) =-up(4  ,:,:,j)
-          up(5:neq  ,:,:,i) = up(5:neq  ,:,:,j)
+          up(1:3  ,:,:,i) =  up(1:3  ,:,:,j)
+          up(4    ,:,:,i) = -up(4    ,:,:,j)
+          up(5:neq,:,:,i) =  up(5:neq,:,:,j)
           j=j-1
         enddo
       end if
@@ -425,12 +423,12 @@ contains
 
     !   in
     if (bc_in == BC_CLOSED) then
-      if (coords(2).eq.MPI_NBZ-1) then
+      if (coords(2) == MPI_NBZ-1) then
         j=nz
         do i=nzp,nzmax
-          up(1:3,:,:,i) = up(1:3,:,:,j)
-          up(4  ,:,:,i) =-up(4  ,:,:,j)
-          up(5:neq  ,:,:,i) = up(5:neq  ,:,:,j)
+          up(1:3  ,:,:,i) =  up(1:3  ,:,:,j)
+          up(4    ,:,:,i) = -up(4    ,:,:,j)
+          up(5:neq,:,:,i) =  up(5:neq,:,:,j)
           j=j-1
         enddo
       end if
@@ -439,10 +437,10 @@ contains
     !   outflow BCs
     !   left
     if (bc_left == BC_OUTFLOW) then
-      if (coords(0).eq.0) then
+      if (coords(0) == 0) then
         j=nghost
         do i=nxmin,0
-          up(:,i,:,:)=up(:,j,:,:)
+          up(:,i,:,:) = up(:,j,:,:)
           j=j-1
         enddo
       end if
@@ -450,10 +448,10 @@ contains
 
     !   right
     if (bc_right == BC_OUTFLOW) then
-      if (coords(0).eq.MPI_NBX-1) then
+      if (coords(0) == MPI_NBX-1) then
         j=nx
         do i=nxp,nxmax
-          up(:,i,:,:)=up(:,j,:,:)
+          up(:,i,:,:) = up(:,j,:,:)
           j=j-1
         enddo
       end if
@@ -461,10 +459,10 @@ contains
 
     !   bottom
     if (bc_bottom == BC_OUTFLOW) then
-      if (coords(1).eq.0) then
+      if (coords(1) == 0) then
         j= nghost
         do i=nymin,0
-          up(:,:,i,:)=up(:,:,j,:)
+          up(:,:,i,:) = up(:,:,j,:)
           j=j-1
         enddo
       end if
@@ -472,10 +470,10 @@ contains
 
     !   top
     if (bc_top == BC_OUTFLOW) then
-      if (coords(1).eq.MPI_NBY-1) then
+      if (coords(1) == MPI_NBY-1) then
         j=ny
         do i=nyp,nymax
-          up(:,:,i,:)=up(:,:,j,:)
+          up(:,:,i,:) = up(:,:,j,:)
           j=j-1
         enddo
       end if
@@ -483,10 +481,10 @@ contains
 
     !   out
     if (bc_out == BC_OUTFLOW) then
-      if (coords(2).eq.0) then
+      if (coords(2) == 0) then
         j=nghost
         do i=nzmin,0
-          up(:,:,:,i)=up(:,:,:,j)
+          up(:,:,:,i) = up(:,:,:,j)
           j = j-1
         enddo
       end if
@@ -494,10 +492,10 @@ contains
 
     !   in
     if (bc_in == BC_OUTFLOW) then
-      if (coords(2).eq.MPI_NBZ-1) then
+      if (coords(2) == MPI_NBZ-1) then
         j=nz
         do i=nzp,nzmax
-          up(:,:,:,i)=up(:,:,:,j)
+          up(:,:,:,i) = up(:,:,:,j)
           j = j-1
         enddo
       end if

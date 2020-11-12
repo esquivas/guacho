@@ -3,8 +3,7 @@
 !> @brief Column density projection
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -46,26 +45,26 @@ contains
     !initializes MPI
 #ifdef MPIP
 #ifdef PERIODX
-    logical, parameter :: perx=.true.
+    logical, parameter :: perx = .true.
 #else
-    logical, parameter :: perx=.false.
+    logical, parameter :: perx = .false.
 #endif
 #ifdef PERIODY
-    logical, parameter :: pery=.true.
+    logical, parameter :: pery = .true.
 #else
-    logical, parameter :: pery=.false.
+    logical, parameter :: pery = .false.
 #endif
 #ifdef PERIODZ
-    logical, parameter :: perz=.true.
+    logical, parameter :: perz = .true.
 #else
-    logical, parameter :: perz=.false.
+    logical, parameter :: perz = .false.
 #endif
-    period(0)=perx
-    period(1)=pery
-    period(2)=perz
-    dims(0)  =MPI_NBX
-    dims(1)  =MPI_NBY
-    dims(2)  =MPI_NBZ
+    period(0) = perx
+    period(1) = pery
+    period(2) = perz
+    dims(0)   = MPI_NBX
+    dims(1)   = MPI_NBY
+    dims(2)   = MPI_NBZ
 
     call mpi_init (err)
     call mpi_comm_rank (mpi_comm_world,rank,err)
@@ -81,22 +80,21 @@ contains
     coords(:)=0
 #endif
     if(rank.eq.master) then
-       print '(a)' ,"*******************************************"
-       print '(a)' ,"                        _                 *"
-       print '(a)' ,"  __   _   _  __ _  ___| |__   ___    3   *"
-       print '(a)' ," / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
-       print '(a)' ,"| (_| | |_| | (_| | (__| | | | (_) |      *"
-       print '(a)' ," \__, |\__,_|\__,_|\___|_| |_|\___/       *"
-       print '(a)' ," |___/                                    *"
+       print '(a)' ,"*********************************************"
+       print '(a)' ,"*                         _                 *"
+       print '(a)' ,"*   __   _   _  __ _  ___| |__   ___    3   *"
+       print '(a)' ,"*  / _ `| | | |/ _` |/ __| '_ \ / _ \    D  *"
+       print '(a)' ,"* | (_| | |_| | (_| | (__| | | | (_) |      *"
+       print '(a)' ,"*  \__, |\__,_|\__,_|\___|_| |_|\___/       *"
+       print '(a)' ,"*  |___/                                    *"
     endif
 #ifdef MPIP
     if(rank.eq.master) then
-       print '(a,i3,a)','*    running with mpi in', np , ' processors    *'
+       print '(a,i3,a)','*    running with mpi in ', np, ' processors     *'
        print '(a)' ,'*******************************************'
        print '(a)', 'Calculating Column Density'
     end if
-    call mpi_cart_create(mpi_comm_world, ndim, dims, period, 1                 &
-         , comm3d, err)
+    call mpi_cart_create(mpi_comm_world, ndim, dims, period, .true., comm3d,err)
     call mpi_comm_rank(comm3d, rank, err)
     call mpi_cart_coords(comm3d, rank, ndim, coords, err)
     print '(a,i3,a,3i4)', 'processor ', rank                                   &
@@ -113,9 +111,9 @@ contains
 #endif
 
     !  grid spacing
-    dx=xmax/nxtot
-    dy=ymax/nytot
-    dz=zmax/nztot
+    dx = xmax/nxtot
+    dy = ymax/nytot
+    dz = zmax/nztot
 
     !  allocate big arrays in memory
     allocate( u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) )
@@ -134,12 +132,12 @@ contains
     use parameters, only : np, neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
     use globals,    only : rank, comm3d
     implicit none
-    real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-    integer, intent(in) :: itprint
+    real,    intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    integer, intent(in)  :: itprint
     character (len=128), intent(in) :: filepath
     integer :: unitin, ip, err
     character (len=128) file1
-    character           :: byte_read
+    character             :: byte_read
     character, parameter  :: lf = char(10)
     integer :: nxp, nyp, nzp, x0p, y0p, z0p, mpi_xp, mpi_yp, mpi_zp, neqp,     &
                neqdynp, nghostp
@@ -226,8 +224,6 @@ contains
   !> @param real [out], x : final z position in the grid
   subroutine rotation_x(theta,x,y,z,xn,yn,zn)
 
-    ! rotation around the x axis by an angle theta
-
     implicit none
     real, intent(in ) :: theta, x, y, z
     reaL, intent(out) :: xn, yn, zn
@@ -247,7 +243,6 @@ contains
   !> @param real [out], x : final x position in the grid
   !> @param real [out], y : final y position in the grid
   !> @param real [out], x : final z position in the grid
-
   subroutine rotation_y(theta,x,y,z,xn,yn,zn)
 
     implicit none
@@ -295,7 +290,7 @@ contains
   !> @param real [in] thetaz : Rotation around Z
   subroutine fill_map(nxmap,nymap,u,map,dxT,dyT,theta_x,theta_y,theta_z)
 
-     use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
+    use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax,           &
                            neq, nx, ny, nz, vsc2, rsc,nztot, neqdyn, rhosc
     use globals, only : dz
     use hydro_core, only : u2prim
@@ -310,30 +305,30 @@ contains
     real :: x,y,z,xn,yn,zn
 
     do k=1,nz
-       do j=1,ny
-          do i=1,nx
+      do j=1,ny
+        do i=1,nx
 
-            !  obtain original position
-            call getXYZ(i,j,k, x,y,z)
+          !  obtain original position
+          call getXYZ(i,j,k, x,y,z)
 
-            !  do the rotation of the coordinates
-            call rotation_x(theta_x,x,y,z,xn,yn,zn)
-            call rotation_y(theta_y,xn,yn,zn,x,y,z)
-            call rotation_z(theta_z,x,y,z,xn,yn,zn)
-            ! This is the position on the target (centered)
-            ! Integration is along Z
-            iobs=xn/dxT + nxmap/2
-            jobs=yn/dyT + nymap/2
+          !  do the rotation of the coordinates
+          call rotation_x(theta_x,x,y,z,xn,yn,zn)
+          call rotation_y(theta_y,xn,yn,zn,x,y,z)
+          call rotation_z(theta_z,x,y,z,xn,yn,zn)
+          ! This is the position on the target (centered)
+          ! Integration is along Z
+          iobs=xn/dxT + nxmap/2
+          jobs=yn/dyT + nymap/2
 
-            !  make sure the result lies in the map bounds
-            if( (iobs >=1    ).and.(jobs >=1    ).and. &
-                (iobs <=nxmap).and.(jobs <=nymap) ) then
+          !  make sure the result lies in the map bounds
+          if( (iobs >=1    ).and.(jobs >=1    ).and.                           &
+              (iobs <=nxmap).and.(jobs <=nymap)      ) then
 
-              if (u(7,i,j,k) <= 0. ) then
-                map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
-              end if
-
+            if (u(7,i,j,k) <= 0. ) then
+              map(iobs, jobs) = map(iobs, jobs) + u(1,i,j,k)*rhosc*dz*rsc
             end if
+
+          end if
         end do
       end do
     end do
@@ -437,14 +432,14 @@ contains
 
   end subroutine write_map
 
-!=======================================================================
+  !=======================================================================
 
 end module coldens_utilities
 
 !=======================================================================
 !> @brief Computes the H-alpha emission
 !> @details Computes the H-alpha apbsorption
-!! @n It rotates the data along each of the coordinates axis
+!> @n It rotates the data along each of the coordinates axis
 !! by an amount @f$ \theta_x, \theta_y, \theta_z @f$, and  projectcs the
 !! map along the the LOS, which is taken to be the Z axis
 program coldens
@@ -466,8 +461,8 @@ program coldens
   real :: map(nxmap, nymap), map1(nxmap,nymap)
 
   !  Target pixel size, relative to the simulation
-  dxT= xmax/real(nxmap)
-  dyT= dxT
+  dxT = xmax/real(nxmap)
+  dyT = dxT
 
   ! initializes program (uses the parameters.f90 form the rest of the code)
   call init_coldens()
@@ -522,6 +517,7 @@ program coldens
 
   !  add info to the map
   call fill_map(nxmap,nymap,u,map,dxT,dyT, theta_x, theta_y, theta_z)
+
   !  sum all the partial sums
   call mpi_reduce(map,map1,nxmap*nymap, mpi_real_kind, mpi_sum, master,        &
                  comm3d, err)
@@ -535,7 +531,7 @@ program coldens
 #ifdef MPIP
   call mpi_finalize(err)
 #endif
-  !
+
   stop
 
 end program coldens

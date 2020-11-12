@@ -3,8 +3,7 @@
 !> @brief Cooling module with Dlgarno Mac Cray coronal cooling curve
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -49,7 +48,7 @@ contains
   !=======================================================================
   !> @brief Reads the cooling curve table
   !> @details Reads the Dalgarno McCray cooling courve
-  !! the location is assumed in src/cool_lib/coolingDMC.tab,
+  !! @n The location is assumed in src/cool_lib/coolingDMC.tab,
   !! it is read by init subroutine
   subroutine read_table_dmc()
 
@@ -63,11 +62,11 @@ contains
     real (kind=8) :: a, b
 
     if(rank.eq.master) then
-      open(unit=10,file=trim(workdir)//'../src/cool_lib/coolingDMC.tab',         &
+      open(unit=10,file = trim(workdir)//'../src/cool_lib/coolingDMC.tab',     &
            status='old')
        do i=1,41
          read(10,*) a, b
-         cooltab_dmc(1,i)=10.e0**(a)
+         cooltab_dmc(1,i)=10.e0**( a)
          cooltab_dmc(2,i)=10.e0**(-b)
        end do
        close(unit=10)

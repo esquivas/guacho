@@ -3,8 +3,7 @@
 !> @brief Guacho-3D main program
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-!
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -61,7 +60,6 @@ program guacho
   use boundaries
   use difrad
   use thermal_cond, only : tc_log
-
   implicit none
   integer :: err
   integer :: itprint
@@ -78,7 +76,7 @@ program guacho
   call boundaryI()
 
   !  update primitives with u
-  call calcprim(u,primit, only_ghost=.false.)
+  call calcprim(u,primit, only_ghost = .false.)
 
   if (dif_rad) call diffuse_rad()
 

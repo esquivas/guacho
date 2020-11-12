@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
 
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -47,8 +47,8 @@ contains
   !=======================================================================
   !> @brief initializes random number generation
   !> @details initializes random number generation
-
   subroutine init_difrad()
+
     implicit none
     integer :: rand_size
     integer, allocatable, dimension(:) :: rand_seed
@@ -74,7 +74,7 @@ contains
     allocate(rand_seed(1:rand_size))
     call date_and_time(time=system_time)
     read(system_time,*) rtime
-    rand_seed=int(rtime*1000.)
+    rand_seed=int(rtime*1000.0)
 #ifdef MPIP
     rand_seed=rand_seed*rank
 #endif
@@ -346,9 +346,6 @@ contains
           ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )/(u(neqdyn+1,i,j,k)*(dx*rsc)**3)
           f=f*exp(-dtau)
        end if
-       !dtau=u(6,i,j,k)*a0*dl*dx*rsc
-       !ph(i,j,k)=ph(i,j,k)+f*(1.-exp(-dtau) )!/(u(6,i,j,k)+1e-30)
-       !f=f*exp(-dtau)
 
        xl=xl+dxl
        yl=yl+dyl
@@ -654,13 +651,9 @@ contains
     !   computes the emissivity at each cell
     !call emdiff(emax)
 
-    !   fire the photon torpedoes! (nrays=1000000  moved to header)
-    !   posicion de la fuente ionizante, in the entire domain
-    !    xc=real(nxtot/2)*dx
-    !    yc=real(nytot/2)*dy
-    !    zc=real(nztot/2)*dz
+    !   fire the photon torpedoes!
 
-    !   posicion de la fuente ionizante
+    !  Source position
     xc=real(nxtot/2)*dx
     yc=real(nytot/2)*dy
     zc=real(nztot/2)*dz
@@ -672,7 +665,6 @@ contains
     in=0  ! number or rays successfully injected
     do niter=1, nrays
       !  get the location and direction of the photon to be traced
-      !  from 1:nxtot, 1:nytot, 1:nztot
       call starsource(srad,xc,yc,zc,xp,yp,zp,dirx,diry,dirz)
       !  obtain in which proc will be put
       !
@@ -700,8 +692,8 @@ contains
 
     end do
 
-    !determine the actual number of photons injected, !
-    !and divide ph among them
+    !determine the actual number of photons injected,
+    !and divide ph by it
 #ifdef MPIP
     call mpi_allreduce(in, nmax, 1, mpi_integer, mpi_sum, mpi_comm_world,err)
 #else

@@ -3,8 +3,7 @@
 !> @brief Output in BIN Format
 !> @author Alejandro Esquivel
 !> @date 4/May/2016
-!
-! Copyright (c) 2016 Guacho Co-Op
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -24,6 +23,7 @@
 
 !> @brief Output in BIN format
 !> @details This module writes the ouput in BIN format
+
 module  Out_BIN_Module
 
   use parameters
@@ -38,9 +38,10 @@ contains
   !> @param integer [in] unit : number of logical unit
   subroutine write_header(unit, neq_out, nghost_out)
     implicit none
-    integer, intent(in) :: unit, neq_out, nghost_out
-    character, parameter  :: lf = char(10)
-    character (len=128) :: cbuffer
+    integer, intent(in)  :: unit, neq_out, nghost_out
+    character, parameter :: lf = char(10)
+    character (len=128)  :: cbuffer
+    real                 :: time_sec
 
     !  Write ASCII header
     write(unit) "**************** Output for Guacho v1.3****************",lf
@@ -75,6 +76,22 @@ contains
 
     write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
     write(unit) trim(cbuffer), lf
+
+    time_sec = time * tsc
+    !  Do some formatting
+    if (time_sec > 1.0e6*yr) then
+      write(cbuffer, '("Output time is:",f7.2, Myr' ) time_sec/1.0e6/yr
+    else if (time_sec > 1.0e3*yr) then
+      write(cbuffer, '("Output time is:",f7.2, Kyr' ) time_sec/1.0e3/yr
+    else if (time_sec > yr) then
+      write(cbuffer, '("Output time is:",f7.2, yr'  ) time_sec/yr
+    else if (time_sec > day) then
+      write(cbuffer, '("Output time is:",f7.2, days') time_sec/day
+    else if (time_sec > hr) then
+      write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
+    else
+      write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
+    end if
 
 #ifdef DOUBLEP
     write(unit) "Double precision 8 byte floats",lf
@@ -242,8 +259,8 @@ contains
 #endif
 
     if (enable_lmp .and. dump_shock) then
-      !   This is a hack to write div V and alpha for now
-      ! take turns to write to disk
+      !  This is a hack to write div V and alpha for now
+      !  take turns to write to disk
       do ip=0, np-1
         if(rank == ip) then
           write(file1,'(a,i3.3,a,i3.3,a)')                                     &
@@ -269,5 +286,3 @@ contains
   !=======================================================================
 
 end module Out_BIN_Module
-
-!=======================================================================

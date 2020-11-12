@@ -4,7 +4,7 @@
 !> @author A. Esquivel, M. Schneiter, C. Villareal D'Angelo
 !> @date 4/May/2016
 
-! Copyright (c) 2016 Guacho Co-OP
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !

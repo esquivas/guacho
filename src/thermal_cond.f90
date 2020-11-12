@@ -4,7 +4,7 @@
 !> @author Alejandro Esquivel & Ernesto Zurbiggen
 !> @date 07/Sep/2015
 
-! Copyright (c) 2016 Guacho Co-OP
+! Copyright (c) 2020 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
