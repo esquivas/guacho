@@ -638,8 +638,8 @@ program stokes_lp
   integer :: err
   integer :: itprint
   !
-  real, parameter :: theta_x = -45.0 *pi/180.
-  real, parameter :: theta_y =   0.0 *pi/180.
+  real, parameter :: theta_x =   0.0 *pi/180.
+  real, parameter :: theta_y =  45.0 *pi/180.
   real, parameter :: theta_z =   0.0 *pi/180.
   !   map and its dimensions
   integer, parameter :: nmaps= 3   !< (1=I, 2=Q, 3=U)
@@ -665,7 +665,7 @@ program stokes_lp
 
   freq_obs  =  1.40e9 !< frequency of observation (Hz)
 
-  loop_over_outputs : do itprint=0,10
+  loop_over_outputs : do itprint=0,25
 
     !  read MHD and particles data
     call read_data(u,itprint,filepath)
