@@ -73,7 +73,7 @@ contains
     real (kind=4),  allocatable   :: rho(:,:,:),  velx(:,:,:), vely(:,:,:),    &
                                      velz(:,:,:), magx(:,:,:), magy(:,:,:),    &
                                      magz(:,:,:)
-    real, parameter     :: rho_env=0.005, T_env=1000.0/Tempsc, B_env=2.e-6/bsc
+    real, parameter     :: rho_env=0.1, T_env=1000.0/Tempsc, B_env=1.6e-6/bsc
     ! real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
     real    :: pos(3)
@@ -97,19 +97,19 @@ contains
         allocate ( magz(nxtot,nytot,nztot) )
 
         ! Read entire input
-        open(unit=10,file='/storage2/esquivel/turb-mhd-sims/b1p.01/dens.bin',  &
+        open(unit=10,file='/storage2/esquivel/turb-mhd-sims/b1p.1/dens.bin',  &
              access='stream')
-        open(unit=11,file='/storage2/esquivel/turb-mhd-sims/b1p.01/velx.bin',  &
+        open(unit=11,file='/storage2/esquivel/turb-mhd-sims/b1p.1/velx.bin',  &
              access='stream')
-        open(unit=12,file='/storage2/esquivel/turb-mhd-sims/b1p.01/vely.bin',  &
+        open(unit=12,file='/storage2/esquivel/turb-mhd-sims/b1p.1/vely.bin',  &
              access='stream')
-        open(unit=13,file='/storage2/esquivel/turb-mhd-sims/b1p.01/velz.bin',  &
+        open(unit=13,file='/storage2/esquivel/turb-mhd-sims/b1p.1/velz.bin',  &
              access='stream')
-        open(unit=14,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magx.bin',  &
+        open(unit=14,file='/storage2/esquivel/turb-mhd-sims/b1p.1/magx.bin',  &
              access='stream')
-        open(unit=15,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magy.bin',  &
+        open(unit=15,file='/storage2/esquivel/turb-mhd-sims/b1p.1/magy.bin',  &
              access='stream')
-        open(unit=16,file='/storage2/esquivel/turb-mhd-sims/b1p.01/magz.bin',  &
+        open(unit=16,file='/storage2/esquivel/turb-mhd-sims/b1p.1/magz.bin',  &
              access='stream')
 
         read(10) rho  ; close(10)
