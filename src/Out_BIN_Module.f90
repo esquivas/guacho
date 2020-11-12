@@ -92,6 +92,7 @@ contains
     else
       write(cbuffer, '("Output time is: ",es10.3, " sec" )') time_sec
     end if
+    write(unit) trim(cbuffer), lf
 
 #ifdef DOUBLEP
     write(unit) "Double precision 8 byte floats",lf
