@@ -30,7 +30,7 @@ module snr
   implicit none
   !   SN parameters
   real :: Esn = 1.e51    !<  Energy in the SN
-  real :: Rsn = 3.0*pc   !<  Initial radius of the SN
+  real :: Rsn = 1.0*pc   !<  Initial radius of the SN
   real :: Msn = 1.4*Msun !<  Mass inside Rsn
   real, parameter :: chi =0.5       !<  Fraction of kinetic to total energy
 
@@ -46,8 +46,8 @@ contains
 !--------------------------------------------------------------------
 
 subroutine impose_snr(u, xc, yc, zc)
-  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         nxtot, nytot, nztot, neq, nx, ny, nz, &
+  use parameters, only : nxmin, nxmax, nymin, nymax, nzmin, nzmax,             &
+                         nxtot, nytot, nztot, neq, nx, ny, nz,                 &
                          rsc, rhosc, vsc, Psc
   use globals,    only : dx, dy, dz, coords
   use constants,  only : pi
@@ -55,7 +55,7 @@ subroutine impose_snr(u, xc, yc, zc)
   real, intent(inout) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
   real, intent(in)    :: xc, yc, zc
   integer :: i, j, k
-  real    :: x, y, z, r,  dens, vr, Eth
+  real    :: x, y, z, r,  dens, vr, Eth, Emag
 
  !   inside SN (converted to code units)
   dens=(3./4./pi)*Msn/(Rsn**3)/rhosc
@@ -77,12 +77,12 @@ subroutine impose_snr(u, xc, yc, zc)
 
           ! |v(r)| in code units
           vr=(R/Rsn)*Sqrt(10.*chi*Esn/(3.*Msn)) / vsc
-
+          Emag = 0.5*( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 )
           u(1,i,j,k)= dens
           u(2,i,j,k)= dens*vr*(x-xc) / r
           u(3,i,j,k)= dens*vr*(y-yc) / r
           u(4,i,j,k)= dens*vr*(z-yc) / r
-          u(5,i,j,k)= 0.5*dens*vr**2 + Eth
+          u(5,i,j,k)= 0.5*dens*vr**2 + Eth + Emag
 
         endif
 
