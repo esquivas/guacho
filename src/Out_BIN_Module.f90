@@ -90,7 +90,7 @@ contains
     else if (time_sec > hr) then
       write(cbuffer, '("Output time is:",f7.2, "hr"'  ) time_sec/hr
     else
-      write(cbuffer, '("Output time is:",f7.2, "hr"'  ) time_sec/hr
+      write(cbuffer, '("Output time is:",f7.2, "sec"' ) time_sec/hr
     end if
 
 #ifdef DOUBLEP
