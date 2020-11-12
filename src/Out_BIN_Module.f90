@@ -38,9 +38,10 @@ contains
   !> @param integer [in] unit : number of logical unit
   subroutine write_header(unit, neq_out, nghost_out)
     implicit none
-    integer, intent(in) :: unit, neq_out, nghost_out
-    character, parameter  :: lf = char(10)
-    character (len=128) :: cbuffer
+    integer, intent(in)  :: unit, neq_out, nghost_out
+    character, parameter :: lf = char(10)
+    character (len=128)  :: cbuffer
+    real                 :: time_sec
 
     !  Write ASCII header
     write(unit) "**************** Output for Guacho v1.3****************",lf
@@ -75,6 +76,22 @@ contains
 
     write(cbuffer, '("Specfic heat at constant volume Cv: ",f7.2)') cv
     write(unit) trim(cbuffer), lf
+
+    time_sec = time * tsc
+    !  Do some formatting
+    if (time_sec > 1.0e6*yr) then
+      write(cbuffer, '("Output time is:",f7.2, Myr' ) time_sec/1.0e6/yr
+    else if (time_sec > 1.0e3*yr) then
+      write(cbuffer, '("Output time is:",f7.2, Kyr' ) time_sec/1.0e3/yr
+    else if (time_sec > yr) then
+      write(cbuffer, '("Output time is:",f7.2, yr'  ) time_sec/yr
+    else if (time_sec > day) then
+      write(cbuffer, '("Output time is:",f7.2, days') time_sec/day
+    else if (time_sec > hr) then
+      write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
+    else
+      write(cbuffer, '("Output time is:",f7.2, hr'  ) time_sec/hr
+    end if
 
 #ifdef DOUBLEP
     write(unit) "Double precision 8 byte floats",lf
