@@ -85,7 +85,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  integer, parameter :: cooling = COOL_NONE  ! originalmente COOL_H
+  integer, parameter :: cooling = COOL_CHI
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
@@ -133,7 +133,7 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =2048
+  integer, parameter :: N_MP = 16384
   !>  Enable following SED of each MP
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
@@ -184,7 +184,7 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1.e3*yr/tsc
+  real, parameter :: tmax    = 3.e3*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 1.e2*yr/tsc
   real, parameter :: cfl=0.4                 !< Courant-Friedrichs-Lewy number
@@ -192,7 +192,7 @@ module parameters
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=9          !< number of output to do warm start
+  integer            :: itprint0=26          !< number of output to do warm start
 
 
   !*********************************************************************
