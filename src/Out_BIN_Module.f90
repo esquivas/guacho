@@ -84,7 +84,7 @@ contains
     else if (time_sec > 1.0e3*yr) then
       write(cbuffer, '("Output time is:",f7.2, "Kyr" )') time_sec/1.0e3/yr
     else if (time_sec > yr) then
-      write(cbuffer, '"Output time is:",f7.2, "yr"   )') time_sec/yr
+      write(cbuffer, '("Output time is:",f7.2, "yr"  )') time_sec/yr
     else if (time_sec > day) then
       write(cbuffer, '("Output time is:",f7.2, "days")') time_sec/day
     else if (time_sec > hr) then
