@@ -76,7 +76,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> CHEM              : Enables a full chemical network
-  integer, parameter :: eq_of_state = EOS_ADIABATIC
+  integer, parameter :: eq_of_state = EOS_SINGLE_SPECIE
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -85,7 +85,7 @@ module parameters
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
   !> COOL_CHEM : enables cooling from a full chemical network
-  integer, parameter :: cooling = COOL_NONE  ! originalmente COOL_H
+  integer, parameter :: cooling = COOL_CHI
 
   !> Boundary conditions
   !> BC_OUTFLOW   : Outflow boundary conditions (free flow)
@@ -133,7 +133,7 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =2048
+  integer, parameter :: N_MP =8192
   !>  Enable following SED of each MP
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
@@ -168,7 +168,7 @@ module parameters
   real, parameter :: xphys=24.*pc     !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv=1.5 !gamma=1.5 !< Specific heat at constant volume (/R)
+  real, parameter :: cv=1.5         !gamma=1.5 !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.           !< mean atomic mass
 
@@ -184,7 +184,7 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1.e3*yr/tsc
+  real, parameter :: tmax    = 3.e3*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 1.e2*yr/tsc
   real, parameter :: cfl=0.4                 !< Courant-Friedrichs-Lewy number
@@ -192,7 +192,7 @@ module parameters
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=141  !< number of output to do warm start
+  integer            :: itprint0=10          !< number of output to do warm start
 
 
   !*********************************************************************
