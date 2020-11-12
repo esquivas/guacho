@@ -958,10 +958,10 @@ contains
     real, intent(out)   :: chi0, qNR, Emin, Emax
     real                :: normal(3), r, thB1, thB2, v1, v2, v_shock, Brat,    &
                            beta1sq, lambda_eff, Elimit
-    real, parameter     :: lmp_eta = 4.25        !  for eq(32) in Vaidya et al.
+    real, parameter     :: lmp_eta =  4.5        !  for eq(32) in Vaidya et al.
     real, parameter     :: e1const = 37.702      ! m^2c^4 sqrt(9/(8pie^3))
-    real, parameter     :: deltaN  = 0.01        ! Mimica et al. 2009
-    real, parameter     :: deltaE  = 0.1         ! Mimica et al. 2009
+    real, parameter     :: deltaN  =  0.01       ! Mimica et al. 2009
+    real, parameter     :: deltaE  =  0.1        ! Mimica et al. 2009
     real :: e_old, n_old, c1, c2
 
     call get_NRth(prim1,prim2,normal,r,thB1,thB2)
