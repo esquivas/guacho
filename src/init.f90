@@ -97,7 +97,7 @@ contains
 #ifdef MPIP
     if(rank.eq.master) then
       print '(a,i3,a)','*    running with mpi in ', np, ' processors     *'
-      print '(a)' '*********************************************'
+      print '(a)', '*********************************************'
     end if
     call mpi_cart_create(mpi_comm_world, ndim, dims, period,.true., comm3d, err)
     call mpi_comm_rank(comm3d, rank, err)
