@@ -122,8 +122,8 @@ program guacho
       !call diffuse_rad()
       call write_output(itprint)
       if (rank == 0) then
-         print'(a,i4,a,i6)','********** wrote output **********:' , itprint,   &
-                            ' in iteration:', currentIteration
+         print'(a,i4,a,i0)','********** wrote output **********:' , itprint,   &
+                            ' in iteration: ', currentIteration
       end if
       tprint=tprint+dtprint
       itprint=itprint+1
