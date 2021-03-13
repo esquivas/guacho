@@ -83,6 +83,7 @@ module parameters
   !> COOL_BBC  : Cooling function of Benjamin, Benson and Cox (2003)
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
+  !> COOL_SKKKV: from table(s) in Schure et al. (2009)
   !> COOL_CHEM : enables cooling from a full chemical network
   integer, parameter :: cooling =
 
