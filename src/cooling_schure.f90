@@ -75,7 +75,7 @@ contains
       do i=1,180
         read(10,*) data(:)
         cooltab(1,i)= 10.0**data(1)
-        cooltab(2,i)= 10.0**data(1+dmc_f)
+        cooltab(2,i)= 10.0**(- data(1+dmc_f) )
       end do
       close(unit=10)
     endif
