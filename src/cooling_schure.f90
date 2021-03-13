@@ -122,11 +122,10 @@ end subroutine read_table_schure
   !! conserved and primitive variables
   subroutine coolingschure()
 
-    use parameters, only : nx, ny, nz, cv, Psc, tsc, dif_radHe, mhd, n1_chem
+    use parameters, only : nx, ny, nz, cv, Psc, tsc, mhd, n1_chem
     use constants,  only : Kb
     use globals, only : u, primit, dt_CFL
     use hydro_core, only : u2prim
-    use difradHe
     use network
     implicit none
     real                 :: T , dens
