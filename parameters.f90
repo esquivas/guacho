@@ -148,7 +148,8 @@ module parameters
   logical, parameter :: lmp_distf  =
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP =
-
+  !>  Dump shock detector to disk
+  logical, parameter :: dump_shock =
 
 #ifdef PASSIVES
   integer, parameter :: npas   =      !< num. of passive scalars
