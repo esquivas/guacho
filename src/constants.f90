@@ -73,12 +73,13 @@ module constants
   integer, parameter :: EOS_CHEM          = 4
 
   !  Cooling Schemes
-  integer, parameter :: COOL_NONE = 0
-  integer, parameter :: COOL_H    = 1
-  integer, parameter :: COOL_BBC  = 2
-  integer, parameter :: COOL_DMC  = 3
-  integer, parameter :: COOL_CHI  = 4
-  integer, parameter :: COOL_CHEM = 5
+  integer, parameter :: COOL_NONE  = 0
+  integer, parameter :: COOL_H     = 1
+  integer, parameter :: COOL_BBC   = 2
+  integer, parameter :: COOL_DMC   = 3
+  integer, parameter :: COOL_CHI   = 4
+  integer, parameter :: COOL_SKKKV = 5
+  integer, parameter :: COOL_CHEM  = 6
 
   !  Coundary conditions
   integer, parameter :: BC_OUTFLOW  = 1
