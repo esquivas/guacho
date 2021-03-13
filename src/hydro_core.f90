@@ -54,8 +54,10 @@ contains
     integer :: i
     real :: dentot
 #endif
+    real, parameter :: dens_floor = 1e-8
+    real, parameter :: Temp_floor = 10.0
 
-    r=max(uu(1),1e-15)
+    r=max(uu(1),dens_floor)
     prim(1)=r
 
     prim(2)=uu(2)/r
@@ -87,13 +89,13 @@ contains
 
     !   Temperature calculation
     if (eq_of_state == EOS_ADIABATIC) then
-      T=(prim(5)/r)*Tempsc
+      T=max( (prim(5)/r)*Tempsc, Temp_floor)
+      prim(5)= r*T/Tempsc
     end if
 
     if (eq_of_state == EOS_SINGLE_SPECIE) then
       ! assumes it is fully ionized
-      r=max(r,1e-15)
-      T=max(1.,(prim(5)/r)*Tempsc)
+      T=max(Temp_floor,(prim(5)/r)*Tempsc)
       prim(5)=r*T/Tempsc
     end if
 
@@ -101,8 +103,8 @@ contains
 
     if (eq_of_state == EOS_H_RATE) then
       dentot=(2.*r-prim(neqdyn+1))
-      dentot=max(dentot,1e-15)
-      T=max(1.,(prim(5)/dentot)*Tempsc)
+      dentot=max(dentot, dens_floor)
+      T=max(Temp_floor,(prim(5)/dentot)*Tempsc)
       prim(5)=dentot*T/Tempsc
     end if
 
@@ -112,8 +114,8 @@ contains
       do i = n1_chem, n1_chem+n_spec-1
         dentot = prim(i) + dentot
       end do
-      dentot = max(dentot, 1e-15)
-      T=max(1.,(prim(5)/dentot)*Tempsc )
+      dentot = max(dentot, dens_floor)
+      T=max(Temp_floor,(prim(5)/dentot)*Tempsc )
 
       !T=(prim(5)/r)*Tempsc
       prim(5) = dentot * T /Tempsc
