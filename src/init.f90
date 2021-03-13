@@ -43,6 +43,7 @@ contains
     use lmp_module
     use cooling_dmc
     use cooling_chi
+    use cooling_schure
     use difrad
     use thermal_cond
     use flux_cd_module
@@ -164,6 +165,9 @@ contains
 
     !   CHIANTI COOLING
     if (cooling == COOL_CHI) call init_cooling_chianti()
+
+    !   SKKKV cooling
+    if (cooling == COOL_SKKKV) call init_cooling_schure()
 
     !  Thermal conduction
     if (th_cond /= TC_OFF) call init_thermal_cond()
@@ -297,6 +301,9 @@ contains
         print'(a)', ''
       else if (cooling == COOL_CHI) then
         print'(a)', 'Radiative cooling ON (Uses table from CHIANTI)'
+        print'(a)', ''
+      else if (cooling == COOL_SKKKV) then
+        print'(a)', 'Radiative cooling ON (Uses tables from Schure et al. 2009)'
         print'(a)', ''
       else
         print'(a)', 'Unrecognized cooling scheme'
