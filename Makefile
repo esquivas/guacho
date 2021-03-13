@@ -78,6 +78,7 @@ chemistry.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
+cooling_schure.o \
 thermal_cond.o \
 init.o \
 Out_Silo_Module.o \
