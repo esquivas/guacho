@@ -40,7 +40,7 @@ contains
   !! hydrogen and ties the O I and II to it
   subroutine update_neutral_fraction()
 
-    use parameters, only : neq, nx, ny, nz, tsc, dif_rad, charge_exchange
+    use parameters, only : neq, nx, ny, nz, tsc, dif_rad
     use globals, only : u, primit, coords, dt_CFL
     use difrad, only : ph
 
