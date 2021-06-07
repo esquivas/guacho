@@ -115,7 +115,6 @@ OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
 #---------------------------------------------------
 # Set flags
-# Set flags
 ifeq ($(DOUBLEP),Y)
 FLAGS += -DDOUBLEP
 ifeq ($(COMPILER),ifort)
