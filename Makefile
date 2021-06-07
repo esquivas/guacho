@@ -188,7 +188,6 @@ prebuild :
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
 
-
 clean :
 	rm -f *.o *.mod
 	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err
