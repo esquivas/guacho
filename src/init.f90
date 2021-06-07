@@ -128,11 +128,11 @@ contains
         print'(a)',' '
       endif
       itprint=0
-      time=0.
+      time= time_0
       tprint=dtprint
     else
       itprint=itprint0
-      time=real(itprint)*dtprint
+      time=time_0
       if(rank == master) then
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,         &
                                   ' at a time ',time*tsc/yr,' yr'
