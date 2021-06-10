@@ -46,9 +46,9 @@ contains
     implicit none
     integer, intent(in) :: itprint
 
-    if (out_bin ) call write_BIN(itprint)
-    if (out_vtk ) call write_VTK(itprint)
-    if (out_silo) call write_silo(itprint)
+    if (out_bin )   call write_BIN(itprint)
+    if (out_vtk )   call write_VTK(itprint)
+    if (out_silo)   call write_silo(itprint)
     if (enable_lmp) call write_LMP(itprint)
 
   end subroutine write_output
