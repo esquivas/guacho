@@ -224,21 +224,19 @@ contains
     if (dif_rad) then
       gain=real(radphi,8)*dh0*Kb*2.3E4 !3.14d5 #1.15e4 por cada eV (2 a 3 eV en espectro solar)
       Tprime=max( gain*real(T,8)/(dh**2*al),7000.)
-      if(Tprime<1e3) print*, 'Tprime=', Tprime
     else
       tprime=10.
-      ! if(Tprime<1e3) print*, 'Tprime=', Tprime
     end if
     !tprime=1000.
 
     ce=(2.*dh*al)/(3.*Kb*real(T,8))
     T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
-    !if(T1<1e3) then
-    !  print*, 'T1=', T1
-    !  print*, 'T=', T
-    !  print*, 'ce=', ce
-    !endif
+    if(T1<1e3) then
+      print*, 'T1=', T1,'T=', T
+      print*, 'ce=', ce, 'Tprime=', Tprime
+      print*, 'dt=',dt,'seconds'
+    endif
 
     T1=max(T1,0.5*real(T,8) )
     T1=min(T1,10.*real(T,8) )
