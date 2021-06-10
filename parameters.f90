@@ -202,7 +202,7 @@ module parameters
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm    =
   integer            :: itprint0 =   !< number of output to do warm start
-  real, paraeter     :: time_0   =   !< starting time
+  real, parameter    :: time_0   =   !< starting time
 
 
   !*********************************************************************
