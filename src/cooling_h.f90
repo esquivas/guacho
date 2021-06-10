@@ -234,11 +234,11 @@ contains
     ce=(2.*dh*al)/(3.*Kb*real(T,8))
     T1=Tprime+(T-Tprime)*exp(-ce*dt) !# new temperature
 
-    if(T1<1e3) then
-      print*, 'T1=', T1
-      print*, 'T=', T
-      print*, 'ce=', ce
-    endif
+    !if(T1<1e3) then
+    !  print*, 'T1=', T1
+    !  print*, 'T=', T
+    !  print*, 'ce=', ce
+    !endif
 
     T1=max(T1,0.5*real(T,8) )
     T1=min(T1,10.*real(T,8) )
