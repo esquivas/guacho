@@ -51,14 +51,15 @@ module parameters
   logical, parameter :: mhd  =  .false.  !<  Enable full MHD
 
   !> Approximate Riemman Solver
-  !> SOLVER_HLL  : HLL solver (HD most diffusive)
-  !> SOLVER_HLLC : HLLC solver
-  !> SOLVER_HLLE : HLLE solver (too diffusive)
-  !> SOLVER_HLLD : HLLD solver
+  !> SOLVER_HLL   : HLL solver (HD most diffusive)
+  !> SOLVER_HLLC  : HLLC solver
+  !> SOLVER_HLLE  : HLLE solver (too diffusive)
+  !> SOLVER_HLLD  : HLLD solver
+  !> SOLVER_RHLL  : Relativistic HLL solver
+  !> SOLVER_RHLLC : Relativistic HLLC solver
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  !> SOLVER_HLLC_REL   : Relativistic HLLC solver
-  integer, parameter :: riemann_solver = SOLVER_HLLC_REL
+  integer, parameter :: riemann_solver = SOLVER_RHLL
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave     = .false.
