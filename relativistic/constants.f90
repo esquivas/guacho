@@ -57,15 +57,16 @@ module constants
   !  Named constants
 
   !  Approximate Riemann solvers
-  integer, parameter :: SOLVER_HLL            = 1
-  integer, parameter :: SOLVER_HLLC           = 2
-  integer, parameter :: SOLVER_HLLE           = 3
-  integer, parameter :: SOLVER_HLLD           = 4
-  integer, parameter :: SOLVER_HLLE_SPLIT_B   = 5
-  integer, parameter :: SOLVER_HLLD_SPLIT_B   = 6
-  integer, parameter :: SOLVER_HLLE_SPLIT_ALL = 7
-  integer, parameter :: SOLVER_HLLD_SPLIT_ALL = 8
-  integer, parameter :: SOLVER_HLLC_REL       = 9
+  integer, parameter :: SOLVER_HLL            =  1
+  integer, parameter :: SOLVER_HLLC           =  2
+  integer, parameter :: SOLVER_HLLE           =  3
+  integer, parameter :: SOLVER_HLLD           =  4
+  integer, parameter :: SOLVER_HLLE_SPLIT_B   =  5
+  integer, parameter :: SOLVER_HLLD_SPLIT_B   =  6
+  integer, parameter :: SOLVER_HLLE_SPLIT_ALL =  7
+  integer, parameter :: SOLVER_HLLD_SPLIT_ALL =  8
+  integer, parameter :: SOLVER_RHLL           =  9
+  integer, parameter :: SOLVER_RHLLC          = 10
 
   !  Equations of state
   integer, parameter :: EOS_ADIABATIC     = 1
