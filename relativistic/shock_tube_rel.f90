@@ -1,4 +1,6 @@
-module shock_tube_rel
+module shock_tube_relif (eq_of_state == EOS_rel_ideal ) then
+                h = 1.0 + (pL/rhoL)*gamma/( gamma- 1.0 )
+              end if
   implicit none
   real :: rhoL, rhoR, vxL, vxR, vyL, vyR, vzL, vzR, pL, pR
 contains
@@ -26,14 +28,14 @@ contains
     real :: x, gamma_rel, D, mx, my, mz, Etot, h
     integer ::  i,j,k
 
-    do i=nxmin,nxmax
+    do k=nzmin,nzmax
       do j=nymin,nymax
-        do k=nzmin,nzmax
+        do i=nxmin,nxmax
 
           ! Position measured from the centre of the grid
           x=(real(i+coords(0)*nx-nxtot/2)+0.5)*dx
 
-          ! IF LEFFT STATE
+          ! IF LEFT STATE
           if( x <= 0.) then
 
             if (eq_of_state == EOS_rel_ideal ) then
@@ -63,13 +65,16 @@ contains
             Etot = D * h *gamma_rel - pR
 
           end if
-          !   total density and momenta
+
+          !  total density and momenta
           u(1,i,j,k) = D
-          u(2,i,j,k) =mx
-          u(3,i,j,k) =my
-          u(4,i,j,k) =mz
-          !   energy
+          u(2,i,j,k) = mx
+          u(3,i,j,k) = my
+          u(4,i,j,k) = mz
+          !  energy
           u(5,i,j,k) = Etot
+          !  passive scalar
+          u(6,i,j,k) = D
 
         end do
       end do
