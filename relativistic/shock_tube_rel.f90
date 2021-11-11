@@ -1,6 +1,4 @@
-module shock_tube_relif (eq_of_state == EOS_rel_ideal ) then
-                h = 1.0 + (pL/rhoL)*gamma/( gamma- 1.0 )
-              end if
+module shock_tube_rel
   implicit none
   real :: rhoL, rhoR, vxL, vxR, vyL, vyR, vzL, vzR, pL, pR
 contains
