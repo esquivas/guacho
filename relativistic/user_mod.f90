@@ -37,8 +37,8 @@ module user_mod
 contains
 
 !> @brief Initializes variables in the module, as well as other
-!! modules loaded by user.
-!! @n It has to be present, even if empty
+!> modules loaded by user.
+!> @n It has to be present, even if empty
 subroutine init_user_mod()
 
   implicit none
@@ -66,7 +66,6 @@ subroutine initial_conditions(u)
 end subroutine initial_conditions
 
 !=====================================================================
-
 !> @brief User Defined Boundary conditions
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
@@ -90,7 +89,6 @@ subroutine impose_user_bc(u,order)
 end subroutine impose_user_bc
 
 !=======================================================================
-
 !> @brief User Defined source terms
 !> This is a generic interrface to add a source term S in the equation
 !> of the form:  dU/dt+dF/dx+dG/dy+dH/dz=S
