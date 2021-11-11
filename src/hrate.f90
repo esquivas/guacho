@@ -114,7 +114,7 @@ contains
     real, intent(in)                   :: dt, tau, radphi
     real, intent(inout),dimension(neq) :: uu, prim
     real                               :: T
-    real (kind=8) ::  dh, y0, g0, e, y1!etau,
+    real (kind=8) ::  dh, y0, g0, e, y1, etau,
     real (kind=8) :: fpn
     real (kind=8) :: col,rec,a,b,c,d
     !    parameters
@@ -126,7 +126,7 @@ contains
     !ph0=0.
     !psi0=0.
     !   atenuate photoionization with optical depth (already atenuated in radif)
-    !etau=exp(-tau)
+    etau=exp(-tau)
     !!!   radphi=radphi0*etau
     !psi=psi0*etau
 
