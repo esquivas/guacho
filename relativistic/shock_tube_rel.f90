@@ -20,7 +20,7 @@ contains
 
     use globals,    only : coords, dx
     use constants,  only : EOS_REL_IDEAL, EOS_REL_TM
-    use parameters, only : neq, naxmin, nxmax, nymin, nymax, nzmin, nzmax,     &
+    use parameters, only : neq, nx, nxmin, nxmax, nymin, nymax, nzmin, nzmax,  &
                            nxtot, eq_of_state, gamma
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
