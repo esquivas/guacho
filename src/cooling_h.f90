@@ -96,23 +96,23 @@ contains
   !>   of Lyman-alpha are computed separately, and added to
   !>   the cooling rate.
   !> @param real8 [in] x1  : initial H ionization fraction
-  !> @param real8 [in] x2  : final H ionization fraction
-  !> @param real [in] dt  : timestep
+  !!> @param real8 [in] x2  : final H ionization fraction
+  !!> @param real [in] dt  : timestep
   !> @param real8 [in] den : total density of hydrogen
   !> @param real8 [in] dh0 : density of neutral hydrogen
   !> @param real8 [in] Te0 : Temperature
-  FUNCTION ALOSS(X1,X2,DT,DEN,DH0,TE0)
+  FUNCTION ALOSS(X1,DEN,DH0,TE0)
 
     implicit none
 
     real (kind=8) :: ALOSS
-    real, intent(in)          :: DT
-    real (kind=8), intent(in) :: X1,X2,DEN,DH0,TE0
+    !real, intent(in)          :: DT
+    real (kind=8), intent(in) :: X1,DEN,DH0,TE0 !, X2
     real, parameter :: XION=2.179e-11, XH=0.9,XO=1.e-3
     real, parameter :: C0=0.5732,C1=1.8288e-5,C2=-1.15822e-10,C3=9.4288e-16
     real, parameter :: D0=0.5856,D1=1.55083e-5,D2=-9.669e-12, D3=5.716e-19
     real, parameter :: ENK=118409.,EN=1.634E-11
-    real (kind=8) :: SHP
+    !real (kind=8) :: SHP
     real (kind=8) :: TE, DH,DHP,DE,DOI,DOII,OMEGA,OMEGAL,OMEGAH,FRAC,QLA
     real (kind=8) :: ECOLL,CION,EION,EREC,TM,T2,EOI,EOII,EQUIL,FR,EX2,TANH
     real (kind=8) :: BETAF, HIICOOL
@@ -124,7 +124,7 @@ contains
     DOI=XO*DH0
     DOII=XO*DHP
 
-    !SHP=-DH*(X1-X2)/DT  !  ?```
+    !SHP=-DH*(X1-X2)/DT  !  ?
     if(TE <= 1e4 ) then
       ALOSS = 1e-30
       return
@@ -202,7 +202,7 @@ contains
     real, intent(inout) :: uu(neq), pp(neq)
     real, intent(in)    :: dt, radphi
     real                :: T, ch_factor
-    real(kind = 8)      :: y0, y1, dh, dh0, gain, Tprime, al, ce, T1, aal
+    real(kind = 8)      :: y0, y1, dh, dh0, gain, Tprime, al, ce, T1
 
     y0 =  real( pp(neqdyn+1)/pp(1), 8 )  !# neutral H fraction (t0)
     y1  = real( uu(neqdyn+1)/uu(1), 8 )  !# neutral H fraction (t0+dt) fraccion actualizada
@@ -214,7 +214,7 @@ contains
     if (T<=1e4) return
 
     !  get the energy losses
-    al=ALOSS(y0,y1,dt,dh,dh0,real(T,8))/dh**2
+    al=ALOSS(y0,dh,dh0,real(T,8))/dh**2
 
     !aal=ALOSS(y0,y1,dt,dh,dh0,real(T,8))
     !  if(T<1e4)then
