@@ -90,6 +90,8 @@ hll.o 	\
 hllc.o 	\
 hlle.o 	\
 hlld.o 	\
+hllr.o  \
+hllcr.o \
 hlle_split_all.o \
 sources.o \
 hydro_solver.o \
