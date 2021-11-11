@@ -157,8 +157,8 @@ module parameters
 
 #ifdef PASSIVES
   integer, parameter :: npas   = 1     !< num. of passive scalars
-  integer, parameter :: n_spec = 0     !< num of species for chemistry
-  integer, parameter :: n1_chem= 6     !< 1st index for chemistry
+  integer, parameter :: n_spec = 6     !< num of species for chemistry
+  integer, parameter :: n1_chem= 7     !< 1st index for chemistry
 #else
   integer, parameter :: npas = 0      !< num. of passive scalars
 #endif
