@@ -157,8 +157,8 @@ end subroutine read_table_schure
             ch_factor = (gain/(dens**2*Lambda0))*(1.0-emtauC)+emtauC
 
             !  limit changes to avoid catastrophic cooling
-            ch_factor = min(ch_factor, 0.1)
-            ch_factor = max(ch_factor,10.0)
+            ch_factor = max(ch_factor, 0.1)
+            ch_factor = min(ch_factor,10.0)
 
             !  apply cooling to primitive and conserved variables
             primit(5,i,j,k)=primit(5,i,j,k)*ch_factor
