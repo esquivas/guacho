@@ -130,7 +130,7 @@ end subroutine read_table_schure
     implicit none
     real                 :: T , dens
     real, parameter      :: Tmin=10.
-    real (kind=8)        :: Lambda0, Loss0, emtauC, gain
+    real (kind=8)        :: Lambda0, emtauC, gain
     integer              :: i, j, k
     real                 :: dt_seconds, ch_factor
 
