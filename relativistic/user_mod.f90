@@ -117,7 +117,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   real, intent(inout) :: s(neq)
 
   !  hack to avoid compile warnings
-  if (i == 0 .or. j==0 .or. k ==0)
+  if (i == 0 .or. j==0 .or. k ==0) then
      s(:) = pp(:) * 0.0
   end if
 
