@@ -28,12 +28,12 @@
 
 module parameters
 #ifdef MPIP
-    use mpi
+  use mpi
 #endif
   use constants
   implicit none
 #ifdef MPIP
-  logical, parameter :: mpip =   !<  enable mpi parallelization
+  logical, parameter :: mpip =  .true. !<  enable mpi parallelization
 #endif
 
   !> Path used to write the output
