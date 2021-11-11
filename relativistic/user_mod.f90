@@ -84,6 +84,7 @@ subroutine impose_user_bc(u,order)
   integer, intent(in) :: order
 
   !  In this case the boundary is the same for 1st and second order)
+  !  hack to avoid warnings at compile time
   if (order >= 1) then
     u = u
   end if
