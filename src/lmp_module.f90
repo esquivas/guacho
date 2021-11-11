@@ -621,8 +621,10 @@ contains
                  call addMP( status(MPI_TAG), 3, dataIn(1:12), i_mp )
 
                  ! unpack the SED
-                 MP_SED(1,1:100,i_mp) = fullRecv(6:             5+NBinsSEDMP)
-                 MP_SED(2,1:100,i_mp) = fullRecv(6+NBinsSEDMP:5+2*NBinsSEDMP)
+                 MP_SED(1,1:NBinsSEDMP,i_mp) =                                 &
+                                           fullRecv(6:             5+NBinsSEDMP)
+                 MP_SED(2,1:NBinsSEDMP,i_mp) =                                 &
+                                           fullRecv(6+NBinsSEDMP:5+2*NBinsSEDMP)
               else
 
                 call mpi_recv( fullRecv(1:3), 3, mpi_real_kind, IS,            &
