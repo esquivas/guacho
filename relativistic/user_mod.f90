@@ -52,7 +52,6 @@ end subroutine init_user_mod
 !> @param real [out] u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
 !! conserved variables
 !> @param real [in] time : time in the simulation (code units)
-
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
@@ -74,7 +73,6 @@ end subroutine initial_conditions
 !> @param real [in] time : time in the simulation (code units)
 !> @param integer [in] order : order (mum of cells to be filled in case
 !> domain boundaries are being set)
-
 subroutine impose_user_bc(u,order)
 
   use parameters, only: neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax
@@ -102,7 +100,6 @@ end subroutine impose_user_bc
 !> @param integer [in] i : cell index in the X direction
 !> @param integer [in] j : cell index in the Y direction
 !> @param integer [in] k : cell index in the Z direction
-
 subroutine get_user_source_terms(pp,s, i, j , k)
 
   ! Adds the Rad Pressure according to the Beta profile of Bourrier
@@ -128,5 +125,3 @@ end subroutine get_user_source_terms
 !=======================================================================
 
 end module user_mod
-
-!=======================================================================
