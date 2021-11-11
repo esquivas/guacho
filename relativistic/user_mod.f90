@@ -106,7 +106,7 @@ subroutine get_user_source_terms(pp,s, i, j , k)
   ! Adds the Rad Pressure according to the Beta profile of Bourrier
   use constants,  only : Ggrav
   use parameters, only : nx, ny, nz, nxtot, nytot, nztot, rsc, vsc2,&
-                         vsc
+                         vsc, neq
   use globals,    only : dx, dy, dz, coords
 
 
