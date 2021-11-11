@@ -84,8 +84,9 @@ subroutine impose_user_bc(u,order)
   integer, intent(in) :: order
 
   !  In this case the boundary is the same for 1st and second order)
-  !if (order >= 1) then
-  !end if
+  if (order >= 1) then
+    u = u
+  end if
 
 end subroutine impose_user_bc
 
@@ -112,9 +113,13 @@ subroutine get_user_source_terms(pp,s, i, j , k)
 
   implicit none
   integer, intent(in) :: i, j, k
-  integer             :: l, index, Nr
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
+
+  !  hack to avoid compile warnings
+  if (i == 0 .or. j==0 .or. k ==0)
+     s(:) = pp(:) * 0.0
+  end if
 
 end subroutine get_user_source_terms
 
