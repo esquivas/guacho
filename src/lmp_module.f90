@@ -402,8 +402,10 @@ contains
                 P_DSA(i_mp,1,1:8) = fullRecv(13:20)
                 P_DSA(i_mp,2,1:8) = fullRecv(21:28)
                 ! unpack the SED
-                MP_SED(1,1:100,i_mp) = fullRecv(29           :28  +NBinsSEDMP)
-                MP_SED(2,1:100,i_mp) = fullRecv(29+NBinsSEDMP:28+2*NBinsSEDMP)
+                MP_SED(1,1:NBinsSEDMP,i_mp) =                                  &
+                                         fullRecv(29           :28  +NBinsSEDMP)
+                MP_SED(2,1:NBinsSEDMP,i_mp) =                                  &
+                                         fullRecv(29+NBinsSEDMP:28+2*NBinsSEDMP)
 
               else
 
