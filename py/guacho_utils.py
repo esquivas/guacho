@@ -168,6 +168,17 @@ def get_boxsize(nout,path='',base='points',verbose=False):
   return (nx*mpi_x, ny*mpi_y, nz*mpi_z)
 
 '''
+  Returns gamma = (cv + 1) / cv
+'''
+def get_gamma_ad(nout,path='',base='points',verbose=False):
+   
+  file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
+  head_info = read_header(file_in,verbose=False)
+  cv = head_info[10][0]
+  gamma = (cv +1.0)  / cv
+  return gamma
+
+'''
   Returns the basic scalings
 '''
 def get_scalings(nout,path='',base='points',verbose=False):
@@ -334,4 +345,52 @@ def read_lmp(nout,path='', base='lmp',trim=True):
         return array, SED, P1, P2
     else:
         return array
+
+'''
+   Converts the conserved variables to primitives for the 
+   relativistic case with an EOS of ideal gas with constant
+   gamma, on a single cell
+'''
+def u2prim_rel_ideal(D, mx, my, mz, E, gamma_ad):
+  #  this are the expressions in Ryu et al. 2006)
+  M  = np.sqrt(mx**2 + my**2 + mz**2 )
+
+  if (M > 0.0):
+    denom = (M**2 + D**2)*(gamma_ad - 1.0)**2
+
+    b1 =-2.0*gamma_ad*(gamma_ad - 1.0)*M*E / denom
+    b2 = ( (gamma_ad**2)*(E**2) + 2.0*(gamma_ad-1.0)*(M**2) - ((gamma_ad-1.0)**2)*(D**2) ) /denom
+    b3 =-2.0*gamma_ad*M*E / denom
+    b4 = M**2 / denom
+
+    a1 = -b2
+    a2 =  b1*b3 -4.0*b4
+    a3 =  4.0*b2*b4 - b3**2 -b1**2*b4
+
+    R = ( 9.0*a1*a2 -27.0*a3 -2.0*a1**3 ) / 54.0
+    S = ( 3.0*a2 -a1**2 ) / 9.0
+    T = R**2 + S**3
+
+    x1 =  ( R + np.sqrt(T) )**(1/3) + ( R - np.sqrt(T) )**(1/3) - a1/3.0
+
+    B = 0.5*(b1 + np.sqrt(b1**2 - 4.0*b2 + 4.0*x1) )
+    C = 0.5*(x1 - np.sqrt(x1**2 - 4.0*b4) )
+
+    v = 0.5* ( -B + np.sqrt(B**2 - 4.0*C) )
+    gamma_rel = 1.0/np.sqrt(1.0 - v**2 )
+    rho = D / gamma_rel
+    vx  = mx*v/M
+    vy  = my*v/M
+    vz  = my*v/M
+  else:
+    v = 0.0
+    gamma_rel = 1.00
+    rho = D / gamma_rel
+    vx = 0.0
+    vy = 0.0
+    vz = 0.0
+
+  Pth = (gamma_ad-1.0)*(E - mx*vx -my*vy -mz*vz - rho)
+
+  return rho, vx, vy, vz, Pth
 
