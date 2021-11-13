@@ -129,7 +129,6 @@ subroutine step(dt)
 
 end subroutine step
 
-
 !> @brief High level wrapper to advancce the simulation
 !> @details High level wrapper to advancce the simulation
 !! @n The variables are taken from the globals module.
@@ -202,7 +201,7 @@ subroutine tstep()
   !  the primitives in the physical domain are upated
   if (eq_of_state == EOS_CHEM) call update_chem()
 
-  !-------------------------
+  !----------------------------------
   !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
