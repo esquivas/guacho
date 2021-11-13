@@ -106,18 +106,18 @@ module parameters
   integer, parameter :: bc_in     = BC_OUTFLOW
   logical, parameter :: bc_user   = .false. !< user boundaries (e.g. sources)
 
-  !>  Slope limiters
-  !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
-  !>  LIMITER_NO_LIMIT   = Does not limit the slope (unstable)
-  !>  LIMITER_MINMOD     = Minmod (most diffusive) limiter
-  !>  LIMITER_VAN_LEER   = Van Ler limiter
-  !>  LIMITER_VAN_ALBADA = Van Albada limiter
-  !>  LIMITER_UMIST      = UMIST limiter
-  !>  LIMITER_WOODWARD   = Woodward limiter
-  !>  LIMITER_SUPERBEE   = Superbee limiter
+  !> Slope limiters
+  !> LIMITER_NO_AVERAGE = Performs no average (1st order in space)
+  !> LIMITER_NO_LIMIT   = Does not limit the slope (unstable)
+  !> LIMITER_MINMOD     = Minmod (most diffusive) limiter
+  !> LIMITER_VAN_LEER   = Van Ler limiter
+  !> LIMITER_VAN_ALBADA = Van Albada limiter
+  !> LIMITER_UMIST      = UMIST limiter
+  !> LIMITER_WOODWARD   = Woodward limiter
+  !> LIMITER_SUPERBEE   = Superbee limiter
   integer, parameter :: slope_limiter = LIMITER_MINMOD
 
-  !>  Thermal conduction
+  !> Thermal conduction
   !> TC_OFF         : No thermal conduction
   !> TC_ISOTROPIC   : Isotropic thermal conduction
   !> TC_ANISOTROPIC : Anisotropic thermal conduction (requires B field)
@@ -169,7 +169,7 @@ module parameters
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX = 4     !< number of MPI blocks in X
+  integer, parameter :: MPI_NBX = 4    !< number of MPI blocks in X
   integer, parameter :: MPI_NBY = 1    !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ = 1    !< number of MPI blocks in Z
 #endif
@@ -194,7 +194,7 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !<  magnetic field scaling
 
   !> Maximum integration time
   real, parameter :: tmax    = 1.0

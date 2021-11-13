@@ -85,7 +85,7 @@ module constants
   integer, parameter :: COOL_SKKKV = 5
   integer, parameter :: COOL_CHEM  = 6
 
-  !  Coundary conditions
+  !  Boundary conditions
   integer, parameter :: BC_OUTFLOW  = 1
   integer, parameter :: BC_CLOSED   = 2
   integer, parameter :: BC_PERIODIC = 3
