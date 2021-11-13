@@ -51,6 +51,12 @@ contains
     real,    intent(out), dimension(neq)  :: prim
     real,    intent(out)                  :: T
     real :: r
+
+    real :: a1, a2, a3
+    real :: b1, b2, b3, b4
+    real :: B, C, M, R, S, T
+    real :: x1
+
 #ifdef PASSIVES
     integer :: i
     real :: dentot
@@ -58,23 +64,48 @@ contains
     real, parameter :: dens_floor = 1e-8
     real, parameter :: Temp_floor = 10.0
 
-    r=max(uu(1),dens_floor)
-    prim(1)=r
+    if (riemann_solver == SOLVER_RHLL .or. &
+        riemann_solver == SOLVER_RHLLC) then
 
-    prim(2)=uu(2)/r
-    prim(3)=uu(3)/r
-    prim(4)=uu(4)/r
-
-    if (mhd) then
+      r=max(uu(1),dens_floor)
+      prim(1)=r
+  
+      prim(2)=uu(2)/r
+      prim(3)=uu(3)/r
+      prim(4)=uu(4)/r
+  
+      if (mhd) then
 #ifdef  BFIELD
-      prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)                 &
-                     -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
+        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)                 &
+                       -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
 #endif
-    else
-      prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
-    end if
+      else
+        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
+      end if
+  
+      prim(5)=max(prim(5),1e-16)
 
-    prim(5)=max(prim(5),1e-16)
+    else
+  
+      r=max(uu(1),dens_floor)
+      prim(1)=r
+  
+      prim(2)=uu(2)/r
+      prim(3)=uu(3)/r
+      prim(4)=uu(4)/r
+  
+      if (mhd) then
+#ifdef  BFIELD
+        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)                 &
+                       -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
+#endif
+      else
+        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
+      end if
+  
+      prim(5)=max(prim(5),1e-16)
+    
+    end if
 
     if (mhd .or. pmhd) then
 #ifdef  BFIELD
