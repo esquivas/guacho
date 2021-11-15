@@ -56,6 +56,9 @@ contains
     real :: b1, b2, b3, b4
     real :: B, C, M, R, S, T
     real :: x1
+    real :: gamma_rel
+    real :: v
+    real :: denom
 
 #ifdef PASSIVES
     integer :: i
@@ -66,25 +69,51 @@ contains
 
     if (riemann_solver == SOLVER_RHLL .or. &
         riemann_solver == SOLVER_RHLLC) then
+        
+      M = sqrt(uu(2)**2 + uu(3)**2 + uu(4)**2)
 
-      r=max(uu(1),dens_floor)
-      prim(1)=r
-  
-      prim(2)=uu(2)/r
-      prim(3)=uu(3)/r
-      prim(4)=uu(4)/r
-  
-      if (mhd) then
-#ifdef  BFIELD
-        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)                 &
-                       -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
-#endif
+      if (M > 0.0) then
+
+        denom = (M**2 + uu(1)**2)*(gamma - 1.0)**2
+
+        b1 = -(2*gamma*(gamma-1.0)*M*uu(5))/denom
+        b2 = ((gamma*uu(5))**2 + 2*(gamma-1.0)*M**2 - ((gamma -1.0)*uu(1))**2)/denom
+        b3 = -2*gamma*M*uu(5)/denom
+        b4 = M**2/denom
+
+        a1 = -b2
+        a2 = b1*b3 - 4*b4
+        a3 = 4*b2*b4 - b3**2 - b4*b1**2
+
+        R = (9*a1*a2 - 27*a3 - 2*a1**3)/54.0
+        S = (3*a2 - a1**2)/9.0
+        T = R**2 + S**3
+
+        x1 = (R + sqrt(T))**(1.0/3.0) + (R - sqrt(T))**(1.0/3.0)-a1/3.0
+
+        B = 0.5*(b1 + sqrt(b1**2 - 4*b2 + 4*x1))
+        C = 0.5*(x1 - sqrt(x1**2 - 4*b4))
+
+        v = 0.5*(-B + sqrt(B**2 - 4*C))
+        gamma_rel = 1.0/sqrt(1 - v**2)
+        prim(1) = uu(1)/gamma_rel
+        prim(2) = uu(2)*v/M
+        prim(3) = uu(3)*v/M
+        prim(4) = uu(4)*v/M
+
       else
-        prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
-      end if
-  
-      prim(5)=max(prim(5),1e-16)
 
+        v = 0.0
+        gamma_rel = 1.0
+        prim(1) = uu(1)/gamma_rel
+        prim(2) = 0.0
+        prim(3) = 0.0
+        prim(4) = 0.0
+
+      end if
+
+      prim(5)=(gamma-1)*(uu(5) - uu(2)*prim(2) - uu(3)*prim(3) - uu(4)*prim(4) - prim(1))
+  
     else
   
       r=max(uu(1),dens_floor)
@@ -93,18 +122,19 @@ contains
       prim(2)=uu(2)/r
       prim(3)=uu(3)/r
       prim(4)=uu(4)/r
-  
+
+
       if (mhd) then
 #ifdef  BFIELD
         prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2)                 &
-                       -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
+                        -0.5*  (  uu(6)**2+  uu(7)**2  +uu(8)**2) ) /cv
 #endif
       else
         prim(5)=( uu(5)-0.5*r*(prim(2)**2+prim(3)**2+prim(4)**2) ) /cv
       end if
-  
-      prim(5)=max(prim(5),1e-16)
-    
+
+      prim(5)=max(prim(5),1e-16)    
+
     end if
 
     if (mhd .or. pmhd) then
