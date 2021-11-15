@@ -43,8 +43,9 @@ contains
   
   subroutine u2prim(uu, prim, T)
 
-    use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives, &
-                           pmhd, mhd, eq_of_state, n1_chem, n_spec
+    use parameters, only : neq, neqdyn, Tempsc, vsc2, cv, passives,   &
+                           pmhd, mhd, eq_of_state, n1_chem, n_spec,   &
+                           riemann_solver, gamma
     use constants
     implicit none
     real,    intent(in),  dimension(neq)  :: uu
@@ -54,7 +55,7 @@ contains
 
     real :: a1, a2, a3
     real :: b1, b2, b3, b4
-    real :: B, C, M, R, S, T
+    real :: B, C, M, RR, SS, TT
     real :: x1
     real :: gamma_rel
     real :: v
@@ -85,11 +86,11 @@ contains
         a2 = b1*b3 - 4*b4
         a3 = 4*b2*b4 - b3**2 - b4*b1**2
 
-        R = (9*a1*a2 - 27*a3 - 2*a1**3)/54.0
-        S = (3*a2 - a1**2)/9.0
-        T = R**2 + S**3
+        RR = (9*a1*a2 - 27*a3 - 2*a1**3)/54.0
+        SS = (3*a2 - a1**2)/9.0
+        TT = RR**2 + SS**3
 
-        x1 = (R + sqrt(T))**(1.0/3.0) + (R - sqrt(T))**(1.0/3.0)-a1/3.0
+        x1 = (RR + sqrt(TT))**(1.0/3.0) + (RR - sqrt(TT))**(1.0/3.0)-a1/3.0
 
         B = 0.5*(b1 + sqrt(b1**2 - 4*b2 + 4*x1))
         C = 0.5*(x1 - sqrt(x1**2 - 4*b4))
@@ -451,7 +452,8 @@ contains
   subroutine prim2f(prim,ff,prim0)
 
     use parameters, only : neq, neqdyn, cv, pmhd, mhd, passives, riemann_solver
-    use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL
+    use constants, only : SOLVER_HLLE_SPLIT_ALL, SOLVER_HLLD_SPLIT_ALL,        &
+                          SOLVER_RHLL, SOLVER_RHLLC
     implicit none
     real,    dimension(neq), intent(in)  :: prim
     real, dimension(neq), intent(in), optional :: prim0
