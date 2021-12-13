@@ -31,7 +31,7 @@
 module user_mod
 
   ! load auxiliary modules
-
+  use sod_tube
   implicit none
 
 contains
@@ -43,6 +43,7 @@ subroutine init_user_mod()
 
   implicit none
   !  initialize modules loaded by user
+  call init_sod()
 
 end subroutine init_user_mod
 
@@ -60,6 +61,7 @@ subroutine initial_conditions(u)
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
 
+  call impose_sod(u)
 
 end subroutine initial_conditions
 

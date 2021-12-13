@@ -11,13 +11,13 @@ VPATH = . : ../ : ../src/ :../../src
 #   if MPI enabled, do not use mpif90, but rather the base compiler
 #   of the mpi build (e.g. 'mpif90 --version')
 #COMPILER= gfortran
-#COMPILER= ifort
+COMPILER= ifort
 
 ### ifortran ###
-#FLAGS= -O3 -cpp -i_dynamic -mcmodel=large
+#FLAGS= -O3 -cpp  -mcmodel=large
 #FLAGS= -O3 -cpp  -mcmodel=large -vec-report0 -traceback -check
 #FLAGS= -O3 -cpp -vec-report0
-#FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
+FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
 #FLAGS = -cpp -O3
@@ -31,19 +31,19 @@ VPATH = . : ../ : ../src/ :../../src
 #   carefull all of the following is case sensitive
 #---------------------------------------------------
 #   MPI paralalelization (Y/N)
-MPIP   =
+MPIP   = Y
 
 #   Include Magnetic field (Y/N) , (either full MHD or passive B)
-BFIELD =
+BFIELD = N
 
 #   Include passive scalars (Y/N)
-PASSIVES =
+PASSIVES = Y
 
 #   Double Precision (Y/N Default is single)
-DOUBLEP =
+DOUBLEP = Y
 
 #   Enable  Silo Output (requires external libraries)
-SILO =
+SILO = N
 #   IF silo was selected make sure the libraries are in place,
 #   adjust the following line for that purpose
 #FLAGS += -I/usr/local/silo/include -I/usr/local/szip/include -I/usr/local/hdf5/include/
@@ -52,7 +52,7 @@ SILO =
 
 # Additional USER modules to compile (they can only call constants,
 # parameters and globals)
-MODULES_USER=
+MODULES_USER= shock_tube.o
 
 #####################################################
 # There should be no need to modify below this line #
