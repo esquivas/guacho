@@ -40,7 +40,7 @@ contains
             px   = rhoL * vxL
             py   = rhoL * vyL
             pz   = rhoL * vzL
-            Etot = 0.5*rhoL*(vxL**2 + vyL**2 +vzL**2) - pL/(gamma-1.0)
+            Etot = 0.5*rhoL*(vxL**2 + vyL**2 +vzL**2) + pL/(gamma-1.0)
             pas  = rhoL
 
           else !RIGHT STATE
@@ -49,7 +49,7 @@ contains
             px   = rhoR * vxR
             py   = rhoR * vyR
             pz   = rhoR * vzR
-            Etot = 0.5*rhoR*(vxR**2 + vyR**2 +vzR**2) - pR/(gamma-1.0)
+            Etot = 0.5*rhoR*(vxR**2 + vyR**2 +vzR**2) + pR/(gamma-1.0)
             pas  = - rhoR
           end if
 
