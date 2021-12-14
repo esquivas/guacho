@@ -23,7 +23,7 @@ contains
                            nxtot, gamma
     implicit none
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-    real :: x, gamma_rel, rho, px, py, pz, Etot, pas
+    real :: x, rho, px, py, pz, Etot, pas
     integer ::  i,j,k
 
     do k=nzmin,nzmax
@@ -61,7 +61,7 @@ contains
           !  energy
           u(5,i,j,k) = Etot
           !  passive scalar
-          u(6,i,j,k) = pa
+          u(6,i,j,k) = pas
 
         end do
       end do
