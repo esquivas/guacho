@@ -57,7 +57,7 @@ module parameters
   !> SOLVER_HLLD : HLLD solver *
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = HLLC
+  integer, parameter :: riemann_solver = SOLVER_HLLC
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave     = .false.
