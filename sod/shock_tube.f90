@@ -55,13 +55,13 @@ contains
 
           !  total density and momenta
           u(1,i,j,k) = rho
-          u(2,i,j,k) = vx
-          u(3,i,j,k) = vy
-          u(4,i,j,k) = vz
+          u(2,i,j,k) = px
+          u(3,i,j,k) = py
+          u(4,i,j,k) = pz
           !  energy
           u(5,i,j,k) = Etot
           !  passive scalar
-          u(6,i,j,k) = pas
+          u(6,i,j,k) = pa
 
         end do
       end do
