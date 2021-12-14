@@ -182,7 +182,7 @@ module parameters
   real, parameter :: mu = 1.0          !< mean atomic mass
 
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0 =                   !<  reference temperature (for cs)
+  real, parameter :: T0 = 1e4               !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
   real, parameter :: rhosc= amh*mu          !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
