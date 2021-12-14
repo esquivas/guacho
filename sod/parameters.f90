@@ -159,7 +159,7 @@ module parameters
   integer, parameter :: npas = 0       !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot= 512     !< Total grid size in X
+  integer, parameter :: nxtot= 256     !< Total grid size in X
   integer, parameter :: nytot=   8     !< Total grid size in Y
   integer, parameter :: nztot=   8     !< Total grid size in Z
 
@@ -172,12 +172,12 @@ module parameters
 
   !  set box size
   real, parameter :: xmax  = 1.0       !< grid extent in X (code units)
-  real, parameter :: ymax  = 8.0/512.0 !< grid extent in Y (code units)
-  real, parameter :: zmax  = 8.0/512.0 !< grid extent in Z (code units)
+  real, parameter :: ymax  = 8.0/256.0 !< grid extent in Y (code units)
+  real, parameter :: zmax  = 8.0/256.0 !< grid extent in Z (code units)
   real, parameter :: xphys = 1.0       !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv = 2.5             !< Specific heat at constant volume (/R)
+  real, parameter :: cv = 2.5          !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.0          !< mean atomic mass
 
