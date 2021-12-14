@@ -12,7 +12,7 @@ contains
     vzL  = 0.0    ; vzR  =  0.0
     pL   = 1.0    ; pR   =  0.1
 
-  end subroutine init_rs_p1
+  end subroutine init_sod
 
   !--------------------------------------------------------------------
   ! Initial conditions for the Sod tube test
@@ -67,7 +67,7 @@ contains
       end do
     end do
 
-  end subroutine impose_rs
+  end subroutine impose_sod
   !--------------------------------------------------------------------
 
 end module shocK_tube_rel
