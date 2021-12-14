@@ -1,4 +1,4 @@
-module shock_tube_rel
+module shock_tube
   implicit none
   real :: rhoL, rhoR, vxL, vxR, vyL, vyR, vzL, vzR, pL, pR
 contains
@@ -70,4 +70,4 @@ contains
   end subroutine impose_sod
   !--------------------------------------------------------------------
 
-end module shocK_tube_rel
+end module shocK_tube
