@@ -48,6 +48,7 @@ module constants
   real, parameter :: hr=3600.          !< 1hr in seconds
   real, parameter :: day=86400.        !< 1day in seconds
   real, parameter :: yr=3.1536E7       !< 1yr in seconds
+  real, parameter :: kyr=3.1536E10     !< 1kyr in seconds  
   real, parameter :: Myr=3.1536E13     !< 1Myr in seconds
 
   !  Named constants
