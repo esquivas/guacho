@@ -171,7 +171,7 @@ def get_boxsize(nout,path='',base='points',verbose=False):
   Returns gamma = (cv + 1) / cv
 '''
 def get_gamma_ad(nout,path='',base='points',verbose=False):
-   
+
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
   cv = head_info[10][0]
@@ -347,7 +347,7 @@ def read_lmp(nout,path='', base='lmp',trim=True):
         return array
 
 '''
-   Converts the conserved variables to primitives for the 
+   Converts the conserved variables to primitives for the
    relativistic case with an EOS of ideal gas with constant
    gamma, on a single cell
 '''
@@ -381,7 +381,7 @@ def u2prim_rel_ideal(D, mx, my, mz, E, gamma_ad):
     rho = D / gamma_rel
     vx  = mx*v/M
     vy  = my*v/M
-    vz  = my*v/M
+    vz  = mz*v/M
   else:
     v = 0.0
     gamma_rel = 1.00
@@ -393,4 +393,3 @@ def u2prim_rel_ideal(D, mx, my, mz, E, gamma_ad):
   Pth = (gamma_ad-1.0)*(E - mx*vx -my*vy -mz*vz - rho)
 
   return rho, vx, vy, vz, Pth
-

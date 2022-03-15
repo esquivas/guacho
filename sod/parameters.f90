@@ -28,12 +28,12 @@
 
 module parameters
 #ifdef MPIP
-  use mpi
+    use mpi
 #endif
   use constants
   implicit none
 #ifdef MPIP
-  logical, parameter :: mpip =  .true. !<  enable mpi parallelization
+  logical, parameter :: mpip = .true.  !<  enable mpi parallelization
 #endif
 
   !> Path used to write the output
@@ -51,15 +51,13 @@ module parameters
   logical, parameter :: mhd  =  .false.  !<  Enable full MHD
 
   !> Approximate Riemman Solver
-  !> SOLVER_HLL   : HLL solver (HD most diffusive)
-  !> SOLVER_HLLC  : HLLC solver
-  !> SOLVER_HLLE  : HLLE solver (too diffusive)
-  !> SOLVER_HLLD  : HLLD solver
-  !> SOLVER_RHLL  : Relativistic HLL solver
-  !> SOLVER_RHLLC : Relativistic HLLC solver
+  !> SOLVER_HLL  : HLL solver (HD most diffusive)
+  !> SOLVER_HLLC : HLLC solver *
+  !> SOLVER_HLLE : HLLE solver (too diffusive)
+  !> SOLVER_HLLD : HLLD solver *
   !> SOLVER_HLLE_SPLIT : Split version of HLLE
   !> SOLVER_HLLD_SPLIT : Split version of HLLD
-  integer, parameter :: riemann_solver = SOLVER_RHLL
+  integer, parameter :: riemann_solver = SOLVER_HLLC
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
   logical, parameter :: eight_wave     = .false.
@@ -69,7 +67,7 @@ module parameters
   logical, parameter :: dump_divb      = .false.
 
   !  Type of output (silo has to be set in Makefile)
-  logical, parameter :: out_bin = .true. !< binary i/o (needed for warmstart)
+  logical, parameter :: out_bin = .true.  !< binary i/o (needed for warmstart)
   logical, parameter :: out_vtk = .false. !< vtk (also binary)
 
   !> Equation of state used to compute T and P
@@ -77,9 +75,7 @@ module parameters
   !> EOS_SINGLE_SPECIE : Uses only n (e.g. to use with tabulated cooling curves)
   !> EOS_H_RATE        : Using n_HI and n_HII
   !> EOS_CHEM          : Enables a full chemical network
-  !> EOS_rel_ideal     : Ideal relativistic with constant Gamma
-  !> EOS_rel_TM        : Relativistic TM eos (Mignone et al 2005)
-  integer, parameter :: eq_of_state =  EOS_REL_IDEAL
+  integer, parameter :: eq_of_state = EOS_ADIABATIC
 
   !> Type of cooling (choose only one)
   !> COOL_NONE: Turns off the cooling
@@ -104,20 +100,20 @@ module parameters
   integer, parameter :: bc_top    = BC_OUTFLOW
   integer, parameter :: bc_out    = BC_OUTFLOW
   integer, parameter :: bc_in     = BC_OUTFLOW
-  logical, parameter :: bc_user   = .false. !< user boundaries (e.g. sources)
+  logical, parameter :: bc_user   = .false.  !< user boundaries (e.g. sources)
 
-  !> Slope limiters
-  !> LIMITER_NO_AVERAGE = Performs no average (1st order in space)
-  !> LIMITER_NO_LIMIT   = Does not limit the slope (unstable)
-  !> LIMITER_MINMOD     = Minmod (most diffusive) limiter
-  !> LIMITER_VAN_LEER   = Van Ler limiter
-  !> LIMITER_VAN_ALBADA = Van Albada limiter
-  !> LIMITER_UMIST      = UMIST limiter
-  !> LIMITER_WOODWARD   = Woodward limiter
-  !> LIMITER_SUPERBEE   = Superbee limiter
+  !>  Slope limiters
+  !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
+  !>  LIMITER_NO_LIMIT   = Does not limit the slope (unstable)
+  !>  LIMITER_MINMOD     = Minmod (most diffusive) limiter
+  !>  LIMITER_VAN_LEER   = Van Ler limiter
+  !>  LIMITER_VAN_ALBADA = Van Albada limiter
+  !>  LIMITER_UMIST      = UMIST limiter
+  !>  LIMITER_WOODWARD   = Woodward limiter
+  !>  LIMITER_SUPERBEE   = Superbee limiter
   integer, parameter :: slope_limiter = LIMITER_MINMOD
 
-  !> Thermal conduction
+  !>  Thermal conduction
   !> TC_OFF         : No thermal conduction
   !> TC_ISOTROPIC   : Isotropic thermal conduction
   !> TC_ANISOTROPIC : Anisotropic thermal conduction (requires B field)
@@ -160,28 +156,28 @@ module parameters
   integer, parameter :: n_spec = 6     !< num of species for chemistry
   integer, parameter :: n1_chem= 7     !< 1st index for chemistry
 #else
-  integer, parameter :: npas = 0      !< num. of passive scalars
+  integer, parameter :: npas = 0       !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot=  512  !< Total grid size in X
-  integer, parameter :: nytot=  8    !< Total grid size in Y
-  integer, parameter :: nztot=  8    !< Total grid size in Z
+  integer, parameter :: nxtot= 256     !< Total grid size in X
+  integer, parameter :: nytot=   8     !< Total grid size in Y
+  integer, parameter :: nztot=   8     !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
-  integer, parameter :: MPI_NBX = 4    !< number of MPI blocks in X
-  integer, parameter :: MPI_NBY = 1    !< number of MPI blocks in Y
-  integer, parameter :: MPI_NBZ = 1    !< number of MPI blocks in Z
+  integer, parameter :: MPI_NBX= 8    !< number of MPI blocks in X
+  integer, parameter :: MPI_NBY= 1    !< number of MPI blocks in Y
+  integer, parameter :: MPI_NBZ= 1    !< number of MPI blocks in Z
 #endif
 
   !  set box size
   real, parameter :: xmax  = 1.0       !< grid extent in X (code units)
-  real, parameter :: ymax  = 8.0/512.0 !< grid extent in Y (code units)
-  real, parameter :: zmax  = 8.0/512.0 !< grid extent in Z (code units)
+  real, parameter :: ymax  = 8.0/256.0 !< grid extent in Y (code units)
+  real, parameter :: zmax  = 8.0/256.0 !< grid extent in Z (code units)
   real, parameter :: xphys = 1.0       !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
-  real, parameter :: cv = 3.0          !< Specific heat at constant volume (/R)
+  real, parameter :: cv = 2.5          !< Specific heat at constant volume (/R)
   real, parameter :: gamma=(cv+1.)/cv  !< Cp/Cv
   real, parameter :: mu = 1.0          !< mean atomic mass
 
@@ -194,19 +190,19 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !<  magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1.0
+  real, parameter :: tmax    = 0.3
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 0.1
-  real, parameter :: cfl     = 0.8       !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta     = 0.001     !< artificial viscosity
+  real, parameter :: dtprint = 0.01
+  real, parameter :: cfl     = 0.9     !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta     = 0.0     !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm    = .false.
-  integer            :: itprint0 = 0    !< number of output to do warm start
-  real, parameter    :: time_0   = 0.0  !< starting time
+  integer            :: itprint0 =  0   !< number of output to do warm start
+  real, parameter    :: time_0   =  0.0 !< starting time
 
 
   !*********************************************************************

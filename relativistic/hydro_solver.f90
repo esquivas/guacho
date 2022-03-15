@@ -77,6 +77,7 @@ end subroutine viscous_copy
 !> @param real [in] dt : timestep
 
 subroutine step(dt)
+
   use parameters, only : nx, ny, nz, neqdyn, &
                          user_source_terms, radiation_pressure, &
                          eight_wave, enable_flux_cd
@@ -128,7 +129,6 @@ subroutine step(dt)
 
 end subroutine step
 
-
 !> @brief High level wrapper to advancce the simulation
 !> @details High level wrapper to advancce the simulation
 !! @n The variables are taken from the globals module.
@@ -154,16 +154,16 @@ subroutine tstep()
   dtm=dt_CFL/2.
   !   calculate the fluxes using the primitives
   !   (piecewise constant)
-  if (riemann_solver == SOLVER_HLL ) call hllfluxes(1)
-  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(1)
-  if (riemann_solver == SOLVER_RHLL ) call hllrfluxes(1)
-  if (riemann_solver == SOLVER_RHLLC) call hllcrfluxes(1)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(1)
-  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(1)
+  if (riemann_solver == SOLVER_HLL )  call hllfluxes(1)
+  if (riemann_solver == SOLVER_HLLC)  call hllcfluxes(1)
+  if (riemann_solver == SOLVER_HLLE)  call hllefluxes(1)
+  if (riemann_solver == SOLVER_HLLD)  call hlldfluxes(1)
   !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(1)
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(1)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(1)
+  if (riemann_solver == SOLVER_RHLL ) call hllrfluxes(1)
+  if (riemann_solver == SOLVER_RHLLC) call hllcrfluxes(1)
 
   !   upwind timestep
   call step(dtm)
@@ -175,16 +175,16 @@ subroutine tstep()
 
   !   calculate the fluxes using the primitives
   !   with linear reconstruction (piecewise linear)
-  if (riemann_solver == SOLVER_HLL ) call hllfluxes(2)
-  if (riemann_solver == SOLVER_HLLC) call hllcfluxes(2)
-  if (riemann_solver == SOLVER_RHLL ) call hllrfluxes(2)
-  if (riemann_solver == SOLVER_RHLLC) call hllcrfluxes(2)
-  if (riemann_solver == SOLVER_HLLE) call hllefluxes(2)
-  if (riemann_solver == SOLVER_HLLD) call hlldfluxes(2)
+  if (riemann_solver == SOLVER_HLL )  call hllfluxes(2)
+  if (riemann_solver == SOLVER_HLLC)  call hllcfluxes(2)
+  if (riemann_solver == SOLVER_HLLE)  call hllefluxes(2)
+  if (riemann_solver == SOLVER_HLLD)  call hlldfluxes(2)
   !if (riemann_solver == SOLVER_HLLE_SPLIT_B) call hllefluxes(2)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_B) call hllefluxes(2)
   if (riemann_solver == SOLVER_HLLE_SPLIT_ALL) call hllefluxesSplitAll(2)
   !if (riemann_solver == SOLVER_HLLD_SPLIT_ALL) call hllefluxes(2)
+  if (riemann_solver == SOLVER_RHLL ) call hllrfluxes(2)
+  if (riemann_solver == SOLVER_RHLLC) call hllcrfluxes(2)
 
   !  upwind timestep
   call step(dt_CFL)
@@ -201,7 +201,7 @@ subroutine tstep()
   !  the primitives in the physical domain are upated
   if (eq_of_state == EOS_CHEM) call update_chem()
 
-  !-------------------------
+  !----------------------------------
   !   apply cooling/heating terms
 
   !   add cooling (H rat e)to the conserved variables
