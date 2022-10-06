@@ -27,10 +27,10 @@
 !! can be moved later to a runtime input file
 
 module parameters
-#ifdef MPIP
-    use mpi
-#endif
   use constants
+#ifdef MPIP
+  use mpi
+#endif
   implicit none
 #ifdef MPIP
   logical, parameter :: mpip =   !<  enable mpi parallelization
@@ -65,6 +65,8 @@ module parameters
   logical, parameter :: enable_flux_cd =
   !>  Enable writting of divB to disk
   logical, parameter :: dump_divb      =
+  !>  Enable writting of shock flag to disk
+  logical, parameter :: dump_shock     =
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin =  !< binary i/o (needed for warmstart)
@@ -148,9 +150,8 @@ module parameters
   logical, parameter :: lmp_distf  =
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP =
-  !>  Dump shock detector to disk
-  logical, parameter :: dump_shock =
 
+  
 #ifdef PASSIVES
   integer, parameter :: npas   =      !< num. of passive scalars
   integer, parameter :: n_spec =      !< num of species for chemistry
@@ -174,7 +175,7 @@ module parameters
   real, parameter :: xmax  =      !< grid extent in X (code units)
   real, parameter :: ymax  =      !< grid extent in Y (code units)
   real, parameter :: zmax  =      !< grid extent in Z (code units)
-  
+
   real, parameter :: xphys =      !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
