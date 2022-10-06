@@ -135,10 +135,10 @@ module parameters
   logical, parameter :: radiation_pressure = .false.
 
   !> Include radiative pressure Bourrier
-  logical, parameter :: beta_pressure =
+  logical, parameter :: beta_pressure = .false.
 
   !> Include charge_exchange
-  logical, parameter :: charge_exchange =
+  logical, parameter :: charge_exchange = .false.
 
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
