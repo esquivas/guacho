@@ -17,7 +17,7 @@ COMPILER= ifort
 ### ifortran ###
  FLAGS= -O3 -cpp -mcmodel=large -g -traceback -check bounds -warn all
 #FLAGS= -O3 -cpp -mcmodel=large -traceback -check
-#FLAGS= -O3 -cpp 
+#FLAGS= -O3 -cpp
 #FLAGS= -O3 -cpp -g -traceback -check bounds -warn all
 
 ### gfortran ###
@@ -71,6 +71,7 @@ utils.o
 OBJECTS_MAIN=\
 lmp_module.o \
 user_mod.o \
+self_gravity.o \
 network.o \
 flux_cd_module.o \
 hydro_core.o \
@@ -80,6 +81,7 @@ difrad.o \
 cooling_h.o \
 cooling_dmc.o	\
 cooling_chi.o \
+cooling_schure.o \
 thermal_cond.o \
 init.o \
 Out_Silo_Module.o \
