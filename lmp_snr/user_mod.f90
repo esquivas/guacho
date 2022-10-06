@@ -171,7 +171,7 @@ contains
         pos(2) = pos(2) * ymax
         pos(3) = pos(3) * zmax
 
-        if(isInDomain(pos) ) then
+        if( isInDomain(pos) ) then
             n_activeMP            = n_activeMP + 1
             partOwner(n_activeMP) = rank
             partID   (n_activeMP) = n_activeMP + rank*N_MP
