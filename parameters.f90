@@ -174,6 +174,7 @@ module parameters
   real, parameter :: xmax  =      !< grid extent in X (code units)
   real, parameter :: ymax  =      !< grid extent in Y (code units)
   real, parameter :: zmax  =      !< grid extent in Z (code units)
+  
   real, parameter :: xphys =      !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
