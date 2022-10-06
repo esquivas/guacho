@@ -154,11 +154,11 @@ module parameters
 
 #ifdef PASSIVES
   integer, parameter :: npas=4        !< num. of passive scalars
-  integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
-  integer, parameter :: n1_chem = 6   !< position of first index of species
 #else
   integer, parameter :: npas = 0      !< num. of passive scalars
 #endif
+  integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
+  integer, parameter :: n1_chem = 6   !< position of first index of species
 
   integer, parameter :: nxtot=512    !< Total grid size in X
   integer, parameter :: nytot=512    !< Total grid size in Y
