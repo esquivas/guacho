@@ -1,0 +1,707 @@
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002ADA8D82AEB0  Unknown               Unknown  Unknown
+guacho             0000000000422E97  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002ADA8DC5A790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AF6502FEEB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AF65072E790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B0112955EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B0112D85790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002ACE0E675EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002ACE0EAA5790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AF59F30BEB0  Unknown               Unknown  Unknown
+guacho             000000000042312F  hydro_core_mp_u2p          65  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AF59F73B790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002BA358D30EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002BA359160790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AD0E0DBDEB0  Unknown               Unknown  Unknown
+guacho             0000000000422E90  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AD0E11ED790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002BA7020EFEB0  Unknown               Unknown  Unknown
+guacho             00000000004231D4  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002BA70251F790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AFE8494DEB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AFE84D7D790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B9A8EE59EB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B9A8F289790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AE75282EEB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AE752C5E790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B3856888EB0  Unknown               Unknown  Unknown
+guacho             0000000000423196  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B3856CB8790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B8332212EB0  Unknown               Unknown  Unknown
+guacho             0000000000423162  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B8332642790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AD5B4086EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AD5B44B6790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+
+Stack trace terminated abnormally.
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AABD2EC0EB0  Unknown               Unknown  Unknown
+guacho             0000000000423167  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AABD32F0790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002BA0D6793EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002BA0D6BC3790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B99CA350EB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B99CA780790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AC0B43C0EB0  Unknown               Unknown  Unknown
+guacho             00000000004231C1  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AC0B47F0790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AFFF2A2AEB0  Unknown               Unknown  Unknown
+guacho             00000000004231B7  hydro_core_mp_u2p          86  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AFFF2E5A790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B80AD624EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B80ADA54790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AF63B716EB0  Unknown               Unknown  Unknown
+guacho             00000000004231D4  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AF63BB46790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B47400E2EB0  Unknown               Unknown  Unknown
+guacho             0000000000423177  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B4740512790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002ABB45890EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002ABB45CC0790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B91A8D20EB0  Unknown               Unknown  Unknown
+guacho             00000000004231AE  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B91A9150790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B1C561CBEB0  Unknown               Unknown  Unknown
+guacho             00000000004231C1  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B1C565FB790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B48B7344EB0  Unknown               Unknown  Unknown
+guacho             0000000000423177  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B48B7774790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AEC628EDEB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AEC62D1D790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AC402DE5EB0  Unknown               Unknown  Unknown
+guacho             0000000000423180  hydro_core_mp_u2p          86  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AC403215790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B0473987EB0  Unknown               Unknown  Unknown
+guacho             0000000000423196  hydro_core_mp_u2p         107  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B0473DB7790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002B6788D11EB0  Unknown               Unknown  Unknown
+guacho             00000000004231C6  hydro_core_mp_u2p         108  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002B6789141790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AF434A8FEB0  Unknown               Unknown  Unknown
+guacho             0000000000423177  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AF434EBF790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+guacho             000000000050FC51  Unknown               Unknown  Unknown
+guacho             000000000050E3A7  Unknown               Unknown  Unknown
+guacho             00000000004C5654  Unknown               Unknown  Unknown
+guacho             00000000004C5466  Unknown               Unknown  Unknown
+guacho             000000000048F66F  Unknown               Unknown  Unknown
+guacho             000000000049325B  Unknown               Unknown  Unknown
+libpthread.so.0    00002AAD21026EB0  Unknown               Unknown  Unknown
+guacho             0000000000423141  hydro_core_mp_u2p          73  hydro_core.f90
+guacho             0000000000422FC5  hydro_core_mp_cal         307  hydro_core.f90
+guacho             0000000000488FEA  hydro_solver_mp_t         171  hydro_solver.f90
+guacho             000000000048C538  MAIN__                    111  main.f90
+guacho             000000000040822E  Unknown               Unknown  Unknown
+libc.so.6          00002AAD21456790  Unknown               Unknown  Unknown
+guacho             0000000000408139  Unknown               Unknown  Unknown
