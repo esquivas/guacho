@@ -197,13 +197,13 @@ module parameters
   real, parameter :: tmax    = 3.e3*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 1.e2*yr/tsc
-  real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.005              !< artificial viscosity
+  real, parameter :: cfl = 0.4              !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta = 0.005            !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=10         !< number of output to do warm start
-  real, parameter    :: time_0   =          !< starting time
+  integer            :: itprint0 = 10       !< number of output to do warm start
+  real, parameter    :: time_0   = 0.0      !< starting time
 
 
   !*********************************************************************
