@@ -124,11 +124,21 @@ module parameters
   !> Enable 'diffuse' radiation
   logical, parameter :: dif_rad = .false.
 
-  !> Include user defined source terms (e.g. gravity, has to be set in usr_mod)
+  !> Enable self-gravity (SOR)
+  logical, parameter :: enable_self_gravity = .false.
+
+  !> Include user defined source terms
+  !> (e.g. gravity, has to be set in usr_mod)
   logical, parameter :: user_source_terms = .false.
 
   !> Include radiative pressure
   logical, parameter :: radiation_pressure = .false.
+
+  !> Include radiative pressure Bourrier
+  logical, parameter :: beta_pressure =
+
+  !> Include charge_exchange
+  logical, parameter :: charge_exchange =
 
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
@@ -138,13 +148,15 @@ module parameters
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
+  !>  Dump shock detector to disk
+  logical, parameter :: dump_shock = .false.
 
 #ifdef PASSIVES
-  integer, parameter :: npas=0        !< num. of passive scalars
-#else
-  integer, parameter :: npas=0        !< num. of passive scalars
+  integer, parameter :: npas=4        !< num. of passive scalars
   integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
   integer, parameter :: n1_chem = 6   !< position of first index of species
+#else
+  integer, parameter :: npas = 0      !< num. of passive scalars
 #endif
 
   integer, parameter :: nxtot=512    !< Total grid size in X
@@ -156,8 +168,6 @@ module parameters
   integer, parameter :: MPI_NBX=4     !< number of MPI blocks in X
   integer, parameter :: MPI_NBY=4     !< number of MPI blocks in Y
   integer, parameter :: MPI_NBZ=4     !< number of MPI blocks in Z
-  !> total number of MPI processes
-  integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
 #endif
 
   !  set box size
@@ -187,12 +197,13 @@ module parameters
   real, parameter :: tmax    = 3.e3*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 1.e2*yr/tsc
-  real, parameter :: cfl=0.4                 !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta=0.005               !< artificial viscosity
+  real, parameter :: cfl=0.4                !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta=0.005              !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0=10          !< number of output to do warm start
+  integer            :: itprint0=10         !< number of output to do warm start
+  real, parameter    :: time_0   =          !< starting time
 
 
   !*********************************************************************
@@ -223,6 +234,8 @@ module parameters
 #endif
 
 #ifdef MPIP
+  !> total number of MPI processes
+  integer, parameter :: np=MPI_NBX*MPI_NBY*MPI_NBZ
   !>  number of physical cells in x in each MPI block
   integer, parameter :: nx=nxtot/MPI_NBX
   !>  number of physical cells in y in each MPI block
