@@ -133,7 +133,7 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =8192
+  integer, parameter :: N_MP =16384
   !>  Enable following SED of each MP
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
