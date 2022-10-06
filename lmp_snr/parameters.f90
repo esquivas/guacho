@@ -25,6 +25,7 @@
 !> @brief Parameters module
 !> @details This module contains parameters of the run, some of this
 !! can be moved later to a runtime input file
+
 module parameters
   use constants
 #ifdef MPIP
@@ -59,13 +60,13 @@ module parameters
   integer, parameter :: riemann_solver = SOLVER_HLLD
 
   !>  Include terms proportional to DIV B (powell et al. 1999)
-  logical, parameter :: eight_wave = .false.
+  logical, parameter :: eight_wave     = .false.
   !>  Enable flux-CD cleaning of div B
   logical, parameter :: enable_flux_cd = .true.
   !>  Enable writting of divB to disk
-  logical, parameter :: dump_divb = .false.
+  logical, parameter :: dump_divb      = .false.
   !>  Enable writting of shock flag to disk
-  logical, parameter :: dump_shock = .true.
+  logical, parameter :: dump_shock     = .true.
 
   !  Type of output (silo has to be set in Makefile)
   logical, parameter :: out_bin  = .true.   !< binary i/o (needed for warmstart)
@@ -84,6 +85,7 @@ module parameters
   !> COOL_BBC  : Cooling function of Benjamin, Benson and Cox (2003)
   !> COOL_DMC  : coronal eq. (tabulated) from Dalgarno & Mc Cray (1972)
   !> COOL_CHI  : From table(s) generated with Chianti
+  !> COOL_SKKKV: from table(s) in Schure et al. (2009)
   !> COOL_CHEM : enables cooling from a full chemical network
   integer, parameter :: cooling = COOL_CHI
 
@@ -148,8 +150,7 @@ module parameters
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP = 100
-  !>  Dump shock detector to disk
-  logical, parameter :: dump_shock = .false.
+
 
 #ifdef PASSIVES
   integer, parameter :: npas=4        !< num. of passive scalars
