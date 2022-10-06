@@ -151,14 +151,14 @@ module parameters
   !>  Number of bins for SED (Spectral Energy Distribution)
   integer, parameter :: NBinsSEDMP =
 
-  
+
 #ifdef PASSIVES
   integer, parameter :: npas   =      !< num. of passive scalars
-  integer, parameter :: n_spec =      !< num of species for chemistry
-  integer, parameter :: n1_chem=      !< 1st index for chemistry
 #else
   integer, parameter :: npas = 0      !< num. of passive scalars
 #endif
+integer, parameter :: n_spec =      !< num of species for chemistry
+integer, parameter :: n1_chem=      !< 1st index for chemistry
 
   integer, parameter :: nxtot=      !< Total grid size in X
   integer, parameter :: nytot=      !< Total grid size in Y
