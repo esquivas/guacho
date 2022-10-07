@@ -307,7 +307,7 @@ def read_lmp(nout,path='', base='lmp',trim=True, verbose=False):
         file_in = path+base+str(ip).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
         f = open(file_in,'rb')
         nproc,n_mp,n_activeMP, n_bins = struct.unpack('4i',f.read(16))
-        if verbose: print(np_activeMP, ' active particles in processor ', ip)
+        if verbose: print(n_activeMP, ' active particles in processor ', ip)
         for i_mp in range(n_activeMP):
             ii = struct.unpack('1i',f.read(4))[0]
             ii -= 1
