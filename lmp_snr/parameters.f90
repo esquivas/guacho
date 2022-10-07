@@ -195,7 +195,7 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 3.e3*yr/tsc
+  real, parameter :: tmax    = 1.e3*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 1.e2*yr/tsc
   real, parameter :: cfl = 0.4              !< Courant-Friedrichs-Lewy number
