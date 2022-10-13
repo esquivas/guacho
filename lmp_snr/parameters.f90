@@ -145,7 +145,7 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =16384
+  integer, parameter :: N_MP =16384/4
   !>  Enable following SED of each MP
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
@@ -160,9 +160,9 @@ module parameters
   integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
   integer, parameter :: n1_chem = 6   !< position of first index of species
 
-  integer, parameter :: nxtot=512    !< Total grid size in X
-  integer, parameter :: nytot=512    !< Total grid size in Y
-  integer, parameter :: nztot=512    !< Total grid size in Z
+  integer, parameter :: nxtot=256    !< Total grid size in X
+  integer, parameter :: nytot=256    !< Total grid size in Y
+  integer, parameter :: nztot=256    !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
