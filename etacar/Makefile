@@ -109,10 +109,17 @@ network.o \
 hydro_core.o \
 lyman_alpha_tau.o  #   not updated to Guacho V1.3
 
+#  For the Brackett gamma calculation
+BR_G = \
+network.o \
+hydro_core.o \
+brackett_gamma.o
+
 # Join object lists
 OBJECTS_ALL     = ${MODULES_MAIN} ${MODULES_USER} ${OBJECTS_MAIN}
 OBJECTS_COLDENS = ${MODULES_MAIN} ${MODULES_USER} ${COLDENS}
 OBJECTS_LYAT    = ${MODULES_MAIN} ${MODULES_USER} ${LYAT}
+OBJECTS_BR_G    = ${MODULES_MAIN} ${MODULES_USER} ${BR_G}
 #---------------------------------------------------
 # Set flags
 ifeq ($(DOUBLEP),Y)
@@ -165,6 +172,12 @@ lyman_alpha_tau : prebuild ${OBJECTS_LYAT}
 	@rm -f *.o *.mod
 	@echo "Done! (`date`)"
 
+brackett_gamma : prebuild ${OBJECTS_BR_G}
+	@echo Linking object files ...
+	@$(COMPILER) $(FLAGS) $(LINKFLAGS) $(OBJECTS_BR_G) -o $@
+	@echo Cleaning up ...
+	@rm -f *.o *.mod
+
 prebuild :
 	@echo "Guacho build started `date`"
 	@echo Compiling flags used: $(FLAGS)
@@ -175,18 +188,9 @@ prebuild :
 	@echo Compiling $^ ...
 	@$(COMPILER) $(FLAGS) -c $< -o $@
 %.o:%.f
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:%.F95
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:%.F90
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
-%.o:%.F
-	@echo Compiling $^ ...
-	@$(COMPILER) $(FLAGS) -c $< -o $@
+	@echo Compiling $^ .
+
 
 clean :
 	rm -f *.o *.mod
-	rm -f $(PROGRAM) lyman_alpha_tau coldens *.out *.err
+	rm -f $(PROGRAM) lyman_alpha_tau coldens brackett_gamma *.out *.err

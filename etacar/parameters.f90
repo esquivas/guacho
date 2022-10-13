@@ -47,8 +47,8 @@ module parameters
   !  If integer, choose from list provided
   !----------------------------------------
 
-  logical, parameter :: pmhd =  .false.  !<  enadble passive mhd
-  logical, parameter :: mhd  =  .false.  !<  Enable full MHD
+  logical, parameter :: pmhd = .false.   !<  enadble passive mhd
+  logical, parameter :: mhd  = .false.   !<  Enable full MHD
 
   !> Approximate Riemman Solver
   !> SOLVER_HLL  : HLL solver (HD most diffusive)
@@ -67,8 +67,8 @@ module parameters
   logical, parameter :: dump_divb      = .false.
 
   !  Type of output (silo has to be set in Makefile)
-  logical, parameter :: out_bin =  .true.  !< binary i/o (needed for warmstart)
-  logical, parameter :: out_vtk =  .false. !< vtk (also binary)
+  logical, parameter :: out_bin = .true.  !< binary i/o (needed for warmstart)
+  logical, parameter :: out_vtk = .false. !< vtk (also binary)
 
   !> Equation of state used to compute T and P
   !> EOS_ADIABATIC     : Does not modify P, and T=(P/rho)*Tempsc
@@ -100,7 +100,7 @@ module parameters
   integer, parameter :: bc_top    = BC_OUTFLOW
   integer, parameter :: bc_out    = BC_OUTFLOW
   integer, parameter :: bc_in     = BC_OUTFLOW
-  logical, parameter :: bc_user   = .true. !< user boundaries (e.g. sources)
+  logical, parameter :: bc_user   =  .true. !< user boundaries (e.g. sources)
 
   !>  Slope limiters
   !>  LIMITER_NO_AVERAGE = Performs no average (1st order in space)
@@ -143,25 +143,25 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .false.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP       = 10
+  integer, parameter :: N_MP       = 0
   !>  Enable following SED of each MP
-  logical, parameter :: lmp_distf  = 100
+  logical, parameter :: lmp_distf  = .false.
   !>  Number of bins for SED (Spectral Energy Distribution)
-  integer, parameter :: NBinsSEDMP = 100
+  integer, parameter :: NBinsSEDMP = 0
   !>  Dump shock detector to disk
   logical, parameter :: dump_shock = .false.
 
 #ifdef PASSIVES
   integer, parameter :: npas   = 2     !< num. of passive scalars
-  integer, parameter :: n_spec = 2     !< num of species for chemistry
-  integer, parameter :: n1_chem= 6     !< 1st index for chemistry
+  integer, parameter :: n_spec = 6     !< num of species for chemistry
+  integer, parameter :: n1_chem= 7     !< 1st index for chemistry
 #else
   integer, parameter :: npas = 0      !< num. of passive scalars
 #endif
 
-  integer, parameter :: nxtot= 600     !< Total grid size in X
-  integer, parameter :: nytot= 600     !< Total grid size in Y
-  integer, parameter :: nztot= 600     !< Total grid size in Z
+  integer, parameter :: nxtot= 400     !< Total grid size in X
+  integer, parameter :: nytot= 400     !< Total grid size in Y
+  integer, parameter :: nztot= 400     !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -174,7 +174,7 @@ module parameters
   real, parameter :: xmax  = 1.0     !< grid extent in X (code units)
   real, parameter :: ymax  = 1.0     !< grid extent in Y (code units)
   real, parameter :: zmax  = 1.0     !< grid extent in Z (code units)
-  real, parameter :: xphys = 15.45*20.0*au  !< grid extent in X (physical units, cgs)
+  real, parameter :: xphys = 40.*au  !< grid extent in X (physical units, cgs)
 
   !  For the equation of state
   real, parameter :: cv = 1.5          !< Specific heat at constant volume (/R)
@@ -182,7 +182,7 @@ module parameters
   real, parameter :: mu = 1.0          !< mean atomic mass
 
   !  scaling factors to physical (cgs) units
-  real, parameter :: T0 = 1.0e4             !<  reference temperature (for cs)
+  real, parameter :: T0 = 1e4               !<  reference temperature (for cs)
   real, parameter :: rsc=xphys/xmax         !<  distance scaling
   real, parameter :: rhosc= amh*mu          !<  mass density scaling
   real, parameter :: Tempsc=T0*gamma        !<  Temperature scaling
@@ -193,11 +193,11 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 10.0*yr/tsc
+  real, parameter :: tmax    = 5.0 * yr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1.0*yr/tsc
-  real, parameter :: cfl     = 0.8    !< Courant-Friedrichs-Lewy number
-  real, parameter :: eta     = 0.001  !< artificial viscosity
+  real, parameter :: dtprint = 0.1*yr/tsc
+  real, parameter :: cfl     = 0.35     !< Courant-Friedrichs-Lewy number
+  real, parameter :: eta     = 0.01     !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm    = .false.

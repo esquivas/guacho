@@ -1,8 +1,8 @@
 !=======================================================================
 !> @file user_mod.f90
 !> @brief User input module
-!> @author  A. Esquivel  & Isaac Carbajal
-!> @date 4/Nov/2021
+!> @author  Guacho Co Op.l
+!> @date 14/Dic/2021
 
 ! Copyright (c) 2021 Guacho Co-Op
 !
@@ -23,16 +23,15 @@
 !=======================================================================
 
 !> @brief User imput module
-!> @details  This is an attempt to have all input neede from user in a
+!> @details  This is an attempt to have all input needed from user in a
 !! single file
-!!!  This module should load additional modules (i.e. star, jet, sn), to
+!!  This module should load additional modules (i.e. star, jet, sn), to
 !!  impose initial and boundary conditions (such as sources)
 
 module user_mod
 
   ! load auxiliary modules
   use two_winds
-
   implicit none
 
 contains
@@ -44,7 +43,7 @@ subroutine init_user_mod()
 
   implicit none
   !  initialize modules loaded by user
-  call init_two_winds()
+  call init_twowinds()
 
 end subroutine init_user_mod
 
@@ -56,24 +55,50 @@ end subroutine init_user_mod
 subroutine initial_conditions(u)
 
   use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
-                         neqdyn, Tempsc, rsc, vsc, rhosc, Psc
+                         neqdyn, Tempsc, rsc, vsc, rhosc
+  use globals,    only : coords, dx ,dy ,dz
   use constants,  only : Kb
-  use globals,    only: coords, dx ,dy ,dz
-
   implicit none
   real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+  real              :: x, y, z, rads, dens, velx, vely, velz
+  integer           :: i, j, k
+  real              :: rho_medium, T_medium
 
-  ! medio uniforme y estatico
-  u(1,:,:,:) = 1.66e-24 /rhosc
-  u(2,:,:,:) = 0.0
-  u(3,:,:,:) = 0.0
-  u(4,:,:,:) = 0.0
-  u(5,:,:,:) = 1.0e4 * 1.0 * Kb /Psc
+  rho_medium = (1.e-24)*1.66 /rhosc 
+  T_medium   = 1.e4/Tempsc
 
-  u(6,:,:,:) = 1e-4 * u(1,:,:,:)
-  u(7,:,:,:) = 1.0e-5
+  !  imponemos el viento central en todo el dominio
+  do k=nzmin,nzmax
+    do j=nymin,nymax
+      do i=nxmin,nxmax
 
-  call impose_two_winds(u,0.0)
+        velx = 0.
+        vely = 0.
+        velz = 0.
+        dens = rho_medium
+
+        !   total density and momenta
+        u(1,i,j,k) = dens
+        u(2,i,j,k) = dens*velx
+        u(3,i,j,k) = dens*vely
+        u(4,i,j,k) = dens*velz
+
+        !  density of neutrals
+        u(neqdyn+1,i,j,k) =  y0(1)*dens
+        !  passive scalar (tag) for stellar material
+        u(neqdyn+2,i,j,k)= 1000*dens
+
+        ! total energy
+        u(5,i,j,k) = 0.5*dens*(velx**2+vely**2+velz**2) +             &
+                     cv * (2.0*u(1,i,j,k) - u(neqdyn+1,i,j,k) ) * Tw(1)
+
+      end do
+    end do
+  end do
+
+  !  imponemos el viento del planeta tambien
+  call impose_winds(u, 0.0) 
+     
 
 end subroutine initial_conditions
 
@@ -95,7 +120,7 @@ subroutine impose_user_bc(u,order)
   !  In this case the boundary is the same for 1st and second order)
   !  hack to avoid warnings at compile time
   if (order >= 1) then
-    call impose_two_winds(u,time)
+     call impose_winds(u, time)
   end if
 
 end subroutine impose_user_bc
@@ -118,12 +143,10 @@ subroutine get_user_source_terms(pp,s, i, j , k)
                          vsc, neq
   use globals,    only : dx, dy, dz, coords
 
-
   implicit none
   integer, intent(in) :: i, j, k
   real, intent(in)    :: pp(neq)
   real, intent(inout) :: s(neq)
-
   real :: x(Nsources), y(Nsources), z(Nsources), GM(Nsources),       &
           rad2(Nsources), xc, yc, zc
   integer :: l
@@ -156,8 +179,6 @@ subroutine get_user_source_terms(pp,s, i, j , k)
     s(5)= s(5)-pp(1)*GM(l)*( pp(2)*x(l) +pp(3)*y(l) +pp(4)*z(l) )  &
           /(rad2(l)**1.5 )
   end do
-
-
 
 end subroutine get_user_source_terms
 
