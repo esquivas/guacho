@@ -207,7 +207,7 @@ contains
               !print*, 'particle ', partID(i_mp),                              &
               !        'marked inside the shock region', currentIteration
               !  interpolate Pressure
-              !Q_MP0(i_mp,9) = 0.
+              Q_MP0(i_mp,9) = 0.
               l = 1
               do k= ind(3),ind(3)+1
                 do j=ind(2),ind(2)+1
