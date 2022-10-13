@@ -755,6 +755,7 @@ contains
       write(unitout) np, N_MP, i_active, NBinsSEDMP
     end if
 
+    print '(a,i3,a,i6,a)',"Processor ",rank," writting ",i_active," active LMPs"
     !  loop over particles owned by processor and write the active ones
     do i_mp=1,N_MP
       if (partID(i_mp) /=0) then
@@ -767,8 +768,9 @@ contains
             write(unitout) MP_SED(2,:,i_mp)
             write(unitout) P_DSA(i_mp,:,:)
           end if
-        endif
+        end if
       end if
+      print '(a,i3,a,i6,a)',  "Processor ",rank," wrote ",i_mp," active LMPs"
     end do
 
     close(unitout)
