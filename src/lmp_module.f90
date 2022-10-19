@@ -54,9 +54,6 @@ contains
       ! eq = 11  : compression ratio (does not reset)
       ! eq = 12  : angle between the shock normal and the preshock field
 
-      allocate( shockF(nx,ny,nz) )
-      !  used to mark in the MHD grid shocked regions (shockF(i,j,k)=1)
-
       allocate( MP_SED(2,NBinsSEDMP,N_MP) )
       !  MP_SED(1,:,i) :  Energy (Lagrangian) bins
       !  MP_SED(2,:,i) :  Number of MP with Energy E_i +- Delta E
@@ -71,6 +68,8 @@ contains
       !  eq = 4-6 : vx, vy, vz
     end if
 
+    allocate( shockF(nx,ny,nz) )
+    !  used to mark in the MHD grid shocked regions (shockF(i,j,k)=1)
     allocate( Q_MP1(N_MP,3) )    ! x,y,z position advanced by the predictor
     allocate( partID   (N_MP) )  ! Individual particle identifier
     allocate( partOwner(N_MP) )  ! Rank of the processor that owns said particle
@@ -140,7 +139,7 @@ contains
     use constants, only : pi
     use utilities, only : isInDomain, inWhichDomain, isInShock
     implicit none
-    integer :: i_mp, i, j, k, l, ind(3)
+    integer :: i_mp, i, j, k, l, ind(3), i_add
     real    :: weights(8)
     integer :: dest, nLocSend, sendLoc(0:np-1), sendList(0:np-1,0:np-1),       &
                dataLoc(N_MP), iS, iR, status(MPI_STATUS_SIZE), err
@@ -325,26 +324,28 @@ contains
           !  predictor step
           Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
 
-        end if  ! isIndomain (l 158)
+        end if  ! isIndomain (l 161)
 
         !  check if particle is leaving the domain
         dest = inWhichDomain(Q_MP1(i_mp,1:3))
-        if (dest == -1) call deactivateMP(i_mp)
-        if( dest /= rank .and. dest /= -1 ) then
-          !  count for MPI exchange
-          sendLoc(dest) = sendLoc(dest) + 1
-          nLocSend      = nLocSend      + 1
-          dataLoc(nLocSend) = i_mp
-          !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp),        &
-          !                     ' is going to ',DEST
+
+        if (dest == -1 ) then
+          call deactivateMP(i_mp)
+        else if (dest /= rank) then
+            !  count for MPI exchange
+            sendLoc(dest) = sendLoc(dest) + 1
+            nLocSend      = nLocSend      + 1
+            dataLoc(nLocSend) = i_mp
+            !print'(i2,a,i4,a,i4)', rank, ' *** particle ',partID(i_mp),        &
+            !                     ' is going to ',DEST
         end if
 
       end if  ! if part was active
-    end do    ! loop over all particles
+    end do    ! loop over all particles (i_mp)
 
     !   consolidate list to have info of all send/receive operations
-    call mpi_allgather(sendLoc(:),  np, mpi_integer, &
-                       sendList, np, mpi_integer, comm3d,err)
+    call mpi_allgather(sendLoc(:),  np, mpi_integer,                           &
+                       sendList,    np, mpi_integer, comm3d,err)
 
     !  exchange particles
     do iR=0,np-1
@@ -352,7 +353,8 @@ contains
         if(sendList(iR,iS) /= 0) then
 
           if(iS == rank) then
-            !print'(i0,a,i0,a,i0)', rank,'-->', IR, ':',sendList(iR,iS)
+            !print'(i0,a,i0,a,i0,a,i0)', rank,'-->', IR, ':',sendList(iR,iS),  &
+            !                           '--', nLocSend
             do i=1,sendlist(iR,iS)
               !    if (iR /= -1) then
               if (lmp_distf) then
@@ -385,6 +387,7 @@ contains
 
           end if
 
+
           if(iR == rank) then
 
             !print'(i0,a,i0,a,i0)', rank,'<--', IS, ':',sendList(iR,iS)
@@ -398,13 +401,13 @@ contains
                               mpi_any_tag,comm3d, status, err)
 
                 !  add current particle in list and data in new processor
-                call addMP( status(MPI_TAG), 12, fullRecv(1:12), i_mp )
-                P_DSA(i_mp,1,1:8) = fullRecv(13:20)
-                P_DSA(i_mp,2,1:8) = fullRecv(21:28)
+                call addMP( status(MPI_TAG), 12, fullRecv(1:12), i_add )
+                P_DSA(i_add,1,1:8) = fullRecv(13:20)
+                P_DSA(i_add,2,1:8) = fullRecv(21:28)
                 ! unpack the SED
-                MP_SED(1,1:NBinsSEDMP,i_mp) =                                  &
+                MP_SED(1,1:NBinsSEDMP,i_add) =                                 &
                                          fullRecv(29           :28  +NBinsSEDMP)
-                MP_SED(2,1:NBinsSEDMP,i_mp) =                                  &
+                MP_SED(2,1:NBinsSEDMP,i_add) =                                 &
                                          fullRecv(29+NBinsSEDMP:28+2*NBinsSEDMP)
 
               else
@@ -415,12 +418,12 @@ contains
                 !print*,'received successfuly', status(MPI_TAG)
 
                 !  add current particle in list and data in new processor
-                call addMP( status(MPI_TAG), 6, fullRecv(1:6), i_mp )
+                call addMP( status(MPI_TAG), 6, fullRecv(1:6), i_add )
 
               end if
 
               !  recalculate predictor step for newcomer
-              Q_MP1(i_mp,1:3) = Q_MP0(i_mp,1:3)+ dt_CFL*Q_MP0(i_mp,4:6)
+              Q_MP1(i_add,1:3) = Q_MP0(i_add,1:3) + dt_CFL*Q_MP0(i_add,4:6)
 
             end do
 
@@ -446,7 +449,7 @@ contains
     use constants, only : sigma_SB, sigma_T,clight,emass
     use utilities, only : inWhichDomain, isInDomain, isInShock
     implicit none
-    integer :: i_mp, i, j, k, l, ib, ind(3)
+    integer :: i_mp, i, j, k, l, ib, ind(3), i_add
     real    :: weights(8)
     integer :: dest, nLocSend, dataLoc(N_mp),  sendLoc(0:np-1),                &
                sendList(0:np-1,0:np-1),status(MPI_STATUS_SIZE), err, iR, iS
@@ -463,7 +466,7 @@ contains
     ! initialize send and recv lists
     dataLoc(:)    =  0
     sendLoc(:)    =  0
-    sendlist(:,:) =  0
+    sendList(:,:) =  0
     nLocSend      =  0
 
     do i_mp=1, n_MP
@@ -552,8 +555,10 @@ contains
 
         !  check if particle is leaving the domain
         dest = inWhichDomain( Q_MP0(i_mp,1:3) )
-        if (dest == -1) call deactivateMP(i_mp)
-        if (dest /= rank .and. dest /= -1) then
+
+        if (dest == -1) then
+          call deactivateMP(i_mp)
+        else if (dest /= rank) then
           !  count for MPI exchange
           sendLoc(dest) = sendLoc(dest) + 1
           nLocSend      = nLocSend      + 1
@@ -561,11 +566,11 @@ contains
         end if
 
       end if
-    end do
+    end do  !(N_mp)
 
     !   consolidate list to have info of all send/receive operations
     call mpi_allgather(sendLoc(:),  np, mpi_integer,                           &
-                       sendList, np, mpi_integer, comm3d,err)
+                       sendList,    np, mpi_integer, comm3d,err)
 
     !  exchange particles
     do iR=0,np-1
@@ -580,7 +585,7 @@ contains
 
                 !  pack info if we are solving the SED
                 fullSend(1:3) = Q_MP0(dataLoc(i),1:3)
-                fullSend(4:5) = Q_MP0(dataLoc(i),4:5)
+                fullSend(4:5) = Q_MP0(dataLoc(i),11:12)
                 fullSend(6:             5+NBinsSEDMP)=                         &
                                               MP_SED(1,1:NBinsSEDMP,dataLoc(i) )
                 fullSend(6+NBinsSEDMP:5+2*NBinsSEDMP)=                         &
@@ -618,19 +623,19 @@ contains
                  dataIn(1:3) = fullRecv(1:3)
                  dataIn(4:10) = 0.
                  dataIn(11:12) = fullRecv(4:5)
-                 call addMP( status(MPI_TAG), 3, dataIn(1:12), i_mp )
+                 call addMP( status(MPI_TAG), 12, dataIn(1:12), i_add )
 
                  ! unpack the SED
-                 MP_SED(1,1:NBinsSEDMP,i_mp) =                                 &
+                 MP_SED(1,1:NBinsSEDMP,i_add) =                                &
                                            fullRecv(6:             5+NBinsSEDMP)
-                 MP_SED(2,1:NBinsSEDMP,i_mp) =                                 &
+                 MP_SED(2,1:NBinsSEDMP,i_add) =                                &
                                            fullRecv(6+NBinsSEDMP:5+2*NBinsSEDMP)
               else
 
                 call mpi_recv( fullRecv(1:3), 3, mpi_real_kind, IS,            &
                                mpi_any_tag, comm3d, status, err)
                 !  add current particle in list and data in new processor
-                call addMP( status(MPI_TAG), 3, fullRecv(1:3), i_mp )
+                call addMP( status(MPI_TAG), 3, fullRecv(1:3), i_add )
 
               end if
 
@@ -755,8 +760,6 @@ contains
       write(unitout) np, N_MP, i_active, NBinsSEDMP
     end if
 
-    print '(a,i3,a,i6,a)',"Processor ",rank," writting ",i_active," active LMPs"
-    !  loop over particles owned by processor and write the active ones
     do i_mp=1,N_MP
       if (partID(i_mp) /=0) then
         if( isInDomain(Q_MP0(i_mp,1:3)) ) then
@@ -770,7 +773,6 @@ contains
           end if
         end if
       end if
-      print '(a,i3,a,i6,a)',  "Processor ",rank," wrote ",i_mp," active LMPs"
     end do
 
     close(unitout)
