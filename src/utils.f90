@@ -175,10 +175,7 @@ contains
       end do
     end do
 
-end subroutine flag_shock
-
-
-
+  end subroutine flag_shock
   !=======================================================================
 
 end module utilities
