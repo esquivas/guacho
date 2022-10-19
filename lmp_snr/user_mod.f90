@@ -59,7 +59,7 @@ contains
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax,      &
           pmhd, mhd, passives, rsc,rhosc, vsc, psc, cv, Tempsc, neqdyn, tsc,   &
           gamma, nx, ny, nz, nxtot, nytot, nztot, N_MP, NBinsSEDMP,            &
-          np, xmax, ymax, zmax, vsc2, bsc
+          np, xmax, ymax, zmax, vsc2, bsc, lmp_distf
 
     use globals,    only : coords, dx ,dy ,dz, rank,                           &
                            Q_MP0, partID, partOwner, n_activeMP, MP_SED
@@ -70,7 +70,6 @@ contains
     real, intent(out) :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     !logical ::  isInDomain
     integer :: i,j,k
-    real    :: dens, temp, rad, x, y, z, radSN, pressSN, eSN, nu
     integer :: yj,xi
     real    :: pos(3)
     !  initial MP spectra parameters
@@ -101,9 +100,9 @@ contains
     u(7,:,:,:) = B_env
     u(8,:,:,:) = 0.
 
-    xc = 12.* pc/rsc
-    yc = 12.* pc/rsc
-    zc = 12.* pc/rsc
+    xc = 12.0* pc/rsc
+    yc = 12.0* pc/rsc
+    zc = 12.0* pc/rsc
 
     call impose_snr(u,xc,yc,zc)
 
@@ -165,7 +164,7 @@ contains
     else
       !  this will insert N_MP/2 (N_MP is set in parameters) randomly
       !  distributed within each processor domain
-      do while (n_activeMP < N_MP/2)
+      do while (n_activeMP < N_MP/4 )
         call random_number(pos(1:3))
         pos(1) = pos(1) * xmax
         pos(2) = pos(2) * ymax
@@ -190,14 +189,17 @@ contains
                 end do
               end do
             end do
-            N0     =  1.0e-6 / rhoI
-            chi0   = N0 * (1.-gamma_lmp)/                                      &
-                          ( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
 
-            do i = 1,NBinsSEDMP
-              MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
-              MP_SED(2,i,n_activeMP)= chi0*MP_SED(1,i,n_activeMP)**(-gamma_lmp)
-            end do
+            if ( lmp_distf ) then
+              N0     =  1.0e-6 / rhoI
+              chi0   = N0 * (1.-gamma_lmp)/                                    &
+                            ( Emax**(1.-gamma_lmp)-Emin**(1.-gamma_lmp) )
+
+              do i = 1,NBinsSEDMP
+                MP_SED(1,i,n_activeMP)=10.**(log10(Emin)+real(i-1)*deltaE)
+                MP_SED(2,i,n_activeMP)=chi0*MP_SED(1,i,n_activeMP)**(-gamma_lmp)
+              end do
+            end if
 
           endif
 
@@ -220,9 +222,15 @@ contains
     use globals,    only: time, dt_CFL
     implicit none
     real, intent(out)    :: u(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
-    real, save           :: w(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
+    !real, save           :: w(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax)
     integer, intent(in)  :: order
-    integer              :: i, j, k
+    !integer              :: i, j, k
+
+    !  In this case the boundary is the same for 1st and second order)
+    !  hack to avoid warnings at compile time
+    if (order >= 1) then
+      u = u
+    end if
 
   end subroutine impose_user_bc
 
@@ -242,6 +250,11 @@ contains
     real, intent(in)   :: pp(neq)
     real, intent(out)  :: s(neq)
     integer :: i, j, k
+
+    !  hack to avoid compile warnings
+    if (i == 0 .or. j==0 .or. k ==0) then
+       s(:) = pp(:) * 0.0
+    end if
 
   end subroutine get_user_source_terms
 
