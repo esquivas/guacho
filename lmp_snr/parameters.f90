@@ -145,7 +145,7 @@ module parameters
   !> Include Lagrangian Macro Particles (tracers)
   logical, parameter :: enable_lmp = .true.
   !> Max number of macro particles followed by each processor
-  integer, parameter :: N_MP =16384/4
+  integer, parameter :: N_MP =16384
   !>  Enable following SED of each MP
   logical, parameter :: lmp_distf  = .true.
   !>  Number of bins for SED (Spectral Energy Distribution)
@@ -160,9 +160,9 @@ module parameters
   integer, parameter :: n_spec  = 4   !< num. of species (if chemistry enabled)
   integer, parameter :: n1_chem = 6   !< position of first index of species
 
-  integer, parameter :: nxtot=256    !< Total grid size in X
-  integer, parameter :: nytot=256    !< Total grid size in Y
-  integer, parameter :: nztot=256    !< Total grid size in Z
+  integer, parameter :: nxtot=512     !< Total grid size in X
+  integer, parameter :: nytot=512     !< Total grid size in Y
+  integer, parameter :: nztot=512     !< Total grid size in Z
 
 #ifdef MPIP
   !   mpi array of processors
@@ -192,19 +192,19 @@ module parameters
   real, parameter :: vsc = sqrt(vsc2)       !<  Velocity scaling
   real, parameter :: Psc = rhosc*vsc2       !<  Pressure scaling
   real, parameter :: tsc =rsc/sqrt(vsc2)    !<  time scaling
-  real, parameter :: bsc = sqrt(4.0*pi*Psc) !< magnetic field scaling
+  real, parameter :: bsc = sqrt(4.0*pi*Psc) !<  magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1.e3*yr/tsc
+  real, parameter :: tmax    = 1000.0*yr/tsc
   !> interval between consecutive outputs
-  real, parameter :: dtprint = 1.e2*yr/tsc
+  real, parameter :: dtprint = 100.0*yr/tsc
   real, parameter :: cfl = 0.4              !< Courant-Friedrichs-Lewy number
   real, parameter :: eta = 0.005            !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0 = 10       !< number of output to do warm start
-  real, parameter    :: time_0   = 0.0      !< starting time
+  integer            :: itprint0 = 10         !< number of output to do warm start
+  real, parameter    :: time_0   = 0.0*yr/tsc !< starting time
 
 
   !*********************************************************************
