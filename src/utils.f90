@@ -106,8 +106,7 @@ contains
   !> returns -1 if point lies outside domain
   ! @param real [in] : 3D position with respect to a corner of the domain
   function inWhichDomain(pos)
-    use parameters, only : nx, ny, nz, MPI_NBX, MPI_NBY, MPI_NBZ,              &
-                           xmax, ymax, zmax
+    use parameters, only : nx, ny, nz, MPI_NBX, MPI_NBY, MPI_NBZ
     use globals,    only : dx, dy, dz, comm3d
 #ifdef MPIP
     use mpi
