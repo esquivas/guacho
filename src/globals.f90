@@ -55,7 +55,7 @@ module globals
   real :: dz  !< grid spacing in Z
 
   !> position of neighboring MPI blocks
-  integer, dimension(0:2) :: coords
+  integer :: coords(0:2)
 
   integer :: left   !< MPI neighbor in the -x direction
   integer :: right  !< MPI neighbor in the +x direction
