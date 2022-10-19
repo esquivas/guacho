@@ -106,7 +106,8 @@ contains
   !> returns -1 if point lies outside domain
   ! @param real [in] : 3D position with respect to a corner of the domain
   function inWhichDomain(pos)
-    use parameters, only : nx, ny, nz, MPI_NBX, MPI_NBY, MPI_NBZ
+    use parameters, only : nx, ny, nz, MPI_NBX, MPI_NBY, MPI_NBZ,              &
+                           xmax, ymax, zmax
     use globals,    only : dx, dy, dz, comm3d
 #ifdef MPIP
     use mpi
@@ -117,17 +118,18 @@ contains
     integer          :: ind(0:2), err
 
     ! get coords of rank
-    ind(0) = int(pos(1)/dx)/nx
-    ind(1) = int(pos(2)/dy)/ny
-    ind(2) = int(pos(3)/dz)/nz
+    ind(0) = int(pos(1)/ dx/ nx )
+    ind(1) = int(pos(2)/ dy/ ny )
+    ind(2) = int(pos(3)/ dz/ nz )
 
 #ifdef MPIP
-    if ( ind(0) < 0 .or. ind(0) > (MPI_NBX-1) .or. &
-         ind(1) < 0 .or. ind(1) > (MPI_NBY-1) .or. &
-         ind(2) < 0 .or. ind(2) > (MPI_NBZ-1)   ) then
+    if ( ind(0) < 0 .or. ind(0) >= (MPI_NBX) .or. &
+         ind(1) < 0 .or. ind(1) >= (MPI_NBY) .or. &
+         ind(2) < 0 .or. ind(2) >= (MPI_NBZ)   ) then
          inWhichDomain = -1
     else
       call mpi_cart_rank(comm3d,ind,inWhichDomain,err)
+
     endif
 #else
     if(.not.isInDomain(pos)) inWhichDomain = -1
