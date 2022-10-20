@@ -251,11 +251,6 @@ contains
     real, intent(out)  :: s(neq)
     integer :: i, j, k
 
-    !  hack to avoid compile warnings
-    if (i == 0 .or. j==0 .or. k ==0) then
-       s(:) = pp(:) * 0.0
-    end if
-
   end subroutine get_user_source_terms
 
   !=======================================================================
