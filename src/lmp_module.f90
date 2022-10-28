@@ -50,7 +50,7 @@ contains
       ! eq = 7   : b**2/2 = (bx**2+by**2+bz**2)/2
       ! eq = 8   : rho
       ! eq = 9   : P
-      ! eq = 10  : shock flag (1 if shocked)
+      ! eq = 10  : shock flag (1 in shock, 0 not in shock, -1 just left shock)
       ! eq = 11  : compression ratio (does not reset)
       ! eq = 12  : angle between the shock normal and the preshock field
 
@@ -520,7 +520,7 @@ contains
             ! eq. (23) Vaidya et al. 2018
             bNP1  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(B_2NP1+Urad) )
             !  convert to cgs to update SED
-            bNP1  = bNP1 * tsc * Psc
+            bNP1  = bNP1 * tsc / Psc    !  'fixed' 28/10/22, originally: *Psc
 
             !  update only if *not* currently marked as inside shock
             if (Q_MP0(i_mp,10) == 0.) then
@@ -1012,7 +1012,7 @@ contains
     !Emax = MP_SED(1,100,i_mp)
     Emin = MP_SED(1,1,i_mp)
 
-    !calculate Emin (see Esquivas notes)
+    !  calculate Emin (see Esquivas notes)
     c1   = n_old + deltaN*rhoI
     c2   = E_old + deltaE*EI*Psc
 
