@@ -124,7 +124,7 @@ contains
     currentIteration = 1
     if (.not.iwarm) then
       if(rank.eq.master) then
-        print'(a)', 'Starting cold'
+        print'(a,es12.3,a)', 'Starting cold, from t=', time*tsc/yr,' yr'
         print'(a)',' '
       endif
       itprint=0
