@@ -122,8 +122,9 @@ contains
 
     !   initialize time integration
     currentIteration = 1
+    if(rank == master) then print'(a)',' '
     if (.not.iwarm) then
-      if(rank.eq.master) then
+      if(rank == master) then
         print'(a,es12.3,a)', 'Starting cold, from t=', time*tsc/yr,' yr'
         print'(a)',' '
       endif
