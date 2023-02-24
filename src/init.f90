@@ -122,24 +122,23 @@ contains
 
     !   initialize time integration
     currentIteration = 1
-    time   = time_0
-    tprint = time_0 + dtprint
+    time    = time_0
+    tprint  = time_0 + dtprint
+    itprint = itprint0
 
-    if(rank == master) then print'(a)',' '
-    
-    if (.not.iwarm) then
-      if(rank == master) then
+    if (rank == master) then
+
+      print'(a)',' '
+
+      if(.not.iwarm) then
         print'(a,es12.3,a)', 'Starting cold, from t=', time*tsc/yr,' yr'
-        print'(a)',' '
-      endif
-      itprint = 0
-    else
-      itprint=itprint0
-      if(rank == master) then
+      else
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,         &
                                   ' at a time ',time*tsc/yr,' yr'
-        print'(a)',' '
       end if
+      
+      print'(a)',' '
+
     end if
 
     !   allocate big arrays in memory
