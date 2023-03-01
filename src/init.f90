@@ -2,8 +2,7 @@
 !> @file init.f90
 !> @brief Guacho-3D initialization module
 !> @author Alejandro Esquivel
-!> @date 4/May/2016
-! Copyright (c) 2020 Guacho Co-Op
+! Copyright (c) 2023 Guacho Co-Op
 !
 ! This file is part of Guacho-3D.
 !
@@ -136,7 +135,7 @@ contains
         print'(a,i0,a,es12.3,a)', 'Warm start , from output ',itprint,         &
                                   ' at a time ',time*tsc/yr,' yr'
       end if
-      
+
       print'(a)',' '
 
     end if
@@ -258,6 +257,40 @@ contains
         print'(a)', ''
         stop
       end if
+
+      !  Validate Riemann solver & options w and w/o magnetic field
+#ifdef BFIELD
+      if (not(pmhd) .and. not(mhd) ) then
+        print'(a)', 'Bfield is enabled, select pmhd or mhd in parameters or ' &
+        print'(a)', 'disable Bfield in Makefile'
+        call mpi_finalize(err)
+        stop
+      end if
+      if ( riemann_solver==SOLVER_HLL .or. riemann_solver==SOLVER_HLLC  ) then
+        print'(a)',  'HD solver selected with B field enabled'
+        print'(a)',  '(change solver to an MHD one or disable Bfield)'
+        call mpi_finalize(err)
+        stop
+      endif
+#else
+      if ( pmhd .or. mhd ) then
+        print'(a)', 'Bfield is disabled, disable pmhd and mhd in parameters'
+        print'(a)', 'or enable Bfield in Makefile'
+        call mpi_finalize(err)
+        stop
+        end if
+        if (  riemann_solver==SOLVER_HLLE           .or.                       &
+              riemann_solver==SOLVER_HLLD           .or.                       &
+              riemann_solver==SOLVER_HLLE_SPLIT_B   .or.                       &
+              riemann_solver==SOLVER_HLLD_SPLIT_B   .or.                       &
+              riemann_solver==SOLVER_HLLE_SPLIT_ALL .or.                       &
+              riemann_solver==SOLVER_HLLE_SPLIT_ALL  ) then
+          print'(a)',  'MHD solver selected with B field disabled'
+          print'(a)',  '(change solver to an HD one or enable Bfield)'
+          call mpi_finalize(err)
+          stop
+        endif
+#endif
 
       if (enable_flux_cd) then
         print'(a)', 'div(B) constrained with flux-CD method'
