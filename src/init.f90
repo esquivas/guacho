@@ -261,7 +261,7 @@ contains
       !  Validate Riemann solver & options w and w/o magnetic field
 #ifdef BFIELD
       if (not(pmhd) .and. not(mhd) ) then
-        print'(a)', 'Bfield is enabled, select pmhd or mhd in parameters or ' &
+        print'(a)', 'Bfield is enabled, select pmhd or mhd in parameters or '
         print'(a)', 'disable Bfield in Makefile'
         call mpi_finalize(err)
         stop
