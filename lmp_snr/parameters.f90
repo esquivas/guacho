@@ -172,9 +172,9 @@ module parameters
 #endif
 
   !  set box size
-  real, parameter :: xmax=1.          !< grid extent in X (code units)
-  real, parameter :: ymax=1.          !< grid extent in Y (code units)
-  real, parameter :: zmax=1.          !< grid extent in Z (code units)
+  real, parameter :: xmax=24.          !< grid extent in X (code units)
+  real, parameter :: ymax=24.          !< grid extent in Y (code units)
+  real, parameter :: zmax=24.          !< grid extent in Z (code units)
 
   real, parameter :: xphys=24.*pc     !< grid extent in X (physical units, cgs)
 
@@ -203,7 +203,7 @@ module parameters
 
   !> Warm start flag, if true restarts the code from previous output
   logical, parameter :: iwarm=.false.
-  integer            :: itprint0 = 10         !< number of output to do warm start
+  integer            :: itprint0 = 0          !< number of output to do warm start
   real, parameter    :: time_0   = 0.0*yr/tsc !< starting time
 
 
