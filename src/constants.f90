@@ -28,15 +28,15 @@ module constants
   implicit none
 
   real, parameter :: pi=acos(-1.)         !< @f$ \pi @f$
-  real, parameter :: amh=1.66e-24         !< hydrogen mass
+  real, parameter :: amh=1.66e-24         !< hydrogen mass (g)
   real, parameter :: Kb=1.38e-16          !< Boltzmann constant (cgs)
   real, parameter :: Rg=8.3145e7          !< Gas constant (cgs)
   real, parameter :: Ggrav=6.67259e-8     !< Gravitational constant (cgs)
-  real, parameter :: clight=2.99E10       !< speed of light in vacuum (cgs)
+  real, parameter :: clight=2.99E10       !< speed of light in vacuum (cm/s)
   real, parameter :: echarge=4.8032e-10   !< electron charge statcoulomb (cgs)
   real, parameter :: emass=9.10938e-28    !< electron mass (g)
-  real, parameter :: sigma_SB=5.6704e-5   !< Stephan Boltzmann constant (cgs)
-  real, parameter :: sigma_T =6.65245e-25 !< Thompson-scattering cross section
+  real, parameter :: sigma_SB=5.6704e-5   !< Stephan Boltzmann constant (cm^2)
+  real, parameter :: sigma_T =6.65245e-25 !< Thompson-scat cross-section (cm^2)
 
   real, parameter :: Msun=1.99E33         !< solar radius (cgs)
   real, parameter :: Rsun=6.955e10        !< solar mass (cgs)
