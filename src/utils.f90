@@ -47,9 +47,9 @@ contains
     integer          :: ind(3)
 
     ! shift to the local processor
-    ind(1) = int(pos(1)/dx) - coords(0)*nx + 1
-    ind(2) = int(pos(2)/dy) - coords(1)*ny + 1
-    ind(3) = int(pos(3)/dz) - coords(2)*nz + 1
+    ind(1) = int( pos(1)/dx ) - coords(0)*nx + 1
+    ind(2) = int( pos(2)/dy ) - coords(1)*ny + 1
+    ind(3) = int( pos(3)/dz ) - coords(2)*nz + 1
 
     !   False if not in physical domain
     if ( ind(1) < 1  .or. ind(2)<1  .or. ind(3)<1 .or. &
@@ -117,9 +117,9 @@ contains
     integer          :: ind(0:2), err
 
     ! get coords of rank
-    ind(0) = int(pos(1)/ dx/ nx )
-    ind(1) = int(pos(2)/ dy/ ny )
-    ind(2) = int(pos(3)/ dz/ nz )
+    ind(0) = int( pos(1)/ dx ) / nx
+    ind(1) = int( pos(2)/ dy ) / ny
+    ind(2) = int( pos(3)/ dz ) / nz
 
 #ifdef MPIP
     if ( ind(0) < 0 .or. ind(0) >= (MPI_NBX) .or. &
