@@ -400,9 +400,9 @@ subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,               
     do k= ind(3),ind(3)+1
       do j=ind(2),ind(2)+1
         do i=ind(1),ind(1)+1
-          Bx = Bx + u(6,i,j,k) * weights(l) * Bsc
-          By = By + u(7,i,j,k) * weights(l) * Bsc
-          Bz = Bz + u(8,i,j,k) * weights(l) * Bsc
+          Bx = Bx + u(6,i,j,k) * weights(l) * Bsc  !  cgs
+          By = By + u(7,i,j,k) * weights(l) * Bsc  !  cgs
+          Bz = Bz + u(8,i,j,k) * weights(l) * Bsc  !  cgs
           l  = l + 1
         end do
       end do
@@ -431,7 +431,9 @@ subroutine fill_map(nxmap, nymap, nmaps, map, freq_obs,dxT , dyT,               
       !  summing all the elements in a map.
       if (Q_MP0(i_mp, 11) /= 0) then
 
-        call get_stokes(i_mp,freq_obs,Bx,By,SI,SQ,SU)
+        !call get_stokes(i_mp,freq_obs,Bx,By,SI,SQ,SU)
+        call get_stokes(i_mp,freq_obs,Bxn,Byn,SI,SQ,SU)
+
         map(iobs,jobs,1)= map(iobs,jobs,1) + SI*dz*rsc
         map(iobs,jobs,2)= map(iobs,jobs,2) + SQ*dz*rsc
         map(iobs,jobs,3)= map(iobs,jobs,3) + SU*dz*rsc
@@ -447,7 +449,7 @@ end subroutine fill_map
 !=======================================================================
 subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   use parameters, only : NBinsSEDMP
-  use globals,    only : MP_SED
+  use globals,    only : MP_SED, rank
   implicit none
   integer, intent(in)  :: i_mp
   real,    intent(in)  :: freq_obs, Bx, By
@@ -521,6 +523,10 @@ subroutine get_stokes(i_mp,freq_obs,Bx,By,I,Q,U)
   ! Eqs (49-50) ''
   Q = Jpol * (Bx**2-By**2 ) / Bperp**2
   U = Jpol * ( -2.0*Bx*By ) / Bperp**2
+
+  !I = 0.0
+  !Q = 0.0
+  !U = 0.0
 
 end subroutine get_stokes
 
@@ -665,15 +671,15 @@ program stokes_lp
 
   freq_obs  =  1.40e9 !< frequency of observation (Hz)
 
-  loop_over_outputs : do itprint=0,10
+  loop_over_outputs : do itprint=0,15
 
     !  read MHD and particles data
     call read_data(u,itprint,filepath)
 
     !  resets map
-    map(:,:,:) =0.
-    map1(:,:,:)=0.
-    !
+    map(:,:,:)  = 0.0
+    map1(:,:,:) = 0.0
+
     if (rank == master) then
        print'(a)', 'Calculating projection with angles of rotaton'
        print'(f6.2,a,f6.2,a,f6.2,a)',theta_x*180./pi,'° around X, '            &
@@ -685,6 +691,7 @@ program stokes_lp
     !  add info to the map
     call fill_map(nxmap,nymap,nmaps,map,freq_obs,dxT,dyT,theta_x, theta_y, theta_z)
     !  sum all the partial sums
+
     call mpi_reduce(map,map1,nxmap*nymap*nmaps, mpi_real_kind, mpi_sum, master,&
                     comm3d, err)
 
@@ -699,7 +706,7 @@ program stokes_lp
 #ifdef MPIP
   call mpi_finalize(err)
 #endif
-  !
+
   stop
 
 end program stokes_lp
