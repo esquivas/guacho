@@ -202,9 +202,9 @@ module parameters
   real, parameter :: eta = 0.005            !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
-  logical, parameter :: iwarm=.true.
-  integer            :: itprint0 = 11            !< number of output to do warm start
-  real, parameter    :: time_0   = 1100.0*yr/tsc !< starting time
+  logical, parameter :: iwarm=.false.
+  integer            :: itprint0 = 0          !< number of output to do warm start
+  real, parameter    :: time_0   = 0.0*yr/tsc !< starting time
 
 
   !*********************************************************************
