@@ -35,7 +35,7 @@ contains
   !================================================================
   !> @brief Initialization of module
   !> @details Allocates memory for all global variables that correspond
-  !! to the particle module
+  !> to the particle module
   subroutine init_lmp()
 
     use parameters, only : nx, ny, nz, lmp_distf, N_MP, NBinsSEDMP
@@ -61,6 +61,7 @@ contains
       allocate( P_DSA(N_MP,2,8))
       !  P_DSA(i, 1, :) : Pre  shock MHD info (U1 in Vaidya et al 2018)
       !  P_DSA(i, 2, :) : Post shock MHD info (U2 in Vaidya et al 2018)
+        P_DSA(:,:,:) = 0.0
     else
       allocate( Q_MP0(N_MP,6) )
       !  Q_MP0(i, eq) has the following info:
@@ -91,7 +92,7 @@ contains
     partID(i_mp) = 0
 
     !  if necessary move tail index
-    if (i_mp == n_activeMP) n_activeMP = n_activeMP - 1
+    if (i_mp == n_activeMP) n_activeMP = max( n_activeMP - 1, 0 )
 
   end subroutine deactivateMP
 
@@ -200,8 +201,9 @@ contains
           !   DSA calculation
           if (lmp_distf) then
 
-          !   If particle was already inside shock
-            if (Q_MP0(i_mp,10) /= 0.) then
+            !  If particle was already inside shock
+            if (Q_MP0(i_mp,10) > 0.0) then
+            !if (Q_MP0(i_mp,10) /= 0.) then
 
               !print*, 'particle ', partID(i_mp),                              &
               !        'marked inside the shock region', currentIteration
@@ -459,8 +461,9 @@ contains
     real    :: q_NR, Emin, Emax, chi0
     !> RH term eq (7) Vaidya +
     real, parameter :: Tcmb = 2.278
-    real, parameter :: Urad = 4.0*sigma_SB*(Tcmb**4)/clight/Psc  !~1.05e-13
-    !> constant in front of eq(7) in cgs
+    real, parameter :: Urad = 4.0*sigma_SB*(Tcmb**4)/clight/Psc
+    !  Urad~2.e-13 erg/cm^3 but w/Psc is now in code units
+    !> constant in front of eq(7), in cgs
     real, parameter ::Cr0= ( 4.0*sigma_T )/(3.0* emass**2 * clight**3 )
 
     ! initialize send and recv lists
@@ -471,7 +474,10 @@ contains
 
     do i_mp=1, n_MP
       ! execute only if particle i_mp is in the active list
-        if (partID(i_mp)/=0 .and. isInDomain(Q_MP1(i_mp,1:3)) ) then
+        !!!if (partID(i_mp)/=0 .and. isInDomain(Q_MP1(i_mp,1:3)) ) then
+      if (partID(i_mp)/=0 ) then
+
+        if(isInDomain(Q_MP1(i_mp,1:3)) ) then
 
           !  clear come variables
           if(lmp_distf) then
@@ -520,17 +526,17 @@ contains
             ! eq. (23) Vaidya et al. 2018
             bNP1  = 0.5*dt_CFL*Cr0*( (Q_MP0(i_mp,7)+Urad) + ema*(B_2NP1+Urad) )
             !  convert to cgs to update SED
-            bNP1  = bNP1 * tsc / Psc    !  'fixed' 28/10/22, originally: *Psc
+            bNP1  = bNP1 * tsc * Psc
 
             !  update only if *not* currently marked as inside shock
-            if (Q_MP0(i_mp,10) == 0.) then
-              do ib=1,NBinsSEDMP
+            if (Q_MP0(i_mp,10) == 0.0) then
+              do ib=1, NBinsSEDMP
 
-                MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp)*ema*                       &
-                                  (1.+bNP1*MP_SED(1,ib,i_mp))**2
+                MP_SED(2,ib,i_mp)=MP_SED(2,ib,i_mp) * ema *                    &
+                                  ( 1.0 + bNP1 * MP_SED(1,ib,i_mp) )**2
 
-                MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp)*ema/                       &
-                                  (1.+bNP1*MP_SED(1,ib,i_mp))
+                MP_SED(1,ib,i_mp)=MP_SED(1,ib,i_mp) * ema /                    &
+                                  (1.0 + bNP1 * MP_SED(1,ib,i_mp) )
 
               end do
             else if (Q_MP0(i_mp,10) == -1.) then  ! inject spectra after shock
@@ -551,21 +557,24 @@ contains
 
             end if
 
-        end if
+          end if
 
-        !  check if particle is leaving the domain
-        dest = inWhichDomain( Q_MP0(i_mp,1:3) )
+          !  check if particle is leaving the domain
+          dest = inWhichDomain( Q_MP0(i_mp,1:3) )
 
-        if (dest == -1) then
-          call deactivateMP(i_mp)
-        else if (dest /= rank) then
-          !  count for MPI exchange
-          sendLoc(dest) = sendLoc(dest) + 1
-          nLocSend      = nLocSend      + 1
-          dataLoc(nLocSend) = i_mp
-        end if
+          if (dest == -1) then
+            call deactivateMP(i_mp)
+            !print'(a,i5,a,i2,a,i2)', 'particle ',i_mp ,' leaving ', rank, '->', dest
+            !print'(i4,3es13.5)', i_mp,  Q_MP0(i_mp,1:3)
+            else if (dest /= rank) then
+              !  count for MPI exchange
+              sendLoc(dest) = sendLoc(dest) + 1
+              nLocSend      = nLocSend      + 1
+              dataLoc(nLocSend) = i_mp
+            end if
 
-      end if
+        end if !isInDomain
+      end if  !valid ID
     end do  !(N_mp)
 
     !   consolidate list to have info of all send/receive operations
