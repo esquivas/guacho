@@ -165,7 +165,9 @@ contains
       !  this will insert N_MP/2 (N_MP is set in parameters) randomly
       !  distributed within each processor domain
       do while (n_activeMP < N_MP/4 )
+
         call random_number(pos(1:3))
+        !  position measured from a corner of the domain (code units)
         pos(1) = pos(1) * xmax
         pos(2) = pos(2) * ymax
         pos(3) = pos(3) * zmax
