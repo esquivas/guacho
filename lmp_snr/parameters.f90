@@ -195,16 +195,16 @@ module parameters
   real, parameter :: bsc = sqrt(4.0*pi*Psc) !<  magnetic field scaling
 
   !> Maximum integration time
-  real, parameter :: tmax    = 1000.0*yr/tsc
+  real, parameter :: tmax    = 1500.0*yr/tsc
   !> interval between consecutive outputs
   real, parameter :: dtprint = 100.0*yr/tsc
   real, parameter :: cfl = 0.4              !< Courant-Friedrichs-Lewy number
   real, parameter :: eta = 0.005            !< artificial viscosity
 
   !> Warm start flag, if true restarts the code from previous output
-  logical, parameter :: iwarm=.false.
-  integer            :: itprint0 = 0          !< number of output to do warm start
-  real, parameter    :: time_0   = 0.0*yr/tsc !< starting time
+  logical, parameter :: iwarm=.true.
+  integer            :: itprint0 = 11            !< number of output to do warm start
+  real, parameter    :: time_0   = 1100.0*yr/tsc !< starting time
 
 
   !*********************************************************************
