@@ -48,10 +48,10 @@ contains
 !> @param integer [in] i : index in the X direction
 !> @param integer [in] j : index in the Y direction
 !> @param integer [in] k : index in the Z direction
-!> @param real [out] x : X position form the center of the grid (code units)
-!> @param real [out] y : Y position form the center of the grid (code units)
-!> @param real [out] z : Z position form the center of the grid (code units)
-!> @param real [out] r : Spherical radius form the center of the grid
+!> @param real [out] x : X position from the center of the grid (code units)
+!> @param real [out] y : Y position from the center of the grid (code units)
+!> @param real [out] z : Z position from the center of the grid (code units)
+!> @param real [out] r : Spherical radius from the center of the grid
 !! (code units)
 
 subroutine getpos(i,j,k,x,y,z,r)
