@@ -229,7 +229,7 @@ integer, parameter :: n1_chem=      !< 1st index for chemistry
 
   integer, parameter :: neq=neqdyn + npas  !< number of equations
 
-#ifdef SILO
+#ifdef OUT_SILO
   logical, parameter :: out_silo = .true.  !< silo (needs hdf/silo libraries)
 #else
   logical, parameter :: out_silo = .false.  !< silo (needs hdf/silo libraries)
