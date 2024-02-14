@@ -38,7 +38,7 @@ contains
   !> @param integer [in] itprint : number of output
   subroutine write_output(itprint)
 
-    use parameters !, only :: out_bin, out_vtk, out_silo
+    use parameters, only : out_bin, out_vtk, out_silo, enable_lmp, master
     use Out_BIN_Module
     use Out_Silo_Module
     use Out_VTK_Module
