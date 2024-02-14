@@ -358,7 +358,7 @@ contains
   !> @brief Upper level wrapper
   !> @details Upper level wrapper for the SILO output
   !> @param integer [in] itprint : number of output
-  subroutine write_utsilo(itprint)
+  subroutine write_silo(itprint)
 
     implicit none
     integer, intent(in) :: itprint
