@@ -174,15 +174,17 @@ contains
     !  create directories to write the outputs
     if (rank == master) then
       if (out_bin) then
-        call system('if [ ! -e '//trim(outputpath)//'BIN ]; then mkdir -p '    &
+        call system('if ! [ -e '//trim(outputpath)//'BIN ]; then mkdir -p '    &
                                 //trim(outputpath)//'BIN ; fi')
       end if
       if (out_vtk) then
-        call system('if [ ! -e '//trim(outputpath)//'VTK ]; then mkdir -p '    &
+        call system('if ! [ -e '//trim(outputpath)//'VTK ]; then mkdir -p '    &
                                 //trim(outputpath)//'VTK ; fi')
+        call system('touch '//trim(outputpath)//'VTK/master.visit')
+
       end if
       if (out_silo) then
-        call system('if [! -e'//trim(outputpath)//'SILO/BLOCKS];then mkdir -p '&
+      call system('if ! [ -e '//trim(outputpath)//'SILO/BLOCKS ] ; then mkdir -p '&
                               //trim(outputpath)//'SILO/BLOCKS ; fi')
       end if
     end if
@@ -352,6 +354,11 @@ contains
       if (out_bin) print'(a)', '*.bin (binary, with a small header)'
       if (out_vtk) print'(a)', '*.vtk (binary VTK)'
       print'(a)', ''
+#ifdef OUT_SILO
+      print'(a)', 'Silo/hdf5'
+      print'(a)', ''
+#endif
+
 
       print'(a)', '----- BOUNDARY CONDITIONS -----------'
       if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
