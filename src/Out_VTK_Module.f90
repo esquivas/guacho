@@ -48,7 +48,7 @@ subroutine write_VTK(itprint)
   real  :: t, x0,y0, z0
   real, dimension(neq) :: prim
   integer :: nCells, unitout, i, j, k
-  character, parameter  :: lf = char(10) 
+  character, parameter  :: lf = char(10)
 #ifdef MPIP
   character (len=128) :: file2
 #endif
@@ -57,7 +57,7 @@ subroutine write_VTK(itprint)
 #ifdef MPIP
   if (rank.eq.0) then
      write(file2,'(a)') trim(outputpath)//'VTK/master.visit'
-     if (itprint.eq.0) then
+     if (itprint.eq.itprint0) then
         open(unit=7,file=file2,status='replace',form='formatted')
         write(7,'(a,i0)') '!NBLOCKS ',np
         do i=0,np-1
@@ -80,7 +80,7 @@ subroutine write_VTK(itprint)
   unitout=10
 #endif
 
-  open(unit=unitout,file=file1,status='replace',access='stream')!, convert='BIG_ENDIAN')
+  open(unit=unitout,file=file1,status='replace',access='stream', convert='BIG_ENDIAN')
 
   !   write the header
   x0=( real(coords(0)*nx) )*dx
@@ -88,7 +88,7 @@ subroutine write_VTK(itprint)
   z0=( real(coords(2)*nz) )*dz
   nCells = nx*ny*nz
 
-  write(cbuffer,'(a)') '# vtk DataFile Version 2.0 '
+  write(cbuffer,'(a)') '# vtk DataFile Version 3.0 '
   write(unitout) trim(cbuffer),lf
 
   write(cbuffer,'(a)') 'output from Guacho-3D'
@@ -99,40 +99,44 @@ subroutine write_VTK(itprint)
 
   write(cbuffer,'(a)') 'DATASET STRUCTURED_POINTS'
   write(unitout) trim(cbuffer),lf
-  
-  write(cbuffer, '("DIMENSIONS ",(3i6,1x))') nx+1,ny+1,nz+1
+
+  write(cbuffer, '("DIMENSIONS ",(i0,1x,i0,1x,i0))') nx+1,ny+1,nz+1
   write(unitout) trim(cbuffer),lf
-  
+
   write(cbuffer, '("ORIGIN "    ,3e15.7)') x0*rsc,y0*rsc,z0*rsc
   write(unitout) trim(cbuffer),lf
-  
+
   write(cbuffer, '("SPACING",3e15.7)') dx*rsc,dy*rsc,dz*rsc
   write(unitout) trim(cbuffer),lf
-  
-  !   writes the variables, scalars first then vectors
 
-  write(cbuffer,'(a,i10)') 'CELL_DATA ',nCells
+  !write(cbuffer,'(a)') 'TIME 1 1 double'
+  !write(unitout) trim(cbuffer),lf
+  !write(unitout) real(itprint*time*tsc,kind=8)
+  !write(unitout) lf
+
+  !  writes the variables, scalars first then vectors
+  write(cbuffer,'(a,i0)') 'CELL_DATA ',nCells
   write(unitout) trim(cbuffer),lf
 
-  !   DENSITY
+  !  Density
   write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Density',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Density',1,nCells,' float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
      do j=1,ny
         do i=1, nx
-           write(unitout) real(primit(1,i,j,k)*rhosc,4) 
+           write(unitout) real(primit(1,i,j,k)*rhosc,4)
         end do
      end do
   end do
-  write(unitout) lf  
+  write(unitout) lf
 
- !   GAS PRESSURE
+ !  Gas pressure
  write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Thermal_Pressure',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Thermal_Pressure',1,nCells,' float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
@@ -142,12 +146,12 @@ subroutine write_VTK(itprint)
         end do
      end do
   end do
-  write(unitout) lf  
+  write(unitout) lf
 
-  !   TEMP
+  !  Temperature
   write(cbuffer,'(a)') 'FIELD FieldData 1'
   write(unitout) trim(cbuffer),lf
-  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Temperature',1,nCells,'float'
+  write(cbuffer,'(a,1x,i0,1x,i0,a)') 'Temperature',1,nCells,' float'
   write(unitout) trim(cbuffer),lf
 
   do k=1,nz
@@ -160,7 +164,7 @@ subroutine write_VTK(itprint)
   end do
   write(unitout) lf
 
-  !   VELOCITY
+  !  Velocity
   write(cbuffer,'(a)') 'VECTORS Velocity float'
   write(unitout) trim(cbuffer),lf
    do k=1,nz
@@ -172,10 +176,10 @@ subroutine write_VTK(itprint)
          end do
       end do
    end do
-   write(unitout) lf  
+   write(unitout) lf
 
   if (pmhd .or. mhd) then
-  !   MAGNETIC FIELD
+  !  Magnetic field
     write(cbuffer,'(a)') 'VECTORS BField float'
     write(unitout) trim(cbuffer),lf
      do k=1,nz
@@ -187,12 +191,12 @@ subroutine write_VTK(itprint)
            end do
         end do
      end do
-     write(unitout) lf  
-  end if 
+     write(unitout) lf
+  end if
 
   close(unitout)
 
-  print'(i3,a,a)',rank," wrote file:",trim(file1)
+  print'(i3,a,a)',rank," wrote file : ",trim(file1)
 
 end subroutine write_VTK
 
