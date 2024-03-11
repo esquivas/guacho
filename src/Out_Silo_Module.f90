@@ -194,6 +194,8 @@ contains
     !  close the silo file
     ierr = dbclose(unitout)
 
+    print'(i3,a,a)',rank," wrote file : ",trim(file1)
+
   end subroutine writeblocks
 
   !=======================================================================
@@ -222,7 +224,7 @@ contains
 
     !  add multimesh
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',    &
+      write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',    &
             itprint,'.silo:quadmesh'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -238,7 +240,7 @@ contains
     !  add multivars
     !  density
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',    &
+      write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',    &
             itprint,'.silo:rho'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -254,7 +256,7 @@ contains
     !  velocity components
     !V_x
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)') trim(outputpath)//'BLOCKS/out',i,'.',     &
+      write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',     &
            itprint,'.silo:vx'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -267,7 +269,7 @@ contains
     err = dbset2dstrlen(oldlen)
     !V_y
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',    &
+      write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',    &
             itprint,'.silo:vy'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -280,7 +282,7 @@ contains
     err = dbset2dstrlen(oldlen)
     !V_z
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',    &
+      write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',    &
             itprint,'.silo:vz'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -294,7 +296,7 @@ contains
 
     !  Thermal pressure
     do i=0, np-1
-      write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',    &
+      write(buf,'(a,i3.3,a,i3.3,a)')  './BLOCKS/out',i,'.',    &
             itprint,'.silo:Pth'
       Lstring=len_trim(buf)
       names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -310,7 +312,7 @@ contains
       !  B components
       !B_x
       do i=0, np-1
-        write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',  &
+        write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',  &
               itprint,'.silo:bx'
         Lstring=len_trim(buf)
         names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -323,7 +325,7 @@ contains
       err = dbset2dstrlen(oldlen)
       !B_y
       do i=0, np-1
-        write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',  &
+        write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',  &
               itprint,'.silo:by'
         Lstring=len_trim(buf)
         names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -336,7 +338,7 @@ contains
       err = dbset2dstrlen(oldlen)
       !B_z
       do i=0, np-1
-        write(buf,'(a,i3.3,a,i3.3,a)')  trim(outputpath)//'BLOCKS/out',i,'.',  &
+        write(buf,'(a,i3.3,a,i3.3,a)') './BLOCKS/out',i,'.',  &
               itprint,'.silo:bz'
         Lstring=len_trim(buf)
         names(i*Lstring+1:(i+1)*Lstring ) = buf(1:Lstring)
@@ -351,6 +353,8 @@ contains
 
     !  close master file
     err = dbclose(unitout)
+
+    print*, 'Finished writing master file'
 
   end subroutine writemaster
 
