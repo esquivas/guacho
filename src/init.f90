@@ -351,11 +351,10 @@ contains
       print'(a)', 'in the following format(s):'
       if (out_bin) print'(a)', '*.bin (binary, with a small header)'
       if (out_vtk) print'(a)', '*.vtk (binary VTK)'
-      print'(a)', ''
 #ifdef OUT_SILO
       print'(a)', 'Silo/hdf5'
-      print'(a)', ''
 #endif
+      print'(a)', ''
 
 
       print'(a)', '----- BOUNDARY CONDITIONS -----------'
