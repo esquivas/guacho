@@ -180,8 +180,6 @@ contains
       if (out_vtk) then
         call system('if ! [ -e '//trim(outputpath)//'VTK ]; then mkdir -p '    &
                                 //trim(outputpath)//'VTK ; fi')
-        call system('touch '//trim(outputpath)//'VTK/master.visit')
-
       end if
       if (out_silo) then
       call system('if ! [ -e '//trim(outputpath)//'SILO/BLOCKS ] ; then mkdir -p '&
