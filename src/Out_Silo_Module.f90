@@ -176,7 +176,7 @@ contains
                   primit(5,imin:imax,jmin:jmax,kmin:kmax), vardims, ndim,      &
                   DB_F77NULL, 0, DB_DOUBLE, DB_ZONECENT, DB_F77NULL, ierr)
 
-#ifdef PMHD
+#ifdef BFIELD
     !  B components
     err = dbputqv1(unitout, "bx", 2, "quadmesh", 8,                            &
                   primit(6,imin:imax,jmin:jmax,kmin:kmax), vardims, ndim,      &
@@ -194,7 +194,7 @@ contains
     !  close the silo file
     ierr = dbclose(unitout)
 
-    print'(i3,a,a)',rank," wrote file : ",trim(file1)
+    print'(i3,a,a)',rank," wrote file : ",trim(file)
 
   end subroutine writeblocks
 
