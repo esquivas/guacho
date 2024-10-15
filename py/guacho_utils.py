@@ -140,7 +140,7 @@ def get_axis(nout,path='',base='points',verbose=False):
 '''
   Returns the extent of the computational box
 '''
-def get_extent(nout,path='',base='points',verbose=False):
+def get_extent(nout,path='',base='points',verbose=False, centered=False):
 
   file_in = path+base+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin'
   head_info = read_header(file_in,verbose=False)
@@ -151,9 +151,14 @@ def get_extent(nout,path='',base='points',verbose=False):
   x0, y0, z0          = head_info[4]
   mpi_x, mpi_y, mpi_z = head_info[5]
   f.close()
-  x_extent = np.asarray( [ 0.5, nx*mpi_x-0.5 ] )*dx
-  y_extent = np.asarray( [ 0.5, ny*mpi_y-0.5 ] )*dy
-  z_extent = np.asarray( [ 0.5, nz*mpi_z-0.5 ] )*dz
+  if centered :
+      x_extent = np.asarray( [ -(nx*mpi_x-0.5)/2, (nx*mpi_x-0.5)/2 ] )*dx
+      y_extent = np.asarray( [ -(ny*mpi_y-0.5)/2, (ny*mpi_y-0.5)/2 ] )*dy
+      z_extent = np.asarray( [ -(nz*mpi_z-0.5)/2, (nz*mpi_z-0.5)/2 ] )*dz
+  else :
+      x_extent = np.asarray( [ 0.5, nx*mpi_x-0.5 ] )*dx
+      y_extent = np.asarray( [ 0.5, ny*mpi_y-0.5 ] )*dy
+      z_extent = np.asarray( [ 0.5, nz*mpi_z-0.5 ] )*dz
   return ( x_extent, y_extent, z_extent)
 
 '''
@@ -394,3 +399,74 @@ def u2prim_rel_ideal(D, mx, my, mz, E, gamma_ad):
   Pth = (gamma_ad-1.0)*(E - mx*vx -my*vy -mz*vz - rho)
 
   return rho, vx, vy, vz, Pth
+
+'''
+   Computes the mass-loss/accretion rate of a spherical region
+   of radius Rs centered at a position x0,y0,z0
+   Position is measured with respect of a corner of the simulation
+   I/O is in [ cgs ]
+   nout,neq,path='',base='points'):
+
+'''
+def get_Mdot(nout, x0, y0, z0, R0, path='', base='points', verbose=False):
+  #  get boxsize
+  Nx, Ny, Nz = get_boxsize(nout, path+'BIN/', verbose=False)
+  #  read scalings
+  rsc, vsc, rhosc, Bsc = get_scalings(nout,path=path+'BIN/', verbose=False)
+  #  from header read spacings
+  header = read_header(path+'BIN/points'+str(0).zfill(3)+'.'+str(nout).zfill(3)+'.bin', verbose=False)
+  dx, dy, dz  = header[3]
+  dx *= rsc ; dy *= rsc ; dz *= rsc  # [ cgs ]
+
+  #  locate bounds
+  #  left
+  iL = int( (x0 - 1.05*R0)/dx  + 0.5)
+  iH = int( (x0 + 1.05*R0)/dx  + 0.5)
+  jL = int( (y0 - 1.05*R0)/dy  + 0.5)
+  jH = int( (y0 + 1.05*R0)/dy  + 0.5)
+  kL = int( (z0 - 1.05*R0)/dz  + 0.5)
+  kH = int( (z0 + 1.05*R0)/dz  + 0.5)
+
+  Cells_in  = 0
+  Cells_out = 0
+  Fx = 0 ; Fy = 0 ; Fz = 0
+  #  loop the domain
+  for l in range(1,4):   #  l--> x, y, z directions
+
+    flux   = readbin3d_all(nout=nout,neq=l,path=path+'BIN/',verbose=False,conserved=True,scale=False)
+
+    for i in range(iL,iH) :
+      for j in range(jL,jH) :
+        for k in range(kL,kH) :
+
+          x = float(i+0.5)*dx
+          y = float(j+0.5)*dx
+          z = float(k+0.5)*dx
+
+          rad = np.sqrt((x-x0)**2 + (y-y0)**2 + (z-z0)**2 )
+
+          if (rad <= R0) :    # inside the Gaussian Surface
+
+            if l == 1 :       #  x direction
+              Fx += ( flux[k,j,i+1] - flux[k,j,i-1])
+
+            elif l==2 :       # y direction
+              Fy += ( flux[k,j+1,i] - flux[k,j-1,i])
+
+            elif l==3 :       # z direction
+              Fz += ( flux[k+1,j,i] - flux[k-1,j,i])
+
+            Cells_in  += 1
+          else:
+            Cells_out += 1
+
+  Fsc = rhosc*vsc           # [scaling factor]
+  dA  = dx*dy               # [ cgs ]
+
+  Mdx = Fx * Fsc * dA       # [cgs]
+  Mdy = Fy * Fsc * dA       # [cgs]
+  Mdz = Fz * Fsc * dA       # [cgs]
+  Mdot = Mdx + Mdy + Mdz
+  print(f'{Cells_in} cells inside region, {Cells_out}, outside')
+
+  return Mdot
