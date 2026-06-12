@@ -64,7 +64,7 @@ program guacho
   integer :: err
   integer :: itprint
   real    :: tprint
-  logical :: dump_out = .false.
+  logical :: dump_out = .false., checkpoint=.false.
 
   !   initializes mpi, and global variables
   call initmain(tprint, itprint)
@@ -103,6 +103,33 @@ program guacho
       ' | time:', time*tsc,                                                    &
       ' | dt:', dt_CFL*tsc,                                                    &
       ' | tprint:', tprint*tsc
+
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    ! To force checkpoint create a file named 'checkpoint' in output dir
+    ! e.g. 'touch <outputdir>/checkpoint'
+    !  master checks for existence of file
+    if (rank == 0)  inquire(file=trim(outputpath)//trim("checkpoint"),    &
+                    exist=checkpoint)
+
+    ! master comunicates checkpoint flag to all
+    call mpi_bcast(checkpoint, 1, mpi_logical, 0, mpi_comm_world, err)
+
+    if (checkpoint) then
+        call write_output(999)
+
+        if (rank ==0) then
+          print'(a,es15.7)',  &
+          '****************** wrote checkpoint *************** time: ', time
+        call system('rm -rf '//trim(outputpath)//'checkpoint')
+        end if
+
+        checkpoint = .false.
+
+        ! syncs all processors
+        call mpi_barrier(mpi_comm_world, err)
+
+    end if
+    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     !  if lmp enabled compute predictor for particle positions
     if(enable_lmp) call LMPpredictor()
