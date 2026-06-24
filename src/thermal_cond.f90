@@ -29,52 +29,53 @@
 module thermal_cond
   use globals
   use parameters
+  use constants, only : clight, pi
   implicit none
 
   !> Parameter for the sturated regime in McKee
-  real, parameter :: ph=0.4
-  real, parameter :: nu=0.01            !< Super-stepping damping factor
-  real, parameter :: snu=sqrt(nu)       !< Sqrt of damping factor
-  integer, parameter ::  Max_iter = 100 !< Maximum number of iterations
+  real, parameter :: eps_perp = 1.0e-4  !< K_perp/K_par (field wandering turb)
+  real, parameter :: phi=0.3
+  real, parameter :: nu=0.01            !< ST damping factor ~[0.001-0.1]
+  real, parameter :: beta_sp = 6.4E-8   !< Effective conductivity spitzer=6.4E-7
+
+  !> Maximum number of iterations ST block, or subcycles if a ST not used
+  integer, parameter :: Max_iter = 200
+
   !> timestep reduction factor for the conduction
-  real, parameter :: tstep_red_factor=0.25
-  real :: dt_cond                       !< conduction timestep
-  integer :: tc_log !< loical unit to write TC log
+  real, parameter :: tstep_red_factor=0.50   ! [0.1-0.5]
+  real    :: dt_cond    !< conduction timestep
+  real    :: dt_sat     !< conduction timestep including saturation
+  logical :: kappa_eff  = .true. !< compute dt including saturation
+  !>  use if too saturated or if dt_cond becomes too restrictive
+  integer :: tc_log !< logical unit to write TC log
 
 contains
 
 !=======================================================================
-
 !> @brief Intializes Temperature array
 !> @details Intializes Temperature array
 !> (to resolve dependencies it was moved to the globals module)
-
 subroutine init_thermal_cond()
   implicit none
 
   !  create log dir if not present
   if (rank == master) then
 
-  !  call execute_command_line('if [ ! -e '//trim(workdir)&
-  !    //'logs ]; then mkdir '//trim(workdir)//'logs ; fi')
+  call system('if [ ! -e '//trim(outputpath)&
+      //'logs ]; then mkdir '//trim(outputpath)//'logs ; fi')
 
-  call system('if [ ! -e '//trim(workdir)&
-      //'logs ]; then mkdir '//trim(workdir)//'logs ; fi')
-
-  open(newunit=tc_log,file=trim(workdir)//'logs/thermal_conduction.log')
-  write(tc_log,'(a)') '***** Thermal conduction logfile ********'
-  write(tc_log,'(a)') 'iteration    |    dt_hydro    |   dt_cond      | Nsteps  '
+  open(newunit=tc_log,file=trim(outputpath)//'logs/thermal_conduction-test.log')
+  write(tc_log,'(a)') '************* Thermal conduction logfile ****************'
+  write(tc_log,'(a)') '# iter  | dt_hydro/left |    dt_cond   | Nsteps | ST block'
 
   end if
 
 end subroutine init_thermal_cond
 
 !=======================================================================
-
 !> @brief computes conduction timescale
 !> @details computes conduction timescale (in seconds)
 !> @param real [out] dt :: conduction timescale
-
 subroutine get_dt_cond(dt)
 
   use hydro_core, only : csound
@@ -91,14 +92,14 @@ subroutine get_dt_cond(dt)
      do j=1,ny
         do i=1,nx
 
-           !  spitzer timescale
+          !  spitzer timescale (parabolic dt)
            dtp = min( dtp, primit(1,i,j,k)/Ksp(Temp(i,j,k)) )
 
         end do
      end do
   end do
 
-  dtp=tstep_red_factor*0.5*(ddx*rsc)**2*cv*Rg*dtp*rhosc/mu
+  dtp=tstep_red_factor*(ddx*rsc)**2*cv*Rg*dtp*rhosc*mu/3.0  !  [seconds]
 
 #ifdef MPIP
   call mpi_allreduce(dtp, dt, 1, mpi_real_kind, mpi_min, mpi_comm_world,err)
@@ -106,393 +107,394 @@ subroutine get_dt_cond(dt)
   dt=dtp
 #endif
 
+! ==============================================================================
+! Uses an effective kappa by including the saturated flux timestep
+if ( tc_saturation .and. kappa_eff ) then
+  if (TC_ISOTROPIC) then
+    call heatfluxes()
+  else if (TC_ANISOTROPIC) then
+    call MHD_heatfluxes()
+  end if
+
+#ifdef MPIP
+  call mpi_allreduce(dt_sat, dtp, 1, mpi_real_kind, mpi_min, mpi_comm_world,err)
+#else
+  dtp = dt_sat
+#endif
+  !if (rank == master) then
+  !   print('(a,es15.7,a,es15.7,a,f7.3)'), &
+  !   'dt_spitzer: ', dt, ' dt_saturated: ', dtp, ' speedup factor: ', dtp/dt
+  !end if
+  dt = max(dt, dtp)
+
+  end if
+  !=============================================================================
 
 end subroutine get_dt_cond
 
 !=======================================================================
-
 !> @brief Progress bar
 !> @details Progress bar
 !! takes a number between 1 and tot
 !> @param integer [in] j   : current iteration
 !> @param integer [in] tot : total number of iterartions
-
-subroutine progress(j,tot)
+subroutine progress(j, tot, done)
   implicit none
-  integer(kind=4)::j,k
-  integer(kind=4), intent(in) :: tot
-  character(len=57)::bar="???% |                                                  |"
-  open (unit=6)
-  write(unit=bar(1:3),fmt="(i3)") 100*j/tot
-  bar(7:56)="."
-  do k=1, 50*j/tot
-     bar(6+k:6+k)="="
-  enddo
-  ! print the progress bar.
-  write(unit=6,fmt="(a1,a1,a57)",advance="no") '+',char(13), bar
-  return
+
+  integer, intent(in) :: j, tot
+  logical, intent(in), optional :: done
+
+  integer :: k, nfill, pct
+  integer, parameter :: nbar = 37
+  character(len=53) :: bar
+  character(len=53) :: blank
+  logical :: finished
+
+  finished = .false.
+  if (present(done)) finished = done
+
+  blank = repeat(" ", len(blank))
+
+  if (finished) then
+     ! Clear the progress-bar line and return to beginning of line
+     write(6, "(a1,a53,a1)", advance="no") char(13), blank, char(13)
+     flush(6)
+     return
+  endif
+
+  if (tot <= 0) return
+
+  pct = int(100.0d0 * dble(j) / dble(tot))
+  pct = max(0, min(100, pct))
+
+  nfill = int(dble(nbar) * dble(j) / dble(tot))
+  nfill = max(0, min(nbar, nfill))
+
+  bar = "th cond: ???% |                                     |"
+
+  write(bar(10:12), "(i3)") pct
+
+  bar(16:52) = "."
+
+  do k = 1, nfill
+     bar(15+k:15+k) = "="
+  end do
+
+  ! Print progress bar without newline
+  write(6, "(a1,a53)", advance="no") char(13), bar
+  flush(6)
+
 end subroutine progress
 
 !=======================================================================
-
 !> @brief Spitzer conductivity
 !> @details Computes the Spitzer conductivity
 !> @param real [in] T : temperature [K]
-
 real function KSp(T)
   implicit none
   real, intent(in) :: T
-  real, parameter :: beta=6.e-7
 
-  Ksp= beta*T**(2.5)
+  Ksp = beta_sp*T**(2.5)
 
 end function KSp
 
 !=======================================================================
-
 !> @brief Spitzer parallel conductivity
 !> @details Computes the Spitzer conductivity parallel to B
 !> @param real [in] T : temperature [K]
-
-real function KSp_parl(xtemp)
+real function KSp_par(Temp)
   implicit none
-  real,intent(in):: xtemp
-  real,parameter:: K0_parl = 9.2181e-7
+  real,intent(in):: Temp
 
-  Ksp_parl= K0_parl*xtemp**(2.5)
+  Ksp_par = beta_sp*Temp**(2.5)
 
-end function KSp_parl
+end function KSp_par
 
 !=======================================================================
-
 !> @brief Spitzer perpendicular conductivity
 !> @details Computes the Spitzer conductivity perpendicular to B
 !> @param real [in] T : temperature [K]
-
-real function KSp_perp(xtemp,xdens,B2)
+real function KSp_perp(Temp)
   implicit none
-  real,intent(in):: xtemp,xdens,B2
-  real,parameter:: K0_perp = 0.30089e+33
-  Ksp_perp= K0_perp*xdens/(B2*sqrt(xtemp))*xdens
+  real,intent(in):: Temp
+
+  Ksp_perp = beta_sp*eps_perp*Temp**(2.5)
 
 end function KSp_perp
-
 
 !=======================================================================
 
 !> @brief Returns Heat Fluxes
-!> @details Heat flux, if saturation enabled it takes minimum of the
-!! Spitzer and the saturated value
+!> @details Heat flux, if saturation enabled the flux is limited with it
 !! @n  The result is stored in the 5th component of global the
 !! F,G,H fluxes (in cgs, conversion is done in dt product)
-
+!! also compute a dt_sat in case the saturation is enabled
 subroutine heatfluxes()
   use hydro_core, only : csound
   implicit none
   integer :: i, j, k
-  real, parameter :: clight=3.E10, phi=0.3
-  real:: cs, coef, dTx, dTy, dTz, meanT, meanP, meanDens, yhp
+  real, parameter :: phi=0.3
+  real :: cs, meanP, meanDens, kap_x, kap_y, kap_z
+  real :: qx_sat, qy_sat, qz_sat, qx_cl, qy_cl, qz_cl, dTdx, dTdy, dTdz, fac
+
+  F(5,:,:,:)=0.0  ; G(5,:,:,:)=0.0 ; H(5,:,:,:)=0.0
+  dt_sat = huge(1.)
 
   do k=0,nz
      do j=0,ny
         do i=0,nx
 
-           yhp=1.!-primit(neqdyn+1,i,j,k)/primit(1,i,j,k)
-
-           !  get the flux in the X direction
-           if (Temp(i,j,k) == Temp(i+1,j,k) ) then
-              F(5,i,j,k)=0.
-           else
-              meanP   = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
-              meanDens= 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
-              meanT   = 0.5*(    Temp(i,j,k)+    Temp(i+1,j,k))
-              dTx=(Temp(i+1,j,k)-Temp(i,j,k))/(dx*rsc)
-
+          !--------------- X direction -----------------------------------------
+          ! Temperature gradient in x
+          dTdx = (Temp(i+1,j,k) - Temp(i,j,k)) / (dx*rsc)
+          ! Kappa at face center
+          kap_x = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i+1,j,k)) / &
+                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i+1,j,k)))
+          ! Classic (spitzer) heatflux
+          qx_cl = -kap_x * dTdx
           if (tc_saturation) then
-              call csound(meanP,meanDens,cs)
-              cs=min(cs*sqrt(vsc2),clight)
-              coef=min( Ksp(meanT) , 5.*ph*cs*meanP*Psc/abs(dTx) )
+            ! Cowley & McKee saturation
+            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
+            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
+            call csound(meanP,meanDens,cs)
+            cs=min(cs*vsc,clight)         ! scale and limit to < clight
+            qx_sat = 5.0 * phi * meanDens*rhosc * cs**3
+            ! harmonic average
+            fac = 1.0 / ( 1.0 + abs(qx_cl)/qx_sat )
+            F(5,i,j,k) = qx_cl *fac
+            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_x )
           else
-              coef = Ksp(meanT)
+            F(5,i,j,k) = qx_cl
           end if
 
-              F(5,i,j,k)=-coef*dTx*yhp
+          !--------------- Y direction -----------------------------------------
+          ! Temperature gradient in y
+          dTdy = (Temp(i,j+1,k) - Temp(i,j,k)) / (dy*rsc)
+          ! Kappa at face center
+          kap_y = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j+1,k)) / &
+                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j+1,k)) )
+          ! Classic (spitzer) heatflux
+          qy_cl = -kap_y * dTdy
+          if (tc_saturation) then
+            ! Cowley & McKee saturation
+            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
+            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
+            call csound(meanP,meanDens,cs)
+            cs=min(cs*vsc,clight)         ! scale and limit to < clight
+            qy_sat = 5.0 * phi * meanDens*rhosc * cs**3
+            ! harmonic average'
+            fac = 1./ ( 1.0 + abs(qy_cl)/qy_sat )
+            G(5,i,j,k) = qy_cl * fac
+            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_y )
+          else
+            G(5,i,j,k) = qy_cl
+          end if
 
-           end if
-           !  get the flux in the Y direction
-           if (Temp(i,j,k) == Temp(i,j+1,k) ) then
-              G(5,i,j,k)=0.
-           else
-              meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
-              meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
-              meanT   = 0.5*(    Temp(i,j,k)+    Temp(i,j+1,k))
-              dTy=(Temp(i,j+1,k)-Temp(i,j,k))/(dy*rsc)
-
-              if (tc_saturation) then
-                call csound(meanP,meanDens,cs)
-                cs=min(cs*sqrt(vsc2),clight)
-                coef=min( Ksp(meanT) , 5.*ph*cs*meanP*Psc/abs(dTy) )
-              else
-                coef = Ksp(meanT)
-              endif
-
-              G(5,i,j,k)=-coef*dTy*yhp
-
-           end if
-           !  get the flux in the Z direction
-           if (Temp(i,j,k) == Temp(i,j,k+1) ) then
-              H(5,i,j,k)=0.
-           else
-              meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
-              meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
-              meanT   = 0.5*(  Temp(i,j,k)  +    Temp(i,j,k+1))
-              dTz=(Temp(i,j,k+1)-Temp(i,j,k))/(dz*rsc)
-
-              if (tc_saturation) then
-                call csound(meanP,meanDens,cs)
-                cs=min(cs*sqrt(vsc2),clight)
-                coef=min( Ksp(meanT) , 5.*ph*cs*meanP*Psc/abs(dTz) )
-              else
-                coef = Ksp(meanT)
-              endif
-
-              H(5,i,j,k)=-coef*dTz*yhp
-
-           end if
+          !--------------- Z direction -----------------------------------------
+          ! Temperature gradient in z
+          dTdz = (Temp(i,j,k+1) - Temp(i,j,k)) / (dz*rsc)
+          ! Kappa at face center
+          kap_z = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j,k+1)) / &
+                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j,k+1)) )
+          ! Classic (spitzer) heatflux
+          qz_cl = -kap_z * dTdz
+          if (tc_saturation) then
+            ! Cowley & McKee saturation
+            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
+            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
+            call csound(meanP,meanDens,cs)
+            cs=min(cs*vsc,clight)         ! scale and limit to < clight
+            qz_sat = 5.0 * phi * meanDens*rhosc * cs**3
+            ! harmonic average
+            fac = 1.0 / ( 1.0 + abs(qz_cl)/qz_sat )
+            H(5,i,j,k) = qz_cl * fac
+            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_z )
+          else
+            H(5,i,j,k) = qz_cl
+          end if
 
         end do
      end do
   end do
-  !
+
+  !   here I multiply rho/kappa_eff by the prefactors to get dt_sat
+  dt_sat = dt_sat * tstep_red_factor*(dx*rsc)**2*cv*Rg*mu/3.0
+
 end subroutine heatfluxes
 
 !=======================================================================
-
 !> @brief Returns Heat Fluxes with anisotropic thermal conduction
 !> @details Heat flux, if sturation enabled takes minimum of the
 !! Spitzer and the saturated value
 !! @n  The result is stored in the 5th component of global the
 !! F,G,H fluxes (in cgs, conversion is done in dt product)
-
+!! also compute a dt_sat in case the saturation is enabled
 subroutine MHD_heatfluxes()
 
   use hydro_core, only : csound
   implicit none
   integer :: i,j,k
-  real,parameter :: clight=3.E10,phi=0.3,alpha=5.0*phi
-  real :: cs,meanTemp,meanPres,meanDens
-  !Gradient Temperature
-  real :: gradTx,gradTy,gradTz
-  !real :: gradT
-  real :: gradT_parl_x,gradT_parl_y,gradT_parl_z,gradT_parl
-  real :: gradT_perp_x,gradT_perp_y,gradT_perp_z,gradT_perp
-  !Magnetic fiel unitary vector components
-  real :: bx,by,bz,modB,B2
-  !Internal product of vectors: B and gradT
-  real :: bgradT
-  !real :: ,bgradTx,bgradTy,bgradTz
-  !Coeficientes de conducción
-  real :: K_parl_x,K_parl_y,K_parl_z,K_perp_x,K_perp_y,K_perp_z
-  real :: coefSatx,coefSaty,coefSatz
+  real, parameter :: phi=0.3
+  real            :: Bx_f, By_f, Bz_f, Bmag, bxh, byh, bzh, dTdx, dTdy, dTdz
+  real            :: dTdy_i, dTdz_i, dTdy_ip, dTdz_ip,                         &
+                     dTdx_j, dTdz_j, dTdx_jp, dTdz_jp,                         &
+                     dTdx_k, dTdy_k, dTdx_kp, dTdy_kp, Kpar_f, Kperp_f,        &
+                     bdotgradT, qx_cl, qy_cl, qz_cl, qmag_cl, rho_f, p_f, cs,  &
+                     fac, qsat
 
   F(5,:,:,:)=0.0  ; G(5,:,:,:)=0.0 ; H(5,:,:,:)=0.0
 
+  dt_sat = huge(1.)
+
   do k=0,nz
-     do j=0,ny
-        do i=0,nx
+    do j=0,ny
+      do i=0,nx
 
-          bx = primit(6,i,j,k)
-          by = primit(7,i,j,k)
-          bz = primit(8,i,j,k)
-          B2 = bx*bx+by*by+bz*bz
-          modB = sqrt(B2)
-          bx = bx/modB
-          by = by/modB
-          bz = bz/modB
+        !--------------- X direction -------------------------------------------
+        !  Interpolate magnetic field to i+1/2 interface
+        Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i+1,j,k))
+        By_f = 0.5*(primit(7,i,j,k) + primit(7,i+1,j,k))
+        Bz_f = 0.5*(primit(8,i,j,k) + primit(8,i+1,j,k))
+        Bmag = sqrt( Bx_f**2 + By_f**2 + Bz_f**2 )+ tiny(1.0)
+        !  (scaling units not needed for the following)
+        bxh = Bx_f / Bmag
+        byh = By_f / Bmag
+        bzh = Bz_f / Bmag
+        !  Temperature gradient at interface
+        dTdx    = (Temp(i+1,j,k) - Temp(i,j,k) ) / ( dx*rsc)
+        dTdy_i  = ( Temp( i ,j+1,k) - Temp( i ,j-1,k) ) / (2.0*dy*rsc)
+        dTdy_ip = ( Temp(i+1,j+1,k) - Temp(i+1,j-1,k) ) / (2.0*dy*rsc)
+        dTdy    = 0.5*(dTdy_i + dTdy_ip)
+        dTdz_i  = ( Temp( i ,j,k+1) - Temp( i ,j,k-1) ) / (2.0*dz*rsc)
+        dTdz_ip = ( Temp(i+1,j,k+1) - Temp(i+1,j,k-1) ) / (2.0*dz*rsc)
+        dTdz    = 0.5*(dTdz_i + dTdz_ip)
+        !  Interpolate conductivities to inteface
+        Kpar_f  = 2.0*KSp_par(Temp(i,j,k)) * KSp_par(Temp(i+1,j,k)) /          &
+                  (   Ksp_par(Temp(i,j,k)) + Ksp_par(Temp(i+1,j,k)) )
+        Kperp_f = 2.0*KSp_perp(Temp(i,j,k)) * KSp_perp(Temp(i+1,j,k)) /        &
+                  (   KSp_perp(Temp(i,j,k)) + Ksp_perp(Temp(i+1,j,k)) )
+        !  b dot grad(T)
+        bdotgradT = bxh*dTdx + byh*dTdy + bzh*dTdz
+        !  compute classical flux at interface
+        qx_cl = -Kperp_f * dTdx -( Kpar_f - Kperp_f ) * bxh * bdotgradT
+        qy_cl = -Kperp_f * dTdy -( Kpar_f - Kperp_f ) * byh * bdotgradT
+        qz_cl = -Kperp_f * dTdz -( Kpar_f - Kperp_f ) * bzh * bdotgradT
+        !  Cowie & McKee saturation
+        if (tc_saturation) then
+          rho_f = 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
+          p_f   = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
+          call csound(p_f,rho_f,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qsat = 5.0 * phi * rho_f*rhosc * cs**3
+          qmag_cl = sqrt(qx_cl**2 + qy_cl**2 + qz_cl**2)
+          fac = 1.0 / (1.0 + qmag_cl/max(qsat, tiny(1.0)))
+          dt_sat = min(dt_sat, rho_f*rhosc/fac/Kpar_f )
+        else
+          fac = 1.0
+        end if
+        F(5,i,j,k) = qx_cl * fac
 
-          !  not saturated conduction
-          if(.not.tc_saturation) then
-            !  get the flux in the X direction
-            if ( abs(Temp(i,j,k)-Temp(i+1,j,k)) < 1.0e-14 ) then
 
-              gradTx = 0.0
-              K_parl_x = 0.0
-              K_perp_x = 0.0
+        !--------------- Y direction -------------------------------------------
+        !  Interpolate magnetic field to j+1/2 interface
+        Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i,j+1,k))
+        By_f = 0.5*(primit(7,i,j,k) + primit(7,i,j+1,k))
+        Bz_f = 0.5*(primit(8,i,j,k) + primit(8,i,j+1,k))
+        Bmag = sqrt( Bx_f**2 + By_f**2 + Bz_f**2 ) + tiny(1.0)
+        !  (scaling units not needed for the following)
+        bxh = Bx_f / Bmag
+        byh = By_f / Bmag
+        bzh = Bz_f / Bmag
+        !  Temperature gradient at interface
+        dTdx_j  = ( Temp(i+1, j ,k) - Temp(i-1, j ,k) ) / (2.0*dx*rsc)
+        dTdx_jp = ( Temp(i+1,j+1,k) - Temp(i-1,j+1,k) ) / (2.0*dx*rsc)
+        dTdx    = 0.5*(dTdx_j + dTdx_jp)
+        dTdy    = ( Temp(i,j+1,k) - Temp(i,j,k) ) / ( dy*rsc)
+        dTdz_j  = ( Temp(i, j ,k+1) - Temp(i, j ,k-1) ) / (2.0*dz*rsc)
+        dTdz_jp = ( Temp(i,j+1,k+1) - Temp(i,j+1,k-1) ) / (2.0*dz*rsc)
+        dTdz    = 0.5*(dTdz_j + dTdz_jp)
+        !  Interpolate conductivities to inteface
+        Kpar_f  = 2.0*KSp_par(Temp(i,j,k)) * KSp_par(Temp(i,j+1,k)) /          &
+                  (   KSp_par(Temp(i,j,k)) + KSp_par(Temp(i,j+1,k)))
+        Kperp_f = 2.0*KSp_perp(Temp(i,j,k)) * KSp_perp(Temp(i,j+1,k)) /        &
+                  (   KSp_perp(Temp(i,j,k)) + Ksp_perp(Temp(i,j+1,k)))
+        !  b dot grad(T)
+        bdotgradT = bxh*dTdx + byh*dTdy + bzh*dTdz
+        !  compute classical flux at interface
+        qx_cl = -Kperp_f * dTdx -( Kpar_f - Kperp_f ) * bxh * bdotgradT
+        qy_cl = -Kperp_f * dTdy -( Kpar_f - Kperp_f ) * byh * bdotgradT
+        qz_cl = -Kperp_f * dTdz -( Kpar_f - Kperp_f ) * bzh * bdotgradT
+        !  Cowie & McKee saturation
+        if (tc_saturation) then
+          rho_f = 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
+          p_f   = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
+          call csound(p_f,rho_f,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qsat = 5.0 * phi * rho_f*rhosc * cs**3
+          qmag_cl = sqrt(qx_cl**2 + qy_cl**2 + qz_cl**2)
+          fac = 1.0 / (1.0 + qmag_cl/max(qsat, tiny(1.0)))
+          dt_sat = min(dt_sat, rho_f*rhosc/fac/Kpar_f )
+        else
+          fac = 1.0
+        end if
+        G(5,i,j,k) = qy_cl * fac
 
-            else
-
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
-              meanTemp = 0.5*(    Temp(i,j,k)+    Temp(i+1,j,k))
-
-              gradTx = (Temp(i+1,j,k)-Temp(i,j,k))/(dx*rsc)
-              K_parl_x = Ksp_parl(meanTemp)
-              K_perp_x = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-            !  get the flux in the Y direction
-            if ( abs(Temp(i,j,k)-Temp(i,j+1,k)) < 1.0e-14 ) then
-
-              gradTy = 0.0
-              K_parl_y = 0.0
-              K_perp_y = 0.0
-
-            else
-
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
-              meanTemp = 0.5*(    Temp(i,j,k)+    Temp(i,j+1,k))
-
-              gradTy = (Temp(i,j+1,k)-Temp(i,j,k))/(dy*rsc)
-              K_parl_y = Ksp_parl(meanTemp)
-              K_perp_y = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-            !  get the flux in the Z direction
-            if ( abs(Temp(i,j,k)-Temp(i,j,k+1)) < 1.0e-14 ) then
-
-              gradTz = 0.0
-              K_parl_z = 0.0
-              K_perp_z = 0.0
-
-            else
-
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
-              meanTemp = 0.5*(  Temp(i,j,k)  +    Temp(i,j,k+1))
-
-              gradTz = (Temp(i,j,k+1)-Temp(i,j,k))/(dz*rsc)
-              K_parl_z = Ksp_parl(meanTemp)
-              K_perp_z = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-            !internal product of b.gradT
-            bgradT = bx*gradTx+by*gradTy+bz*gradTz
-
-            gradT_parl_x = bgradT*bx
-            gradT_parl_y = bgradT*by
-            gradT_parl_z = bgradT*bz
-
-            gradT_perp_x = gradTx-gradT_parl_x
-            gradT_perp_y = gradTy-gradT_parl_y
-            gradT_perp_z = gradTz-gradT_parl_z
-
-            F(5,i,j,k) = -K_parl_x*gradT_parl_x - K_perp_x*gradT_perp_x
-
-            G(5,i,j,k) = -K_parl_y*gradT_parl_y - K_perp_y*gradT_perp_y
-
-            H(5,i,j,k) = -K_parl_z*gradT_parl_z - K_perp_z*gradT_perp_z
-
-          else
-            !   Saturated conduction
-            !  get the flux in the X direction
-            if ( abs(Temp(i,j,k)-Temp(i+1,j,k)) < 1.0e-14 ) then
-
-              gradTx = 0.0
-              K_parl_x = 0.0
-              K_perp_x = 0.0
-              coefSatx = 0.0
-
-            else
-
-              meanPres = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
-              meanTemp = 0.5*(    Temp(i,j,k)+    Temp(i+1,j,k))
-              call csound(meanPres,meanDens,cs)
-              cs = min(cs*vsc,clight)
-              coefSatx = alpha*meanDens*cs**3
-
-              gradTx = (Temp(i+1,j,k)-Temp(i,j,k))/(dx*rsc)
-              K_parl_x = Ksp_parl(meanTemp)
-              K_perp_x = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-             !  get the flux in the Y direction
-            if ( abs(Temp(i,j,k)-Temp(i,j+1,k)) < 1.0e-14 ) then
-
-              gradTy = 0.0
-              K_parl_y = 0.0
-              K_perp_y = 0.0
-              coefSaty = 0.0
-
-            else
-
-              meanPres = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
-              meanTemp = 0.5*(    Temp(i,j,k)+    Temp(i,j+1,k))
-              call csound(meanPres,meanDens,cs)
-              cs = min(cs*vsc,clight)
-              coefSaty = alpha*meanDens*cs**3
-
-              gradTy = (Temp(i,j+1,k)-Temp(i,j,k))/(dy*rsc)
-              K_parl_y = Ksp_parl(meanTemp)
-              K_perp_y = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-            !  get the flux in the Z direction
-            if ( abs(Temp(i,j,k)-Temp(i,j,k+1)) < 1.0e-14 ) then
-
-              gradTz = 0.0
-              K_parl_z = 0.0
-              K_perp_z = 0.0
-              coefSatz = 0.0
-
-            else
-
-              meanPres = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
-              meanDens = 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
-              meanTemp = 0.5*(  Temp(i,j,k)  +    Temp(i,j,k+1))
-              call csound(meanPres,meanDens,cs)
-              cs = min(cs*vsc,clight)
-              coefSatz = alpha*meanDens*cs**3
-
-              gradTz = (Temp(i,j,k+1)-Temp(i,j,k))/(dz*rsc)
-              K_parl_z = Ksp_parl(meanTemp)
-              K_perp_z = Ksp_perp(meanTemp,meanDens*rhosc,B2*bsc**2)
-
-            end if
-
-            !internal product of b.gradT
-            bgradT = bx*gradTx+by*gradTy+bz*gradTz
-
-            gradT_parl_x = bgradT*bx
-            gradT_parl_y = bgradT*by
-            gradT_parl_z = bgradT*bz
-            ! |gradT_parl| == |(b.gradT)b| == |(b.gradT)|
-            gradT_parl = bgradT
-
-            gradT_perp_x = gradTx-gradT_parl_x
-            gradT_perp_y = gradTy-gradT_parl_y
-            gradT_perp_z = gradTz-gradT_parl_z
-            ! |gradT_perp| == |gradT-gradT_parl|
-            gradT_perp = sqrt( gradT_perp_x*gradT_perp_x + gradT_perp_y*gradT_perp_y + gradT_perp_z*gradT_perp_z )
-
-            F(5,i,j,k) = - 1./( 1./(K_parl_x + 1.e-14) + gradT_parl/(coefSatx + 1.e-14) ) * gradT_parl_x &
-                         - 1./( 1./(K_perp_x + 1.e-14) + gradT_perp/(coefSatx + 1.e-14) ) * gradT_perp_x
-
-            G(5,i,j,k) = - 1./( 1./(K_parl_y + 1.e-14) + gradT_parl/(coefSaty + 1.e-14) ) * gradT_parl_y &
-                         - 1./( 1./(K_perp_y + 1.e-14) + gradT_perp/(coefSaty + 1.e-14) ) * gradT_perp_y
-
-            H(5,i,j,k) = - 1./( 1./(K_parl_z + 1.e-14) + gradT_parl/(coefSatz + 1.e-14) ) * gradT_parl_z &
-                         - 1./( 1./(K_perp_z + 1.e-14) + gradT_perp/(coefSatz + 1.e-14) ) * gradT_perp_z
-
-          end if
-
+        !--------------- Z direction -------------------------------------------
+        !  Interpolate magnetic field to k+1/2 interface
+        Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i,j,k+1))
+        By_f = 0.5*(primit(7,i,j,k) + primit(7,i,j,k+1))
+        Bz_f = 0.5*(primit(8,i,j,k) + primit(8,i,j,k+1))
+        Bmag = sqrt( Bx_f**2 + By_f**2 + Bz_f**2 )+ tiny(1.0)
+        !  (scaling units not needed for the following)
+        bxh = Bx_f / Bmag
+        byh = By_f / Bmag
+        bzh = Bz_f / Bmag
+        !  Temperature gradient at interface
+        dTdx_k  = ( Temp(i+1,j, k ) - Temp(i-1,j, k ) ) / (2.0*dx*rsc)
+        dTdx_kp = ( Temp(i+1,j,k+1) - Temp(i-1,j,k+1) ) / (2.0*dx*rsc)
+        dTdx    = 0.5*(dTdx_k + dTdx_kp)
+        dTdy_k  = ( Temp(i,j+1, k ) - Temp(i,j-1, k) ) / (2.0*dy*rsc)
+        dTdy_kp = ( Temp(i,j+1,k+1) - Temp(i,j-1,k+1) ) / (2.0*dy*rsc)
+        dTdy    = 0.5*(dTdy_k + dTdy_kp)
+        dTdz    = ( Temp(i,j,k+1) - Temp(i,j,k) ) / ( dz*rsc)
+        !  Interpolate conductivities to inteface
+        Kpar_f  = 2.0*KSp_par(Temp(i,j,k)) * KSp_par(Temp(i,j,k+1)) /          &
+                  (   KSp_par(Temp(i,j,k)) + KSp_par(Temp(i,j,k+1)))
+        Kperp_f = 2.0*KSp_perp(Temp(i,j,k)) * KSp_perp(Temp(i,j,k+1)) /        &
+                  (   KSp_perp(Temp(i,j,k)) + Ksp_perp(Temp(i,j,k+1)))
+        !  b dot grad(T)
+        bdotgradT = bxh*dTdx + byh*dTdy + bzh*dTdz
+        !  compute classical flux at interface
+        qx_cl = -Kperp_f * dTdx -( Kpar_f - Kperp_f ) * bxh * bdotgradT
+        qy_cl = -Kperp_f * dTdy -( Kpar_f - Kperp_f ) * byh * bdotgradT
+        qz_cl = -Kperp_f * dTdz -( Kpar_f - Kperp_f ) * bzh * bdotgradT
+        !  Cowie & McKee saturation
+        if (tc_saturation) then
+          rho_f = 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
+          p_f   = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
+          call csound(p_f,rho_f,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qsat = 5.0 * phi * rho_f*rhosc * cs**3
+          qmag_cl = sqrt(qx_cl**2 + qy_cl**2 + qz_cl**2)
+          fac = 1.0 / (1.0 + qmag_cl/max(qsat, tiny(1.0)))
+          dt_sat = min(dt_sat, rho_f*rhosc/fac/Kpar_f )
+        else
+          fac = 1.0
+        end if
+        H(5,i,j,k) = qz_cl * fac
         end do
      end do
   end do
 
+  !   here I multiply rho/kappa_eff for the constants in front of dt_sat
+  dt_sat = dt_sat * tstep_red_factor*(dx*rsc)**2*cv*Rg*mu/3.0
+
 end subroutine MHD_heatfluxes
 
-
 !=======================================================================
-
 !> @brief Exchanges ghost cells for energy only
 !> @details Exchanges one layer of boundaries, only the equation that
-!!  corresponds to the energy
-
+!>  corresponds to the energy
   subroutine thermal_bounds()
 
     implicit none
@@ -615,160 +617,247 @@ end subroutine MHD_heatfluxes
 
   end subroutine thermal_bounds
 
-!=======================================================================
-
+  !=======================================================================
 !> @brief  Length of superstep
 !> @details Returns the length of the superstep with N inner substeps
 !> @param integer [in] N : Nunber of inner substeps
 !> @param real [in] snu : sqrt of daMPI_NBg factor
-
-real function superstep(N,snu)
-
-  implicit none
-  integer :: N
-  real,    intent(in) :: snu
-
-  superstep=real(N)/(2.*snu) * ( (1+snu)**(2*N) - (1-snu)**(2*N) ) / &
-       ( (1+snu)**(2*N) + (1-snu)**(2*N) )
-
-  !1/( (nu-1.)*Cos(pi*(2*real(j)-1.)/(2.*real(N)) )+nu+1. )
-
-end function superstep
+! ********   Thius function only exact in th elimit of N large ****************
+!real function superstep(N,snu)
+!
+!  implicit none
+!  integer :: N
+!  real,    intent(in) :: snu
+!
+!  superstep=real(N)/(2.*snu) * ( (1+snu)**(2*N) - (1-snu)**(2*N) ) / &
+!       ( (1+snu)**(2*N) + (1-snu)**(2*N) )
+!
+!  !1/( (nu-1.)*Cos(pi*(2*real(j)-1.)/(2.*real(N)) )+nu+1. )
+!
+!end function superstep
 
 !=======================================================================
-
 !> @brief Size of substep j
 !> @details Returns the size of substep j of N
 !> @param  integer [in] j : index of current step
 !> @param  integer [in] N : Total number of substeps
-!> @param  real [in] nu : daMPI_NBg factor
-
+!> @param  real [in] nu : damping factor
 real function substep(j,N,nu)
 
   implicit none
   integer, intent(in) :: j, N
   real,    intent(in) :: nu
 
-  substep=1./( (nu-1.)*Cos(pi*real(2*j-1)/(2.*real(N)) )+nu+1. )
+  substep=1.0/( (nu-1.0)*Cos(pi*real(2*j-1)/(2.0*real(N)) ) + nu + 1.0 )
 
 end function substep
 
 !=======================================================================
-
 !> @brief Returns the number of Supersteps
 !> @details Returns the number of Supersteps
-!> @param real fs    : ratio of dtcond/dthydro
-!> @param integer Ns : Number of Supersteps
-!> @param real fstep : Number of supersteps (float)
+!> @param real dt_hydro   : dt hydro [seconds]
+!> @param real dt_cond    : dt of classical conduction
+!> @param integer Ns      : Number of Supersteps required
+!> @param real scale      : Scaling factor to match up dt_cfl with Ns supersteps
+subroutine ST_steps(dt_hydro,dt_cond, Ns,scale)
 
-  subroutine ST_steps(fs,Ns,fstep)
+  implicit none
+  real ,   intent(in)  :: dt_hydro, dt_cond
+  integer, intent(out) :: Ns
+  real,    intent(out) :: scale
+  real                 :: dt_tot
+  integer :: j
 
-    implicit none
-
-    real ,   intent(in) :: fs
-    integer, intent(out):: Ns
-    real,    intent(out):: fstep
-    integer, parameter :: jmax=199
-    integer :: j
-    !
-    do j=1,jmax
-       if (superstep(j,snu) > fs) exit
+  Ns = 1
+  do
+    dt_tot = 0.0
+    do j = 1, Ns
+      dt_tot = dt_tot + dt_cond * substep(j, Ns, nu)
     end do
 
-    Ns = j
-    fstep = fs/superstep(Ns,snu)
+    if (dt_tot >= dt_hydro) exit
 
-  end subroutine ST_steps
+    Ns = Ns + 1
+
+    if (Ns > Max_iter) then
+      !print*, "Error: number of supersteps exceeded, increase Max_iter or" //&
+      !        "reduce the damping factor nu ", Ns, Max_iter, dt_hydro, dt_cond
+      !stop
+      Ns = Max_iter
+      scale = 1.0
+      return !exit
+    end if
+
+  end do
+
+  scale = dt_hydro / dt_tot
+
+end subroutine ST_steps
 
 !=======================================================================
+!> @brief updates pressure and temperature
+!> @details This routine makes a minimal update of only pressure and
+!> temperature, takes the indices i, j, k of a cell, updates the global arrays
+!> 'primit' and 'Temp'
+!> @param integer [in] i : index in the X direction
+!> @param integer [in] j : index in the Y direction
+!> @param integer [in] k : index in the Z direction
+!!**********  support for different EOS is under construction **************
+subroutine update_PT(i, j, k)
 
+  implicit none
+  integer, intent(in) :: i, j, k
+  real, parameter :: Temp_floor = 10.0
+
+  if (mhd) then
+    primit(5,i,j,k) = ( u(5,i,j,k)                                             &
+            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) )  &
+            - 0.5 * ( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k) ) /Cv
+  else
+    primit(5,i,j,k) = ( u(5,i,j,k)                                             &
+            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) )
+  end if
+
+  if (eq_of_state == EOS_SINGLE_SPECIE) then
+    Temp(i,j,k) = max(Temp_floor,(primit(5,i,j,k)/primit(1,i,j,k))*Tempsc)
+  else
+    print*, 'Unsupported EOS'
+    stop
+  end if
+
+end subroutine
+
+!=======================================================================
 !> @brief Upper level wrapper for thermal conduction
 !> @details This routine adds the heat conduction, receives the hydro
-!!  timestep in seconds, and assumes the primitives and Temp(i,j,k)
-!!  arrays are updated
-
+!>  timestep in seconds, and assumes the primitives and Temp(i,j,k)
+!>  arrays are updated
 subroutine thermal_conduction()
 
   use hydro_core, only : calcprim
   implicit none
-  real :: dt_hydro
-  real :: dts, fstep
-  integer :: n,i,j,k, nsteps
-  logical :: SuperStep
+  real    :: dt_hydro
+  real    :: dts, scale, dt_left
+  integer :: n,i,j,k, nsteps, nSTb
+  logical :: SuperStep = .true.  !  Enable superstepping
+  logical :: progressbar = .false.  ! print progress bar within ST blocks
 
-  dt_hydro = dt_CFL*tsc
+  dt_hydro = dt_CFL*tsc          !  [seconds]
+  dt_left  = dt_hydro
+  nSTb     = 1
+
+ STblocks : do
 
   !  get the conduction timescale
-  call get_dt_cond(dt_cond)
+    call get_dt_cond(dt_cond)
 
-  SuperStep = .True.
-
-  if (dt_cond < dt_hydro) then
-
+    !  compute the number of (super) steps needed to asdvance dt_cfl
     if (SuperStep) then
-       call ST_steps(dt_hydro/dt_cond,Nsteps,fstep)
+      call ST_steps(dt_left, dt_cond, Nsteps, scale )
     else
-      Nsteps = min( ceiling(dt_hydro/dt_cond), Max_iter )
+      Nsteps = ceiling(dt_left/dt_cond)
+      scale = 1.0
+      if (NSteps > Max_iter) then
+        print*, "Not enough sub-cycles, try increasing MAX_iter, or enabling"//&
+                "Super-steps"
+      end if
     end if
 
-  else
-
-    !   this oprevents use of superstep if Nsteps =1
-    SuperStep = .False.
-    fstep  = dt_hydro/dt_cond
-    Nsteps = 1
-
-  end if
-
-  if (rank == master) then
-    print*, 'Calculating thermal conduction'
-    write(tc_log,'(i0,a,es15.7,a,es15.7,a,i4)') currentIteration,' |',dt_hydro,' |', dt_cond,' |', Nsteps
-  end if
-
-  steps : do n=1,Nsteps
-
-    !  here i take care of the transformation from cgs to code units
-    if (SuperStep) then
-      dts=dt_cond*fstep*substep(n,Nsteps,nu)/Psc/rsc
-    else
-      dts=dt_hydro/real(Nsteps)/Psc/rsc
+    if (rank == master) then
+      write(tc_log,'(i7,a,es12.4,a,es12.4,a,i6,a,i3)')                         &
+                         currentIteration,' | ',dt_left,'  | ', dt_cond,' | ', &
+                         Nsteps, ' | ', nSTb
+      flush(tc_log)
     end if
 
-    !  show progress bar (comment to run in batch)
-    if (rank == master ) call progress(n,nsteps)
+    steps : do n=1,Nsteps
 
-    !  get the heat fluxes
-    if (th_cond == TC_ANISOTROPIC) then
-      call MHD_heatfluxes()
-    end if
-    if (th_cond == TC_ISOTROPIC) then
-      call heatfluxes()
-    end if
+      if (SuperStep) then
+        dts= dt_cond*scale*substep(n,Nsteps,nu) /Psc/rsc
+      else
+        dts=dt_hydro/real(Nsteps)               /Psc/rsc
+      end if
 
-    !  update the conserved and primitives
-    do k=1,nz
-      do j=1,ny
-        do i=1,nx
-        u(5,i,j,k)=u(5,i,j,k)-dts*( ( f(5,i,j,k) - f(5,i-1,j,k) )/dx &
-                                  + ( g(5,i,j,k) - g(5,i,j-1,k) )/dy &
-                                  + ( h(5,i,j,k) - h(5,i,j,k-1) )/dz )
+      !  remaining time to cover (seconds)
+      dt_left = dt_left - dts *Psc*rsc
+
+      !  show progress bar
+      if (rank == master .and. progressbar) call progress(n,nsteps)
+
+      !  get the heat fluxes
+      if (th_cond == TC_ANISOTROPIC) then
+        call MHD_heatfluxes()
+      end if
+      if (th_cond == TC_ISOTROPIC) then
+        call heatfluxes()
+      end if
+
+      !  update the conserved and primitive vars
+      dts = dts /Psc/rsc  ! cgs to code units in the loop
+      do k=1,nz
+        do j=1,ny
+          do i=1,nx
+          u(5,i,j,k)=u(5,i,j,k)-dts*( ( f(5,i,j,k) - f(5,i-1,j,k) )/dx &
+                                    + ( g(5,i,j,k) - g(5,i,j-1,k) )/dy &
+                                    + ( h(5,i,j,k) - h(5,i,j,k-1) )/dz )
+
+          call update_PT(i,j,k)
+
+          end do
         end do
       end do
-    end do
 
-    !  boundary conditions
-    !  (only one layer of u(5,:,:,:) is exchanged )
-    call thermal_bounds()
+      !  boundary conditions
+      !  (only one layer of u(5,:,:,:) is exchanged )
+      call thermal_bounds()
 
-    !  update primitives and Temperature
-    call calcprim(u, primit)
+      !  update primitives and Temperature
+      !call calcprim(u, primit)
 
-  end do steps
+      !=========================================================================
+      !  minimal update, only one ghost cell
+      !  X (i=0 & i = nx+1)
+      do k=0,nz+1
+        do j=0,ny+1
+          call update_PT(  0  ,j ,k )
+          call update_PT(nx+1 ,j ,k )
+        end do
+      end do
+      !  Y (j=0 & j = ny+1)
+      do k=0,nz+1
+        do i=0,nx+1
+          call update_PT(i,   0  ,k )
+          call update_PT(i, ny+1 ,k )
+        end do
+      end do
+      !  Z (k=0 & k= nz+1)
+      do j=0,ny+1
+        do i=0,nx+1
+          call update_PT(i ,j , 0    )
+          call update_PT(i ,j , nz+1 )
+        end do
+      end do
+      !=========================================================================
+
+    end do steps
+
+    if (rank == master .and. progressbar) call progress(n,nsteps, done=.true.)
+
+    if (rank==master)  print('(a,i4,a,2es12.4,f10.1,a)'),                      &
+        ' Finished block of: ', nsteps, ' STs, dt_left/dt_cond ', dt_left,     &
+        dt_cond, dt_left/dt_cond, ' remain'
+
+    !  if have finished
+    if (abs( dt_left )  <= 0.01*dt_cond ) exit
+
+    nSTb  = nSTb + 1
+
+  end do STblocks
 
 end subroutine thermal_conduction
 
 !=======================================================================
 
 end module thermal_cond
-
+!
 !=======================================================================
