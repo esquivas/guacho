@@ -87,7 +87,8 @@ contains
     real (kind=8)     :: coolchi, T0, T1, C0, C1
 
     if(T.gt.1e8) then
-      coolchi=0.21e-26*Sqrt(real(T,8))
+      !coolchi=0.21e-26*Sqrt(real(T,8))
+      coolchi = cooltab_chianti(2,41)*Sqrt(real(T,8)/1.0E8)
     else
       if1=int(log10(T)*10)-39
       T0=cooltab_chianti(1,if1)
