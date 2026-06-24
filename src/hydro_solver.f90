@@ -198,8 +198,8 @@ contains
     !  update the chemistry network
     !  the primitives in the physical domain are upated
     if (eq_of_state == EOS_CHEM) then
-      if (chem_solver == KIMNYA  ) call update_chem()
-      if (chem_solver == CHEMEQ2 ) call update_chemeq2()
+      if (chem_solver == KIMYA    ) call update_chem()
+      if (chem_solver == CHEMEQ_2 ) call update_chemeq2()
     end if
 
     !-------------------------
