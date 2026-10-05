@@ -64,7 +64,7 @@ subroutine init_thermal_cond()
   call system('if [ ! -e '//trim(outputpath)&
       //'logs ]; then mkdir '//trim(outputpath)//'logs ; fi')
 
-  open(newunit=tc_log,file=trim(outputpath)//'logs/thermal_conduction-test.log')
+  open(newunit=tc_log,file=trim(outputpath)//'logs/thermal_conduction.log')
   write(tc_log,'(a)') '************* Thermal conduction logfile ****************'
   write(tc_log,'(a)') '# iter  | dt_hydro/left |    dt_cond   | Nsteps | ST block'
 
@@ -84,7 +84,7 @@ subroutine get_dt_cond(dt)
   real              :: dtp, ddx
   integer :: i, j, k, err
   !
-  dtp=huge(1.)
+  dtp=huge(1.0)
   ddx=min(dx ,dy)
   ddx=min(ddx,dz)
   !
@@ -110,9 +110,9 @@ subroutine get_dt_cond(dt)
 ! ==============================================================================
 ! Uses an effective kappa by including the saturated flux timestep
 if ( tc_saturation .and. kappa_eff ) then
-  if (TC_ISOTROPIC) then
+  if (th_cond == TC_ISOTROPIC) then
     call heatfluxes()
-  else if (TC_ANISOTROPIC) then
+  else if (th_cond == TC_ANISOTROPIC) then
     call MHD_heatfluxes()
   end if
 
@@ -215,7 +215,7 @@ end function KSp_par
 !> @details Computes the Spitzer conductivity perpendicular to B
 !> @param real [in] T : temperature [K]
 real function KSp_perp(Temp)
-  implicit none
+implicit none
   real,intent(in):: Temp
 
   Ksp_perp = beta_sp*eps_perp*Temp**(2.5)
@@ -240,81 +240,91 @@ subroutine heatfluxes()
   F(5,:,:,:)=0.0  ; G(5,:,:,:)=0.0 ; H(5,:,:,:)=0.0
   dt_sat = huge(1.)
 
+  do k=1,nz
+    do j=1,ny
+      do i=0,nx
+        !--------------- X direction -----------------------------------------
+        ! Temperature gradient in x
+        dTdx = (Temp(i+1,j,k) - Temp(i,j,k)) / (dx*rsc)
+        ! Kappa at face center
+        kap_x = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i+1,j,k)) / &
+                ( Ksp(Temp(i,j,k)) + Ksp(Temp(i+1,j,k)))
+        ! Classic (spitzer) heatflux
+        qx_cl = -kap_x * dTdx
+        if (tc_saturation) then
+          ! Cowley & McKee saturation
+          meanDens= 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
+          meanP   = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
+          call csound(meanP,meanDens,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qx_sat = 5.0 * phi * meanDens*rhosc * cs**3
+          ! harmonic average
+          fac = 1.0 / ( 1.0 + abs(qx_cl)/qx_sat )
+          F(5,i,j,k) = qx_cl *fac
+          dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_x )
+        else
+          F(5,i,j,k) = qx_cl
+        end if
+      end do
+    end do
+  end do
+
+  do k=1,nz
+    do j=0,ny
+      do i=1,nx
+        !--------------- Y direction -----------------------------------------
+        ! Temperature gradient in y
+        dTdy = (Temp(i,j+1,k) - Temp(i,j,k)) / (dy*rsc)
+        ! Kappa at face center
+        kap_y = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j+1,k)) / &
+                ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j+1,k)) )
+        ! Classic (spitzer) heatflux
+        qy_cl = -kap_y * dTdy
+        if (tc_saturation) then
+          ! Cowley & McKee saturation
+          meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
+          meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
+          call csound(meanP,meanDens,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qy_sat = 5.0 * phi * meanDens*rhosc * cs**3
+          ! harmonic average'
+          fac = 1./ ( 1.0 + abs(qy_cl)/qy_sat )
+          G(5,i,j,k) = qy_cl * fac
+          dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_y )
+        else
+          G(5,i,j,k) = qy_cl
+        end if
+      end do
+    end do
+  end do
+
   do k=0,nz
-     do j=0,ny
-        do i=0,nx
-
-          !--------------- X direction -----------------------------------------
-          ! Temperature gradient in x
-          dTdx = (Temp(i+1,j,k) - Temp(i,j,k)) / (dx*rsc)
-          ! Kappa at face center
-          kap_x = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i+1,j,k)) / &
-                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i+1,j,k)))
-          ! Classic (spitzer) heatflux
-          qx_cl = -kap_x * dTdx
-          if (tc_saturation) then
-            ! Cowley & McKee saturation
-            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i+1,j,k))
-            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i+1,j,k))
-            call csound(meanP,meanDens,cs)
-            cs=min(cs*vsc,clight)         ! scale and limit to < clight
-            qx_sat = 5.0 * phi * meanDens*rhosc * cs**3
-            ! harmonic average
-            fac = 1.0 / ( 1.0 + abs(qx_cl)/qx_sat )
-            F(5,i,j,k) = qx_cl *fac
-            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_x )
-          else
-            F(5,i,j,k) = qx_cl
-          end if
-
-          !--------------- Y direction -----------------------------------------
-          ! Temperature gradient in y
-          dTdy = (Temp(i,j+1,k) - Temp(i,j,k)) / (dy*rsc)
-          ! Kappa at face center
-          kap_y = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j+1,k)) / &
-                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j+1,k)) )
-          ! Classic (spitzer) heatflux
-          qy_cl = -kap_y * dTdy
-          if (tc_saturation) then
-            ! Cowley & McKee saturation
-            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j+1,k))
-            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j+1,k))
-            call csound(meanP,meanDens,cs)
-            cs=min(cs*vsc,clight)         ! scale and limit to < clight
-            qy_sat = 5.0 * phi * meanDens*rhosc * cs**3
-            ! harmonic average'
-            fac = 1./ ( 1.0 + abs(qy_cl)/qy_sat )
-            G(5,i,j,k) = qy_cl * fac
-            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_y )
-          else
-            G(5,i,j,k) = qy_cl
-          end if
-
-          !--------------- Z direction -----------------------------------------
-          ! Temperature gradient in z
-          dTdz = (Temp(i,j,k+1) - Temp(i,j,k)) / (dz*rsc)
-          ! Kappa at face center
-          kap_z = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j,k+1)) / &
-                  ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j,k+1)) )
-          ! Classic (spitzer) heatflux
-          qz_cl = -kap_z * dTdz
-          if (tc_saturation) then
-            ! Cowley & McKee saturation
-            meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
-            meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
-            call csound(meanP,meanDens,cs)
-            cs=min(cs*vsc,clight)         ! scale and limit to < clight
-            qz_sat = 5.0 * phi * meanDens*rhosc * cs**3
-            ! harmonic average
-            fac = 1.0 / ( 1.0 + abs(qz_cl)/qz_sat )
-            H(5,i,j,k) = qz_cl * fac
-            dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_z )
-          else
-            H(5,i,j,k) = qz_cl
-          end if
-
-        end do
-     end do
+    do j=1,ny
+      do i=1,nx
+        !--------------- Z direction -----------------------------------------
+        ! Temperature gradient in z
+        dTdz = (Temp(i,j,k+1) - Temp(i,j,k)) / (dz*rsc)
+        ! Kappa at face center
+        kap_z = 2.0*Ksp(Temp(i,j,k))*Ksp(Temp(i,j,k+1)) / &
+                ( Ksp(Temp(i,j,k)) + Ksp(Temp(i,j,k+1)) )
+        ! Classic (spitzer) heatflux
+        qz_cl = -kap_z * dTdz
+        if (tc_saturation) then
+          ! Cowley & McKee saturation
+          meanDens= 0.5*(primit(1,i,j,k)+primit(1,i,j,k+1))
+          meanP   = 0.5*(primit(5,i,j,k)+primit(5,i,j,k+1))
+          call csound(meanP,meanDens,cs)
+          cs=min(cs*vsc,clight)         ! scale and limit to < clight
+          qz_sat = 5.0 * phi * meanDens*rhosc * cs**3
+          ! harmonic average
+          fac = 1.0 / ( 1.0 + abs(qz_cl)/qz_sat )
+          H(5,i,j,k) = qz_cl * fac
+          dt_sat = min(dt_sat, meanDens*rhosc/fac/kap_z )
+        else
+          H(5,i,j,k) = qz_cl
+        end if
+      end do
+    end do
   end do
 
   !   here I multiply rho/kappa_eff by the prefactors to get dt_sat
@@ -346,10 +356,9 @@ subroutine MHD_heatfluxes()
 
   dt_sat = huge(1.)
 
-  do k=0,nz
-    do j=0,ny
+  do k=1,nz
+    do j=1,ny
       do i=0,nx
-
         !--------------- X direction -------------------------------------------
         !  Interpolate magnetic field to i+1/2 interface
         Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i+1,j,k))
@@ -394,7 +403,13 @@ subroutine MHD_heatfluxes()
         end if
         F(5,i,j,k) = qx_cl * fac
 
+      end do
+    end do
+  end do
 
+  do k=1,nz
+    do j=0,ny
+      do i=1,nx
         !--------------- Y direction -------------------------------------------
         !  Interpolate magnetic field to j+1/2 interface
         Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i,j+1,k))
@@ -438,7 +453,13 @@ subroutine MHD_heatfluxes()
           fac = 1.0
         end if
         G(5,i,j,k) = qy_cl * fac
+      end do
+    end do
+  end do
 
+  do k=0,nz
+    do j=1,ny
+      do i=1,nx
         !--------------- Z direction -------------------------------------------
         !  Interpolate magnetic field to k+1/2 interface
         Bx_f = 0.5*(primit(6,i,j,k) + primit(6,i,j,k+1))
@@ -544,75 +565,79 @@ end subroutine MHD_heatfluxes
                       recvi, bzsize, mpi_real_kind, in    , 0,          &
                       comm3d, status , err)
 
-    if (left  .ne. -1) u(5,0     ,0:nyp1,0:nzp1)=recvl(1,1,:,:)
-    if (right .ne. -1) u(5,nxp1  ,0:nyp1,0:nzp1)=recvr(1,1,:,:)
-    if (bottom.ne. -1) u(5,0:nxp1,0     ,0:nzp1)=recvb(1,:,1,:)
-    if (top   .ne. -1) u(5,0:nxp1,nyp1  ,0:nzp1)=recvt(1,:,1,:)
-    if (out   .ne. -1) u(5,0:nxp1,0:nyp1,0     )=recvo(1,:,:,1)
-    if (in    .ne. -1) u(5,0:nxp1,0:nyp1,nzp1  )=recvi(1,:,:,1)
-    !
-#else
+    if (left  .ne. -1) u(5,0     ,0:nyp1,0:nzp1) = recvl(1,1,:,:)
+    if (right .ne. -1) u(5,nxp1  ,0:nyp1,0:nzp1) = recvr(1,1,:,:)
+    if (bottom.ne. -1) u(5,0:nxp1,0     ,0:nzp1) = recvb(1,:,1,:)
+    if (top   .ne. -1) u(5,0:nxp1,nyp1  ,0:nzp1) = recvt(1,:,1,:)
+    if (out   .ne. -1) u(5,0:nxp1,0:nyp1,0     ) = recvo(1,:,:,1)
+    if (in    .ne. -1) u(5,0:nxp1,0:nyp1,nzp1  ) = recvi(1,:,:,1)
 
-    !   periodic BCs
-    if (bc_left == BC_PERIODIC .and. bc_right == BC_PERIODIC) then
-      !   Left BC
-      if (coords(0).eq.0) then
-         u(5,0,:,:)=u(5,nx,:,:)
-      endif
-      !   Right BC
-      if (coords(0).eq.MPI_NBX-1) then
-         u(5,nxp1,:,:)=u(5,1,:,:)
-      endif
-    end if
+#endif
 
-    if (bc_bottom == BC_PERIODIC .and. bc_top == BC_PERIODIC) then
-      !   bottom BC
-      if (coords(1).eq.0) then
-         u(5,:,0,:)= u(5,:,ny,:)
-      endif
-      !   top BC
-      if (coords(1).eq.MPI_NBY-1) then
-         u(5,:,nyp1,:)= u(5,:,1,:)
-      endif
-    end if
-
-    if (bc_out == BC_PERIODIC .and. bc_in == BC_PERIODIC) then
-      !   out BC
-      if (coords(2).eq.0) then
-         u(5,:,:,0)= u(5,:,:,nz)
-      endif
-      !   in BC
-      if (coords(2).eq.MPI_NBZ-1) then
-         u(5,:,:,nzp1)= u(5,:,:,1)
+    ! Left
+    if (coords(0) == 0) then
+      if (bc_left == BC_PERIODIC) then
+#ifndef MPIP
+        u(5, 0, 0:nyp1, 0:nzp1) = u(5,nx, 0:nyp1, 0:nzp1)
+#endif
+      else
+        u(5, 0, 0:nyp1, 0:nzp1) = u(5, 1, 0:nyp1, 0:nzp1)
       endif
     endif
 
-#endif /* !MPIP */
-    !   reflecting and outflow BCs
+    ! Right
+    if (coords(0) == MPI_NBX-1) then
+      if (bc_right == BC_PERIODIC) then
+#ifndef MPIP
+        u(5,nxp1, 0:nyp1, 0:nzp1) = u(5, 1, 0:nyp1, 0:nzp1)
+#endif
+      else
+        u(5,nxp1, 0:nyp1, 0:nzp1) = u(5, nx, 0:nyp1, 0:nzp1)
+      endif
+    endif
 
-    !   left
-    if (coords(0).eq.0) then
-       u(5,0,   0:nyp1,0:nzp1)=u(5,1 ,0:nyp1,0:nzp1)
+    ! Bottom
+        if (coords(1) == 0) then
+      if (bc_bottom == BC_PERIODIC) then
+#ifndef MPIP
+        u(5, 0:nxp1, 0, 0:nzp1) = u(5, 0:nxp1, ny, 0:nzp1)
+#endif
+      else
+        u(5, 0:nxp1, 0, 0:nzp1) = u(5, 0:nxp1,  1, 0:nzp1)
+      endif
     endif
-    !   right
-    if (coords(0).eq.MPI_NBX-1) then
-       u(5,nxp1,0:nyp1,0:nzp1)=u(5,nx,0:nyp1,0:nzp1)
+
+    ! Top
+    if (coords(1) == MPI_NBY-1) then
+      if (bc_top == BC_PERIODIC) then
+#ifndef MPIP
+        u(5, 0:nxp1, nyp1, 0:nzp1) = u(5, 0:nxp1,  1, 0:nzp1)
+#endif
+      else
+        u(5, 0:nxp1, nyp1, 0:nzp1) = u(5, 0:nxp1, ny, 0:nzp1)
+      endif
     endif
-    !   bottom
-    if (coords(1).eq.0) then
-       u(5,0:nxp1,0   ,0:nzp1)=u(5,0:nxp1,1 ,0:nzp1)
+
+    ! Out
+    if (coords(2) == 0) then
+      if (bc_out == BC_PERIODIC) then
+#ifndef MPIP
+        u(5, 0:nxp1, 0:nyp1, 0) = u(5, 0:nxp1, 0:nyp1, nz)
+#endif
+      else
+        u(5, 0:nxp1, 0:nyp1, 0) = u(5, 0:nxp1, 0:nyp1,  1)
+      endif
     endif
-    !   top
-    if (coords(1).eq.MPI_NBY-1) then
-       u(5,0:nxp1,nyp1,0:nzp1)=u(5,0:nxp1,ny,0:nzp1)
-    endif
-    !   out
-    if (coords(2).eq.0) then
-       u(5,0:nxp1,0:nyp1,0   )=u(5,0:nxp1,0:nyp1,1 )
-    endif
-    !   in
-    if (coords(2).eq.MPI_NBZ-1) then
-       u(5,0:nxp1,0:nyp1,nzp1)=u(5,0:nxp1,0:nyp1,nz)
+
+    !  In
+    if (coords(2) == MPI_NBZ-1) then
+      if (bc_in == BC_PERIODIC) then
+#ifndef MPIP
+        u(5, 0:nxp1, 0:nyp1, nzp1) = u(5, 0:nxp1, 0:nyp1,  1)
+#endif
+      else
+        u(5, 0:nxp1, 0:nyp1, nzp1) = u(5, 0:nxp1, 0:nyp1, nz)
+      endif
     endif
 
   end subroutine thermal_bounds
@@ -711,11 +736,11 @@ subroutine update_PT(i, j, k)
 
   if (mhd) then
     primit(5,i,j,k) = ( u(5,i,j,k)                                             &
-            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) )  &
-            - 0.5 * ( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k) ) /Cv
+            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k)    &
+            - 0.5 * ( u(6,i,j,k)**2+u(7,i,j,k)**2+u(8,i,j,k)**2 ) ) /Cv
   else
     primit(5,i,j,k) = ( u(5,i,j,k)                                             &
-            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) )
+            - 0.5 * ( u(2,i,j,k)**2+u(3,i,j,k)**2+u(4,i,j,k)**2)/u(1,i,j,k) )/Cv
   end if
 
   if (eq_of_state == EOS_SINGLE_SPECIE) then
@@ -728,6 +753,65 @@ subroutine update_PT(i, j, k)
 end subroutine
 
 !=======================================================================
+!> @brief Computes and prints min and max values of T, P and Et
+!> @details Reports the min and max value of T, P and Et within the
+!> entire PHISICAL domain
+!> @param integer [in] nSTB    : number of supertep Block
+!> @param real    [in] dt_left : remaining time in MHD interation
+!> @param real    [in] dt_cond : conduction timestep (seconds)
+subroutine print_tc_debug(nSTb, dt_left, dt_cond)
+
+  use mpi
+  implicit none
+
+  integer, intent(in) :: nSTb
+  real,    intent(in) :: dt_left, dt_cond
+
+  real :: Tmin_loc, Tmax_loc, Tmin_glob, Tmax_glob
+  real :: pmin_loc, pmax_loc, pmin_glob, pmax_glob
+  real :: emin_loc, emax_loc, emin_glob, emax_glob
+  integer :: err
+
+  Tmin_loc = minval(Temp(1:nx,1:ny,1:nz))
+  Tmax_loc = maxval(Temp(1:nx,1:ny,1:nz))
+
+  pmin_loc = minval(primit(5,1:nx,1:ny,1:nz))
+  pmax_loc = maxval(primit(5,1:nx,1:ny,1:nz))
+
+  emin_loc = minval(u(5,1:nx,1:ny,1:nz))
+  emax_loc = maxval(u(5,1:nx,1:ny,1:nz))
+
+#ifdef MPIP
+  call MPI_Reduce(Tmin_loc, Tmin_glob, 1, mpi_real_kind, MPI_MIN, master, comm3d, err)
+  call MPI_Reduce(Tmax_loc, Tmax_glob, 1, mpi_real_kind, MPI_MAX, master, comm3d, err)
+
+  call MPI_Reduce(pmin_loc, pmin_glob, 1, mpi_real_kind, MPI_MIN, master, comm3d, err)
+  call MPI_Reduce(pmax_loc, pmax_glob, 1, mpi_real_kind, MPI_MAX, master, comm3d, err)
+
+  call MPI_Reduce(emin_loc, emin_glob, 1, mpi_real_kind, MPI_MIN, master, comm3d, err)
+  call MPI_Reduce(emax_loc, emax_glob, 1, mpi_real_kind, MPI_MAX, master, comm3d, err)
+#else
+  Tmin_glob = Tmin_loc
+  Tmax_glob = Tmax_loc
+
+  pmin_glob = pmin_loc
+  pmax_glob = pmax_loc
+
+  emin_glob = emin_loc
+  emax_glob = emax_loc
+#endif
+
+  if (rank == master) then
+     print *, 'TC block = ', nSTb
+     print *, 'dt_left, dt_cond = ', dt_left, dt_cond
+     print *, 'Tmin, Tmax = ', Tmin_glob, Tmax_glob
+     print *, 'pmin, pmax = ', pmin_glob, pmax_glob
+     print *, 'u5 min, max = ', emin_glob, emax_glob
+  endif
+
+end subroutine print_tc_debug
+
+!=======================================================================
 !> @brief Upper level wrapper for thermal conduction
 !> @details This routine adds the heat conduction, receives the hydro
 !>  timestep in seconds, and assumes the primitives and Temp(i,j,k)
@@ -737,19 +821,19 @@ subroutine thermal_conduction()
   use hydro_core, only : calcprim
   implicit none
   real    :: dt_hydro
-  real    :: dts, scale, dt_left
+  real    :: dts, scale, dt_left, coef_t
   integer :: n,i,j,k, nsteps, nSTb
-  logical :: SuperStep = .true.  !  Enable superstepping
+  logical :: SuperStep   = .true.   ! enable superstepping
   logical :: progressbar = .false.  ! print progress bar within ST blocks
 
-  dt_hydro = dt_CFL*tsc          !  [seconds]
+  dt_hydro = dt_CFL*tsc             !  [seconds]
   dt_left  = dt_hydro
   nSTb     = 1
 
  STblocks : do
 
   !  get the conduction timescale
-    call get_dt_cond(dt_cond)
+    call get_dt_cond(dt_cond)    !  [seconds]
 
     !  compute the number of (super) steps needed to asdvance dt_cfl
     if (SuperStep) then
@@ -770,16 +854,17 @@ subroutine thermal_conduction()
       flush(tc_log)
     end if
 
-    steps : do n=1,Nsteps
+    steps : do n = Nsteps, 1, -1
+    !steps : do n = 1, Nsteps
 
       if (SuperStep) then
-        dts= dt_cond*scale*substep(n,Nsteps,nu) /Psc/rsc
+        dts= dt_cond*scale*substep(n,Nsteps,nu) ! [seconds]
       else
-        dts=dt_hydro/real(Nsteps)               /Psc/rsc
+        dts=dt_left/real(Nsteps)               ! [seconds]
       end if
 
       !  remaining time to cover (seconds)
-      dt_left = dt_left - dts *Psc*rsc
+      dt_left = dt_left - dts
 
       !  show progress bar
       if (rank == master .and. progressbar) call progress(n,nsteps)
@@ -792,14 +877,16 @@ subroutine thermal_conduction()
         call heatfluxes()
       end if
 
+      !  Coefficient including dts and scaling conversion factor to code units
+      !  includes conversion for U, dx,y,z are already in code units
+      coef_t = dts  / Psc/ rsc
       !  update the conserved and primitive vars
-      dts = dts /Psc/rsc  ! cgs to code units in the loop
       do k=1,nz
         do j=1,ny
           do i=1,nx
-          u(5,i,j,k)=u(5,i,j,k)-dts*( ( f(5,i,j,k) - f(5,i-1,j,k) )/dx &
-                                    + ( g(5,i,j,k) - g(5,i,j-1,k) )/dy &
-                                    + ( h(5,i,j,k) - h(5,i,j,k-1) )/dz )
+          u(5,i,j,k)=u(5,i,j,k)-coef_t*( ( f(5,i,j,k) - f(5,i-1,j,k) )/dx &
+                                       + ( g(5,i,j,k) - g(5,i,j-1,k) )/dy &
+                                       + ( h(5,i,j,k) - h(5,i,j,k-1) )/dz )
 
           call update_PT(i,j,k)
 
@@ -841,11 +928,15 @@ subroutine thermal_conduction()
 
     end do steps
 
-    if (rank == master .and. progressbar) call progress(n,nsteps, done=.true.)
+    if (rank == master .and. progressbar)                                      &
+      call progress(Nsteps-n+1, Nsteps, done=.true.)
 
     if (rank==master)  print('(a,i4,a,2es12.4,f10.1,a)'),                      &
         ' Finished block of: ', nsteps, ' STs, dt_left/dt_cond ', dt_left,     &
         dt_cond, dt_left/dt_cond, ' remain'
+
+    !! DEBUG|
+    call print_tc_debug(nSTb, dt_left, dt_cond)
 
     !  if have finished
     if (abs( dt_left )  <= 0.01*dt_cond ) exit
