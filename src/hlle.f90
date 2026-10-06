@@ -102,8 +102,8 @@ contains
 
     case(1)        ! 1st half timestep
 
-      do k=0,nz
-        do j=0,ny
+      do k=1,nz
+        do j=1,ny
           do i=0,nx
 
             !------- x direction -------------------------------------
@@ -112,6 +112,14 @@ contains
 
             call prim2fhlle(priml,primr,ff)
             f(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=1,ncells_z
+        do j=0,ncells_y
+          do i=1,ncells_x
 
             !------- y direction -------------------------------------
             priml(:)=primit(:,i ,j  ,k )
@@ -122,6 +130,14 @@ contains
             call prim2fhlle(priml,primr,ff)
             call swapy(ff,neq)
             g(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=0,ncells_z
+        do j=1,ncells_y
+          do i=1,ncells_x
 
             !------- z direction -------------------------------------
             priml(:)=primit(:,i ,j ,k  )
@@ -139,8 +155,8 @@ contains
 
     case (2)   !  2nd half timestep
 
-      do k=0,nz
-        do j=0,ny
+      do k=1,nz
+        do j=1,ny
           do i=0,nx
 
             !------- x direction ------------------------------------
@@ -152,6 +168,14 @@ contains
 
             call prim2fhlle(priml,primr,ff)
             f(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=1,ncells_z
+        do j=0,ncells_y
+          do i=1,ncells_x
 
             !------- y direction ------------------------------------
             priml (:)=primit(:,i,j  ,k )
@@ -168,6 +192,13 @@ contains
             call swapy(ff,neq)
             g(:,i,j,k)=ff(:)
 
+          end do
+        end do
+      end do
+
+      do k=0,ncells_z
+        do j=1,ncells_y
+          do i=1,ncells_x
             !------- z direction ------------------------------------
             priml (:)=primit(:,i,j,k  )
             primr (:)=primit(:,i,j,k+1)
