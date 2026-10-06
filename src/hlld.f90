@@ -113,11 +113,11 @@ contains
       sMmuL=sM - priml(2)
       denl=priml(1)*slmul*slmsM-bx**2
 
-      if(denl == 0) then
+      if( abs(denl) < 1.0e-8*pst ) then
         vstl = primL(3)
         wstl = primL(4)
-        bystl= 0.!primL(7)
-        bzstl= 0.!primL(8)
+        bystl= primL(7)
+        bzstl= primL(8)
         !print*,'stopped @ HLLD'
         !stop
       else
@@ -161,11 +161,11 @@ contains
       sMmuR=sM - primr(2)
       denr=primr(1)*srmur*sRmsM-bx**2
 
-      if(denr == 0) then
-        vstl = primL(3)
-        wstl = primL(4)
-        bystl= 0.!primL(7)
-        bzstl= 0.!primL(8)
+      if( abs(denr) < 1.0e-8*pst ) then
+        vstr = primR(3)
+        wstr = primR(4)
+        bystr= primR(7)
+        bzstr= primR(8)
         !print*,'stopped @ HLLD'
         !stop
       else
@@ -207,11 +207,11 @@ contains
     denl=priml(1)*slmul*slmsM-bx**2
     denr=primr(1)*srmur*srmsM-bx**2
 
-    if(denl == 0) then
+    if( abs(denl) < 1.0e-8*pst)  then
       vstl =priml(3)
       wstl =priml(4)
-      bystl=0.!priml(7)
-      bzstl=0.!priml(8)
+      bystl=priml(7)
+      bzstl=priml(8)
       !print*,'stopped @ HLLD'
       !stop
     else
@@ -221,11 +221,11 @@ contains
       bzstl= priml(8)*( priml(1)*slmul**2 - bx**2 )/denl            !bzL*
     endif
 
-    if(denr == 0) then
+    if( abs(denr) < 1.0e-8*pst ) then
       vstr =primr(3)
       wstr =primr(4)
-      bystr=0.!primr(7)
-      bzstr=0.!primr(8)
+      bystr=primr(7)
+      bzstr=primr(8)
       !print*,'stopped @ HLLD'
       !stop
     else
@@ -337,8 +337,8 @@ contains
 
     case(1)        ! 1st half timestep
       !
-      do k=0,nz
-        do j=0,ny
+      do k=1,nz
+        do j=1,ny
           do i=0,nx
 
             !------- x direction -------------------------------------
@@ -347,6 +347,14 @@ contains
             !
             call prim2fhlld(priml,primr,ff)
             f(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=1,ncells_z
+        do j=0,ncells_y
+          do i=1,ncells_x
 
             !------- y direction -------------------------------------
             priml(:)=primit(:,i ,j  ,k )
@@ -357,6 +365,14 @@ contains
             call prim2fhlld(priml,primr,ff)  !gets fluxes (swapped)
             call swapy(ff,neq)             !swaps back the fluxes
             g(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=0,ncells_z
+        do j=1,ncells_y
+          do i=1,ncells_x
 
             !------- z direction -------------------------------------
             priml(:)=primit(:,i ,j ,k  )
@@ -374,8 +390,8 @@ contains
 
     case (2)   !  2nd half timestep
 
-      do k=0,nz
-        do j=0,ny
+      do k=1,nz
+        do j=1,ny
           do i=0,nx
 
             !------- x direction ------------------------------------
@@ -387,6 +403,14 @@ contains
 
             call prim2fhlld(priml,primr,ff)
             f(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=1,ncells_z
+        do j=0,ncells_y
+          do i=1,ncells_x
 
             !------- y direction ------------------------------------
             priml (:)=primit(:,i,j  ,k )
@@ -402,6 +426,14 @@ contains
             call prim2fhlld(priml,primr,ff)
             call swapy(ff,neq)
             g(:,i,j,k)=ff(:)
+
+          end do
+        end do
+      end do
+
+      do k=0,ncells_z
+        do j=1,ncells_y
+          do i=1,ncells_x
 
             !------- z direction ------------------------------------
             priml (:)=primit(:,i,j,k  )
