@@ -61,7 +61,7 @@ program guacho
   use difrad
   use thermal_cond, only : tc_log
   implicit none
-  integer :: err
+  integer :: err, uchk, istat
   integer :: itprint
   real    :: tprint
   logical :: dump_out = .false., checkpoint=.false.
@@ -104,32 +104,29 @@ program guacho
       ' | dt:', dt_CFL*tsc,                                                    &
       ' | tprint:', tprint*tsc
 
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !---------------------------------------------------------------------------
     ! To force checkpoint create a file named 'checkpoint' in output dir
     ! e.g. 'touch <outputdir>/checkpoint'
     !  master checks for existence of file
-    if (rank == 0)  inquire(file=trim(outputpath)//trim("checkpoint"),    &
-                    exist=checkpoint)
-
-    ! master comunicates checkpoint flag to all
-    call mpi_bcast(checkpoint, 1, mpi_logical, 0, mpi_comm_world, err)
+    if (rank == master) inquire (file = trim(outputpath)//'checkpoint',           &
+                                 exist = checkpoint)
+    call mpi_bcast (checkpoint, 1, mpi_logical, master, mpi_comm_world, err)
 
     if (checkpoint) then
-        call write_output(999)
+      call write_output (999)
+      if (rank == master) then
+        print'(a,es15.7)',                                                        &
+        '****** wrote checkpoint (output 999) ****** time: ', time
+        open (newunit = uchk, file=trim(outputpath)//'checkpoint', status='old',  &
+              iostat = istat)
+        if (istat == 0) close (uchk, status='delete')
+      end if
+      checkpoint = .false.
 
-        if (rank ==0) then
-          print'(a,es15.7)',  &
-          '****************** wrote checkpoint *************** time: ', time
-        call system('rm -rf '//trim(outputpath)//'checkpoint')
-        end if
-
-        checkpoint = .false.
-
-        ! syncs all processors
-        call mpi_barrier(mpi_comm_world, err)
-
+      ! syncs all processors
+      call mpi_barrier(mpi_comm_world, err)
     end if
-    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    !---------------------------------------------------------------------------
 
     !  if lmp enabled compute predictor for particle positions
     if(enable_lmp) call LMPpredictor()
