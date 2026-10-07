@@ -231,7 +231,7 @@ contains
   !> @param real [out] prim(neq,nxmin:nxmax,nymin:nymax,nzmin:nzmax) :
   !> primitive variables
   !> @param logical [in] only_ghost : if set to true then updates the primitives
-  !> only on the ghost cells, it defaults to false (the entire domain)
+  !> only on one layer of ghost cells, it defaults to false (the entire domain)
   subroutine calcprim(u,primit, only_ghost)
 
     use parameters, only : neq, nxmin, nxmax, nymin, nymax, nzmin, nzmax, &
@@ -561,9 +561,9 @@ contains
     real :: b2
 
     b2=bx*bx+by*by+bz*bz
-    cfx=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*bx*bx))/d)
-    cfy=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*by*by))/d)
-    cfz=sqrt(0.5*((gamma*p+b2)+sqrt((gamma*p+b2)**2-4.*gamma*p*bz*bz))/d)
+    cfx=sqrt(0.5*((gamma*p+b2)+sqrt(max(0.,(gamma*p+b2)**2-4.*gamma*p*bx*bx)))/d)
+    cfy=sqrt(0.5*((gamma*p+b2)+sqrt(max(0.,(gamma*p+b2)**2-4.*gamma*p*by*by)))/d)
+    cfz=sqrt(0.5*((gamma*p+b2)+sqrt(max(0.,(gamma*p+b2)**2-4.*gamma*p*bz*bz)))/d)
 
   end subroutine cfast
 
@@ -583,8 +583,8 @@ contains
     b2=prim(6)**2+prim(7)**2+prim(8)**2
     cs2va2 = (gamma*prim(5)+b2)/prim(1)   ! cs^2 + ca^2
 
-    cfx=sqrt(0.5*(cs2va2+sqrt(cs2va2**2                                        &
-             - 4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) )
+    cfx=sqrt(0.5*(cs2va2 + sqrt( max(0.0,                                      &
+                 cs2va2**2 - 4.*gamma*prim(5)*prim(6)**2/prim(1)/prim(1) ) ) ) )
 
   end subroutine cfastX
 
@@ -750,7 +750,8 @@ contains
 
       if (slope_limiter == LIMITER_VAN_ALBADA) then
         !   Van Albada
-        average=(a*(b*b+delta)+b*(a*a+delta))/(a*a+b*b+delta)
+        average = (a*(b*b+delta)+b*(a*a+delta))/(a*a + b*b + 2.0*delta)
+        if (a*b < 0) average = 0.0
       end if
 
       if (slope_limiter == LIMITER_UMIST) then
