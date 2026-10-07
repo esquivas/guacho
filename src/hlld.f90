@@ -352,9 +352,9 @@ contains
         end do
       end do
 
-      do k=1,ncells_z
-        do j=0,ncells_y
-          do i=1,ncells_x
+      do k=1,nz
+        do j=0,ny
+          do i=1,nx
 
             !------- y direction -------------------------------------
             priml(:)=primit(:,i ,j  ,k )
@@ -370,9 +370,9 @@ contains
         end do
       end do
 
-      do k=0,ncells_z
-        do j=1,ncells_y
-          do i=1,ncells_x
+      do k=0,nz
+        do j=1,ny
+          do i=1,nx
 
             !------- z direction -------------------------------------
             priml(:)=primit(:,i ,j ,k  )
@@ -408,9 +408,9 @@ contains
         end do
       end do
 
-      do k=1,ncells_z
-        do j=0,ncells_y
-          do i=1,ncells_x
+      do k=1,nz
+        do j=0,ny
+          do i=1,nx
 
             !------- y direction ------------------------------------
             priml (:)=primit(:,i,j  ,k )
@@ -431,9 +431,9 @@ contains
         end do
       end do
 
-      do k=0,ncells_z
-        do j=1,ncells_y
-          do i=1,ncells_x
+      do k=0,nz
+        do j=1,ny
+          do i=1,nx
 
             !------- z direction ------------------------------------
             priml (:)=primit(:,i,j,k  )
